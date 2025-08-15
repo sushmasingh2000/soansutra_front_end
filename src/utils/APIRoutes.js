@@ -1,4 +1,5 @@
 export const domain = "http://192.168.190.250:2000";
+// export const domain ="https://sonashutra-backend-code.onrender.com";
 
 export const endpoint ={
     login : `${domain}/api/v1/login-user`,
