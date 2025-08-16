@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
@@ -310,8 +309,13 @@ const ProductsTab = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
-            <h3 className="text-lg font-semibold mb-2">Manage Images</h3>
-            <ProductImageManager productId={selectedProduct?.product_id} />
+            {selectedProduct?.product_id && (
+              <>
+                <h3 className="text-lg font-semibold mb-2">Manage Images</h3>
+                <ProductImageManager productId={selectedProduct.product_id} />
+              </>
+            )}
+
             <div className="grid grid-cols-1 gap-4">
               <select
                 name="product_category_id"
@@ -419,8 +423,13 @@ const ProductsTab = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
-            <h3 className="text-lg font-semibold mb-2">Manage Images</h3>
-            <ProductImageManager productId={selectedProduct?.product_id} />
+            {selectedProduct?.product_id && (
+              <>
+                <h3 className="text-lg font-semibold mb-2">Manage Images</h3>
+                <ProductImageManager productId={selectedProduct.product_id} />
+              </>
+            )}
+
             <div className="grid grid-cols-1 gap-4">
               <select
                 name="product_category_id"

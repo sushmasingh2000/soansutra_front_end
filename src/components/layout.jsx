@@ -6,6 +6,8 @@ import Permissions_tab from './admin_layout/permissions_tab';
 import ProductCategoriesTab from './admin/ProductCategories';
 import SubCategoryProduct from './admin/SubCategories';
 import Product from './admin/Product';
+import ProductVariant from './admin/ProductVariant';
+import ProductUnits from './admin/ProductUnit';
 
 const AdminPanel = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -30,6 +32,8 @@ const AdminPanel = () => {
     { id: 'categories', label: ' Categories', icon: '📂', roles: [ 'Support Engineer', 'user'] },
     { id: 'subcategories', label: ' Sub Categories', icon: '📂', roles: [ 'Support Engineer', 'user'] },
     { id: 'products', label: 'Products', icon: '📦', roles: ['Support Engineer', 'user'] },
+    { id: 'variants', label: 'Variants', icon: '📦', roles: ['Support Engineer', 'user'] },
+    { id: 'unit', label: 'Units', icon: '📦', roles: ['Support Engineer', 'user'] },
     { id: 'reports', label: 'Reports', icon: '📈', roles: ['superuser', 'Support Engineer', 'user'] },
     { id: 'profile', label: 'Profile', icon: '👤', roles: ['superuser', 'Support Engineer', 'user'] },
     { id: 'settings', label: 'Settings', icon: '⚙️', roles: ['superuser', 'Support Engineer', 'user'] },
@@ -319,6 +323,8 @@ const AdminPanel = () => {
       case 'categories': return <ProductCategoriesTab />;
       case 'subcategories': return <SubCategoryProduct />;
       case 'products': return <Product/>;
+      case 'variants': return <ProductVariant/>;
+      case 'unit': return <ProductUnits/>;
       case 'reports': return <ReportsTab />;
       case 'settings': return <SettingsTab />;
       case 'profile': return <ProfileTab />;
