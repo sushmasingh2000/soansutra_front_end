@@ -30,5 +30,11 @@ export const endpoint ={
     get_type_role_permission : `${domain}/api/v1/get-type-of-permission`,
     remove_permission : `${domain}/api/v1/remove-permission-from-role`,
 
+    //category user
+    category_product : `${domain}/api/v1/create-product-category`,
+    get_product : `${domain}/api/v1/get-product-category`,
+    get_product_by_id : `${domain}/api/v1/get-product-category-by-id`,
+    upddate_product : `${domain}/api/v1/update-product-category`,
+    delete_product : `${domain}/api/v1/delete-product-category`,
    
 }
