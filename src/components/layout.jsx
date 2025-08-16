@@ -3,12 +3,15 @@ import StoreManagementTab from './admin_layout/store_mangement';
 import UserManagementTab from './admin_layout/usermanagement_tab'; // Corrected import path
 import RolePermissionsTab from './admin_layout/role_tab';
 import Permissions_tab from './admin_layout/permissions_tab';
+import ProductCategoriesTab from './admin/ProductCategories';
+import SubCategoryProduct from './admin/SubCategories';
+import Product from './admin/Product';
 
 const AdminPanel = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [userRole, setUserRole] = useState('superadmin'); // superadmin, admin, user
+  const userRole =localStorage.getItem("role")
 
   // Demo data
   const dashboardStats = {
@@ -18,44 +21,29 @@ const AdminPanel = () => {
     activeRoles: 5
   };
 
-  // const demoStores = [
-  //   { id: 1, name: 'Main Store', address: 'Delhi', contact: '9876543210', email: 'main@store.com', status: 'Active' },
-  //   { id: 2, name: 'Branch Store', address: 'Mumbai', contact: '9876543211', email: 'branch@store.com', status: 'Active' },
-  //   { id: 3, name: 'Online Store', address: 'Bangalore', contact: '9876543212', email: 'online@store.com', status: 'Inactive' }
-  // ];
-
-  // const demoUsers = [
-  //   { id: 1, name: 'John Doe', email: 'john@store.com', phone: '9876543210', role: 'Manager', store: 'Main Store', status: 'Active' },
-  //   { id: 2, name: 'Jane Smith', email: 'jane@store.com', phone: '9876543211', role: 'Staff', store: 'Branch Store', status: 'Active' },
-  //   { id: 3, name: 'Mike Johnson', email: 'mike@store.com', phone: '9876543212', role: 'Supervisor', store: 'Online Store', status: 'Inactive' }
-  // ];
-
-  // const demoRoles = [
-  //   { id: 1, name: 'Store Manager', description: 'Manages store operations', permissions: 8, status: 'Active' },
-  //   { id: 2, name: 'Sales Staff', description: 'Handles sales operations', permissions: 4, status: 'Active' },
-  //   { id: 3, name: 'Supervisor', description: 'Supervises daily activities', permissions: 6, status: 'Active' }
-  // ];
-
-  const demoCategories = [
-    { id: 1, name: 'Electronics', description: 'Electronic products and gadgets', parent: 'Root', products: 15, status: 'Active' },
-    { id: 2, name: 'Clothing', description: 'Clothing and fashion items', parent: 'Root', products: 25, status: 'Active' },
-    { id: 3, name: 'Home & Garden', description: 'Home and garden products', parent: 'Root', products: 12, status: 'Active' }
-  ];
-
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊', roles: ['superadmin', 'admin', 'user'] },
-    { id: 'stores', label: 'Store Management', icon: '🏪', roles: ['superadmin'] },
-    { id: 'users', label: 'User Management', icon: '👥', roles: ['superadmin'] },
-    { id: 'roles', label: 'Role', icon: '🔐', roles: ['superadmin'] },
-    { id: 'permissions', label: 'Permissions', icon: '🔐', roles: ['superadmin'] },
-    { id: 'categories', label: 'Product Categories', icon: '📂', roles: ['superadmin', 'admin', 'user'] },
-    { id: 'products', label: 'Products', icon: '📦', roles: ['superadmin', 'admin', 'user'] },
-    { id: 'reports', label: 'Reports', icon: '📈', roles: ['superadmin', 'admin'] },
-    { id: 'settings', label: 'Settings', icon: '⚙️', roles: ['superadmin', 'admin', 'user'] },
-    { id: 'profile', label: 'Profile', icon: '👤', roles: ['superadmin', 'admin', 'user'] }
+    { id: 'dashboard', label: 'Dashboard', icon: '📊', roles: ['superuser', 'Support Engineer', 'user'] },
+    { id: 'stores', label: 'Store Management', icon: '🏪', roles: ['superuser'] },
+    { id: 'users', label: 'User Management', icon: '👥', roles: ['superuser'] },
+    { id: 'roles', label: 'Role', icon: '🔐', roles: ['superuser'] },
+    { id: 'permissions', label: 'Permissions', icon: '🔐', roles: ['superuser'] },
+    { id: 'categories', label: ' Categories', icon: '📂', roles: [ 'Support Engineer', 'user'] },
+    { id: 'subcategories', label: ' Sub Categories', icon: '📂', roles: [ 'Support Engineer', 'user'] },
+    { id: 'products', label: 'Products', icon: '📦', roles: ['Support Engineer', 'user'] },
+    { id: 'reports', label: 'Reports', icon: '📈', roles: ['superuser', 'Support Engineer', 'user'] },
+    { id: 'profile', label: 'Profile', icon: '👤', roles: ['superuser', 'Support Engineer', 'user'] },
+    { id: 'settings', label: 'Settings', icon: '⚙️', roles: ['superuser', 'Support Engineer', 'user'] },
   ];
-
-  const filteredMenuItems = menuItems.filter(item => item.roles.includes(userRole));
+  const filteredMenuItems = menuItems.filter(item => {
+    if (userRole === 'superuser') {
+      return item.roles.includes('superuser');
+    } else {
+      return item.roles.includes(userRole) && !(
+        item.roles.length === 1 && item.roles.includes('superuser')
+      );
+    }
+  });
+  
 
   // Header Component
   const Header = () => (
@@ -222,80 +210,6 @@ const AdminPanel = () => {
       </div>
     </div>
   );
-
-
-      
-  <>
-  <StoreManagementTab/>
-  <UserManagementTab/>
-  <RolePermissionsTab/>
-  <Permissions_tab/>
-  </>
-  
-
-  
-  // Product Categories Tab
-  const ProductCategoriesTab = () => (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Product Categories</h1>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
-          <span>➕</span>
-          <span>Add New Category</span>
-        </button>
-      </div>
-      
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent Category</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products Count</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {demoCategories.map((category) => (
-              <tr key={category.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{category.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{category.description}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{category.parent}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{category.products}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
-                    {category.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                  <div className="flex space-x-2">
-                    <button className="text-blue-600 hover:text-blue-800">👁️</button>
-                    <button className="text-green-600 hover:text-green-800">✏️</button>
-                    <button className="text-red-600 hover:text-red-800">🗑️</button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-
-  // Other Demo Tabs
-  const ProductsTab = () => (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Products</h1>
-      <div className="bg-white p-8 rounded-lg shadow-sm border text-center">
-        <div className="text-6xl mb-4">📦</div>
-        <p className="text-xl text-gray-600 mb-2">Products Management</p>
-        <p className="text-gray-500">This section will handle product inventory, pricing, and details.</p>
-      </div>
-    </div>
-  );
-
   const ReportsTab = () => (
     <div className="p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Reports</h1>
@@ -380,7 +294,7 @@ const AdminPanel = () => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
             <select className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-              <option value="superadmin">Super Admin</option>
+              <option value="superuser">Super Admin</option>
               <option value="admin">Admin</option>
               <option value="user">User</option>
             </select>
@@ -398,12 +312,13 @@ const AdminPanel = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
-      case 'stores': return userRole === 'superadmin' ? <StoreManagementTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
-      case 'users': return userRole === 'superadmin' ? <UserManagementTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
-      case 'roles': return userRole === 'superadmin' ? <RolePermissionsTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
-      case 'permissions': return <Permissions_tab/>
+      case 'stores': return userRole === 'superuser' ? <StoreManagementTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
+      case 'users': return userRole === 'superuser' ? <UserManagementTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
+      case 'roles': return userRole === 'superuser' ? <RolePermissionsTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
+      case 'permissions': return userRole === 'superuser' ? <Permissions_tab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
       case 'categories': return <ProductCategoriesTab />;
-      case 'products': return <ProductsTab />;
+      case 'subcategories': return <SubCategoryProduct />;
+      case 'products': return <Product/>;
       case 'reports': return <ReportsTab />;
       case 'settings': return <SettingsTab />;
       case 'profile': return <ProfileTab />;
@@ -422,22 +337,6 @@ const AdminPanel = () => {
       } pt-16 min-h-screen`}>
         {renderTabContent()}
       </main>
-      
-      {/* Role Selector for Demo */}
-      <div className="fixed bottom-4 right-4 z-40">
-        <div className="bg-white p-3 rounded-lg shadow-lg border">
-          <label className="block text-xs font-medium text-gray-700 mb-2">Switch Role (Demo)</label>
-          <select
-            value={userRole}
-            onChange={(e) => setUserRole(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="superadmin">Super Admin</option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-        </div>
-      </div>
     </div>
   );
 };
