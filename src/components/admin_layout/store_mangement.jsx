@@ -1,6 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
+import { apiConnectorGet, apiConnectorPost } from '../../utils/ApiConnector';
+import { endpoint } from '../../utils/APIRoutes';
+import toast from 'react-hot-toast';
+import { enCryptData } from '../../utils/Secret';
 
 const StoreManagementTab = () => {
   const [stores, setStores] = useState([]);
@@ -8,7 +12,6 @@ const StoreManagementTab = () => {
   const [editStoreModal, setEditStoreModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -23,146 +26,22 @@ const StoreManagementTab = () => {
     status: true
   });
 
-  // Environment variables
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL || 'https://sonashutra-backend-code.onrender.com/';
-  const API_PREFIX = import.meta.env.VITE_APP_API_PREFIX || 'api/v1';
-  const BODY_SECRET = import.meta.env.VITE_APP_BODY_SECRET ;
-
-  // Get token from localStorage for super user authorization
-  const getAuthToken = () => {
-    // Check multiple possible storage locations for the super user token
-    return localStorage.getItem('superUserToken') || 
-           localStorage.getItem('token') || 
-           localStorage.getItem('authToken') || 
-           localStorage.getItem('adminToken') ||
-           sessionStorage.getItem('superUserToken') ||
-           sessionStorage.getItem('token') ||
-           sessionStorage.getItem('authToken');
-  };
-
-  // Encryption function
-  const enCryptData = (data) => {
-    try {
-      if (!data) return null;
-      if (!BODY_SECRET) throw new Error("Missing encryption key");
-
-      const encrypted = CryptoJS.AES.encrypt(
-        JSON.stringify(data),
-        BODY_SECRET
-      ).toString();
-
-      return encrypted;
-    } catch (error) {
-      console.log(error);
-      return error.message || null;
-    }
-  };
-
-  // API call helper
-  const apiCall = async (endpoint, method = 'GET', data = null) => {
-    const token = getAuthToken();
-    
-    if (!token) {
-      throw new Error('No super user authorization token found. Please login again.');
-    }
-
-    // Fix the URL construction - remove extra slash
-    let url = `${BASE_URL}${API_PREFIX}/${endpoint}`;
-    if (endpoint === 'get-store') {
-      url = `${BASE_URL}${API_PREFIX}/${endpoint}?=`; // As per your requirement
-    }
-    
-    console.log('API URL:', url); // Debug log
-    console.log('Token:', token.substring(0, 20) + '...'); // Debug log (partial token)
-    
-    const options = {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    };
-
-    if (data && method !== 'GET') {
-      const encryptedPayload = enCryptData(data);
-      if (!encryptedPayload || typeof encryptedPayload === 'string' && encryptedPayload.startsWith('Missing')) {
-        throw new Error('Failed to encrypt data: ' + encryptedPayload);
-      }
-      options.body = JSON.stringify({ payload: encryptedPayload });
-      console.log('Request body:', { payload: 'encrypted_data_hidden' }); // Debug log
-    }
-
-    console.log('Request options:', { ...options, headers: { ...options.headers, Authorization: 'Bearer ***' } }); // Debug log
-
-    const response = await fetch(url, options);
-    
-    console.log('Response status:', response.status); // Debug log
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('API Error Response:', errorData); // Debug log
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log('API Success Response:', result); // Debug log
-    return result;
-  };
-
   // Fetch stores
   const fetchStores = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const response = await apiCall('get-store');
-      
-      console.log('API Response:', response); // Debug log
-      
-      // Handle different possible response structures
-      let storesData = [];
-      if (response) {
-        if (Array.isArray(response)) {
-          storesData = response;
-        } else if (response.data && Array.isArray(response.data)) {
-          storesData = response.data;
-        } else if (response.stores && Array.isArray(response.stores)) {
-          storesData = response.stores;
-        } else if (response.result && Array.isArray(response.result)) {
-          storesData = response.result;
-        }
-      }
-      
-      setStores(storesData);
+      const response = await apiConnectorGet(endpoint?.get_store);
+      setStores(response?.data?.result || []);
     } catch (err) {
-      setError(`Failed to fetch stores: ${err.message}`);
-      setStores([]); // Ensure stores is always an array
-      console.error('Error fetching stores:', err);
+      toast.error('Error fetching stores:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Helper function to format date for MySQL
-  const formatDateForMySQL = (date = new Date()) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    const seconds = String(d.getSeconds()).padStart(2, '0');
-    
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
-
-  // Create store
   const createStore = async () => {
     try {
       setLoading(true);
-      setError(null);
-      
-      const currentDateTime = formatDateForMySQL();
-      
       const storeData = {
         name: formData.name,
         description: formData.description,
@@ -172,22 +51,17 @@ const StoreManagementTab = () => {
         country: formData.country,
         phone: formData.phone,
         email: formData.email,
-        created_at: currentDateTime,
-        updated_at: currentDateTime,
-        status: formData.status ? 1 : 0
       };
 
-      console.log('Sending store data:', storeData); // Debug log
-
-      await apiCall('create-store', 'POST', storeData);
-      
+   const response = await apiConnectorPost(endpoint?.create_store,{
+        payload: enCryptData(storeData)
+      });
       setCreateStoreModal(false);
       resetForm();
       fetchStores();
-      alert('Store created successfully!');
+      toast(response?.data?.message);
     } catch (err) {
-      setError(`Failed to create store: ${err.message}`);
-      console.error('Error creating store:', err);
+      toast.error('Error creating store:', err);
     } finally {
       setLoading(false);
     }
@@ -197,10 +71,8 @@ const StoreManagementTab = () => {
   const updateStore = async () => {
     try {
       setLoading(true);
-      setError(null);
-      
       const storeData = {
-        store_id: selectedStore.id || selectedStore.store_id,
+        store_id: selectedStore.store_id,
         name: formData.name,
         description: formData.description,
         address: formData.address,
@@ -209,22 +81,17 @@ const StoreManagementTab = () => {
         country: formData.country,
         phone: formData.phone,
         email: formData.email,
-        updated_at: formatDateForMySQL(),
-        status: formData.status ? 1 : 0
       };
-
-      console.log('Sending update data:', storeData); // Debug log
-
-      await apiCall('update-store', 'POST', storeData);
-      
+  const response =  await apiConnectorPost(endpoint?.update_store, {
+    payload:enCryptData(storeData)
+  });
       setEditStoreModal(false);
       setSelectedStore(null);
       resetForm();
       fetchStores();
-      alert('Store updated successfully!');
+      toast(response?.data?.message);
     } catch (err) {
-      setError(`Failed to update store: ${err.message}`);
-      console.error('Error updating store:', err);
+      toast.error('Error updating store:', err);
     } finally {
       setLoading(false);
     }
@@ -232,25 +99,19 @@ const StoreManagementTab = () => {
 
   // Delete store
   const deleteStore = async (store) => {
-    // if (!confirm('Are you sure you want to delete this store?')) return;
-    
+    if (!window.confirm('Are you sure you want to delete this store?')) return;
     try {
       setLoading(true);
-      setError(null);
-      
       const deleteData = {
-        store_id: store.id || store.store_id
+        store_id: store.store_id
       };
-
-      console.log('Sending delete data:', deleteData); // Debug log
-      
-      await apiCall('delete-store', 'POST', deleteData);
-      
+    const res =   await apiConnectorPost(endpoint?.delete_store, {
+      payload: enCryptData(deleteData ),
+    });
       fetchStores();
-      alert('Store deleted successfully!');
+      toast(res?.data?.message);
     } catch (err) {
-      setError(`Failed to delete store: ${err.message}`);
-      console.error('Error deleting store:', err);
+      toast.error('Error deleting store:', err);
     } finally {
       setLoading(false);
     }
@@ -280,7 +141,6 @@ const StoreManagementTab = () => {
   };
 
   const openEditModal = (store) => {
-    console.log('Selected store for editing:', store); // Debug log
     setSelectedStore(store);
     setFormData({
       name: store.name || '',
@@ -320,21 +180,6 @@ const StoreManagementTab = () => {
           <span>Add New Store</span>
         </button>
       </div>
-      
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          <div className="flex justify-between items-start">
-            <span className="flex-1 pr-4">{error}</span>
-            <button 
-              onClick={() => setError(null)}
-              className="text-red-700 hover:text-red-900 flex-shrink-0"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Loading State */}
       {loading && (

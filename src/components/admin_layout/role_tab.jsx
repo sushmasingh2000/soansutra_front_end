@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
+import { apiConnectorGet, apiConnectorPost } from '../../utils/ApiConnector';
+import { endpoint } from '../../utils/APIRoutes';
+import toast from 'react-hot-toast';
+import { enCryptData } from '../../utils/Secret';
 
 const RolePermissionsTab = () => {
   const [roles, setRoles] = useState([]);
@@ -10,109 +14,15 @@ const RolePermissionsTab = () => {
   const [newRoleName, setNewRoleName] = useState('');
   const [editRoleName, setEditRoleName] = useState('');
   const [error, setError] = useState('');
-
-  // Environment variables
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL || 'https://sonashutra-backend-code.onrender.com/';
-  const API_PREFIX = import.meta.env.VITE_APP_API_PREFIX || 'api/v1';
-  const BODY_SECRET = import.meta.env.VITE_APP_BODY_SECRET || 'kljhdskjhdghjdfklsghdslkkjldfghds8934574jhbnj345b4kjhdyufdbnr345h34u5nbmebfhdui';
-
-  // Encryption function
-  const enCryptData = (data) => {
-    try {
-      if (!data) return null;
-      if (!BODY_SECRET) throw new Error("Missing encryption key");
-      const encrypted = CryptoJS.AES.encrypt(
-        JSON.stringify(data),
-        BODY_SECRET
-      ).toString();
-      return encrypted;
-    } catch (error) {
-      console.log(error);
-      return error.message || null;
-    }
-  };
-
-  // Get token from localStorage or sessionStorage
-  const getAuthToken = () => {
-    // Try different possible storage keys for the admin token
-    const possibleKeys = [
-      'adminToken',
-      'authToken', 
-      'token',
-      'userToken',
-      'accessToken',
-      'admin_token',
-      'superAdminToken'
-    ];
-
-    for (const key of possibleKeys) {
-      const token = localStorage.getItem(key) || sessionStorage.getItem(key);
-      if (token) {
-        console.log(`Found token in ${key}:`, token);
-        return token;
-      }
-    }
-
-    // If no token found, check if there's any token-like item in localStorage
-    console.log('All localStorage items:', { ...localStorage });
-    console.log('All sessionStorage items:', { ...sessionStorage });
-    
-    return null;
-  };
-
+ 
   // Fetch roles from API
   const fetchRoles = async () => {
     setLoading(true);
-    setError('');
-    
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error('No authentication token found. Please login as admin first.');
-      }
-
-      const response = await fetch(`${BASE_URL}${API_PREFIX}/get-role`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch roles: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log('API Response:', data);
-      
-      // Ensure we always set an array - handle all possible response structures
-      let rolesData = [];
-      
-      if (Array.isArray(data)) {
-        rolesData = data;
-      } else if (data && typeof data === 'object') {
-        // Try different possible array locations in response
-        if (Array.isArray(data.roles)) {
-          rolesData = data.roles;
-        } else if (Array.isArray(data.data)) {
-          rolesData = data.data;
-        } else if (Array.isArray(data.result)) {
-          rolesData = data.result;
-        } else if (Array.isArray(data.items)) {
-          rolesData = data.items;
-        } else if (Array.isArray(data.list)) {
-          rolesData = data.list;
-        }
-      }
-      
-      console.log('Processed roles data:', rolesData);
-      setRoles(rolesData || []);
-      
+      const response = await apiConnectorGet(endpoint?.get_role);
+      setRoles(response?.data?.result || []);
     } catch (error) {
-      console.error('Error fetching roles:', error);
-      setError(error.message);
-      setRoles([]); // Ensure roles is always an array even on error
+      toast.error('Error fetching roles:', error);
     } finally {
       setLoading(false);
     }
@@ -121,48 +31,21 @@ const RolePermissionsTab = () => {
   // Create new role
   const createRole = async () => {
     if (!newRoleName.trim()) {
-      setError('Role name is required');
+      toast('Role name is required');
       return;
     }
-
     setLoading(true);
-    setError('');
-
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-
       const roleData = { roleName: newRoleName.trim() };
-      const encryptedPayload = enCryptData(roleData);
-
-      if (!encryptedPayload) {
-        throw new Error('Failed to encrypt data');
-      }
-
-      const response = await fetch(`${BASE_URL}${API_PREFIX}/create-role`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ payload: encryptedPayload }),
+      const response = await apiConnectorPost(endpoint?.create_role, {
+        payload: enCryptData(roleData),
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create role: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log('Role created:', result);
-      
+      toast(response?.data?.message)
       setNewRoleName('');
       setShowAddModal(false);
       await fetchRoles(); // Refresh the list
     } catch (error) {
-      console.error('Error creating role:', error);
-      setError(error.message);
+      toast.error('Error creating role:', error);
     } finally {
       setLoading(false);
     }
@@ -171,52 +54,25 @@ const RolePermissionsTab = () => {
   // Update role
   const updateRole = async () => {
     if (!editRoleName.trim() || !currentRole) {
-      setError('Role name is required');
+      toast('Role name is required');
       return;
     }
-
     setLoading(true);
-    setError('');
-
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-
       const roleData = { 
         roleId: currentRole.id || currentRole._id || currentRole.roleId,
         roleName: editRoleName.trim() 
       };
-      const encryptedPayload = enCryptData(roleData);
-
-      if (!encryptedPayload) {
-        throw new Error('Failed to encrypt data');
-      }
-
-      const response = await fetch(`${BASE_URL}${API_PREFIX}/update-role`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ payload: encryptedPayload }),
+      const response = await apiConnectorPost(endpoint?.update_role, {
+        payload : enCryptData(roleData)
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update role: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log('Role updated:', result);
-      
+      toast(response?.data?.message)
       setEditRoleName('');
       setCurrentRole(null);
       setShowEditModal(false);
       await fetchRoles(); // Refresh the list
     } catch (error) {
-      console.error('Error updating role:', error);
-      setError(error.message);
+      toast.error('Error updating role:', error);
     } finally {
       setLoading(false);
     }
@@ -227,36 +83,15 @@ const RolePermissionsTab = () => {
     if (!window.confirm(`Are you sure you want to delete the role "${role.name || role.roleName}"?`)) {
       return;
     }
-
     setLoading(true);
-    setError('');
-
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-
-      const roleId = role.id || role._id || role.roleId;
-      const response = await fetch(`${BASE_URL}${API_PREFIX}/delete-role?roleId=${roleId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
+     const roleId = role.id || role._id || role.roleId;
+      const response = await apiConnectorGet(`${endpoint?.delete_role}?roleId=${roleId}`, {
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete role: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log('Role deleted:', result);
-      
+      toast(response?.data?.message)
       await fetchRoles(); // Refresh the list
     } catch (error) {
-      console.error('Error deleting role:', error);
-      setError(error.message);
+      toast.error('Error deleting role:', error);
     } finally {
       setLoading(false);
     }

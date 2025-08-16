@@ -10,7 +10,7 @@ export const apiConnectorGet = async (endpoint, params) => {
       endpoint,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("logindataen")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       },
       {
@@ -86,7 +86,7 @@ export const apiConnectorPost = async (endpoint, reqBody) => {
   try {
     const response = await axios?.post(endpoint, reqBody, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("logindataen")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     // if (response?.data?.msg === "Invalid logindataen.") {

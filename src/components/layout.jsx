@@ -3,15 +3,12 @@ import StoreManagementTab from './admin_layout/store_mangement';
 import UserManagementTab from './admin_layout/usermanagement_tab'; // Corrected import path
 import RolePermissionsTab from './admin_layout/role_tab';
 import Permissions_tab from './admin_layout/permissions_tab';
-import { User } from 'lucide-react';
 
 const AdminPanel = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [userRole, setUserRole] = useState('superadmin'); // superadmin, admin, user
-  const [createStoreModal, setCreateStoreModal] = useState(false);
-  const [createUserModal, setCreateUserModal] = useState(false);
 
   // Demo data
   const dashboardStats = {
