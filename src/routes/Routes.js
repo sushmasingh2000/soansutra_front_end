@@ -22,6 +22,7 @@ import UserManagement from '../components/superadmin/UserManagement'
 import Role from '../components/superadmin/Role'
 import Permissions from '../components/superadmin/Permissions'
 import ProductMaterial from '../components/admin/ProductMaterial'
+import ProductInventory from '../components/admin/ProductInventory'
 
 export const routes = [
   {
@@ -71,7 +72,10 @@ export const routes = [
     path: '/product-material',
     element: ( <MainLayout><ProductMaterial /> </MainLayout>),
   },
- 
+  {
+    path: '/inventory',
+    element: ( <MainLayout><ProductInventory /> </MainLayout>),
+  },
 
 ]
 

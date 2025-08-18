@@ -1,4 +1,4 @@
-export const domain = "http://192.168.18.214:2000";
+export const domain = "http://192.168.221.250:2000";
 // export const domain ="https://sonashutra-backend-code.onrender.com";
 
 export const endpoint = {
@@ -87,6 +87,12 @@ export const endpoint = {
   get_material: `${domain}/api/v1/get-materials`,
   update_material: `${domain}/api/v1/update-materials`,
   delete_material: `${domain}/api/v1/delete-materials`,
+
+  //variant material
+  create_variant_material: `${domain}/api/v1/create-variant-material`,
+  get_variant_material: `${domain}/api/v1/get-variant-material`,
+  update_variant_material: `${domain}/api/v1/update-variant-material`,
+  delete_variant_material: `${domain}/api/v1/delete-variant-material`,
 
   // inventory
   create_product_inventory: `${domain}/api/v1/create-product-inventory`,
