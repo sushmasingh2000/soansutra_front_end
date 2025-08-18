@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { endpoint } from "../../utils/APIRoutes";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import toast from "react-hot-toast";
+import { Cancel } from "@mui/icons-material";
 
-const PermissionsTab = () => {
+const Permissions = () => {
   const [activeTab, setActiveTab] = useState("assign");
   const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
@@ -41,7 +42,7 @@ const PermissionsTab = () => {
   const fetchRolePermissions = async (roleId) => {
     try {
       const res = await apiConnectorPost(endpoint.get_role_permission, {
-        roleId: roleId ,
+        roleId: roleId,
       });
       setRolePermissions(res.data?.result || []);
     } catch (error) {
@@ -75,9 +76,9 @@ const PermissionsTab = () => {
     if (!selectedRole || !selectedPermission) return toast("Select both");
 
     try {
-     const response = await apiConnectorPost(endpoint.remove_permission, {
-          roleId: selectedRole,
-          permissionId: selectedPermission,
+      const response = await apiConnectorPost(endpoint.remove_permission, {
+        roleId: selectedRole,
+        permissionId: selectedPermission,
       });
       toast(response?.data?.message);
       fetchRolePermissions(selectedRole); // refresh data
@@ -89,9 +90,9 @@ const PermissionsTab = () => {
   // Remove individual from table
   const removeFromTable = async (permId) => {
     try {
-     const response = await apiConnectorPost(endpoint.remove_permission, {
-          roleId: selectedRole,
-          permissionId: permId,
+      const response = await apiConnectorPost(endpoint.remove_permission, {
+        roleId: selectedRole,
+        permissionId: permId,
       });
       toast(response?.data?.message);
       fetchRolePermissions(selectedRole);
@@ -110,17 +111,16 @@ const PermissionsTab = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
-                  activeTab === tab
+                className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${activeTab === tab
                     ? "border-blue-500 text-blue-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
+                  }`}
               >
                 {tab === "assign"
                   ? "Assign Permissions"
                   : tab === "remove"
-                  ? "Remove Permissions"
-                  : "View Role Permissions"}
+                    ? "Remove Permissions"
+                    : "View Role Permissions"}
               </button>
             ))}
           </nav>
@@ -177,7 +177,7 @@ const PermissionsTab = () => {
                 Remove Permission from Role
               </h2>
               <div className="space-y-4 max-w-md">
-              <select
+                <select
                   value={selectedRole}
                   onChange={(e) => setSelectedRole(e.target.value)}
                   className="w-full border rounded p-2"
@@ -233,29 +233,40 @@ const PermissionsTab = () => {
                 </select>
               </div>
 
-              <table className="min-w-full border">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Permission</th>
-                    <th className="px-4 py-2 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedPermissions.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2">{item.permissionName}</td>
-                      <td className="px-4 py-2">
-                        <button
-                          className="text-red-600 hover:underline"
-                          onClick={() => removeFromTable(item.permissionId)}
-                        >
-                          Remove
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left border border-gray-300">
+                  <thead className="bg-gray-100 text-gray-700 uppercase">
+                    <tr>
+                      <th className="px-6 py-3 border-b border-gray-300">Permission</th>
+                      <th className="px-6 py-3 border-b border-gray-300">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {paginatedPermissions.length > 0 ? (
+                      paginatedPermissions.map((item, index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 border-b border-gray-200">{item.permissionName}</td>
+                          <td className="px-6 py-4 border-b border-gray-200">
+                            <button
+                              onClick={() => removeFromTable(item.permissionId)}
+                              className="text-red-600 hover:text-red-800 flex items-center gap-1"
+                            >
+                              <Cancel fontSize="small" />
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="2" className="text-center py-6 text-gray-500">
+                          No permissions found for this role.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
 
               {/* Pagination */}
               {totalPages > 1 && (
@@ -287,4 +298,4 @@ const PermissionsTab = () => {
   );
 };
 
-export default PermissionsTab;
+export default Permissions;

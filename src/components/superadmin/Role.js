@@ -5,7 +5,7 @@ import { endpoint } from '../../utils/APIRoutes';
 import toast from 'react-hot-toast';
 import { enCryptData } from '../../utils/Secret';
 
-const RolePermissionsTab = () => {
+const Role = () => {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -14,7 +14,7 @@ const RolePermissionsTab = () => {
   const [newRoleName, setNewRoleName] = useState('');
   const [editRoleName, setEditRoleName] = useState('');
   const [error, setError] = useState('');
- 
+
   // Fetch roles from API
   const fetchRoles = async () => {
     setLoading(true);
@@ -59,12 +59,12 @@ const RolePermissionsTab = () => {
     }
     setLoading(true);
     try {
-      const roleData = { 
+      const roleData = {
         roleId: currentRole.id || currentRole._id || currentRole.roleId,
-        roleName: editRoleName.trim() 
+        roleName: editRoleName.trim()
       };
       const response = await apiConnectorPost(endpoint?.update_role, {
-        payload : enCryptData(roleData)
+        payload: enCryptData(roleData)
       });
       toast(response?.data?.message)
       setEditRoleName('');
@@ -85,7 +85,7 @@ const RolePermissionsTab = () => {
     }
     setLoading(true);
     try {
-     const roleId = role.id || role._id || role.roleId;
+      const roleId = role.id || role._id || role.roleId;
       const response = await apiConnectorGet(`${endpoint?.delete_role}?roleId=${roleId}`, {
       });
       toast(response?.data?.message)
@@ -128,7 +128,7 @@ const RolePermissionsTab = () => {
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
-          <button 
+          <button
             onClick={() => setError('')}
             className="float-right text-red-700 hover:text-red-900"
           >
@@ -149,10 +149,8 @@ const RolePermissionsTab = () => {
           <thead>
             <tr className="bg-gray-50">
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delete</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -160,40 +158,24 @@ const RolePermissionsTab = () => {
               roles.map((role, index) => (
                 <tr key={role.id || role._id || role.roleId || index}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {role.name || role.roleName || 'N/A'}
+                    {role.roleName || role.roleName || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {role.description || 'No description'}
+                    <button
+                      onClick={() => openEditModal(role)}
+                      className="text-green-600 hover:text-green-900"
+                      disabled={loading}>   ✏️   </button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {role.permissions || '0'} permissions
+                     <button
+                    onClick={() => deleteRole(role)}
+                    className="text-red-600 hover:text-red-900"
+                    disabled={loading}
+                  >
+                    🗑️
+                  </button>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      role.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                      {role.status || 'Active'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex space-x-2">
-                      <button className="text-blue-600 hover:text-blue-900">👁️</button>
-                      <button 
-                        onClick={() => openEditModal(role)}
-                        className="text-green-600 hover:text-green-900"
-                        disabled={loading}
-                      >
-                        ✏️
-                      </button>
-                      <button 
-                        onClick={() => deleteRole(role)}
-                        className="text-red-600 hover:text-red-900"
-                        disabled={loading}
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  </td>
+                 
                 </tr>
               ))
             ) : (
@@ -293,4 +275,4 @@ const RolePermissionsTab = () => {
   );
 };
 
-export default RolePermissionsTab;
+export default Role;

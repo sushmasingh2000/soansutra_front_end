@@ -1,9 +1,9 @@
-export const domain = "http://192.168.190.250:2000";
-// export const domain ="https://sonashutra-backend-code.onrender.com";221
+export const domain = "http://192.168.18.214:2000";
+// export const domain ="https://sonashutra-backend-code.onrender.com";
 
 export const endpoint = {
-  login: `${domain}/api/v1/login-user`,
 
+  login: `${domain}/api/v1/login-user`,
   //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
   //store
@@ -71,22 +71,28 @@ export const endpoint = {
   //pending
 
   //attribute
-  create_product_attributes: `${domain}/api/v1/create-product-attributes`,
-  get_product_attributes: `${domain}/api/v1/get-product-attributes`,
-  update_product_attributes: `${domain}/api/v1/update-product-attributes`,
-  delete_product_attributes: `${domain}/api/v1/delete-product-attributes`,
+  // create_product_attributes: `${domain}/api/v1/create-product-attributes`,
+  // get_product_attributes: `${domain}/api/v1/get-product-attributes`,
+  // update_product_attributes: `${domain}/api/v1/update-product-attributes`,
+  // delete_product_attributes: `${domain}/api/v1/delete-product-attributes`,
 
   // product attribute values
-  create_product_attributes_value: `${domain}/api/v1/create-product-attribute-value`,
-  get_product_attributes_value: `${domain}/api/v1/get-product-attribute-value`,
-  update_product_attributes_value: `${domain}/api/v1/update-attribute-value`,
-  delete_product_attributes_value: `${domain}/api/v1/delete-attribute-value`,
+  // create_product_attributes_value: `${domain}/api/v1/create-product-attribute-value`,
+  // get_product_attributes_value: `${domain}/api/v1/get-product-attribute-value`,
+  // update_product_attributes_value: `${domain}/api/v1/update-attribute-value`,
+  // delete_product_attributes_value: `${domain}/api/v1/delete-attribute-value`,
+
+  //material
+  create_material: `${domain}/api/v1/create-materials`,
+  get_material: `${domain}/api/v1/get-materials`,
+  update_material: `${domain}/api/v1/update-materials`,
+  delete_material: `${domain}/api/v1/delete-materials`,
 
   // inventory
   create_product_inventory: `${domain}/api/v1/create-product-inventory`,
   get_product_inventory: `${domain}/api/v1/get-product-inventory`,
   update_product_inventory: `${domain}/api/v1/update-product-inventory`,
-  
+
   // discount
   create_discount: `${domain}/api/v1/create-discount`,
   get_discount: `${domain}/api/v1/get-discount`,

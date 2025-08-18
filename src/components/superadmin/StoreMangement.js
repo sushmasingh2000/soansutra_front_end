@@ -6,7 +6,7 @@ import { endpoint } from '../../utils/APIRoutes';
 import toast from 'react-hot-toast';
 import { enCryptData } from '../../utils/Secret';
 
-const StoreManagementTab = () => {
+const StoreManagement= () => {
   const [stores, setStores] = useState([]);
   const [createStoreModal, setCreateStoreModal] = useState(false);
   const [editStoreModal, setEditStoreModal] = useState(false);
@@ -550,4 +550,4 @@ const StoreManagementTab = () => {
   );
 };
 
-export default StoreManagementTab;
+export default StoreManagement;

@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { endpoint } from "../../utils/APIRoutes";
-import { enCryptData } from "../../utils/Secret";
+import { endpoint } from "../utils/APIRoutes";
+import { enCryptData } from "../utils/Secret";
 import { useNavigate } from "react-router-dom";
 
-const AdminLogin = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = useState("user");
@@ -33,10 +33,10 @@ const AdminLogin = () => {
     try {
       const res = await axios.post(url, { payload: enCryptData(req) });
       toast(res?.data?.message);
-      if(res?.data?.success===true){
-        navigate('/admin');
+      if(res?.data?.success){
         localStorage.setItem("token", res?.data?.result?.token);
       localStorage.setItem("role", res?.data?.result?.role);
+       navigate('/dashboard');
       }
       
     } catch (error) {
@@ -174,4 +174,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default Login;

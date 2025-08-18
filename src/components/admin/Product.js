@@ -3,8 +3,9 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import ProductImageManager from "./ProductImage";
+import { useNavigate } from "react-router-dom";
 
-const ProductsTab = () => {
+const Products = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
@@ -177,6 +178,20 @@ const ProductsTab = () => {
       setLoading(false);
     }
   };
+  const navigate = useNavigate();
+
+
+  const handleVariantClick = (product) => {
+    if (!product || !product.product_id) {
+      toast.error("Product is missing.");
+      return;
+    }
+    navigate(`/product-variant/${product.product_id}`, {
+      state: { product }, // Pass entire product object
+    });
+  };
+
+
 
   const openEditModal = (product) => {
     setSelectedProduct(product);
@@ -233,6 +248,9 @@ const ProductsTab = () => {
                 Subcategory
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Variant
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -284,19 +302,22 @@ const ProductsTab = () => {
                     <td className="px-6 py-4">₹{product.price}</td>
                     <td className="px-6 py-4">{categoryName}</td>
                     <td className="px-6 py-4">{subcategoryName}</td>
+
+
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleVariantClick(product)}
+                        title="Manage Variant"
+                      >
+                        👁️
+                      </button>
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex space-x-2">
-                        <button onClick={() => handleViewProduct(product)}>
-                          👁️
-                        </button>
-                        <button onClick={() => openEditModal(product)}>
-                          ✏️
-                        </button>
-                        <button onClick={() => deleteProduct(product)}>
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
+                        <button onClick={() => handleViewProduct(product)} title="View">👁️</button>
+                        <button onClick={() => openEditModal(product)} title="Edit">✏️</button>
+                        <button onClick={() => deleteProduct(product)} title="Delete">🗑️</button>
+                      </div></td>
                   </tr>
                 );
               })
@@ -699,4 +720,4 @@ const ProductsTab = () => {
     </div>
   );
 };
-export default ProductsTab;
+export default Products;

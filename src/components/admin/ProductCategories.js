@@ -3,7 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { domain, endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 
-const ProductCategoriesTab = () => {
+const ProductCategories = () => {
   const [categories, setCategories] = useState([]);
   const [createCategoryModal, setCreateCategoryModal] = useState(false);
   const [editCategoryModal, setEditCategoryModal] = useState(false);
@@ -473,4 +473,4 @@ const ProductCategoriesTab = () => {
     </>
   );
 };
-export default ProductCategoriesTab;
+export default ProductCategories;

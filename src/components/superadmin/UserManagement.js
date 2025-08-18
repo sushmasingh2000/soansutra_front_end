@@ -6,6 +6,9 @@ import toast from "react-hot-toast";
 import { enCryptData } from "../../utils/Secret";
 
 const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
+  const [roles, setRoles] = useState([]);
+  const [stores, setStores] = useState([]);
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -31,7 +34,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
         ...formData,
         status: 1, // Always set to 1 as required
       };
-      const response  = await apiConnectorPost(endpoint?.create_user, {
+      const response = await apiConnectorPost(endpoint?.create_user, {
         payload: enCryptData(dataToEncrypt)
       });
       toast(response?.data?.message)
@@ -46,6 +49,36 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
       });
     } catch (error) {
       toast.error(" CREATE USER - Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (isOpen) {
+      fetchRoles();
+      fetchStores();
+    }
+  }, [isOpen]);
+
+  const fetchRoles = async () => {
+    setLoading(true);
+    try {
+      const response = await apiConnectorGet(endpoint?.get_role);
+      setRoles(response?.data?.result || []);
+    } catch (error) {
+      toast.error("Error fetching roles");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchStores = async () => {
+    setLoading(true);
+    try {
+      const response = await apiConnectorGet(endpoint?.get_store);
+      setStores(response?.data?.result || []);
+    } catch (error) {
+      toast.error("Error fetching stores");
     } finally {
       setLoading(false);
     }
@@ -111,30 +144,43 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role ID *
+              Role *
             </label>
-            <input
-              type="text"
+            <select
               name="roleId"
               value={formData.roleId}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-            />
+            >
+              <option value="">Select Role</option>
+              {roles.map((role) => (
+                <option key={role.roleId} value={role.roleId}>
+                  {role.roleName}
+                </option>
+              ))}
+            </select>
           </div>
+
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Store ID *
+              Store *
             </label>
-            <input
-              type="text"
+            <select
               name="store_id"
               value={formData.store_id}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-            />
+            >
+              <option value="">Select Store</option>
+              {stores.map((store) => (
+                <option key={store.store_id} value={store.store_id}>
+                  {store.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex justify-end space-x-2 pt-4">
@@ -162,7 +208,9 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
 };
 
 // EditUserModal Component
-const EditUserModal = ({ isOpen, onClose, onSuccess, user, notifications }) => {
+const EditUserModal = ({ isOpen, onClose, onSuccess, user }) => {
+  const [roles, setRoles] = useState([]);
+  const [stores, setStores] = useState([]);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -173,16 +221,41 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user, notifications }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (isOpen) {
+      fetchRoles();
+      fetchStores();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     if (user) {
       setFormData({
         username: user.username || "",
-        password: "", // Don't pre-fill password for security
+        password: "",
         email: user.email || "",
         roleId: user.roleId || user.role_id || "",
         store_id: user.store_id || "",
       });
     }
   }, [user]);
+
+  const fetchRoles = async () => {
+    try {
+      const response = await apiConnectorGet(endpoint?.get_role);
+      setRoles(response?.data?.result || []);
+    } catch (error) {
+      toast.error("Error fetching roles");
+    }
+  };
+
+  const fetchStores = async () => {
+    try {
+      const response = await apiConnectorGet(endpoint?.get_store);
+      setStores(response?.data?.result || []);
+    } catch (error) {
+      toast.error("Error fetching stores");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -197,23 +270,23 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user, notifications }) => {
     setLoading(true);
 
     try {
-      const userId = user.userId ;
+      const userId = user.userId;
       const dataToEncrypt = {
         userId: userId,
         username: formData.username,
         email: formData.email,
-        roleId: formData.roleId || formData.role_id,
+        roleId: formData.roleId,
         status: 1,
         store_id: formData.store_id,
       };
-      const response = await apiConnectorPost(endpoint?.update_user , {
-        payload: enCryptData(dataToEncrypt)
-      })
-      toast(response?.data?.message)
+      const response = await apiConnectorPost(endpoint?.update_user, {
+        payload: enCryptData(dataToEncrypt),
+      });
+      toast(response?.data?.message);
       onSuccess(response?.data?.result);
       onClose();
     } catch (error) {
-      toast.error(" UPDATE USER - Error:", error);
+      toast.error("UPDATE USER - Error:", error);
     } finally {
       setLoading(false);
     }
@@ -234,7 +307,7 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user, notifications }) => {
           </button>
         </div>
 
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Username *
@@ -244,8 +317,8 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user, notifications }) => {
               name="username"
               value={formData.username}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              className="w-full px-3 py-2 border rounded-md"
             />
           </div>
 
@@ -258,8 +331,8 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user, notifications }) => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter new password or leave blank"
+              className="w-full px-3 py-2 border rounded-md"
             />
           </div>
 
@@ -272,65 +345,79 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user, notifications }) => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              className="w-full px-3 py-2 border rounded-md"
             />
           </div>
 
+          {/* Role dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role ID *
+              Role *
             </label>
-            <input
-              type="text"
+            <select
               name="roleId"
               value={formData.roleId}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-            />
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="">Select Role</option>
+              {roles.map((role) => (
+                <option key={role.roleId} value={role.roleId}>
+                  {role.roleName}
+                </option>
+              ))}
+            </select>
           </div>
 
+          {/* Store dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Store ID *
+              Store *
             </label>
-            <input
-              type="text"
+            <select
               name="store_id"
               value={formData.store_id}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-            />
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="">Select Store</option>
+              {stores.map((store) => (
+                <option key={store.store_id} value={store.store_id}>
+                  {store.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex justify-end space-x-2 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 text-gray-600 border rounded-md hover:bg-gray-50"
               disabled={loading}
             >
               Cancel
             </button>
             <button
-              type="button"
-              onClick={handleSubmit}
+              type="submit"
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
               disabled={loading}
             >
               {loading ? "Updating..." : "Update User"}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
 };
 
+
 // Main UserManagementTab Component
-const UserManagementTab = () => {
+const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [createUserModal, setCreateUserModal] = useState(false);
@@ -437,10 +524,10 @@ const UserManagementTab = () => {
                 Email
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Role ID
+                Role
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Store ID
+                Store
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
@@ -467,18 +554,17 @@ const UserManagementTab = () => {
                     {user.email}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {user.roleId || user.role_id}
+                    {user.roleName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {user.store_id}
+                    {user.storeName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-2 py-1 text-xs rounded-full ${
-                        user.status === 1 || user.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
+                      className={`px-2 py-1 text-xs rounded-full ${user.status === 1 || user.status === "Active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                        }`}
                     >
                       {user.status === 1 || user.status === "Active"
                         ? "Active"
@@ -505,7 +591,7 @@ const UserManagementTab = () => {
                         }
                       >
                         {deleteLoading ===
-                        (user.id || user.userId || user._id || user.user_id) ? (
+                          (user.id || user.userId || user._id || user.user_id) ? (
                           <span className="inline-block animate-spin">⏳</span>
                         ) : (
                           "🗑️"
@@ -541,4 +627,4 @@ const UserManagementTab = () => {
   );
 };
 
-export default UserManagementTab;
+export default UserManagement;

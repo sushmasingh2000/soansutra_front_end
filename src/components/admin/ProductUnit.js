@@ -116,7 +116,7 @@ const ProductUnits = () => {
     setFormData({
       un_name: unit.un_name,
       un_slug: unit.un_slug,
-      un_description: unit.un_description || "",
+      un_description: unit.description || "",
     });
     setEditModal(true);
   };
@@ -196,7 +196,7 @@ const ProductUnits = () => {
                     {unit.un_slug}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    {unit.un_description}
+                    {unit.description}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex space-x-2">

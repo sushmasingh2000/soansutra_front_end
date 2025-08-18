@@ -43,7 +43,7 @@ export default function Header() {
       <div className="w-full">
         <div className="flex items-center justify-between h-16 px-2">
           {/* Logo - close to left edge */}
-          <Link to={"/admin-loginpage"} className="flex-shrink-0 pl-2">
+          <Link to={"/admin-login"} className="flex-shrink-0 pl-2">
             <BrandLogo />
           </Link>
 

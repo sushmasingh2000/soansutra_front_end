@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import StoreManagementTab from './admin_layout/store_mangement';
-import UserManagementTab from './admin_layout/usermanagement_tab'; // Corrected import path
-import RolePermissionsTab from './admin_layout/role_tab';
-import Permissions_tab from './admin_layout/permissions_tab';
-import ProductCategoriesTab from './admin/ProductCategories';
-import SubCategoryProduct from './admin/SubCategories';
+import ProductCategories from './admin/ProductCategories';
+import SubCategory from './admin/SubCategories';
 import Product from './admin/Product';
 import ProductVariant from './admin/ProductVariant';
 import ProductUnits from './admin/ProductUnit';
+import StoreManagement from './superadmin/StoreMangement';
+import UserManagement from './superadmin/UserManagement';
+import Role from './superadmin/Role';
+import Permissions from './superadmin/Permissions';
 
 const AdminPanel = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -32,7 +32,7 @@ const AdminPanel = () => {
     { id: 'categories', label: ' Categories', icon: '📂', roles: [ 'Support Engineer', 'user'] },
     { id: 'subcategories', label: ' Sub Categories', icon: '📂', roles: [ 'Support Engineer', 'user'] },
     { id: 'products', label: 'Products', icon: '📦', roles: ['Support Engineer', 'user'] },
-    { id: 'variants', label: 'Variants', icon: '📦', roles: ['Support Engineer', 'user'] },
+    // { id: 'variants', label: 'Variants', icon: '📦', roles: ['Support Engineer', 'user'] },
     { id: 'unit', label: 'Units', icon: '📦', roles: ['Support Engineer', 'user'] },
     { id: 'reports', label: 'Reports', icon: '📈', roles: ['superuser', 'Support Engineer', 'user'] },
     { id: 'profile', label: 'Profile', icon: '👤', roles: ['superuser', 'Support Engineer', 'user'] },
@@ -316,12 +316,12 @@ const AdminPanel = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
-      case 'stores': return userRole === 'superuser' ? <StoreManagementTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
-      case 'users': return userRole === 'superuser' ? <UserManagementTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
-      case 'roles': return userRole === 'superuser' ? <RolePermissionsTab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
-      case 'permissions': return userRole === 'superuser' ? <Permissions_tab /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
-      case 'categories': return <ProductCategoriesTab />;
-      case 'subcategories': return <SubCategoryProduct />;
+      case 'stores': return userRole === 'superuser' ? <StoreManagement /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
+      case 'users': return userRole === 'superuser' ? <UserManagement/> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
+      case 'roles': return userRole === 'superuser' ? <Role /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
+      case 'permissions': return userRole === 'superuser' ? <Permissions /> : <div className="p-6 text-center text-red-600">Access Denied - Super Admin Only</div>;
+      case 'categories': return <ProductCategories />;
+      case 'subcategories': return <SubCategory />;
       case 'products': return <Product/>;
       case 'variants': return <ProductVariant/>;
       case 'unit': return <ProductUnits/>;

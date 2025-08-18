@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 
-const SubCategoryProduct = () => {
+const SubCategory = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
   const [categories, setCategories] = useState([]);
@@ -621,4 +621,4 @@ const SubCategoryProduct = () => {
     </>
   );
 };
-export default SubCategoryProduct;
+export default SubCategory;
