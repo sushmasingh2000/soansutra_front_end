@@ -118,6 +118,7 @@ const ProductMaterial = () => {
                 <table className="min-w-full divide-y divide-gray-200 text-sm">
                     <thead className="bg-gray-50">
                         <tr>
+                            <th className="px-4 py-3 text-left">S.No</th>
                             <th className="px-4 py-3 text-left">Name</th>
                             <th className="px-4 py-3 text-left">Unit</th>
                             <th className="px-4 py-3 text-left">Slug</th>
@@ -125,8 +126,9 @@ const ProductMaterial = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {materials.map((material) => (
+                        {materials.map((material, index) => (
                             <tr key={material.material_id} className="border-t hover:bg-gray-50">
+                                <td className="px-4 py-2">{index +1}</td>
                                 <td className="px-4 py-2">{material.material_name || "--"}</td>
                                 <td className="px-4 py-2">{material.un_name || "--"}</td>
                                 <td className="px-4 py-2">{material.un_slug || "--"}</td>

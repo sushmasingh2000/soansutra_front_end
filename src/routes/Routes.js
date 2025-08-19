@@ -10,7 +10,7 @@ import ShoppingCart from '../components/pages/cart'
 import CheckoutHeader from '../components/pages/checkout' 
 import AdminLayout from '../components/layout'
 import Login from '../authentiaction/Login'
-import ProductUnits from '../components/admin/ProductUnit'
+import ProductUnits from '../components/admin/Unit'
 import ProductVariant from '../components/admin/ProductVariant'
 import MainLayout from '../components/Layout/MainLayout'
 import Dashboard from '../components/Layout/Dashboard'
@@ -21,8 +21,14 @@ import StoreManagement from '../components/superadmin/StoreMangement'
 import UserManagement from '../components/superadmin/UserManagement'
 import Role from '../components/superadmin/Role'
 import Permissions from '../components/superadmin/Permissions'
-import ProductMaterial from '../components/admin/ProductMaterial'
+import ProductMaterial from '../components/admin/Material'
 import ProductInventory from '../components/admin/ProductInventory'
+import Discount from '../components/admin/Discount'
+import ProductDiscount from '../components/admin/ProductDiscount'
+import Tax from '../components/admin/Tax'
+import ProductTax from '../components/admin/ProductTax'
+import PaymentMethod from '../components/admin/Payment'
+import Customer from '../components/admin/Customer'
 
 export const routes = [
   {
@@ -75,6 +81,30 @@ export const routes = [
   {
     path: '/inventory',
     element: ( <MainLayout><ProductInventory /> </MainLayout>),
+  },
+    {
+    path: '/discount',
+    element: ( <MainLayout><Discount /> </MainLayout>),
+  },
+  {
+    path: '/product-discount',
+    element: ( <MainLayout><ProductDiscount /> </MainLayout>),
+  },
+    {
+    path: '/tax',
+    element: ( <MainLayout><Tax /> </MainLayout>),
+  },
+   {
+    path: '/product-tax',
+    element: ( <MainLayout><ProductTax /> </MainLayout>),
+  },
+  {
+    path: '/payment',
+    element: ( <MainLayout><PaymentMethod /> </MainLayout>),
+  },
+{
+    path: '/customer',
+    element: ( <MainLayout><Customer /> </MainLayout>),
   },
 
 ]

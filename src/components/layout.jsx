@@ -3,7 +3,7 @@ import ProductCategories from './admin/ProductCategories';
 import SubCategory from './admin/SubCategories';
 import Product from './admin/Product';
 import ProductVariant from './admin/ProductVariant';
-import ProductUnits from './admin/ProductUnit';
+import ProductUnits from './admin/Unit';
 import StoreManagement from './superadmin/StoreMangement';
 import UserManagement from './superadmin/UserManagement';
 import Role from './superadmin/Role';

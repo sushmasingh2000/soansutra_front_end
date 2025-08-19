@@ -12,6 +12,9 @@ const menuItems = [
   { id: 'products', label: 'Products', icon: '📦', path: '/products', roles: ['Support Engineer', 'user'] },
   { id: 'unit', label: 'Units', icon: '📦', path: '/unit', roles: ['Support Engineer', 'user'] },
   { id: 'material', label: 'Material', icon: '📦', path: '/product-material', roles: ['Support Engineer', 'user'] },
+  { id: 'discount', label: 'Discount', icon: '📦', path: '/discount', roles: ['Support Engineer', 'user'] },
+  { id: 'tax', label: 'Tax', icon: '📦', path: '/tax', roles: ['Support Engineer', 'user'] },
+  { id: 'payment', label: 'Payment', icon: '📦', path: '/payment', roles: ['Support Engineer', 'user'] },
   
   { id: 'reports', label: 'Reports', icon: '📈', path: '/reports', roles: ['superuser', 'Support Engineer', 'user'] },
   { id: 'profile', label: 'Profile', icon: '👤', path: '/profile', roles: ['superuser', 'Support Engineer', 'user'] },

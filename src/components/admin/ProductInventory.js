@@ -4,111 +4,73 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import ReactModal from "react-modal";
-import { Trash2, Edit } from "lucide-react";
+import { Trash2, Edit, Plus } from "lucide-react";
+import { useQuery, useQueryClient } from "react-query";
+import { Add } from "@mui/icons-material";
 
 const ProductInventory = () => {
   const [searchParams] = useSearchParams();
   const defaultVariantId = searchParams.get("variant_id");
-
-  const [products, setProducts] = useState([]);
-  const [variants, setVariants] = useState([]);
-  const [inventory, setInventory] = useState(null);
-
-  const [selectedProduct, setSelectedProduct] = useState("");
-  const [selectedVariant, setSelectedVariant] = useState(defaultVariantId || "");
-
+  const [variant, setVariant] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const client = useQueryClient();
 
   const [formData, setFormData] = useState({
     inventory_id: null,
+    product_id: "",
+    warehouse_id: "",
     quantity: "",
     reserved_quantity: "",
     minimum_quantity: "",
     batch_number: "",
     expiry_date: "",
     barcode: "",
-    updated_by: "Admin",
   });
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const { data } = useQuery(
+    ['get_inventory', defaultVariantId],
+    () => apiConnectorGet(`${endpoint.get_product_inventory}?varient_id=${defaultVariantId}`),
+    { refetchOnMount: false }
+  );
+  const inventory = data?.data?.result?.[0] || [];
 
   useEffect(() => {
-    if (selectedProduct) fetchVariants(selectedProduct);
-  }, [selectedProduct]);
-
-  useEffect(() => {
-    if (selectedVariant) fetchInventory(selectedVariant);
-  }, [selectedVariant]);
-
-  const fetchProducts = async () => {
-    try {
-      const res = await apiConnectorGet(endpoint.get_product_all);
-      setProducts(res?.data?.result?.data || []);
-    } catch {
-      toast.error("Failed to fetch products.");
+    if (defaultVariantId) {
+      const findProductForVariant = async () => {
+        const res = await apiConnectorGet(`${endpoint.get_product_variant}?variant_id=${defaultVariantId}`);
+        setVariant(res?.data?.result?.[0] || []);
+      };
+      findProductForVariant();
     }
-  };
-
-  const fetchVariants = async (productId) => {
-    try {
-      const res = await apiConnectorGet(`${endpoint.get_product_variant}?product_id=${productId}`);
-      setVariants(res?.data?.result || []);
-    } catch {
-      toast.error("Failed to fetch variants.");
-    }
-  };
-
-  const fetchInventory = async (variantId) => {
-    try {
-      const res = await apiConnectorGet(`${endpoint.get_product_inventory}?varient_id=${variantId}`);
-      const inv = res?.data?.result?.[0] || null;
-      setInventory(inv);
-    } catch {
-      toast.error("Failed to fetch inventory.");
-    }
-  };
+  }, [defaultVariantId]);
 
   const openModalForAddUpdate = () => {
-    if (!selectedVariant) return toast.error("Please select a variant.");
-
     const inv = inventory || {};
     setFormData({
+      product_id: variant?.product_id || null,
       inventory_id: inv.inventory_id || null,
-      quantity: inv.quantity || "",
-      reserved_quantity: inv.reserved_quantity || "",
-      minimum_quantity: inv.minimum_quantity || "",
+      warehouse_id: "1",
+      quantity: Number(inv.quantity) || "",
+      reserved_quantity: Number(inv.reserved_quantity) || "",
+      minimum_quantity: Number(inv.minimum_quantity) || "",
       batch_number: inv.batch_number || "",
       expiry_date: inv.expiry_date?.split("T")[0] || "",
       barcode: inv.barcode || "",
-      updated_by: "Admin",
     });
     setModalOpen(true);
   };
 
-  const handleDelete = async () => {
-    try {
-      const res = await apiConnectorPost(endpoint.delete_product_inventory, {
-        inventory_id: inventory.inventory_id,
-      });
-      toast.success(res?.data?.message || "Deleted successfully.");
-      setInventory(null);
-    } catch {
-      toast.error("Failed to delete inventory.");
-    }
-  };
-
   const handleSubmit = async () => {
-    const payload = { ...formData };
-
+    const payload = { ...formData, varient_id: defaultVariantId };
     try {
-      const res = await apiConnectorPost(endpoint.update_product_inventory, payload);
-      toast.success(res?.data?.message);
-      setModalOpen(false);
-      fetchInventory(selectedVariant);
+      const res = await apiConnectorPost(formData.inventory_id ? endpoint.update_product_inventory : endpoint.create_product_inventory, payload);
+      toast(res?.data?.message);
+      if (res?.data?.success) {
+        setModalOpen(false);
+        client.refetchQueries("get_inventory")
+      }
     } catch {
-      toast.error("Failed to update inventory.");
+      toast.error("Failed to submit inventory.");
     }
   };
 
@@ -117,84 +79,88 @@ const ProductInventory = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6  mx-auto">
       <h1 className="text-2xl font-bold mb-6">Product Inventory</h1>
 
       {/* Product Select */}
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">Select Product</label>
-        <select
-          className="w-full border p-2"
-          value={selectedProduct}
-          onChange={(e) => {
-            setSelectedProduct(e.target.value);
-            setSelectedVariant("");
-            setInventory(null);
-          }}
-        >
-          <option value="">-- Select Product --</option>
-          {products.map((product) => (
-            <option key={product.product_id} value={product.product_id}>
-              {product.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Variant Select */}
-      <div className="mb-6">
-        <label className="block mb-1 font-medium">Select Variant</label>
-        <select
-          className="w-full border p-2"
-          value={selectedVariant}
-          onChange={(e) => setSelectedVariant(e.target.value)}
-        >
-          <option value="">-- Select Variant --</option>
-          {variants.map((variant) => (
-            <option key={variant.varient_id} value={variant.varient_id}>
-              {variant.varient_sku}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Actions */}
-      {selectedVariant && (
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={openModalForAddUpdate}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            {inventory ? "Update Inventory" : "Add Inventory"}
-          </button>
-
-          {inventory && (
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-2"
-            >
-              <Trash2 size={16} /> Delete
-            </button>
+      <div className="flex justify-between gap-2">
+        <div className="flex justify-start gap-2">
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Product</label>
+            <input
+              className="w-full border p-2"
+              readOnly
+              value={variant.product_details?.product_name}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Variant</label>
+            <input
+              className="w-full border p-2"
+              readOnly
+              value={variant.varient_sku}
+            />
+          </div>
+        </div>
+        <div>
+          {variant && (
+            <div className=" flex gap-4">
+              {!inventory ? (
+                <button
+                  onClick={openModalForAddUpdate}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                  <Plus size={16} /> Add Inventory
+                </button>
+              ) : (
+                <button
+                  onClick={openModalForAddUpdate}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  <Edit size={16} /> Update Inventory
+                </button>
+              )}
+            </div>
           )}
-        </div>
-      )}
 
-      {/* Inventory Info */}
-      {inventory && (
-        <div className="border p-4 rounded bg-gray-50">
-          <h2 className="font-semibold mb-2">Current Inventory</h2>
-          <ul className="text-sm space-y-1">
-            <li>Quantity: {inventory.quantity}</li>
-            <li>Reserved: {inventory.reserved_quantity}</li>
-            <li>Minimum: {inventory.minimum_quantity}</li>
-            <li>Batch #: {inventory.batch_number || "N/A"}</li>
-            <li>Expiry: {inventory.expiry_date?.split("T")[0] || "N/A"}</li>
-            <li>Barcode: {inventory.barcode || "N/A"}</li>
-          </ul>
         </div>
-      )}
+      </div>
 
-      {/* Add/Update Modal */}
+      <div className="mt-4">
+        <table className="min-w-full bg-white border rounded shadow overflow-hidden">
+          <thead className="bg-gray-100 text-gray-700 text-left">
+            <tr>
+              <th className="py-2 px-4 border-b">Quantity</th>
+              <th className="py-2 px-4 border-b">Reserved</th>
+              <th className="py-2 px-4 border-b">Minimum</th>
+              <th className="py-2 px-4 border-b">Batch #</th>
+              <th className="py-2 px-4 border-b">Expiry</th>
+              <th className="py-2 px-4 border-b">Barcode</th>
+            </tr>
+          </thead>
+          <tbody>
+            {!inventory ? (
+              <tr>
+                <td colSpan="6" className="text-center py-4 text-gray-500">
+                  Inventory not found
+                </td>
+              </tr>
+            ) : (
+              <tr className="text-sm">
+                <td className="py-2 px-4 border-b">{inventory.quantity}</td>
+                <td className="py-2 px-4 border-b">{inventory.reserved_quantity}</td>
+                <td className="py-2 px-4 border-b">{inventory.minimum_quantity}</td>
+                <td className="py-2 px-4 border-b">{inventory.batch_number || "N/A"}</td>
+                <td className="py-2 px-4 border-b">{inventory.expiry_date?.split("T")[0] || "N/A"}</td>
+                <td className="py-2 px-4 border-b">{inventory.barcode || "N/A"}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+
+      {/* Modal */}
       <ReactModal
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
@@ -206,51 +172,69 @@ const ProductInventory = () => {
           {formData.inventory_id ? "Update Inventory" : "Add Inventory"}
         </h2>
         <div className="grid grid-cols-2 gap-4">
-          <input
-            name="quantity"
-            placeholder="Quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            className="border p-2"
-            type="number"
-          />
-          <input
-            name="reserved_quantity"
-            placeholder="Reserved Quantity"
-            value={formData.reserved_quantity}
-            onChange={handleChange}
-            className="border p-2"
-            type="number"
-          />
-          <input
-            name="minimum_quantity"
-            placeholder="Minimum Quantity"
-            value={formData.minimum_quantity}
-            onChange={handleChange}
-            className="border p-2"
-            type="number"
-          />
-          <input
-            name="batch_number"
-            placeholder="Batch Number"
-            value={formData.batch_number}
-            onChange={handleChange}
-            className="border p-2"
-          />
-          <input
-            name="expiry_date"
-            type="date"
-            value={formData.expiry_date}
-            onChange={handleChange}
-            className="border p-2"
-          />
-          <input
-            name="barcode"
-            placeholder="Barcode"
-            value={formData.barcode}
-            onChange={handleChange}
-            className="border p-2"
-          />
+          <div>
+            <label>Quantity</label>
+            <input
+              name="quantity"
+              placeholder="Quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              className="border p-2"
+              type="number"
+            />
+          </div>
+          <div>
+            <label>Reserved Quantity</label>
+            <input
+              name="reserved_quantity"
+              placeholder="Reserved Quantity"
+              value={formData.reserved_quantity}
+              onChange={handleChange}
+              className="border p-2"
+              type="number"
+            />
+          </div>
+          <div>
+            <label>Minimum Quantity</label>
+            <input
+              name="minimum_quantity"
+              placeholder="Minimum Quantity"
+              value={formData.minimum_quantity}
+              onChange={handleChange}
+              className="border p-2"
+              type="number"
+            />
+          </div>
+          <div>
+            <label>Batch Number</label>
+            <input
+              name="batch_number"
+              placeholder="Batch Number"
+              value={formData.batch_number}
+              onChange={handleChange}
+              className="border p-2"
+            />
+          </div>
+          <div>
+            <label>Expiry date</label>
+            <input
+              name="expiry_date"
+              type="date"
+              value={formData.expiry_date}
+              onChange={handleChange}
+              className="border p-2"
+            />
+          </div>
+          <div>
+            <label>Barcode</label>
+            <input
+              name="barcode"
+              placeholder="Barcode"
+              value={formData.barcode}
+              onChange={handleChange}
+              className="border p-2"
+            />
+          </div>
         </div>
         <div className="flex justify-end mt-4">
           <button

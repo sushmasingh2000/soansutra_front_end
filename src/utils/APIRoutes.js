@@ -1,4 +1,4 @@
-export const domain = "http://192.168.221.250:2000";
+export const domain = "http://192.168.18.214:2000";
 // export const domain ="https://sonashutra-backend-code.onrender.com";
 
 export const endpoint = {
@@ -111,5 +111,27 @@ export const endpoint = {
   update_product_discount: `${domain}/api/v1/update-product-discount`,
   delete_product_discount: `${domain}/api/v1/delete-product-discount`,
 
+  //tax
+  create_tax: `${domain}/api/v1/create-tax`,
+  get_tax: `${domain}/api/v1/get-tax`,
+  update_tax: `${domain}/api/v1/update-tax`,
+  delete_tax: `${domain}/api/v1/delete-tax`,
+
+  // product_tax
+  create_product_tax: `${domain}/api/v1/create-product-tax`,
+  get_product_tax: `${domain}/api/v1/get-product-tax`,
+  update_product_tax: `${domain}/api/v1/update-product-tax`,
+  delete_product_tax: `${domain}/api/v1/delete-product-tax`,
+
+  //payment
+  create_payment_method: `${domain}/api/v1/create-payment-method`,
+  get_payment_method: `${domain}/api/v1/get-payment-method`,
+
+  //customer
+  create_customer: `${domain}/api/v1/create-customer`,
+  get_login_customer: `${domain}/api/v1/login-customer`,
+  get_all_customer: `${domain}/api/v1/get-all-customer`,
+  get_customer_profile: `${domain}/api/v1/get-customer-profile`,
+  update_customer_profile: `${domain}/api/v1/update-customer-profile`,
 
 };

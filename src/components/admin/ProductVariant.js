@@ -94,12 +94,18 @@ const ProductVariant = () => {
       <table className="min-w-full border border-gray-300">
         <thead>
           <tr className="bg-gray-100">
+            <th className="border px-4 py-2 text-center">S.No</th>
             <th className="border px-4 py-2 text-center">SKU</th>
             <th className="border px-4 py-2 text-center">Price (₹)</th>
             <th className="border px-4 py-2 text-center">Weight</th>
             <th className="border px-4 py-2 text-center">Dimension Unit</th>
+            <th className="border px-4 py-2 text-center">Quantity</th>
+            <th className="border px-4 py-2 text-center">Reserved Quantity</th>
+            <th className="border px-4 py-2 text-center">Minimum Quantity</th>
             <th className="border px-4 py-2 text-center">Inventory</th>
             <th className="border px-4 py-2 text-center">Material</th>
+            <th className="border px-4 py-2 text-center">Discount</th>
+            <th className="border px-4 py-2 text-center">Tax</th>
             <th className="border px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
@@ -111,20 +117,33 @@ const ProductVariant = () => {
               </td>
             </tr>
           ) : (
-            variants.map((variant) => (
-              <tr key={variant.varient_id} className="hover:bg-gray-50">
-                <td className="border px-4 py-2 text-center">
-                  {variant.varient_sku}
+            variants?.map((variant , index) => (
+              <tr key={variant?.varient_id} className="hover:bg-gray-50">
+                 <td className="border px-4 py-2 text-center">
+                  {index+1}
                 </td>
                 <td className="border px-4 py-2 text-center">
-                  {variant.varient_price}
+                  {variant.varient_sku || "--"}
                 </td>
                 <td className="border px-4 py-2 text-center">
-                  {variant.varient_weight}
+                  {variant.varient_price || "--"}
                 </td>
                 <td className="border px-4 py-2 text-center">
-                  {variant.unit_name || "N/A"}
+                  {variant.varient_weight || "--"}
                 </td>
+                <td className="border px-4 py-2 text-center">
+                  {variant.unit_name || "--"}
+                </td>
+                 <td className="border px-4 py-2 text-center">
+                  {variant.inventory_details?.quantity || "--"}
+                </td>
+                  <td className="border px-4 py-2 text-center">
+                  {variant.inventory_details?.reserved_quantity ||  "--"}
+                </td>
+                  <td className="border px-4 py-2 text-center">
+                  {variant.inventory_details?.minimum_quantity ||  "--"}
+                </td>
+                
                 <td className="border text-center px-4 py-2">
                   <button
                     onClick={() =>
@@ -143,7 +162,26 @@ const ProductVariant = () => {
                     <Edit />
                   </button>
                 </td>
-             
+               <td className="border text-center px-4 py-2">
+                  <button
+                  onClick={() =>
+                      navigate(`/product-discount?variant_id=${variant.varient_id}`)
+                    }
+                    className="text-green-600 hover:underline"
+                  >
+                    <Edit />
+                  </button>
+                </td>
+                 <td className="border text-center px-4 py-2">
+                  <button
+                  onClick={() =>
+                      navigate(`/product-tax?variant_id=${variant.varient_id}`)
+                    }
+                    className="text-green-600 hover:underline"
+                  >
+                    <Edit />
+                  </button>
+                </td>
 
                 <td className="border text-center px-4 py-2 space-x-2">
                   <button

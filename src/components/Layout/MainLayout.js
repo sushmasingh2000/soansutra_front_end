@@ -4,7 +4,7 @@
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="lg:flex h-screen ">
+    <div className="flex h-screen ">
       <Sidebar />
       <div className="flex-1 overflow-auto">
         <div className="hidden md:block">
