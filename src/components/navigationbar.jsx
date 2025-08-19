@@ -1,80 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState } from 'react';
+import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { endpoint } from '../utils/APIRoutes';
+import toast from 'react-hot-toast';
 
 const NavigationBar = () => {
-  const navigate = useNavigate(); // Initialize navigate hook
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [subcategories, setSubcategories] = useState([]);
+  const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const [navItems, setNavItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Mock API call - replace with your actual API endpoint
-  const fetchNavigationData = async () => {
+  const { data: categoryData, isLoading: loadingCategories } = useQuery(
+    ['get_product_category'],
+    () => axios.get(endpoint?.get_product_categroy),
+    { keepPreviousData: true }
+  );
+
+  const categories = categoryData?.data?.result || [];
+
+  const fetchSubcategories = async (categoryId) => {
     try {
-      setLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock data - Updated with category slugs
-      const mockData = [
-        { id: 1, name: 'Rings', slug: 'rings', category: 'rings' },
-        { id: 2, name: 'Earrings', slug: 'earrings', category: 'earrings' },
-        { id: 3, name: 'Bracelets & Bangles', slug: 'bracelets-bangles', category: 'bracelets-bangles' },
-        { id: 4, name: 'Solitaires', slug: 'solitaires', category: 'solitaires' },
-        { id: 5, name: 'Mangalsutras', slug: 'mangalsutras', category: 'mangalsutras' },
-        { id: 6, name: 'Necklaces & Pendants', slug: 'necklaces-pendants', category: 'necklaces-pendants' },
-        { id: 7, name: 'More Jewellery', slug: 'more-jewellery', category: 'more-jewellery' },
-        { id: 8, name: 'Silver by Shaya', slug: 'silver-collection', category: 'silver-collection' },
-        { id: 9, name: 'Gifting', slug: 'gifting', category: 'gifting' },
-        { id: 10, name: 'Trending', slug: 'trending', category: 'trending' },
-        { id: 11, name: 'Collections', slug: 'collections', category: 'collections' }
-      ];
-      
-      setNavItems(mockData);
-    } catch (error) {
-      console.error('Failed to fetch navigation data:', error);
-      // Fallback data
-      setNavItems([
-        { id: 1, name: 'Rings', slug: 'rings', category: 'rings' },
-        { id: 2, name: 'Earrings', slug: 'earrings', category: 'earrings' }
-      ]);
-    } finally {
-      setLoading(false);
+      setActiveCategoryId(categoryId);
+      const response = await axios.get(
+        `${endpoint.get_product_subcategory}?product_category_id=${categoryId}`
+      );
+      setSubcategories(response?.data?.result || []);
+    } catch (err) {
+      toast.error('Failed to fetch subcategories.');
     }
   };
 
-  useEffect(() => {
-    fetchNavigationData();
-  }, []);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const handleNavClick = (slug) => {
+    navigate(`/products/${slug}`);
+    setIsMenuOpen(false);
   };
 
-  const toggleServices = () => {
-    setIsServicesOpen(!isServicesOpen);
+  const handleSubcategoryClick = (categorySlug, subSlug) => {
+    navigate(`/products/${categorySlug}/${subSlug}`);
+    setIsMenuOpen(false);
   };
 
-  // Updated navigation handler for product categories
-  const handleNavClick = (item) => {
-    if (item.category) {
-      // Navigate to products page with category parameter
-      navigate(`/products/${item.category}`);
-    } else {
-      // For other pages like home
-      navigate('/');
-    }
-    setIsMenuOpen(false); // Close mobile menu after navigation
-  };
-
-  // Handler for services navigation
   const handleServiceClick = (slug) => {
     navigate(slug);
     setIsServicesOpen(false);
     setIsMenuOpen(false);
   };
 
-  // Handler for home/logo click
   const handleHomeClick = () => {
     navigate('/');
     setIsMenuOpen(false);
@@ -87,18 +60,16 @@ const NavigationBar = () => {
     { name: 'Care Instructions', slug: '/care-instructions' }
   ];
 
-  if (loading) {
+  if (loadingCategories) {
     return (
-      <nav style={{ backgroundColor: '#4f3267' }} className="text-white sticky top-0 z-50">
+      <nav className="text-white sticky top-0 z-50 bg-purple-700">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             <h1 className="text-lg font-semibold">CaratLane</h1>
-            <div className="flex items-center space-x-4">
-              <div className="animate-pulse flex space-x-4">
-                <div className="h-4 bg-white/20 rounded w-16"></div>
-                <div className="h-4 bg-white/20 rounded w-20"></div>
-                <div className="h-4 bg-white/20 rounded w-18"></div>
-              </div>
+            <div className="flex space-x-4 animate-pulse">
+              <div className="h-4 bg-white/20 rounded w-16"></div>
+              <div className="h-4 bg-white/20 rounded w-20"></div>
+              <div className="h-4 bg-white/20 rounded w-18"></div>
             </div>
           </div>
         </div>
@@ -107,35 +78,49 @@ const NavigationBar = () => {
   }
 
   return (
-    <nav style={{ backgroundColor: '#4f3267' }} className="text-white sticky top-0 z-50">
+    <nav className="text-white sticky top-0 z-50 bg-purple-700">
       {/* Desktop Navigation */}
       <div className="hidden lg:block">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-14">
-            {/* Logo */}
-            <button 
-              onClick={handleHomeClick}
-              className="text-lg font-semibold hover:text-pink-200 transition-colors duration-200"
-            >
-              CaratLane
-            </button>
-
-            {/* Navigation Items */}
             <div className="flex items-center space-x-8">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item)}
-                  className="text-sm font-medium hover:text-pink-200 transition-colors duration-200 whitespace-nowrap"
+              {categories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className="relative group"
+                  onMouseEnter={() => fetchSubcategories(cat.id)}
+                  onMouseLeave={() => setSubcategories([])}
                 >
-                  {item.name}
-                </button>
+                  <button
+                    onClick={() => handleNavClick(cat.slug)}
+                    className="text-sm font-medium hover:text-pink-200 transition-colors duration-200 whitespace-nowrap"
+                  >
+                    {cat.name}
+                  </button>
+
+                  {/* Subcategory Dropdown */}
+                  {activeCategoryId === cat.id && subcategories.length > 0 && (
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white text-black rounded-md shadow-lg z-50">
+                      <div className="py-2">
+                        {subcategories.map((sub) => (
+                          <button
+                            key={sub.id}
+                            onClick={() => handleSubcategoryClick(cat.slug, sub.slug)}
+                            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                          >
+                            {sub.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
 
               {/* Services Dropdown */}
               <div className="relative">
                 <button
-                  onClick={toggleServices}
+                  onClick={() => setIsServicesOpen(!isServicesOpen)}
                   className="flex items-center space-x-1 text-sm font-medium hover:text-pink-200 transition-colors duration-200"
                 >
                   <span>Services</span>
@@ -156,9 +141,8 @@ const NavigationBar = () => {
                   </svg>
                 </button>
 
-                {/* Desktop Services Dropdown Menu */}
                 {isServicesOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                     <div className="py-1">
                       {serviceLinks.map((service, index) => (
                         <button
@@ -178,18 +162,17 @@ const NavigationBar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation (< lg) */}
+      {/* Mobile Navigation */}
       <div className="lg:hidden">
-        {/* Mobile Header */}
         <div className="flex items-center justify-between px-4 h-14">
-          <button 
+          <button
             onClick={handleHomeClick}
             className="text-lg font-semibold hover:text-pink-200 transition-colors duration-200"
           >
             CaratLane
           </button>
           <button
-            onClick={toggleMenu}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="p-2 rounded-md hover:bg-white/10 transition-colors duration-200"
           >
             <svg
@@ -219,19 +202,18 @@ const NavigationBar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
             isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="px-4 py-4 border-t border-white/20">
-            {/* Mobile Navigation Items */}
+            {/* Mobile Categories */}
             <div className="space-y-1">
-              {navItems.map((item) => (
+              {categories.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => handleNavClick(item)}
+                  onClick={() => handleNavClick(item.slug)}
                   className="block w-full text-left px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
                 >
                   {item.name}
@@ -239,10 +221,10 @@ const NavigationBar = () => {
               ))}
             </div>
 
-            {/* Mobile Services Section */}
+            {/* Mobile Services */}
             <div className="mt-4 pt-4 border-t border-white/20">
               <button
-                onClick={toggleServices}
+                onClick={() => setIsServicesOpen(!isServicesOpen)}
                 className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
               >
                 <span>Services</span>
@@ -263,7 +245,6 @@ const NavigationBar = () => {
                 </svg>
               </button>
 
-              {/* Mobile Services Dropdown */}
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
                   isServicesOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'

@@ -1,4 +1,4 @@
-export const domain = "http://192.168.18.214:2000";
+export const domain = "http://192.168.221.250:2000";
 // export const domain ="https://sonashutra-backend-code.onrender.com";
 
 export const endpoint = {
@@ -133,5 +133,6 @@ export const endpoint = {
   get_all_customer: `${domain}/api/v1/get-all-customer`,
   get_customer_profile: `${domain}/api/v1/get-customer-profile`,
   update_customer_profile: `${domain}/api/v1/update-customer-profile`,
+  
 
 };

@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import ReactModal from "react-modal";
-import { Edit2, Plus } from "lucide-react";
+import { Edit2} from "lucide-react";
 import moment from "moment";
 
 const Customer = () => {
-    const queryClient = useQueryClient();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -117,7 +116,7 @@ const Customer = () => {
                             <th className="px-4 py-2 border-b">City</th>
                             <th className="px-4 py-2 border-b">Country</th>
                             <th className="px-4 py-2 border-b">Created</th>
-                            <th className="px-4 py-2 border-b">Actions</th>
+                            {/* <th className="px-4 py-2 border-b">Actions</th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -131,14 +130,14 @@ const Customer = () => {
                                 <td className="px-4 py-2 border-b">
                                     {moment(c.created_at).format("YYYY-MM-DD")}
                                 </td>
-                                <td className="px-4 py-2 border-b">
+                                {/* <td className="px-4 py-2 border-b">
                                     <button
                                         onClick={() => openModal(c)}
                                         className="text-blue-600 hover:underline"
                                     >
                                         <Edit2 size={16} />
                                     </button>
-                                </td>
+                                </td> */}
                             </tr>
                         ))}
                         {customers.length === 0 && (
