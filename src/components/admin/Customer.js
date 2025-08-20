@@ -109,7 +109,7 @@ const Customer = () => {
             {/* Table */}
             <div className="overflow-auto rounded border">
                 <table className="min-w-full bg-white">
-                    <thead className="bg-gray-100 text-sm text-left text-gray-700">
+                    <thead className="bg-gray-100 text-left text-gray-700">
                         <tr>
                             <th className="px-4 py-2 border-b">Name</th>
                             <th className="px-4 py-2 border-b">Email</th>
@@ -117,12 +117,12 @@ const Customer = () => {
                             <th className="px-4 py-2 border-b">City</th>
                             <th className="px-4 py-2 border-b">Country</th>
                             <th className="px-4 py-2 border-b">Created</th>
-                            <th className="px-4 py-2 border-b">Actions</th>
+                            <th className="px-4 py-2 border-b">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {customers.map((c) => (
-                            <tr key={c.customer_id} className="text-sm">
+                            <tr key={c.customer_id} className="">
                                 <td className="px-4 py-2 border-b">{c.name}</td>
                                 <td className="px-4 py-2 border-b">{c.cl_email}</td>
                                 <td className="px-4 py-2 border-b">{c.cl_phone}</td>
@@ -131,14 +131,16 @@ const Customer = () => {
                                 <td className="px-4 py-2 border-b">
                                     {moment(c.created_at).format("YYYY-MM-DD")}
                                 </td>
-                                <td className="px-4 py-2 border-b">
+                                <td className="px-4 py-2 border-b">{c.cl_lgn_status}</td>
+
+                                {/* <td className="px-4 py-2 border-b">
                                     <button
                                         onClick={() => openModal(c)}
                                         className="text-blue-600 hover:underline"
                                     >
                                         <Edit2 size={16} />
                                     </button>
-                                </td>
+                                </td> */}
                             </tr>
                         ))}
                         {customers.length === 0 && (
