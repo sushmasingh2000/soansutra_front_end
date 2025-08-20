@@ -23,13 +23,11 @@ function App() {
         ) : (
           <Route path="*" element={<Dashboard />} />
         )}
-         {user ? (
-          routes.map((route, i) => (
+       
+         { routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />
-          ))
-        ) : (
+          ))}
           <Route path="*" element={<Dashboard />} />
-        )}
     </Routes>
     </BrowserRouter>
      
