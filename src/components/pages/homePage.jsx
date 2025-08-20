@@ -17,7 +17,7 @@ import CaratLaneSignup from '../emailSubscription.jsx'
 
 const HomePage = () => {
     return (
-        <>
+        <div className='overflow-hidden'>
             <Header/>
             <NavigationBar/>
             <HeroBanner/>
@@ -32,7 +32,7 @@ const HomePage = () => {
             {/* <JoinInsider/> */}
             <CaratLaneSignup/>
             <Footer/>
-        </>
+        </div>
     )
 }
 

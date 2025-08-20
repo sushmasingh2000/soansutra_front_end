@@ -5,6 +5,7 @@ import Dashboard from './components/Layout/Dashboard';
 import { routes } from './routes/Routes';
 import HomePage from './components/pages/homePage';
 import Login from './authentiaction/Login';
+import LoginPage from './components/pages/LoginPage';
 
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
          { routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />
           ))}
-          <Route path="*" element={<Dashboard />} />
+          <Route path="*" element={<LoginPage />} />
     </Routes>
     </BrowserRouter>
      

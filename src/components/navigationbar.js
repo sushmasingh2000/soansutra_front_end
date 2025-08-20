@@ -107,13 +107,13 @@ const NavigationBar = () => {
                           <button
                             key={sub.product_subcategory_id}
                             onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
-                            className="flex items-center space-x-3 w-full text-left px-4 py-2 hover:bg-gray-100 transition"
+                            className="flex items-center space-x-3 w-full text-left px-4 border-t hover:bg-gray-100 transition"
                           >
-                            {/* <img
+                            <img
                               src={sub.subcat_image}
                               alt={sub.name}
-                              className="w-10 h-10 object-cover rounded"
-                            /> */}
+                              className="w-3 h-3 object-cover rounded"
+                            />
                             <span className="text-sm">{sub.name}</span>
                           </button>
 
@@ -124,47 +124,7 @@ const NavigationBar = () => {
 
                 </div>
               ))}
-
-
-              {/* Services Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsServicesOpen(!isServicesOpen)}
-                  className="flex items-center space-x-1 text-sm font-medium hover:text-pink-200 transition-colors duration-200"
-                >
-                  <span>Services</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''
-                      }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {isServicesOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                    <div className="py-1">
-                      {serviceLinks.map((service, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleServiceClick(service.slug)}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
-                        >
-                          {service.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+             
             </div>
           </div>
         </div>
