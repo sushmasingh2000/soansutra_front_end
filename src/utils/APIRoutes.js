@@ -1,5 +1,5 @@
-export const domain = "http://192.168.18.214:2000";
-// export const domain ="https://sonashutra-backend-code.onrender.com";
+// export const domain = "http://192.168.18.214:2000";
+ export const domain ="https://sonashutra.onrender.com";
 
 export const endpoint = {
 
