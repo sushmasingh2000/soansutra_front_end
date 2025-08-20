@@ -3,6 +3,9 @@ import { Heart, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../Footer1';
 import Header from '../Header1';
+import { useQuery } from 'react-query';
+import { endpoint } from '../../utils/APIRoutes';
+import axios from 'axios';
 
 // Enhanced Category Configuration with 5 Jewelry Types
 const CATEGORY_CONFIG = {
@@ -248,6 +251,7 @@ const CATEGORY_CONFIG = {
   }
 };
 
+
 // Dummy Product Data
 const generateDummyProducts = (category, count = 20) => {
   const products = [];
@@ -287,6 +291,14 @@ const generateDummyProducts = (category, count = 20) => {
 
 // Dynamic Header Component
 const DynamicHeader = ({ categoryConfig }) => {
+
+  const { data, isLoading } = useQuery(
+    ['get_product'],
+    () => axios.get(endpoint?.get_product_all),
+    { keepPreviousData: true }
+  );
+
+  const product = data?.data?.result || [];
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3">
       <h1 className="text-lg font-semibold text-gray-800">{categoryConfig.title}</h1>

@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import ReactModal from "react-modal";
-import { Edit2, Plus } from "lucide-react";
+import { Edit2} from "lucide-react";
 import moment from "moment";
 
 const Customer = () => {
-    const queryClient = useQueryClient();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
