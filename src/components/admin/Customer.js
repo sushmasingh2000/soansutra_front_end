@@ -4,7 +4,6 @@ import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import ReactModal from "react-modal";
-import { Edit2} from "lucide-react";
 import moment from "moment";
 
 const Customer = () => {

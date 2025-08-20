@@ -186,7 +186,7 @@ export const routes = [
     ),
   },
   {
-    path: "/products/:category",
+    path: "/products/:id",
     element: <DynamicProductListingPage />,
   },
   {

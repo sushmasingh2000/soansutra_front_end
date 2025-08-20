@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Footer from '../Footer1';
 import Header from '../Header1';
 import { useQuery } from 'react-query';
 import { endpoint } from '../../utils/APIRoutes';
 import axios from 'axios';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
 
 // Enhanced Category Configuration with 5 Jewelry Types
 const CATEGORY_CONFIG = {
@@ -13,8 +16,8 @@ const CATEGORY_CONFIG = {
     title: 'Rings Collection - 234 Designs',
     breadcrumb: 'RINGS',
     filters: {
-      ringSize: { 
-        label: 'Ring Size', 
+      ringSize: {
+        label: 'Ring Size',
         options: [
           { value: '16', count: 45 },
           { value: '17', count: 138 },
@@ -24,8 +27,8 @@ const CATEGORY_CONFIG = {
           { value: '21', count: 67 }
         ]
       },
-      metal: { 
-        label: 'Metal', 
+      metal: {
+        label: 'Metal',
         options: [
           { value: 'gold', label: 'Gold', count: 189 },
           { value: 'silver', label: 'Silver', count: 145 },
@@ -33,8 +36,8 @@ const CATEGORY_CONFIG = {
           { value: 'rose-gold', label: 'Rose Gold', count: 92 }
         ]
       },
-      price: { 
-        label: 'Price Range', 
+      price: {
+        label: 'Price Range',
         options: [
           { value: '5000-10000', label: '₹5,000 - ₹10,000', count: 89 },
           { value: '10001-20000', label: '₹10,001 - ₹20,000', count: 143 },
@@ -54,13 +57,13 @@ const CATEGORY_CONFIG = {
     },
     tabs: ['All', 'New In', 'Engagement', 'Wedding', 'Daily Wear']
   },
-  
+
   earrings: {
     title: 'Earrings Collection - 189 Designs',
     breadcrumb: 'EARRINGS',
     filters: {
-      type: { 
-        label: 'Type', 
+      type: {
+        label: 'Type',
         options: [
           { value: 'studs', label: 'Studs', count: 145 },
           { value: 'hoops', label: 'Hoops', count: 89 },
@@ -69,8 +72,8 @@ const CATEGORY_CONFIG = {
           { value: 'jhumkas', label: 'Jhumkas', count: 98 }
         ]
       },
-      metal: { 
-        label: 'Metal', 
+      metal: {
+        label: 'Metal',
         options: [
           { value: 'gold', label: 'Gold', count: 156 },
           { value: 'silver', label: 'Silver', count: 134 },
@@ -86,8 +89,8 @@ const CATEGORY_CONFIG = {
           { value: 'emerald', label: 'Emerald', count: 34 }
         ]
       },
-      price: { 
-        label: 'Price Range', 
+      price: {
+        label: 'Price Range',
         options: [
           { value: '3000-8000', label: '₹3,000 - ₹8,000', count: 78 },
           { value: '8001-15000', label: '₹8,001 - ₹15,000', count: 123 },
@@ -103,8 +106,8 @@ const CATEGORY_CONFIG = {
     title: 'Mangalsutra Collection - 156 Designs',
     breadcrumb: 'MANGALSUTRA',
     filters: {
-      style: { 
-        label: 'Style', 
+      style: {
+        label: 'Style',
         options: [
           { value: 'traditional', label: 'Traditional', count: 89 },
           { value: 'modern', label: 'Modern', count: 134 },
@@ -112,8 +115,8 @@ const CATEGORY_CONFIG = {
           { value: 'layered', label: 'Layered', count: 45 }
         ]
       },
-      length: { 
-        label: 'Chain Length', 
+      length: {
+        label: 'Chain Length',
         options: [
           { value: '16-18', label: '16-18 inches', count: 78 },
           { value: '18-20', label: '18-20 inches', count: 123 },
@@ -121,16 +124,16 @@ const CATEGORY_CONFIG = {
           { value: '22-24', label: '22-24 inches', count: 56 }
         ]
       },
-      metal: { 
-        label: 'Metal', 
+      metal: {
+        label: 'Metal',
         options: [
           { value: 'gold', label: 'Gold', count: 145 },
           { value: 'silver', label: 'Silver', count: 89 },
           { value: 'two-tone', label: 'Two Tone', count: 67 }
         ]
       },
-      price: { 
-        label: 'Price Range', 
+      price: {
+        label: 'Price Range',
         options: [
           { value: '15000-25000', label: '₹15,000 - ₹25,000', count: 67 },
           { value: '25001-50000', label: '₹25,001 - ₹50,000', count: 89 },
@@ -146,8 +149,8 @@ const CATEGORY_CONFIG = {
     title: 'Necklaces Collection - 267 Designs',
     breadcrumb: 'NECKLACES',
     filters: {
-      type: { 
-        label: 'Type', 
+      type: {
+        label: 'Type',
         options: [
           { value: 'choker', label: 'Choker', count: 78 },
           { value: 'pendant', label: 'Pendant', count: 156 },
@@ -156,8 +159,8 @@ const CATEGORY_CONFIG = {
           { value: 'layered', label: 'Layered', count: 67 }
         ]
       },
-      length: { 
-        label: 'Length', 
+      length: {
+        label: 'Length',
         options: [
           { value: '14-16', label: '14-16 inches (Choker)', count: 89 },
           { value: '16-18', label: '16-18 inches (Princess)', count: 145 },
@@ -165,8 +168,8 @@ const CATEGORY_CONFIG = {
           { value: '20-24', label: '20-24 inches (Opera)', count: 78 }
         ]
       },
-      metal: { 
-        label: 'Metal', 
+      metal: {
+        label: 'Metal',
         options: [
           { value: 'gold', label: 'Gold', count: 189 },
           { value: 'silver', label: 'Silver', count: 156 },
@@ -184,8 +187,8 @@ const CATEGORY_CONFIG = {
           { value: 'sapphire', label: 'Sapphire', count: 34 }
         ]
       },
-      price: { 
-        label: 'Price Range', 
+      price: {
+        label: 'Price Range',
         options: [
           { value: '8000-15000', label: '₹8,000 - ₹15,000', count: 89 },
           { value: '15001-30000', label: '₹15,001 - ₹30,000', count: 134 },
@@ -201,8 +204,8 @@ const CATEGORY_CONFIG = {
     title: 'Bracelets & Bangles - 198 Designs',
     breadcrumb: 'BRACELETS & BANGLES',
     filters: {
-      type: { 
-        label: 'Type', 
+      type: {
+        label: 'Type',
         options: [
           { value: 'bracelets', label: 'Bracelets', count: 123 },
           { value: 'bangles', label: 'Bangles', count: 156 },
@@ -210,8 +213,8 @@ const CATEGORY_CONFIG = {
           { value: 'charm', label: 'Charm Bracelets', count: 67 }
         ]
       },
-      size: { 
-        label: 'Size', 
+      size: {
+        label: 'Size',
         options: [
           { value: '2.4', label: '2.4 inches', count: 45 },
           { value: '2.6', label: '2.6 inches', count: 89 },
@@ -219,8 +222,8 @@ const CATEGORY_CONFIG = {
           { value: '3.0', label: '3.0 inches', count: 78 }
         ]
       },
-      metal: { 
-        label: 'Metal', 
+      metal: {
+        label: 'Metal',
         options: [
           { value: 'gold', label: 'Gold', count: 167 },
           { value: 'silver', label: 'Silver', count: 134 },
@@ -237,8 +240,8 @@ const CATEGORY_CONFIG = {
           { value: 'contemporary', label: 'Contemporary', count: 78 }
         ]
       },
-      price: { 
-        label: 'Price Range', 
+      price: {
+        label: 'Price Range',
         options: [
           { value: '5000-12000', label: '₹5,000 - ₹12,000', count: 78 },
           { value: '12001-25000', label: '₹12,001 - ₹25,000', count: 123 },
@@ -252,53 +255,9 @@ const CATEGORY_CONFIG = {
 };
 
 
-// Dummy Product Data
-const generateDummyProducts = (category, count = 20) => {
-  const products = [];
-  const categoryNames = {
-    rings: ['Diamond Solitaire Ring', 'Gold Band Ring', 'Engagement Ring', 'Wedding Ring', 'Cocktail Ring'],
-    earrings: ['Diamond Studs', 'Gold Hoops', 'Pearl Drops', 'Jhumka Earrings', 'Chandbali Earrings'],
-    mangalsutra: ['Traditional Mangalsutra', 'Modern Mangalsutra', 'Designer Mangalsutra', 'Short Mangalsutra', 'Layered Mangalsutra'],
-    necklaces: ['Diamond Pendant', 'Gold Chain', 'Pearl Necklace', 'Statement Necklace', 'Choker Necklace'],
-    bracelets: ['Gold Bracelet', 'Diamond Bangle', 'Silver Kada', 'Charm Bracelet', 'Tennis Bracelet']
-  };
-
-  const images = [
-    'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop'
-  ];
-
-  for (let i = 0; i < count; i++) {
-    const basePrice = Math.floor(Math.random() * 80000) + 10000;
-    const discount = 0.1 + Math.random() * 0.3;
-    const discountedPrice = Math.floor(basePrice * (1 - discount));
-
-    products.push({
-      id: `${category}_${i + 1}`,
-      name: `${categoryNames[category][i % categoryNames[category].length]} ${i + 1}`,
-      price: discountedPrice,
-      originalPrice: basePrice,
-      images: [images[i % images.length], images[(i + 1) % images.length]],
-      category,
-      isNew: Math.random() > 0.7,
-    });
-  }
-  return products;
-};
 
 // Dynamic Header Component
 const DynamicHeader = ({ categoryConfig }) => {
-
-  const { data, isLoading } = useQuery(
-    ['get_product'],
-    () => axios.get(endpoint?.get_product_all),
-    { keepPreviousData: true }
-  );
-
-  const product = data?.data?.result || [];
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3">
       <h1 className="text-lg font-semibold text-gray-800">{categoryConfig.title}</h1>
@@ -317,11 +276,10 @@ const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
         <button
           key={tab}
           onClick={() => onTabChange(tab)}
-          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${
-            activeTab === tab
-              ? 'bg-purple-600 text-white'
-              : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-          }`}
+          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${activeTab === tab
+            ? 'bg-purple-600 text-white'
+            : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+            }`}
         >
           {tab}
         </button>
@@ -347,7 +305,7 @@ const MobileFilterModal = ({ isOpen, onClose, categoryConfig, filters, onFilterC
             </span>
           </h3>
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={onClearAll}
               className="text-pink-500 text-xs font-medium"
             >
@@ -358,7 +316,7 @@ const MobileFilterModal = ({ isOpen, onClose, categoryConfig, filters, onFilterC
             </button>
           </div>
         </div>
-        
+
         <div className="p-4">
           {Object.entries(categoryConfig.filters).map(([filterKey, filterConfig]) => (
             <div key={filterKey} className="mb-6">
@@ -373,7 +331,7 @@ const MobileFilterModal = ({ isOpen, onClose, categoryConfig, filters, onFilterC
                       onChange={(e) => onFilterChange(filterKey, option.value, e.target.checked)}
                     />
                     <span className="text-xs text-gray-700">
-                      {option.label || option.value} 
+                      {option.label || option.value}
                       <span className="text-gray-400"> ({option.count})</span>
                     </span>
                   </label>
@@ -399,7 +357,7 @@ const DynamicSidebarFilters = ({ categoryConfig, filters, onFilterChange, onClea
             {Object.values(filters).flat().length}
           </span>
         </h3>
-        <button 
+        <button
           onClick={onClearAll}
           className="text-pink-500 text-xs font-medium"
         >
@@ -420,7 +378,7 @@ const DynamicSidebarFilters = ({ categoryConfig, filters, onFilterChange, onClea
                   onChange={(e) => onFilterChange(filterKey, option.value, e.target.checked)}
                 />
                 <span className="text-xs text-gray-700">
-                  {option.label || option.value} 
+                  {option.label || option.value}
                   <span className="text-gray-400"> ({option.count})</span>
                 </span>
               </label>
@@ -437,33 +395,47 @@ const ProductCard = ({ product, onWishlist }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
 
+  const images = product.product_images?.filter(img => img?.p_image_url)?.map(img => img.p_image_url)?.length
+    ? product.product_images.map(img => img.p_image_url)
+    : [
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop'
+    ];
+
+
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
   const handleImageClick = () => {
-    navigate(`/productdetails`);
+    navigate(`/productdetails`, {
+      state: { product }
+    });
   };
+
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       <div className="relative group">
-        <div 
+        <div
           className="aspect-square bg-gray-100 overflow-hidden cursor-pointer"
           onClick={handleImageClick}
         >
           <img
-            src={product.images[currentImageIndex]}
-            alt={product.name}
+            src={images[currentImageIndex]}
+            alt={product?.name || 'Product'}
             className="w-full h-full object-cover"
           />
         </div>
-        
-        {product.images.length > 1 && (
+
+        {images.length > 1 && (
           <>
             <button
               onClick={(e) => {
@@ -485,11 +457,11 @@ const ProductCard = ({ product, onWishlist }) => {
             </button>
           </>
         )}
-        
+
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onWishlist(product.id);
+            onWishlist(product.product_id);
           }}
           className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
         >
@@ -502,14 +474,18 @@ const ProductCard = ({ product, onWishlist }) => {
           </span>
         )}
       </div>
-      
+
       <div className="p-3">
         <h3 className="text-xs text-gray-600 truncate mb-1">{product.name}</h3>
-        
+
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-semibold text-gray-800">₹{product.price.toLocaleString()}</span>
+          <span className="text-sm font-semibold text-gray-800">
+            ₹{parseFloat(product.price).toLocaleString()}
+          </span>
           {product.originalPrice && (
-            <span className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
+            <span className="text-xs text-gray-400 line-through">
+              ₹{parseFloat(product.originalPrice).toLocaleString()}
+            </span>
           )}
         </div>
 
@@ -521,13 +497,14 @@ const ProductCard = ({ product, onWishlist }) => {
   );
 };
 
+
 // Product List Component
 const ProductList = ({ products, onWishlist }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
       {products.map((product) => (
         <ProductCard
-          key={product.id}
+          key={product.product_id}
           product={product}
           onWishlist={onWishlist}
         />
@@ -558,7 +535,7 @@ const SortDropdown = ({ sortBy, onSortChange }) => {
 // Category Selector
 const CategorySelector = ({ currentCategory, onCategoryChange }) => {
   const categories = Object.keys(CATEGORY_CONFIG);
-  
+
   return (
     <div className="bg-white border-b border-gray-200 px-4 py-3">
       <div className="flex gap-2 overflow-x-auto no-scrollbar">
@@ -566,11 +543,10 @@ const CategorySelector = ({ currentCategory, onCategoryChange }) => {
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 capitalize ${
-              currentCategory === category
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 capitalize ${currentCategory === category
+              ? 'bg-purple-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             {category.replace('_', ' ')}
           </button>
@@ -582,6 +558,7 @@ const CategorySelector = ({ currentCategory, onCategoryChange }) => {
 
 // Main Dynamic Product Listing Component
 const DynamicProductListingPage = () => {
+  const { id } = useParams();
   const [currentCategory, setCurrentCategory] = useState('rings');
   const [activeTab, setActiveTab] = useState('All');
   const [sortBy, setSortBy] = useState('customer');
@@ -601,13 +578,41 @@ const DynamicProductListingPage = () => {
     });
     setFilters(initialFilters);
     setActiveTab(categoryConfig.tabs[0]);
-    
-    // Generate dummy products for the category
-    const dummyProducts = generateDummyProducts(currentCategory);
-    setAllProducts(dummyProducts);
-    setProducts(dummyProducts);
     setLoading(false);
   }, [currentCategory]);
+  useEffect(() => {
+  const initialFilters = {};
+  Object.keys(categoryConfig.filters).forEach(filterKey => {
+    initialFilters[filterKey] = [];
+  });
+  // Price range initialize karo yahan, example [0, 20000]
+  initialFilters.price = [0, 20000];
+  setFilters(initialFilters);
+  setActiveTab(categoryConfig.tabs[0]);
+  setLoading(false);
+}, [currentCategory]);
+
+
+  const { data, isLoading } = useQuery(
+    ['get_product', id],
+    () => axios.get(`${endpoint?.get_product_user}?product_sub_cat_id=${id}`),
+    { keepPreviousData: true }
+  );
+  const product = data?.data?.result || [];
+
+  useEffect(() => {
+    const enhancedProducts = (product || []).map((p, i) => ({
+      ...p,
+      images: [
+        `https://source.unsplash.com/random/400x400?sig=${i}&product`,
+        `https://source.unsplash.com/random/400x400?sig=${i + 100}&product`
+      ],
+      isNew: Math.random() > 0.7
+    }));
+    setAllProducts(enhancedProducts);
+    setProducts(enhancedProducts);
+  }, [product]);
+
 
   // Filter and sort products
   useEffect(() => {
@@ -626,12 +631,12 @@ const DynamicProductListingPage = () => {
     }
 
     // Apply sidebar filters
-    Object.entries(filters).forEach(([filterKey, selectedValues]) => {
-      if (selectedValues.length > 0) {
-        filteredProducts = filteredProducts.filter(product => {
-          return selectedValues.some(value => 
-            product.name.toLowerCase().includes(value.toLowerCase()) ||
-            Math.random() > 0.5 // Random filter for demo
+    Object.entries(filters)?.forEach(([filterKey, selectedValues]) => {
+      if (selectedValues?.length > 0) {
+        filteredProducts = filteredProducts?.filter(product => {
+          return selectedValues?.some(value =>
+            product?.name?.toLowerCase().includes(typeof value === 'string' ? value.toLowerCase() : String(value).toLowerCase()) ||
+            Math?.random() > 0.5 // Random filter for demo
           );
         });
       }
@@ -691,21 +696,21 @@ const DynamicProductListingPage = () => {
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       <Header />
-      
+
       <div className="flex-1">
-        <CategorySelector 
-          currentCategory={currentCategory} 
-          onCategoryChange={setCurrentCategory} 
+        <CategorySelector
+          currentCategory={currentCategory}
+          onCategoryChange={setCurrentCategory}
         />
-        
+
         <DynamicHeader categoryConfig={categoryConfig} />
-        
-        <DynamicFilterTabs 
-          tabs={categoryConfig.tabs} 
-          activeTab={activeTab} 
-          onTabChange={setActiveTab} 
+
+        <DynamicFilterTabs
+          tabs={categoryConfig.tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
-        
+
         <div className="flex">
           <button
             onClick={() => setMobileFiltersOpen(true)}
@@ -760,7 +765,7 @@ const DynamicProductListingPage = () => {
           </div>
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );

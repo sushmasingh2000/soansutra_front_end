@@ -14,17 +14,23 @@ const NavigationBar = () => {
 
   const { data: categoryData, isLoading: loadingCategories } = useQuery(
     ['get_product_category'],
-    () => axios.get(endpoint?.get_product_categroy),
+    () => axios.get(endpoint?.get_categroy_user),
     { keepPreviousData: true }
   );
 
   const categories = categoryData?.data?.result || [];
 
   const fetchSubcategories = async (categoryId) => {
+    if (activeCategoryId === categoryId) {
+      setActiveCategoryId(null);
+      setSubcategories([]);
+      return;
+    }
+
     try {
       setActiveCategoryId(categoryId);
       const response = await axios.get(
-        `${endpoint.get_product_subcategory}?product_category_id=${categoryId}`
+        `${endpoint.get_sub_categroy_user}?category_id=${categoryId}`
       );
       setSubcategories(response?.data?.result || []);
     } catch (err) {
@@ -32,15 +38,18 @@ const NavigationBar = () => {
     }
   };
 
+
   const handleNavClick = (slug) => {
     navigate(`/products/${slug}`);
     setIsMenuOpen(false);
   };
 
-  const handleSubcategoryClick = (categorySlug, subSlug) => {
-    navigate(`/products/${categorySlug}/${subSlug}`);
+  const handleSubcategoryClick = (productSubcategoryId) => {
+    navigate(`/products/${productSubcategoryId}`);
     setIsMenuOpen(false);
+    setIsServicesOpen(false);
   };
+
 
   const handleServiceClick = (slug) => {
     navigate(slug);
@@ -87,35 +96,41 @@ const NavigationBar = () => {
               {categories.map((cat) => (
                 <div
                   key={cat.id}
-                  className="relative group"
-                  onMouseEnter={() => fetchSubcategories(cat.id)}
-                  onMouseLeave={() => setSubcategories([])}
+                  className="relative"
                 >
                   <button
-                    onClick={() => handleNavClick(cat.slug)}
+                    type="button"
+                    onClick={() => fetchSubcategories(cat.product_category_id)}
                     className="text-sm font-medium hover:text-pink-200 transition-colors duration-200 whitespace-nowrap"
                   >
                     {cat.name}
                   </button>
-
                   {/* Subcategory Dropdown */}
-                  {activeCategoryId === cat.id && subcategories.length > 0 && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white text-black rounded-md shadow-lg z-50">
-                      <div className="py-2">
+                  {activeCategoryId === cat.product_category_id && subcategories.length > 0 && (
+                    <div className="absolute top-full left-0 mt-2 w-64 bg-white text-black rounded-md shadow-lg z-50">
+                      <div className="py-2 grid grid-cols-1 gap-2">
                         {subcategories.map((sub) => (
                           <button
-                            key={sub.id}
-                            onClick={() => handleSubcategoryClick(cat.slug, sub.slug)}
-                            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                            key={sub.product_subcategory_id}
+                            onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
+                            className="flex items-center space-x-3 w-full text-left px-4 py-2 hover:bg-gray-100 transition"
                           >
-                            {sub.name}
+                            <img
+                              src={sub.subcat_image}
+                              alt={sub.name}
+                              className="w-10 h-10 object-cover rounded"
+                            />
+                            <span className="text-sm">{sub.name}</span>
                           </button>
+
                         ))}
                       </div>
                     </div>
                   )}
+
                 </div>
               ))}
+
 
               {/* Services Dropdown */}
               <div className="relative">
@@ -125,9 +140,8 @@ const NavigationBar = () => {
                 >
                   <span>Services</span>
                   <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      isServicesOpen ? 'rotate-180' : ''
-                    }`}
+                    className={`w-4 h-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -176,9 +190,8 @@ const NavigationBar = () => {
             className="p-2 rounded-md hover:bg-white/10 transition-colors duration-200"
           >
             <svg
-              className={`w-6 h-6 transition-transform duration-300 ${
-                isMenuOpen ? 'rotate-90' : ''
-              }`}
+              className={`w-6 h-6 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''
+                }`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -203,22 +216,38 @@ const NavigationBar = () => {
         </div>
 
         <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-          }`}
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+            }`}
         >
           <div className="px-4 py-4 border-t border-white/20">
             {/* Mobile Categories */}
             <div className="space-y-1">
               {categories.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.slug)}
-                  className="block w-full text-left px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
-                >
-                  {item.name}
-                </button>
+                <div key={item.id} className="mb-2">
+                  <button
+                    onClick={() => fetchSubcategories(item.product_category_id)}
+                    className="block w-full text-left px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
+                  >
+                    {item.name}
+                  </button>
+
+                  {activeCategoryId === item.product_category_id && subcategories.length > 0 && (
+                    <div className="pl-6 mt-1 space-y-1">
+                      {subcategories.map((sub) => (
+                        <button
+                          key={sub.product_subcategory_id}
+                          onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
+                          className="block w-full text-left py-2 text-sm text-pink-200 hover:text-white transition-colors duration-200"
+                        >
+                          {sub.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
+
+
             </div>
 
             {/* Mobile Services */}
@@ -229,9 +258,8 @@ const NavigationBar = () => {
               >
                 <span>Services</span>
                 <svg
-                  className={`w-4 h-4 transition-transform duration-200 ${
-                    isServicesOpen ? 'rotate-180' : ''
-                  }`}
+                  className={`w-4 h-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''
+                    }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -246,9 +274,8 @@ const NavigationBar = () => {
               </button>
 
               <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isServicesOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
-                }`}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${isServicesOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
               >
                 <div className="pl-6 pr-3 py-2 space-y-1">
                   {serviceLinks.map((service, index) => (
