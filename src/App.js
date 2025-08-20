@@ -8,20 +8,26 @@ import Login from './authentiaction/Login';
 
 
 function App() {
-  const user = localStorage.getItem("token");
+  const admin = localStorage.getItem("token");
+  const user = localStorage.getItem("user_token");
   return (
     
     <BrowserRouter>
     <Routes>
       <Route path="/"  element = {<HomePage/>} />
       <Route path="/admin-login"  element = {<Login/>} />
-        {user ? (
+        {admin ? (
           routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />
           ))
         ) : (
           <Route path="*" element={<Dashboard />} />
         )}
+       
+         { routes.map((route, i) => (
+            <Route key={i} path={route.path} element={route.element} />
+          ))}
+          <Route path="*" element={<Dashboard />} />
     </Routes>
     </BrowserRouter>
      

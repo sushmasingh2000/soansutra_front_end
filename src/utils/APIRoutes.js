@@ -1,5 +1,5 @@
 // export const domain = "http://192.168.18.214:2000";
- export const domain ="https://sonashutra.onrender.com";
+export const domain ="https://sonashutra.onrender.com";
 
 export const endpoint = {
 
@@ -139,8 +139,11 @@ export const endpoint = {
   get_sub_categroy_user: `${domain}/api/v1/u-get-sub-category`,
   get_product_user: `${domain}/api/v1/u-get-product`,
   u_get_variant: `${domain}/api/v1/u-get-varients`,
-  
- 
+  create_wishlist: `${domain}/api/v1/create-wish-list-items`,
+  get_wishlist: `${domain}/api/v1/get-wish-list-items`,
+  remove_wishlist: `${domain}/api/v1/remove-wish-list-items`,
+  login_customer: `${domain}/api/v1/login-customer`,
+  create_customer: `${domain}/api/v1/create-customer`,
   
 
 };

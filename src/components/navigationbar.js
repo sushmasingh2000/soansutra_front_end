@@ -38,14 +38,8 @@ const NavigationBar = () => {
     }
   };
 
-
-  const handleNavClick = (slug) => {
-    navigate(`/products/${slug}`);
-    setIsMenuOpen(false);
-  };
-
   const handleSubcategoryClick = (productSubcategoryId) => {
-    navigate(`/products/${productSubcategoryId}`);
+    navigate(`/products_web/${productSubcategoryId}`);
     setIsMenuOpen(false);
     setIsServicesOpen(false);
   };
@@ -115,11 +109,11 @@ const NavigationBar = () => {
                             onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
                             className="flex items-center space-x-3 w-full text-left px-4 py-2 hover:bg-gray-100 transition"
                           >
-                            <img
+                            {/* <img
                               src={sub.subcat_image}
                               alt={sub.name}
                               className="w-10 h-10 object-cover rounded"
-                            />
+                            /> */}
                             <span className="text-sm">{sub.name}</span>
                           </button>
 

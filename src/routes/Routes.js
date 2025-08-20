@@ -74,7 +74,7 @@ export const routes = [
   },
   //user
   {
-    path: "login",
+    path: "/login",
     element: <LoginPage />,
   },
   {
@@ -186,7 +186,7 @@ export const routes = [
     ),
   },
   {
-    path: "/products/:id",
+    path: "/products_web/:id",
     element: <DynamicProductListingPage />,
   },
   {
