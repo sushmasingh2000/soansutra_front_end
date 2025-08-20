@@ -135,15 +135,19 @@ export const endpoint = {
   update_customer_profile: `${domain}/api/v1/update-customer-profile`,
 
   // user 
+  //auth
+  login_customer: `${domain}/api/v1/login-customer`,
+  create_customer: `${domain}/api/v1/create-customer`,
+  //prduct 
   get_categroy_user: `${domain}/api/v1/u-get-category`,
   get_sub_categroy_user: `${domain}/api/v1/u-get-sub-category`,
   get_product_user: `${domain}/api/v1/u-get-product`,
   u_get_variant: `${domain}/api/v1/u-get-varients`,
+  //wishlist 
   create_wishlist: `${domain}/api/v1/create-wish-list-items`,
   get_wishlist: `${domain}/api/v1/get-wish-list-items`,
   remove_wishlist: `${domain}/api/v1/remove-wish-list-items`,
-  login_customer: `${domain}/api/v1/login-customer`,
-  create_customer: `${domain}/api/v1/create-customer`,
-  
+
+
 
 };
