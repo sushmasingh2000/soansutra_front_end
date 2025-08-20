@@ -16,7 +16,7 @@ import axios from "axios";
 import { endpoint } from "../../utils/APIRoutes";
 import { format, addDays } from "date-fns";
 
-const ProductPage = () => {
+const ProductDetailWebPage = () => {
   const location = useLocation();
   const productData = location.state?.product;
   const [selectedImage, setSelectedImage] = useState(0);
@@ -312,4 +312,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default ProductDetailWebPage;
