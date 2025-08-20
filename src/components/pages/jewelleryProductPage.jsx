@@ -6,8 +6,8 @@ import Header from '../Header1';
 import { useQuery } from 'react-query';
 import { endpoint } from '../../utils/APIRoutes';
 import axios from 'axios';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import { apiConnectorGet } from '../../utils/ApiConnector';
+import toast from 'react-hot-toast';
 
 
 // Enhanced Category Configuration with 5 Jewelry Types
@@ -570,6 +570,17 @@ const DynamicProductListingPage = () => {
 
   const categoryConfig = CATEGORY_CONFIG[currentCategory];
 
+
+const handleWishlist = async (productId) => {
+  try {
+    const response = await  apiConnectorGet(`${endpoint?.create_wishlist}?product_id=${productId}`);
+      toast(response.data.message);
+  } catch (error) {
+    console.error("Wishlist API error:", error);
+  }
+};
+
+
   // Initialize filters and products when category changes
   useEffect(() => {
     const initialFilters = {};
@@ -681,9 +692,7 @@ const DynamicProductListingPage = () => {
     setFilters(clearedFilters);
   };
 
-  const handleWishlist = (productId) => {
-    console.log(`Product ${productId} wishlisted`);
-  };
+  
 
   if (loading) {
     return (

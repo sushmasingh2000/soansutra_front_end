@@ -15,6 +15,8 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { endpoint } from "../../utils/APIRoutes";
 import { format, addDays } from "date-fns";
+import { apiConnectorGet } from "../../utils/ApiConnector";
+import toast from "react-hot-toast";
 
 const ProductDetailWebPage = () => {
   const location = useLocation();
@@ -24,6 +26,18 @@ const ProductDetailWebPage = () => {
   const [variants, setVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [activeTab, setActiveTab] = useState("Description");
+
+  const handleWishlist = async (productId) => {
+    try {
+      const response = await apiConnectorGet(`${endpoint?.create_wishlist}?product_id=${productId}`);
+      toast(response.data.message);
+      setIsWishlisted(true); // Update the local state to reflect wishlist status
+    } catch (error) {
+      console.error("Wishlist API error:", error);
+      toast.error("Failed to update wishlist");
+    }
+  };
+
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -112,13 +126,14 @@ const ProductDetailWebPage = () => {
                 />
               </div>
               <button
-                onClick={() => setIsWishlisted(!isWishlisted)}
+                onClick={() => handleWishlist(productData.product_id)}
                 aria-label="Add to Wishlist"
                 className={`absolute top-4 right-4 p-3 rounded-full bg-white shadow-md text-xl transition-colors ${isWishlisted ? "text-red-600" : "text-gray-400 hover:text-red-600"
                   }`}
               >
                 <Heart fill={isWishlisted ? "red" : "none"} strokeWidth={2} className="w-6 h-6" />
               </button>
+
             </div>
 
             {/* Thumbnails */}
@@ -129,8 +144,8 @@ const ProductDetailWebPage = () => {
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
                     className={`flex-shrink-0 border-2 rounded-lg overflow-hidden w-20 h-20 focus:outline-none ${selectedImage === idx
-                        ? "border-indigo-600 shadow-lg"
-                        : "border-gray-200 hover:border-gray-400"
+                      ? "border-indigo-600 shadow-lg"
+                      : "border-gray-200 hover:border-gray-400"
                       }`}
                   >
                     <img src={img} alt={`${productData.name} image ${idx + 1}`} className="w-full h-full object-cover" />
@@ -208,8 +223,8 @@ const ProductDetailWebPage = () => {
                       key={variant.varient_id}
                       onClick={() => setSelectedVariant(variant)}
                       className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                          ? "border-indigo-700 bg-indigo-100 text-indigo-700 font-semibold"
-                          : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
+                        ? "border-indigo-700 bg-indigo-100 text-indigo-700 font-semibold"
+                        : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
                         }`}
                     >
                       SKU: {variant.varient_sku}
@@ -226,8 +241,8 @@ const ProductDetailWebPage = () => {
                       key={tab}
                       onClick={() => setActiveTab(tab)}
                       className={`px-6 py-3 -mb-px text-sm font-semibold ${activeTab === tab
-                          ? "border-b-4 border-indigo-600 text-indigo-700"
-                          : "text-gray-600 hover:text-indigo-600"
+                        ? "border-b-4 border-indigo-600 text-indigo-700"
+                        : "text-gray-600 hover:text-indigo-600"
                         }`}
                     >
                       {tab}
@@ -263,7 +278,7 @@ const ProductDetailWebPage = () => {
                   )}
                   {activeTab === "Policy" && (
                     <div>
-                     Return Policy : Warrenty
+                      Return Policy : Warrenty
                     </div>
                   )}
                 </div>

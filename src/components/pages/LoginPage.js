@@ -25,7 +25,7 @@ const LoginPage = () => {
       password,
     });
     if (response.data.success) {
-      localStorage.setItem('user_token', response?.data?.result?.token);
+      localStorage.setItem('token', response?.data?.result?.token);
       window.location.href = '/'; // Change this route as needed
     } else {
       setError(response.data.message || 'Invalid credentials.');
