@@ -253,20 +253,6 @@ const CATEGORY_CONFIG = {
   },
 };
 
-// Dynamic Header Component
-const DynamicHeader = ({ categoryConfig }) => {
-  return (
-    <header className="bg-white border-b border-gray-200 px-4 py-3">
-      <h1 className="text-lg font-semibold text-gray-800">
-        {categoryConfig.title}
-      </h1>
-      <nav className="text-xs text-gray-600 mt-1">
-        <span>HOME</span> &gt;{" "}
-        <span className="text-purple-600">{categoryConfig.breadcrumb}</span>
-      </nav>
-    </header>
-  );
-};
 
 // Dynamic Filter Tabs Component
 const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
@@ -574,7 +560,6 @@ const SortDropdown = ({ sortBy, onSortChange }) => {
 
 
 
-// Main Dynamic Product Listing Component
 const DynamicProductListingPage = () => {
   const { id } = useParams();
   const [currentCategory, setCurrentCategory] = useState("rings");

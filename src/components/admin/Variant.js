@@ -84,10 +84,10 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
   };
 
   const handleSave = async () => {
-    if (!form.price || form.attributes.length === 0) {
-      toast.error("Price and at least one attribute are required.");
-      return;
-    }
+    // if (!form.price || form.attributes.length === 0) {
+    //   toast.error("Price and at least one attribute are required.");
+    //   return;
+    // }
 
     setLoading(true);
     const payload = {
