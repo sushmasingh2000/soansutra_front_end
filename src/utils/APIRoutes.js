@@ -1,5 +1,5 @@
-export const domain = "http://192.168.18.214:2000";
-// export const domain ="https://sonashutra.onrender.com";
+// export const domain = "http://192.168.18.214:2000";
+export const domain ="https://sonashutra.onrender.com";
 
 export const endpoint = {
 
@@ -70,11 +70,11 @@ export const endpoint = {
 
   //pending
 
-  //attribute
-  // create_product_attributes: `${domain}/api/v1/create-product-attributes`,
-  // get_product_attributes: `${domain}/api/v1/get-product-attributes`,
-  // update_product_attributes: `${domain}/api/v1/update-product-attributes`,
-  // delete_product_attributes: `${domain}/api/v1/delete-product-attributes`,
+  // attribute
+  create_product_attributes: `${domain}/api/v1/create-product-attributes`,
+  get_product_attributes: `${domain}/api/v1/get-product-attributes`,
+  update_product_attributes: `${domain}/api/v1/update-product-attributes`,
+  delete_product_attributes: `${domain}/api/v1/delete-product-attributes`,
 
   // product attribute values
   // create_product_attributes_value: `${domain}/api/v1/create-product-attribute-value`,

@@ -22,7 +22,7 @@ function App() {
             <Route key={i} path={route.path} element={route.element} />
           ))
         ) : (
-          <Route path="*" element={<Dashboard />} />
+          <Route path="*" element={<Login />} />
         )}
        
          { routes.map((route, i) => (
