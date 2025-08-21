@@ -29,6 +29,7 @@ import Tax from "../components/admin/Tax";
 import ProductTax from "../components/admin/ProductTax";
 import PaymentMethod from "../components/admin/Payment";
 import Customer from "../components/admin/Customer";
+import WishlistPage from "../components/pages/Wishlist";
 
 export const routes = [
   {
@@ -220,6 +221,10 @@ export const routes = [
   {
     path: "/product-attributes/:id",
     element: <ProductVariant />,
+  },
+    {
+    path: "/wish",
+    element: <WishlistPage />,
   },
 ];
 

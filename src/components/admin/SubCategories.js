@@ -231,7 +231,7 @@ const SubCategory = () => {
           </select>
         </div>
 
-        <div className="hidden lg:block bg-white rounded-lg shadow-sm border overflow-hidden">
+        <div className="hidden lg:block bg-white rounded-lg shadow-sm border overflow-scroll">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -269,13 +269,13 @@ const SubCategory = () => {
                       {subcategory.sub_cat_des}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      <img
+                     <img
                         src={
                           subcategory.sub_cat_image ||
                           "https://via.placeholder.com/80?text=No+Image"
                         }
                         alt={subcategory.sub_cat_name}
-                        className="w-20 h-20 object-cover rounded"
+                        className="w-20 h-20 object-cover rounded mt-1"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">

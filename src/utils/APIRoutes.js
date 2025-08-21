@@ -70,11 +70,11 @@ export const endpoint = {
 
   //pending
 
-  //attribute
-  // create_product_attributes: `${domain}/api/v1/create-product-attributes`,
-  // get_product_attributes: `${domain}/api/v1/get-product-attributes`,
-  // update_product_attributes: `${domain}/api/v1/update-product-attributes`,
-  // delete_product_attributes: `${domain}/api/v1/delete-product-attributes`,
+  // attribute
+  create_product_attributes: `${domain}/api/v1/create-product-attributes`,
+  get_product_attributes: `${domain}/api/v1/get-product-attributes`,
+  update_product_attributes: `${domain}/api/v1/update-product-attributes`,
+  delete_product_attributes: `${domain}/api/v1/delete-product-attributes`,
 
   // product attribute values
   // create_product_attributes_value: `${domain}/api/v1/create-product-attribute-value`,
@@ -135,15 +135,22 @@ export const endpoint = {
   update_customer_profile: `${domain}/api/v1/update-customer-profile`,
 
   // user 
+
+  //auth
+  login_customer: `${domain}/api/v1/login-customer`,
+
+  //prduct 
   get_categroy_user: `${domain}/api/v1/u-get-category`,
   get_sub_categroy_user: `${domain}/api/v1/u-get-sub-category`,
   get_product_user: `${domain}/api/v1/u-get-product`,
   u_get_variant: `${domain}/api/v1/u-get-varients`,
+
+
+  //wishlist 
   create_wishlist: `${domain}/api/v1/create-wish-list-items`,
   get_wishlist: `${domain}/api/v1/get-wish-list-items`,
   remove_wishlist: `${domain}/api/v1/remove-wish-list-items`,
-  login_customer: `${domain}/api/v1/login-customer`,
-  create_customer: `${domain}/api/v1/create-customer`,
-  
+
+
 
 };
