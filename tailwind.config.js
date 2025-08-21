@@ -17,6 +17,11 @@ module.exports = {
         "custom-gradient":
           "radial-gradient(circle, rgb(50 125 224) 0%, rgb(0, 0, 20) 50%)",
       },
+       fontFamily: {
+        playfair: ['"Playfair Display"', 'serif'],
+        dancing: ['"Dancing Script"', 'cursive'],
+        nunito: ['Nunito', 'sans-serif'],
+      },
     },
     animation: {
       "gradient-x": "gradient-x 5s ease infinite",
