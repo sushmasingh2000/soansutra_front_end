@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   MagnifyingGlassIcon,
   MapPinIcon,
@@ -15,6 +15,8 @@ import { Link } from "react-router-dom";
 import { Login } from "@mui/icons-material";
 import { Profiler } from "react";
 import { Lock, LogIn, User } from "lucide-react";
+import { apiConnectorGet } from "../utils/ApiConnector";
+import { endpoint } from "../utils/APIRoutes";
 
 
 // Indian Flag Component
@@ -35,12 +37,31 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const user = localStorage.getItem("token")
+  const [cartItems, setCartItems] = useState([]);
+
   //  const navigate = useNavigate();
 
   // const handleUserClick = () => {
   //   navigate('/login');
   // };
 
+  const getCart = async () => {
+    try {
+      const response = await apiConnectorGet(endpoint?.get_cart);
+      if (response?.data?.success) {
+        setCartItems(response.data.result);
+      } else {
+        console.error('Failed to fetch cart:', response?.data?.message);
+      }
+    } catch (e) {
+      console.log("something went wrong", e);
+    }
+  };
+
+  useEffect(() => {
+    getCart();
+  }, []);
+ 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       {/* Remove all horizontal padding and use full width */}
@@ -150,7 +171,7 @@ export default function Header() {
               <Link to={"/shopping-cart"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative">
                 <ShoppingCartIcon className="h-6 w-6" />
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  2
+                 {cartItems?.length}
                 </span>
               </Link>
             </div>
@@ -164,7 +185,7 @@ export default function Header() {
             <Link to={"/shopping-cart"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative">
               <ShoppingCartIcon className="h-6 w-6" />
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                2
+               {cartItems?.length}
               </span>
             </Link>
             <button

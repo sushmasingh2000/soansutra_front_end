@@ -15,7 +15,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { endpoint } from "../../utils/APIRoutes";
 import { format, addDays } from "date-fns";
-import { apiConnectorGet } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import toast from "react-hot-toast";
 import { Discount } from "@mui/icons-material";
 
@@ -27,6 +27,7 @@ const ProductDetailWebPage = () => {
   const [variants, setVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [activeTab, setActiveTab] = useState("Description");
+  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
   const handleWishlist = async (productId, varientId) => {
@@ -43,6 +44,25 @@ const ProductDetailWebPage = () => {
     }
   };
 
+  const user = localStorage.getItem("token")
+  const handleAddToCart = async () => {
+    if (!user) {
+      toast.error("Please login to add to cart.");
+      navigate("/login");
+      return;
+    }
+    try {
+      const response = await apiConnectorPost(endpoint.create_cart, {
+        product_id: productData.product_id,
+        varient_id: selectedVariant?.varient_id,
+        quantity,
+      });
+      toast.success(response?.data?.message);
+    } catch (error) {
+      console.error("Add to cart error:", error);
+    }
+  };
+
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -50,13 +70,19 @@ const ProductDetailWebPage = () => {
         const response = await axios.get(
           `${endpoint?.u_get_variant}?product_id=${productData.product_id}`
         );
-        if (response.data.success) {
+        if (response.data.success && response.data.result.length > 0) {
           setVariants(response.data.result);
-          if (response.data.result.length > 0) {
-            setSelectedVariant(response.data.result[0]);
-          }
+          setSelectedVariant(response.data.result[0]); // ✅ Set default selected variant
         } else {
+          const fallbackVariant = {
+            varient_id: productData.varient_id || "default",
+            varient_sku: "Default",
+            varient_price: productData.price,
+            varient_weight: productData.weight || "",
+            unit_name: productData.unit_name || "",
+          };
           setVariants([]);
+          setSelectedVariant(fallbackVariant); // ✅ Set fallback selected variant
         }
       } catch (error) {
         console.error("Error fetching variants:", error);
@@ -68,6 +94,7 @@ const ProductDetailWebPage = () => {
       fetchVariants();
     }
   }, [productData?.product_id]);
+
 
   if (!productData) {
     return (
@@ -237,7 +264,18 @@ const ProductDetailWebPage = () => {
 
                 </div>
               )}
-
+ <div className="mt-6 mb-4 flex items-center gap-3">
+              <label htmlFor="quantity" className="font-semibold text-sm">Quantity:</label>
+              <button onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+                className="w-8 h-8 border border-gray-300 rounded flex items-center
+                 justify-center hover:bg-gray-50 select-none text-lg" aria-label="Decrease quantity" > −
+              </button> <input id="quantity" type="number" min={1} value={quantity}
+                onChange={(e) => {
+                  const val = Number(e.target.value); if (!isNaN(val) && val >= 1) { setQuantity(val); }
+                }} className="w-16 border border-gray-300 rounded px-2 py-1 text-center" />
+              <button onClick={() => setQuantity((prev) => prev + 1)} className="w-8 h-8 border border-gray-300 
+                   rounded flex items-center justify-center hover:bg-gray-50 select-none text-lg" aria-label="Increase quantity" > + </button>
+            </div>
               <div className="mt-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">Available Variants</h2>
                 <div className="mt-4">
@@ -249,8 +287,8 @@ const ProductDetailWebPage = () => {
                           key={variant.varient_id}
                           onClick={() => setSelectedVariant(variant)}
                           className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                              ? "border-indigo-700 bg-indigo-100 text-indigo-700 font-semibold"
-                              : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
+                            ? "border-indigo-700 bg-indigo-100 text-indigo-700 font-semibold"
+                            : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
                             }`}
                         >
                           SKU: {variant.varient_sku}
@@ -263,7 +301,7 @@ const ProductDetailWebPage = () => {
                       <select
                         value={selectedVariant?.varient_id || ""}
                         onChange={(e) => {
-                          const selected = variantButtons.find(v => v.varient_id === Number(e.target.value));
+                          const selected = variants.find((v) => String(v.varient_id) === e.target.value); // ✅ match string to string
                           setSelectedVariant(selected);
                         }}
                         className="border border-gray-300 px-4 py-2 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -389,17 +427,17 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
             </div>
-
+           
             {/* Bottom Buttons */}
-            <div className="mt-10 flex space-x-4">
-              <Link
-                to="/cart"
-                state={{ product: { ...productData, selectedVariant } }}
+            <div className="mt-1 flex space-x-4">
+              <button
+                onClick={handleAddToCart}
                 className="flex-grow inline-flex items-center justify-center gap-2 rounded-md border border-indigo-700 bg-indigo-700 px-5 py-3 text-white text-lg font-semibold hover:bg-indigo-800 transition"
               >
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
-              </Link>
+              </button>
+
               <button
                 onClick={() => alert("Buy Now clicked!")}
                 className="flex-grow inline-flex items-center justify-center gap-2 rounded-md border border-indigo-700 bg-white px-5 py-3 text-indigo-700 text-lg font-semibold hover:bg-indigo-50 transition"

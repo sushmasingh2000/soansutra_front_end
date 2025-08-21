@@ -3,7 +3,7 @@ import { BrandLogo } from './brand-logo';
 import { Link } from 'react-router-dom';
 
 <BrandLogo/>
-const CartHeader = ({ onBackClick }) => {
+const CartHeader = ({ onBackClick , cartItems }) => {
   return (
     <>
       {/* Font Awesome CDN - Make sure this is included in your HTML head */}
@@ -46,7 +46,7 @@ const CartHeader = ({ onBackClick }) => {
               className="w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold"
               style={{ backgroundColor: '#4f3267' }}
             >
-              4
+              {cartItems?.length}
             </div>
           </div>
         </div>
