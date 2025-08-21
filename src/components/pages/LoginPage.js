@@ -25,7 +25,7 @@ const LoginPage = () => {
       password,
     });
     if (response.data.success) {
-      localStorage.setItem('user_token', response?.data?.result?.token);
+      localStorage.setItem('token', response?.data?.result?.token);
       window.location.href = '/'; // Change this route as needed
     } else {
       setError(response.data.message || 'Invalid credentials.');
@@ -43,18 +43,13 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header />
-      <NavigationBar />
-      <div className="flex items-center justify-center px-3 py-6 mb-20 mt-10 bg-white">
-        <div className="max-w-sm w-full bg-white rounded-2xl shadow-lg px-6 py-8">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
+      <div className="flex items-center justify-center px-3 py-6 bg-white">
+        <div className="max-w-sm w-full bg-white rounded-2xl shadow-2xl shadow-violet-600 px-6 py-8">
+          <div className="flex justify-center mb-6"> 
             <div className="flex-shrink-0 pl-2">
               <BrandLogo />
             </div>
           </div>
-
-          {/* Header */}
           <div className="text-center mb-6">
             <h1 className="text-xl font-semibold text-gray-800 mb-3">
               Login to SonaSutra
@@ -64,7 +59,6 @@ const LoginPage = () => {
             </p>
           </div>
 
-          {/* Form */}
           <div className="space-y-4">
             <div>
               <input
@@ -85,7 +79,6 @@ const LoginPage = () => {
               />
             </div>
 
-            {/* Login Button */}
             <button
               onClick={handleLogin}
               disabled={loading}
@@ -94,7 +87,6 @@ const LoginPage = () => {
               {loading ? 'Logging in...' : 'LOGIN'}
             </button>
 
-            {/* Error Message */}
             {error && (
               <div className="text-red-500 text-sm text-center mt-2">
                 {error}
@@ -102,8 +94,8 @@ const LoginPage = () => {
             )}
           </div>
 
-          {/* Social Login */}
-          <div className="mt-6">
+      
+          {/* <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
@@ -114,7 +106,6 @@ const LoginPage = () => {
             </div>
 
             <div className="mt-4 flex justify-center space-x-3">
-              {/* Google */}
               <button className="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md">
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -124,16 +115,14 @@ const LoginPage = () => {
                 </svg>
               </button>
 
-              {/* Facebook */}
               <button className="w-10 h-10 bg-[#1877F2] rounded-full flex items-center justify-center hover:bg-[#166FE5] transition-all duration-200 shadow-sm hover:shadow-md">
                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
 
-          {/* Create Account Link */}
           <div className="mt-6 text-center">
             <span className="text-gray-600 text-xs">New to SonaSutra? </span>
             <a
@@ -144,7 +133,6 @@ const LoginPage = () => {
             </a>
           </div>
 
-          {/* Terms and Privacy */}
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500 leading-relaxed">
               By continuing you acknowledge that you are at least 18 years old and have read and agree to SonaSutra's{' '}
@@ -154,7 +142,6 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
