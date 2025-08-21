@@ -276,11 +276,10 @@ const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
         <button
           key={tab}
           onClick={() => onTabChange(tab)}
-          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${
-            activeTab === tab
-              ? "bg-purple-600 text-white"
-              : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-          }`}
+          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${activeTab === tab
+            ? "bg-purple-600 text-white"
+            : "bg-purple-100 text-purple-700 hover:bg-purple-200"
+            }`}
         >
           {tab}
         </button>
@@ -442,12 +441,12 @@ const ProductCard = ({ product, onWishlist }) => {
     ?.map((img) => img.p_image_url)?.length
     ? product.product_images.map((img) => img.p_image_url)
     : [
-        "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop",
-      ];
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop",
+    ];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -594,10 +593,6 @@ const DynamicProductListingPage = () => {
 
   const navigate = useNavigate();
 
-  const handleSubcategoryClick = (productSubcategoryId) => {
-    navigate(`/products_web/${productSubcategoryId}`);
-  };
-
   const handleWishlist = async (productId) => {
     try {
       const response = await apiConnectorGet(
@@ -653,18 +648,18 @@ const DynamicProductListingPage = () => {
     }
   }, [cat_id]);
 
- useEffect(() => {
-  const enhancedProducts = (product || []).map((p, i) => ({
-    ...p,
-    images: [
-      `https://source.unsplash.com/random/400x400?sig=${i}&product`,
-      `https://source.unsplash.com/random/400x400?sig=${i + 100}&product`,
-    ],
-    isNew: Math.random() > 0.7,
-  }));
-  setAllProducts(enhancedProducts);
-  setProducts(enhancedProducts);
-}, [product, id]); // <-- Add `id` here
+  useEffect(() => {
+    const enhancedProducts = (product || []).map((p, i) => ({
+      ...p,
+      images: [
+        `https://source.unsplash.com/random/400x400?sig=${i}&product`,
+        `https://source.unsplash.com/random/400x400?sig=${i + 100}&product`,
+      ],
+      isNew: Math.random() > 0.7,
+    }));
+    setAllProducts(enhancedProducts);
+    setProducts(enhancedProducts);
+  }, [product, id]); // <-- Add `id` here
 
 
   // Filter and sort products
@@ -761,8 +756,8 @@ const DynamicProductListingPage = () => {
               <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 py-2 bg-white border-b">
                 {subcategories.map((subcat) => (
                   <button
-                    key={subcat.id}
-                    // onClick={() => handleSubcategoryClick(subcat.id)}
+                    key={subcat.product_subcategory_id}
+                    onClick={() => navigate(`/products_web/${subcat.product_subcategory_id}`)}
                     className="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-medium hover:bg-purple-200 whitespace-nowrap"
                   >
                     {subcat.name}

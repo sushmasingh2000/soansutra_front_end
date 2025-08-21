@@ -12,6 +12,9 @@ import { TreasureChestIcon } from "./treasure-chest-icon"
 import { BrandLogo } from "./brand-logo"
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { Login } from "@mui/icons-material";
+import { Profiler } from "react";
+import { Lock, LogIn, User } from "lucide-react";
 
 
 // Indian Flag Component
@@ -28,15 +31,16 @@ const IndianFlag = () => (
 )
 
 export default function Header() {
-  
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const user = localStorage.getItem("token")
   //  const navigate = useNavigate();
 
   // const handleUserClick = () => {
   //   navigate('/login');
   // };
- 
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       {/* Remove all horizontal padding and use full width */}
@@ -129,10 +133,18 @@ export default function Header() {
 
             {/* User Actions */}
             <div className="flex items-center space-x-1">
-              <Link to={"/login"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors" >
-                <UserIcon className="h-6 w-6" />
-              </Link>
-              <Link to={"/myaccount/profile"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
+              {user ? (
+                <Link to="/myaccount/profile" className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
+                  <User className="h-6 w-6" />
+                </Link>
+              ) : (
+                <Link to="/login" className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
+                  <Lock className="h-6 w-6" />
+                </Link>
+              )}
+
+
+              <Link to={"/wish"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
                 <HeartIcon className="h-6 w-6" />
               </Link>
               <Link to={"/shopping-cart"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative">

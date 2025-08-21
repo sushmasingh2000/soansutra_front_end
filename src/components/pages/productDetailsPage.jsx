@@ -11,12 +11,13 @@ import Header from "../Header1";
 import NavigationBar from "../navigationbar";
 import Footer from "../Footer1";
 import CustomerReviewSection from "../customerReview";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { endpoint } from "../../utils/APIRoutes";
 import { format, addDays } from "date-fns";
 import { apiConnectorGet } from "../../utils/ApiConnector";
 import toast from "react-hot-toast";
+import { Discount } from "@mui/icons-material";
 
 const ProductDetailWebPage = () => {
   const location = useLocation();
@@ -26,15 +27,19 @@ const ProductDetailWebPage = () => {
   const [variants, setVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [activeTab, setActiveTab] = useState("Description");
+  const navigate = useNavigate();
 
-  const handleWishlist = async (productId) => {
+  const handleWishlist = async (productId, varientId) => {
     try {
-      const response = await apiConnectorGet(`${endpoint?.create_wishlist}?product_id=${productId}`);
-      toast(response.data.message);
-      setIsWishlisted(true); // Update the local state to reflect wishlist status
+      const response = await apiConnectorGet(
+        `${endpoint?.create_wishlist}?product_id=${productId}&varient_id=${varientId}`
+      );
+      toast(response.data.message, { id: 1 });
+      setIsWishlisted(true);
     } catch (error) {
       console.error("Wishlist API error:", error);
-      toast.error("Failed to update wishlist");
+      toast("Please Login");
+      navigate('/login');
     }
   };
 
@@ -94,7 +99,7 @@ const ProductDetailWebPage = () => {
   const deliveryDays = Number(productData.deliveryTime?.split(" ")[0]) || 5;
   const estimatedDeliveryDate = format(addDays(new Date(), deliveryDays), "dd MMM yyyy");
 
-  const tabs = ["Description", "Specifications", "Policy"];
+  const tabs = ["Description", "Specifications", "Product Tax"];
 
   const variantButtons = variants.length
     ? variants
@@ -126,7 +131,7 @@ const ProductDetailWebPage = () => {
                 />
               </div>
               <button
-                onClick={() => handleWishlist(productData.product_id)}
+                onClick={() => handleWishlist(productData.product_id, selectedVariant?.varient_id)}
                 aria-label="Add to Wishlist"
                 className={`absolute top-4 right-4 p-3 rounded-full bg-white shadow-md text-xl transition-colors ${isWishlisted ? "text-red-600" : "text-gray-400 hover:text-red-600"
                   }`}
@@ -184,57 +189,99 @@ const ProductDetailWebPage = () => {
                   <span className="text-3xl font-extrabold text-gray-900">
                     {formatPrice(selectedVariant?.varient_price || productData.price)}
                   </span>
-                  {originalPrice && originalPriceNum > priceNum && (
-                    <>
-                      <span className="text-lg line-through text-gray-500">
-                        {formatPrice(originalPrice)}
-                      </span>
-                      <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-sm font-semibold">
-                        {discount}% OFF
-                      </span>
-                    </>
+
+                  {/* ✅ Show active discount percentage in green next to price */}
+                  {selectedVariant?.discount_details?.length > 0 && (
+                    selectedVariant.discount_details
+                      .filter((d) => d.discount_is_active === "Active")
+                      .slice(0, 1) // Show only the first active discount
+                      .map((d, i) => (
+                        <span
+                          key={i}
+                          className="text-sm font-semibold text-green-600"
+                        >
+                          {d.discount_value}
+                          {d.discount_type === "Percentage" ? "%" : "₹"} Discount
+                        </span>
+                      ))
                   )}
                 </div>
+
                 {savings > 0 && (
                   <p className="text-green-700 font-semibold mt-1">
                     You save {formatPrice(savings)}
                   </p>
                 )}
+
                 <p className="text-gray-500 text-sm mt-1">Price inclusive of all taxes</p>
               </div>
 
-              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md flex items-center space-x-3">
-                <Truck className="w-5 h-5 text-green-600" />
-                <div>
-                  <p className="text-green-800 font-semibold">
-                    Free Delivery by {estimatedDeliveryDate}
-                  </p>
-                  <p className="text-green-700 text-xs">
-                    Order within {deliveryDays} days for free delivery
-                  </p>
+              {selectedVariant?.discount_details?.length > 0 && (
+                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <Discount className="w-5 h-5 text-yellow-600" />
+                    <h3 className="text-yellow-800 font-semibold text-md">Available Discounts</h3>
+                  </div>
+                  <ul className="text-sm text-yellow-700 list-disc pl-6 space-y-1">
+                    {selectedVariant.discount_details
+                      ?.filter((discount) => discount.discount_is_active === "Active")
+                      .map((discount, idx) => (
+                        <li key={idx}>
+                          <span className="font-medium">{discount.discount_name}</span> -{" "}
+                          {discount.discount_value}
+                          {discount.discount_type === "Percentage" ? "%" : "₹"} off (
+                          <span className="text-green-600">{discount.discount_is_active}</span>)
+                        </li>
+                      ))}
+                  </ul>
+
                 </div>
-              </div>
+              )}
 
               <div className="mt-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">Available Variants</h2>
-                <div className="flex flex-wrap gap-3">
-                  {variantButtons.map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-indigo-700 bg-indigo-100 text-indigo-700 font-semibold"
-                        : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
-                        }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))}
+                <div className="mt-4">
+                  {variantButtons.length <= 3 ? (
+                    // Show buttons if 3 or fewer variants
+                    <div className="flex flex-wrap gap-3">
+                      {variantButtons.map((variant) => (
+                        <button
+                          key={variant.varient_id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                              ? "border-indigo-700 bg-indigo-100 text-indigo-700 font-semibold"
+                              : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
+                            }`}
+                        >
+                          SKU: {variant.varient_sku}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    // Show dropdown if more than 3 variants
+                    <div>
+                      <select
+                        value={selectedVariant?.varient_id || ""}
+                        onChange={(e) => {
+                          const selected = variantButtons.find(v => v.varient_id === Number(e.target.value));
+                          setSelectedVariant(selected);
+                        }}
+                        className="border border-gray-300 px-4 py-2 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        {variantButtons.map((variant) => (
+                          <option key={variant.varient_id} value={variant.varient_id}>
+                            SKU: {variant.varient_sku}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
+
               </div>
 
               {/* Tabs */}
-              <div className="mt-10">
+              <div className="mt-1">
                 <div className="flex border-b border-gray-300">
                   {tabs.map((tab) => (
                     <button
@@ -258,29 +305,87 @@ const ProductDetailWebPage = () => {
                   )}
                   {activeTab === "Specifications" && (
                     <div>
-                      {productData.specifications ? (
-                        <table className="w-full text-left text-sm">
-                          <tbody>
-                            {Object.entries(productData.specifications).map(
-                              ([key, val]) => (
-                                <tr key={key} className="border-b border-gray-200">
-                                  <th className="py-2 pr-4 font-medium text-gray-800">{key}</th>
-                                  <td className="py-2">{val}</td>
+                      <table className="w-full text-left text-sm">
+                        <tbody>
+                          {/* Default specifications if any */}
+                          {productData.specifications &&
+                            Object.entries(productData.specifications).map(([key, val]) => (
+                              <tr key={key} className="border-b border-gray-200">
+                                <th className="py-2 pr-4 font-medium text-gray-800">{key}</th>
+                                <td className="py-2">{val}</td>
+                              </tr>
+                            ))}
+
+                          {/* Variant-based specifications */}
+                          {selectedVariant && (
+                            <>
+                              <tr className="border-b border-gray-200">
+                                <th className="py-2 pr-4 font-medium text-gray-800">Weight</th>
+                                <td className="py-2">{selectedVariant.varient_weight || "N/A"}</td>
+                              </tr>
+                              <tr className="border-b border-gray-200">
+                                <th className="py-2 pr-4 font-medium text-gray-800">Unit</th>
+                                <td className="py-2">{selectedVariant.unit_name || "N/A"}</td>
+                              </tr>
+                            </>
+                          )}
+
+                          {/* Material Details */}
+                          {selectedVariant?.material_details?.length > 0 && (
+                            <>
+                              <tr>
+                                <th colSpan="2" className="pt-6 pb-2 text-indigo-600 text-sm font-bold">
+                                  Material Details
+                                </th>
+                              </tr>
+                              {selectedVariant.material_details.map((mat, idx) => (
+                                <tr key={idx} className="border-b border-gray-200">
+                                  <td className="py-2 pr-4 text-gray-700">
+                                    {mat.material_name} ({mat.percentage}%)
+                                  </td>
+                                  <td className="py-2 text-gray-700">
+                                    {mat.weight} {mat.v_un_name || ""}
+                                  </td>
                                 </tr>
-                              )
-                            )}
+                              ))}
+                            </>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                  {activeTab === "Product Tax" && (
+                    <div>
+                      {selectedVariant?.tax_details?.length > 0 ? (
+                        <table className="w-full text-left text-sm">
+
+                          <tbody>
+                            {selectedVariant.tax_details.map((tax, idx) => (
+                              <tr key={idx} className="border-b border-gray-200">
+                                <td className="py-2 pr-4">{idx + 1}</td>
+                                <td className="py-2 pr-4">{tax.tax_name}</td>
+                                <td className="py-2">{tax.tax_percentage}%</td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       ) : (
-                        <p>No specifications available.</p>
+                        <p className="text-gray-600 text-sm">No tax information available.</p>
                       )}
                     </div>
                   )}
-                  {activeTab === "Policy" && (
-                    <div>
-                      Return Policy : Warrenty
-                    </div>
-                  )}
+
+                </div>
+              </div>
+              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md flex items-center space-x-3">
+                <Truck className="w-5 h-5 text-green-600" />
+                <div>
+                  <p className="text-green-800 font-semibold">
+                    Free Delivery by {estimatedDeliveryDate}
+                  </p>
+                  <p className="text-green-700 text-xs">
+                    Order within {deliveryDays} days for free delivery
+                  </p>
                 </div>
               </div>
             </div>

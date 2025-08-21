@@ -91,17 +91,24 @@ const NavigationBar = () => {
                 <div
                   key={cat.id}
                   className="relative"
+                  onMouseEnter={() => {
+                    setActiveCategoryId(cat.product_category_id);
+                    fetchSubcategories(cat.product_category_id);
+                  }}
+                  onMouseLeave={() => {
+                    setActiveCategoryId(null);
+                  }}
                 >
                   <button
                     type="button"
-                    onClick={() => fetchSubcategories(cat.product_category_id)}
                     className="text-sm font-medium hover:text-pink-200 transition-colors duration-200 whitespace-nowrap"
                   >
                     {cat.name}
                   </button>
+
                   {/* Subcategory Dropdown */}
                   {activeCategoryId === cat.product_category_id && subcategories.length > 0 && (
-                    <div className="absolute top-full left-0 mt-2 w-64 bg-white text-black rounded-md shadow-lg z-50">
+                    <div className="absolute top-full left-0  w-64 bg-white text-black shadow-lg z-50">
                       <div className="py-2 grid grid-cols-1 gap-2">
                         {subcategories.map((sub) => (
                           <button
@@ -116,15 +123,13 @@ const NavigationBar = () => {
                             />
                             <span className="text-sm">{sub.name}</span>
                           </button>
-
                         ))}
                       </div>
                     </div>
                   )}
-
                 </div>
               ))}
-             
+
             </div>
           </div>
         </div>
