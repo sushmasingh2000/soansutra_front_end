@@ -15,10 +15,6 @@ import { TreasureChestIcon } from "./treasure-chest-icon"
 import { BrandLogo } from "./brand-logo"
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import { Login } from "@mui/icons-material";
-import { Profiler } from "react";
-import { Lock, LogIn, User } from "lucide-react";
-
 
 // Indian Flag Component
 const IndianFlag = () => (
@@ -34,21 +30,117 @@ const IndianFlag = () => (
 )
 
 export default function Header() {
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  //  const navigate = useNavigate();
+  const [showMoreJewellery, setShowMoreJewellery] = useState(false)
+  const [showUserDropdown, setShowUserDropdown] = useState(false)
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
 
-  // const handleUserClick = () => {
-  //   navigate('/login');
-  // };
- 
+  // Rotating placeholders
+  const placeholders = ["Search Relationship", "Search Price"]
+
+  // Rotate placeholders every 3 seconds
+  useEffect(() => {
+    const placeholderInterval = setInterval(() => {
+      setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length)
+    }, 3000)
+    
+    return () => clearInterval(placeholderInterval)
+  }, [])
+
+const jewelryTypes = [
+    { name: "Rings", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" },
+    { name: "Earrings", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" },
+    { name: "Bracelets & Bangles", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" },
+    { name: "Solitaires", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+  ]
+
+  const moreJewelleryTypes = [
+    { name: "Mangalsutras", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" },
+    { name: "Necklaces & Pendants", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" },
+  ]
+
+  const slides = [
+    { image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/22kt_m.png", alt: "22KT Everyday Collection" },
+    { image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/wearyourwins_m.png", alt: "Wear Your Wins" },
+  ]
+
+  // New category sections
+  const categorySections = [
+    { 
+      name: "Best Sellers", 
+      image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/bestsellers/bestsellers_m.png",
+      bgColor: "bg-gradient-to-r from-blue-100 to-blue-50"
+    },
+    { 
+      name: "Latest", 
+      image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/02-FEB/Banner/New_Website/Hamburger/02/latest_m.png",
+      bgColor: "bg-gradient-to-r from-gray-100 to-gray-50"
+    },
+    { 
+      name: "Trending", 
+      image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/02-FEB/Banner/New_Website/Hamburger/02/trending_m.png",
+      bgColor: "bg-gradient-to-r from-yellow-100 to-yellow-50"
+    },
+    { 
+      name: "Collections", 
+      image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/bestsellers/collections_t.png",
+      bgColor: "bg-gradient-to-r from-purple-100 to-purple-50"
+    }
+  ]
+
+  // Products & Services
+  const productsServices = [
+    {
+      name: "Treasure Chest",
+      description: "Pay 9 instalments, and get the 10th FREE as a CaratLane Benefit!",
+      image: "https://cdn.caratlane.com/media/static/images/web/Treasure-Chest-1-26-may-25.png",
+      icon: "🎁"
+    },
+    {
+      name: "Stores",
+      description: "Visit the nearest store today to try your favourite jewellery.",
+      image: "https://cdn.caratlane.com/media/static/images/web/Store-Vector-25.png",
+      icon: "🏪"
+    },
+    {
+      name: "Digital Gold",
+      description: "Invest in 24K gold hassle-free with CaratLane's Digital Gold.",
+      image: "https://cdn.caratlane.com/media/static/images/discovery/responsive-hamburger-menu/egold-1x.png",
+      icon: "🥇"
+    }
+  ]
+
+  const [currentSlide, setCurrentSlide] = useState(0)
+
+  // Auto-slide functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    }, 3000) // Changes slide every 3 seconds
+    
+    return () => clearInterval(interval)
+  }, [slides.length])
+
+  // Manual slide functions
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length)
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 relative">
       <div className="w-full">
-        <div className="flex items-center justify-between h-16 px-2">
-          {/* Logo - close to left edge */}
-          <Link to={"/admin-login"} className="flex-shrink-0 pl-2">
+        {/* Mobile Header */}
+        <div className="lg:hidden flex items-center justify-between h-16 px-3">
+          {/* Sidebar Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 text-gray-700 hover:text-purple-600 transition-colors"
+          >
+            {isMobileMenuOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
+          </button>
+
+          {/* Brand Logo */}
+          <Link to={"/admin-loginpage"} className="flex-shrink-0">
             <BrandLogo />
           </Link>
 
@@ -170,18 +262,50 @@ export default function Header() {
 
             {/* User Actions */}
             <div className="flex items-center space-x-1">
-              {user ? (
-                <Link to="/myaccount/profile" className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
-                  <User className="h-6 w-6" />
+              {/* User Icon with Dropdown */}
+              <div 
+                className="relative"
+                onMouseEnter={() => setShowUserDropdown(true)}
+                onMouseLeave={() => setShowUserDropdown(false)}
+              >
+                <Link to={"/login"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
+                  <UserIcon className="h-6 w-6" />
                 </Link>
-              ) : (
-                <Link to="/login" className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
-                  <Lock className="h-6 w-6" />
-                </Link>
-              )}
-
-
-              <Link to={"/wish"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
+                
+                {/* Desktop User Dropdown */}
+                {showUserDropdown && (
+                  <div className="absolute top-full right-0  w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-[100]">
+                    <div className="p-4">
+                      <div className="text-center mb-4">
+                        <h3 className="text-lg font-semibold text-purple-700 mb-1">abhishek chaurasia</h3>
+                        <p className="text-gray-600 text-sm">freefireprouser456@yahoo.com</p>
+                      </div>
+                      
+                      <hr className="border-t-2 border-purple-300 mb-4" />
+                      
+                      <div className="space-y-2">
+                        <Link 
+                          to="/my-accounts" 
+                          className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded transition-colors"
+                        >
+                          MY ACCOUNTS
+                        </Link>
+                        <Link 
+                          to="/our-story" 
+                          className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded transition-colors"
+                        >
+                          LOGIN
+                        </Link>
+                        <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded transition-colors">
+                          LOGOUT
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <Link to={"/myaccount/profile"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
                 <HeartIcon className="h-6 w-6" />
               </Link>
               <Link to={"/shopping-cart"} className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative">
@@ -198,11 +322,11 @@ export default function Header() {
         {isMobileMenuOpen && (
           <div className="lg:hidden fixed inset-0 z-[100]">
             {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-black bg-opacity-50"
+            <div 
+              className="absolute inset-0 bg-black bg-opacity-50" 
               onClick={() => setIsMobileMenuOpen(false)}
             />
-
+            
             {/* Sidebar */}
             <div className="relative w-full bg-white h-full shadow-xl overflow-y-auto flex flex-col">
               {/* Sidebar Header */}
@@ -224,26 +348,25 @@ export default function Header() {
                     <span className="font-medium text-sm text-gray-800">INDIA</span>
                   </div>
                 </div>
-
+                
                 {/* Right side - Account, Heart, and Cart icons */}
                 <div className="flex items-center space-x-0">
-                  <Link
-                    to={"/login"}
-                    className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors flex items-center space-x-1"
+                  <Link 
+                    to={"/login"} 
+                    className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <UserIcon className="h-5 w-5" />
-                    <span>Account</span>
                   </Link>
-                  <Link
-                    to={"/myaccount/profile"}
+                  <Link 
+                    to={"/myaccount/profile"} 
                     className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <HeartIcon className="h-5 w-5" />
                   </Link>
-                  <Link
-                    to={"/shopping-cart"}
+                  <Link 
+                    to={"/shopping-cart"} 
                     className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -257,7 +380,7 @@ export default function Header() {
 
               {/* Login Button */}
               <div className="px-4 py-3">
-                <Link
+                <Link 
                   to={"/login"}
                   className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -319,7 +442,7 @@ export default function Header() {
                     alt={slides[currentSlide].alt}
                     className="w-full h-auto object-cover transition-all duration-500 ease-in-out"
                   />
-
+                  
                   {/* Previous Arrow */}
                   <button
                     onClick={prevSlide}
@@ -327,7 +450,7 @@ export default function Header() {
                   >
                     <ChevronLeftIcon className="w-3 h-3" />
                   </button>
-
+                  
                   {/* Next Arrow */}
                   <button
                     onClick={nextSlide}
@@ -335,20 +458,21 @@ export default function Header() {
                   >
                     <ChevronRightIcon className="w-3 h-3" />
                   </button>
-
+                  
                   {/* Slide Navigation Dots */}
                   <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
                     {slides.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={`w-1.5 h-1.5 rounded-full transition-colors ${index === currentSlide ? 'bg-white' : 'bg-white/50'
-                          }`}
+                        className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                          index === currentSlide ? 'bg-white' : 'bg-white/50'
+                        }`}
                       />
                     ))}
                   </div>
                 </div>
-
+                
                 {/* Slide Counter */}
                 <div className="flex justify-center mt-2">
                   <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full">
@@ -361,8 +485,8 @@ export default function Header() {
               <div className="px-4 py-2">
                 <div className="grid grid-cols-2 gap-3">
                   {categorySections.map((category, index) => (
-                    <div
-                      key={index}
+                    <div 
+                      key={index} 
                       className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300"
                     >
                       <img
@@ -389,11 +513,11 @@ export default function Header() {
                     <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
                   </div>
                 </div>
-
+                
                 <div className="space-y-3">
                   {productsServices.map((service, index) => (
-                    <div
-                      key={index}
+                    <div 
+                      key={index} 
                       className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-lg transition-all duration-300 cursor-pointer"
                     >
                       <div className="flex items-start space-x-3">
@@ -436,7 +560,7 @@ export default function Header() {
           </div>
         )}
       </div>
-
+      
       {/* CSS Animation for placeholder slide effect */}
       <style>{`
   @keyframes placeholderSlide {
