@@ -18,6 +18,16 @@ import axios from "axios";
 import { endpoint } from "../../utils/APIRoutes";
 import { format, addDays } from "date-fns";
 import WarrantyFeatures from "../trustBadge";
+import BannerSlidder from "../bannerSlidder";
+import YouMayLike from "../productyoumaylike";
+import SimilarProducts from "../similarproduct";
+import RecentlyViewed from "../recentlyviewed";
+import ContinueBrowsing from "../continuebrowsing";
+import More18KProducts from "../moreproduct";
+import CaratLaneSignup from "../emailSubscription";
+import MobileVideoSlider from "../mobilevideoslider";
+import RelatedCategories from "../relatedcategories";
+import ShopByProducts from "../shopbyproduct";
 
 // Material UI style icons as SVG components
 const GoldIcon = () => (
@@ -640,7 +650,17 @@ const ProductDetailWebPage = () => {
       </div>
       <div className="w-full">
         <WarrantyFeatures/>
+        <BannerSlidder/>
+        <YouMayLike/>
+        <SimilarProducts/>
         <CustomerReviewSection productId={productData.product_id} />
+         <RecentlyViewed/>
+         <ContinueBrowsing/>
+         <More18KProducts/>
+         <CaratLaneSignup/>
+         <MobileVideoSlider/>
+         <RelatedCategories/>
+         <ShopByProducts/>
         <Footer />
       </div>
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40">
