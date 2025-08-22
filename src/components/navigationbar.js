@@ -11,6 +11,9 @@ const NavigationBar = () => {
   const [subcategories, setSubcategories] = useState([]);
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
   const { data: categoryData, isLoading: loadingCategories } = useQuery(
     ['get_product_category'],
@@ -20,6 +23,21 @@ const NavigationBar = () => {
 
   const categories = categoryData?.data?.result || [];
 
+  const handleHomeClick = () => {
+    navigate('/');
+    setIsMenuOpen(false);
+  };
+  const handleServiceClick = (slug) => {
+    navigate(slug);
+    setIsServicesOpen(false);
+    setIsMenuOpen(false);
+  };
+  const serviceLinks = [
+    { name: 'Store Locator', slug: '/store-locator' },
+    { name: 'Customer Service', slug: '/customer-service' },
+    { name: 'Size Guide', slug: '/size-guide' },
+    { name: 'Care Instructions', slug: '/care-instructions' }
+  ];
   const fetchSubcategories = async (categoryId) => {
     if (activeCategoryId === categoryId && isDrawerOpen) {
       setIsDrawerOpen(false);
@@ -47,7 +65,7 @@ const NavigationBar = () => {
   return (
     <nav className="bg-purple-700 text-white ">
       <div className=" px-4 lg:block hidden">
-        <div className="relative"> {/* This is the new wrapper for the entire menu */}
+        <div className="relative">
           <div className="flex space-x-10 py-3">
             {categories.map((cat) => (
               <div
@@ -64,7 +82,6 @@ const NavigationBar = () => {
             ))}
           </div>
 
-          {/* Mega Menu Dropdown - only render once, positioned globally */}
           {activeCategoryId && subcategories.length > 0 && (
             <div className="absolute left-0 top-full !w-screen bg-white text-black shadow-lg z-50 p-6 grid grid-cols-6 gap-4">
               <div>
@@ -145,25 +162,127 @@ const NavigationBar = () => {
         </div>
 
       </div>
-      <div className="lg:hidden overflow-x-auto whitespace-nowrap px-4 py-3 space-x-4 flex bg-white">
-        {categories.map((cat) => (
-          <div key={cat.product_category_id} onClick={() => fetchSubcategories(cat.product_category_id)} className="flex-shrink-0 cursor-pointer">
-            <img
-              src={cat.cat_image}
-              alt={cat.name}
-              className="w-28 h-28 rounded-md border-2 border-white"
-            />
-            <p className="text-xs text-center mt-1 text-black">{cat.name}</p>
-          </div>
-        ))}
-      </div>
+   
+      <div className="lg:hidden">
+        <div className="flex items-center justify-between px-4 h-14">
+          <button
+            onClick={handleHomeClick}
+            className="text-lg font-semibold hover:text-pink-200 transition-colors duration-200"
+          >
+            CaratLane
+          </button>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 rounded-md hover:bg-white/10 transition-colors duration-200"
+          >
+            <svg
+              className={`w-6 h-6 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''
+                }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
 
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+            }`}
+        >
+          <div className="px-4 py-4 border-t border-white/20">
+            {/* Mobile Categories */}
+            <div className="space-y-1">
+              {categories.map((item) => (
+                <div key={item.id} className="mb-2">
+                  <button
+                    onClick={() => fetchSubcategories(item.product_category_id)}
+                    className="block w-full text-left px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
+                  >
+                    {item.name}
+                  </button>
+
+                  {activeCategoryId === item.product_category_id && subcategories.length > 0 && (
+                    <div className="pl-6 mt-1 space-y-1">
+                      {subcategories.map((sub) => (
+                        <button
+                          key={sub.product_subcategory_id}
+                          onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
+                          className="block w-full text-left py-2 text-sm text-pink-200 hover:text-white transition-colors duration-200"
+                        >
+                          {sub.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+
+            </div>
+
+            {/* Mobile Services */}
+            <div className="mt-4 pt-4 border-t border-white/20">
+              <button
+                onClick={() => setIsServicesOpen(!isServicesOpen)}
+                className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
+              >
+                <span>Services</span>
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''
+                    }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${isServicesOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+              >
+                <div className="pl-6 pr-3 py-2 space-y-1">
+                  {serviceLinks.map((service, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleServiceClick(service.slug)}
+                      className="block w-full text-left py-2 text-sm text-pink-200 hover:text-white transition-colors duration-200"
+                    >
+                      {service.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Drawer */}
-      {isDrawerOpen && (
+      {/* {isDrawerOpen && (
         <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
           <div className="bg-white w-full max-w-md h-full overflow-y-auto p-4 relative text-black">
-
-            {/* Header with Back */}
             <div className="flex items-center mb-4">
               <button onClick={() => setIsDrawerOpen(false)} className="text-purple-700 text-lg font-semibold mr-2">
                 ←
@@ -172,8 +291,6 @@ const NavigationBar = () => {
                 categories.find(cat => cat.product_category_id === activeCategoryId)?.name || "Category"
               }</h2>
             </div>
-
-            {/* Featured Buttons */}
             <div className="flex flex-wrap gap-2 mb-4">
               {["Latest Designs", "Bestsellers", "Fast Delivery", "Special Deals"].map((item) => (
                 <button key={item} className="px-3 py-1 bg-purple-100 text-sm text-purple-700 rounded-full">
@@ -181,8 +298,6 @@ const NavigationBar = () => {
                 </button>
               ))}
             </div>
-
-            {/* By Style Section */}
             <h3 className="text-sm font-bold text-purple-700 mb-2">By Style</h3>
             <div className="grid grid-cols-2 gap-4 mb-6">
               {subcategories.map((sub) => (
@@ -200,9 +315,6 @@ const NavigationBar = () => {
                 </div>
               ))}
             </div>
-
-            {/* By Metal & Stone */}
-            {/* By Metal & Stone */}
             <h3 className="text-sm font-bold text-purple-700 mb-2">By Metal & Stone</h3>
             <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-6 text-sm text-gray-700">
               {[
@@ -227,7 +339,6 @@ const NavigationBar = () => {
               ))}
             </div>
 
-            {/* By Price */}
             <h3 className="text-sm font-bold text-purple-700 mb-2">By Price</h3>
             <div className="flex flex-wrap gap-2 mb-6">
               {[
@@ -248,7 +359,6 @@ const NavigationBar = () => {
               ))}
             </div>
 
-            {/* Preview Images */}
             <div className="grid grid-cols-2 gap-3">
               {subcategories.slice(0, 2).map((sub, idx) => (
                 <div key={idx}>
@@ -269,7 +379,7 @@ const NavigationBar = () => {
 
           </div>
         </div>
-      )}
+      )} */}
 
     </nav>
   );
