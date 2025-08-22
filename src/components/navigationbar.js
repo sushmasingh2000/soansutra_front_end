@@ -15,7 +15,7 @@ const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 
-  const { data: categoryData, isLoading: loadingCategories } = useQuery(
+  const { data: categoryData } = useQuery(
     ['get_product_category'],
     () => axios.get(endpoint?.get_categroy_user),
     { keepPreviousData: true }
