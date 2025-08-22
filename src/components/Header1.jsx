@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react"
 import {
   MagnifyingGlassIcon,
@@ -15,6 +14,7 @@ import { TreasureChestIcon } from "./treasure-chest-icon"
 import { BrandLogo } from "./brand-logo"
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import SubcategoryView from "./subcategoryview"; // Import the subcategory component
 
 // Indian Flag Component
 const IndianFlag = () => (
@@ -29,12 +29,182 @@ const IndianFlag = () => (
   </div>
 )
 
+// Jewelry data with subcategories
+const jewelryData = {
+  "Rings": {
+    name: "Rings",
+    image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+    subcategories: {
+      featured: [
+        { name: "Engagement Rings" },
+        { name: "Wedding Bands" },
+        { name: "Diamond Rings" },
+        { name: "Gold Rings" }
+      ],
+      byStyle: [
+        { name: "Solitaire", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+        { name: "Halo", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" },
+        { name: "Vintage", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" },
+        { name: "Modern", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" }
+      ],
+      byMetal: [
+        { name: "Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" },
+        { name: "Platinum", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" },
+        { name: "Silver", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" },
+        { name: "Rose Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png" }
+      ],
+      banners: [
+        { name: "New Arrivals", image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/22kt_m.png" },
+        { name: "Best Sellers", image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/wearyourwins_m.png" }
+      ]
+    }
+  },
+  "Earrings": {
+    name: "Earrings",
+    image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png",
+    subcategories: {
+      featured: [
+        { name: "Stud Earrings" },
+        { name: "Drop Earrings" },
+        { name: "Hoop Earrings" },
+        { name: "Chandeliers" }
+      ],
+      byStyle: [
+        { name: "Classic", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" },
+        { name: "Contemporary", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" },
+        { name: "Ethnic", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" },
+        { name: "Western", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" }
+      ],
+      byMetal: [
+        { name: "Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" },
+        { name: "Diamond", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" },
+        { name: "Pearl", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" },
+        { name: "Gemstone", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/earrings.png" }
+      ],
+      banners: [
+        { name: "Trending Now", image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/22kt_m.png" }
+      ]
+    }
+  },
+  "Bracelets & Bangles": {
+    name: "Bracelets & Bangles",
+    image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png",
+    subcategories: {
+      featured: [
+        { name: "Tennis Bracelets" },
+        { name: "Charm Bracelets" },
+        { name: "Gold Bangles" },
+        { name: "Diamond Bracelets" }
+      ],
+      byStyle: [
+        { name: "Traditional", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" },
+        { name: "Modern", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" },
+        { name: "Link", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" },
+        { name: "Cuff", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" }
+      ],
+      byMetal: [
+        { name: "Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" },
+        { name: "Silver", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" },
+        { name: "Platinum", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" },
+        { name: "Mixed Metal", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/bracelet.png" }
+      ],
+      banners: [
+        { name: "Festive Collection", image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/wearyourwins_m.png" }
+      ]
+    }
+  },
+  "Solitaires": {
+    name: "Solitaires",
+    image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png",
+    subcategories: {
+      featured: [
+        { name: "Classic Solitaires" },
+        { name: "Fancy Solitaires" },
+        { name: "Solitaire Sets" },
+        { name: "Designer Solitaires" }
+      ],
+      byStyle: [
+        { name: "Round", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+        { name: "Princess", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+        { name: "Oval", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+        { name: "Emerald", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" }
+      ],
+      byMetal: [
+        { name: "Platinum", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+        { name: "18K Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+        { name: "White Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" },
+        { name: "Rose Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png" }
+      ],
+      banners: [
+        { name: "Certified Solitaires", image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/22kt_m.png" }
+      ]
+    }
+  },
+  "Mangalsutras": {
+    name: "Mangalsutras",
+    image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png",
+    subcategories: {
+      featured: [
+        { name: "Traditional Mangalsutras" },
+        { name: "Modern Mangalsutras" },
+        { name: "Diamond Mangalsutras" },
+        { name: "Gold Mangalsutras" }
+      ],
+      byStyle: [
+        { name: "Short", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" },
+        { name: "Long", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" },
+        { name: "Layered", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" },
+        { name: "Pendant Style", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" }
+      ],
+      byMetal: [
+        { name: "22K Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" },
+        { name: "18K Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" },
+        { name: "Diamond", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" },
+        { name: "Gemstone", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/mangalsutra.png" }
+      ],
+      banners: [
+        { name: "Bridal Collection", image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/wearyourwins_m.png" }
+      ]
+    }
+  },
+  "Necklaces & Pendants": {
+    name: "Necklaces & Pendants",
+    image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png",
+    subcategories: {
+      featured: [
+        { name: "Chain Necklaces" },
+        { name: "Pendant Necklaces" },
+        { name: "Chokers" },
+        { name: "Statement Necklaces" }
+      ],
+      byStyle: [
+        { name: "Delicate", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" },
+        { name: "Bold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" },
+        { name: "Vintage", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" },
+        { name: "Contemporary", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" }
+      ],
+      byMetal: [
+        { name: "Gold", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" },
+        { name: "Silver", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" },
+        { name: "Diamond", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" },
+        { name: "Pearl", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/necklace.png" }
+      ],
+      banners: [
+        { name: "Everyday Elegance", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/banners/01/trendy_mangalsutra.png" },
+        { name: "Festive Collection", image: "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/banners/01/mangalearrings.png " }
+      ]
+    }
+  }
+};
+
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [showMoreJewellery, setShowMoreJewellery] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
+  const [selectedJewelry, setSelectedJewelry] = useState(null)
+  const [showSubcategory, setShowSubcategory] = useState(false)
 
   // Rotating placeholders
   const placeholders = ["Search Relationship", "Search Price"]
@@ -125,6 +295,28 @@ const jewelryTypes = [
   // Manual slide functions
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length)
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+
+  // Handle jewelry click
+  const handleJewelryClick = (jewelryName) => {
+    const jewelryInfo = jewelryData[jewelryName];
+    if (jewelryInfo) {
+      setSelectedJewelry(jewelryInfo);
+      setShowSubcategory(true);
+    }
+  }
+
+  // Handle back from subcategory
+  const handleBackFromSubcategory = () => {
+    setShowSubcategory(false);
+    setSelectedJewelry(null);
+  }
+
+  // Handle subcategory item click
+  const handleSubcategoryItemClick = (item) => {
+    console.log(`Selected: ${item.name}`);
+    // You can add navigation or other logic here
+    // For example: navigate to product listing page
+  }
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 relative">
@@ -329,233 +521,252 @@ const jewelryTypes = [
             
             {/* Sidebar */}
             <div className="relative w-full bg-white h-full shadow-xl overflow-y-auto flex flex-col">
-              {/* Sidebar Header */}
-              <div className="flex items-center justify-between p-2 border-b">
-                {/* Left side - Close button and Flag */}
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-1 text-gray-600 hover:text-gray-800"
-                  >
-                    <XMarkIcon className="h-5 w-5" />
-                  </button>
-                  <div className="flex items-center space-x-1">
-                    <img
-                      src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
-                      alt="Indian Flag"
-                      className="w-5 h-auto"
-                    />
-                    <span className="font-medium text-sm text-gray-800">INDIA</span>
-                  </div>
-                </div>
-                
-                {/* Right side - Account, Heart, and Cart icons */}
-                <div className="flex items-center space-x-0">
-                  <Link 
-                    to={"/login"} 
-                    className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <UserIcon className="h-5 w-5" />
-                  </Link>
-                  <Link 
-                    to={"/myaccount/profile"} 
-                    className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <HeartIcon className="h-5 w-5" />
-                  </Link>
-                  <Link 
-                    to={"/shopping-cart"} 
-                    className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <ShoppingCartIcon className="h-5 w-5" />
-                    <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                      2
-                    </span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Login Button */}
-              <div className="px-4 py-3">
-                <Link 
-                  to={"/login"}
-                  className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <UserIcon className="h-5 w-5" />
-                  <span className="font-medium text-sm">LOGIN</span>
-                </Link>
-              </div>
-
-              {/* Jewelry Categories - Updated with better spacing */}
-              <div className="px-4 py-2">
-                <div className="grid grid-cols-2 gap-4">
-                  {jewelryTypes.map((item, index) => (
-                    <div key={index} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer">
-                      <div className="flex flex-col items-center text-center space-y-2">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-12 h-12 object-contain"
-                        />
-                        <span className="text-sm font-medium text-gray-800 leading-tight">
-                          {item.name}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-
-                  {showMoreJewellery && moreJewelleryTypes.map((item, index) => (
-                    <div key={index + 4} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer">
-                      <div className="flex flex-col items-center text-center space-y-2">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-12 h-12 object-contain"
-                        />
-                        <span className="text-sm font-medium text-gray-800 leading-tight">
-                          {item.name}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* More Jewellery Button */}
-                <button
-                  onClick={() => setShowMoreJewellery(!showMoreJewellery)}
-                  className="flex items-center justify-center space-x-2 w-full mt-4 py-3 text-purple-600 font-medium text-sm hover:bg-purple-50 rounded-lg transition-colors"
-                >
-                  <span>{showMoreJewellery ? 'Less Jewellery' : 'More Jewellery'}</span>
-                  <ChevronRightIcon className={`h-4 w-4 transition-transform ${showMoreJewellery ? 'rotate-90' : ''}`} />
-                </button>
-              </div>
-
-              {/* Promotional Slides */}
-              <div className="px-4 py-2">
-                <div className="relative rounded-lg overflow-hidden group">
-                  <img
-                    src={slides[currentSlide].image}
-                    alt={slides[currentSlide].alt}
-                    className="w-full h-auto object-cover transition-all duration-500 ease-in-out"
-                  />
-                  
-                  {/* Previous Arrow */}
-                  <button
-                    onClick={prevSlide}
-                    className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
-                  >
-                    <ChevronLeftIcon className="w-3 h-3" />
-                  </button>
-                  
-                  {/* Next Arrow */}
-                  <button
-                    onClick={nextSlide}
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
-                  >
-                    <ChevronRightIcon className="w-3 h-3" />
-                  </button>
-                  
-                  {/* Slide Navigation Dots */}
-                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                    {slides.map((_, index) => (
+              {/* Conditional rendering based on subcategory view */}
+              {showSubcategory && selectedJewelry ? (
+                <SubcategoryView 
+                  category={selectedJewelry}
+                  onBack={handleBackFromSubcategory}
+                  onItemClick={handleSubcategoryItemClick}
+                />
+              ) : (
+                <>
+                  {/* Sidebar Header */}
+                  <div className="flex items-center justify-between p-2 border-b">
+                    {/* Left side - Close button and Flag */}
+                    <div className="flex items-center space-x-2">
                       <button
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                          index === currentSlide ? 'bg-white' : 'bg-white/50'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Slide Counter */}
-                <div className="flex justify-center mt-2">
-                  <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full">
-                    {currentSlide + 1}/{slides.length}
-                  </span>
-                </div>
-              </div>
-
-              {/* Category Sections Grid */}
-              <div className="px-4 py-2">
-                <div className="grid grid-cols-2 gap-3">
-                  {categorySections.map((category, index) => (
-                    <div 
-                      key={index} 
-                      className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300"
-                    >
-                      <img
-                        src={category.image}
-                        alt={category.name}
-                        className="w-full h-16 object-cover"
-                      />
-                      <div className="absolute top-2 left-2">
-                        <span className="text-sm font-semibold text-gray-800 bg-white/80 px-2 py-1 rounded">
-                          {category.name}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="p-1 text-gray-600 hover:text-gray-800"
+                      >
+                        <XMarkIcon className="h-5 w-5" />
+                      </button>
+                      <div className="flex items-center space-x-1">
+                        <img
+                          src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
+                          alt="Indian Flag"
+                          className="w-5 h-auto"
+                        />
+                        <span className="font-medium text-sm text-gray-800">INDIA</span>
+                      </div>
+                    </div>
+                    
+                    {/* Right side - Account, Heart, and Cart icons */}
+                    <div className="flex items-center space-x-0">
+                      <Link 
+                        to={"/login"} 
+                        className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <UserIcon className="h-5 w-5" />
+                      </Link>
+                      <Link 
+                        to={"/myaccount/profile"} 
+                        className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <HeartIcon className="h-5 w-5" />
+                      </Link>
+                      <Link 
+                        to={"/shopping-cart"} 
+                        className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <ShoppingCartIcon className="h-5 w-5" />
+                        <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                          2
                         </span>
-                      </div>
+                      </Link>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Products & Services Section */}
-              <div className="px-4 py-2">
-                <div className="text-center mb-3">
-                  <div className="flex items-center justify-center space-x-2 mb-1">
-                    <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
-                    <span className="text-sm font-semibold text-purple-700 px-2">Products & Services</span>
-                    <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
                   </div>
-                </div>
-                
-                <div className="space-y-3">
-                  {productsServices.map((service, index) => (
-                    <div 
-                      key={index} 
-                      className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                    >
-                      <div className="flex items-start space-x-3">
-                        <div className="flex-shrink-0">
-                          <img
-                            src={service.image}
-                            alt={service.name}
-                            className="w-12 h-10 object-contain"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                            {service.name}
-                          </h3>
-                          <p className="text-xs text-gray-600 leading-relaxed">
-                            {service.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Mobile User Profile Section at Bottom */}
-              <div className="px-4 py-3 border-t border-gray-200 mt-auto">
-                <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-sm font-semibold text-purple-700 mb-1">abhishek chaurasia</h3>
-                      <p className="text-gray-600 text-xs">freefireprouser456@yahoo.com</p>
+                  {/* Login Button */}
+                  <div className="px-4 py-3">
+                    <Link 
+                      to={"/login"}
+                      className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <UserIcon className="h-5 w-5" />
+                      <span className="font-medium text-sm">LOGIN</span>
+                    </Link>
+                  </div>
+
+                  {/* Jewelry Categories - Updated with click handlers */}
+                  <div className="px-4 py-2">
+                    <div className="grid grid-cols-2 gap-4">
+                      {jewelryTypes.map((item, index) => (
+                        <div 
+                          key={index} 
+                          className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer"
+                          onClick={() => handleJewelryClick(item.name)}
+                        >
+                          <div className="flex flex-col items-center text-center space-y-2">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-12 h-12 object-contain"
+                            />
+                            <span className="text-sm font-medium text-gray-800 leading-tight">
+                              {item.name}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+
+                      {showMoreJewellery && moreJewelleryTypes.map((item, index) => (
+                        <div 
+                          key={index + 4} 
+                          className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer"
+                          onClick={() => handleJewelryClick(item.name)}
+                        >
+                          <div className="flex flex-col items-center text-center space-y-2">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-12 h-12 object-contain"
+                            />
+                            <span className="text-sm font-medium text-gray-800 leading-tight">
+                              {item.name}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <button className="bg-white text-purple-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 transition-colors">
-                      LOGOUT
+
+                    {/* More Jewellery Button */}
+                    <button
+                      onClick={() => setShowMoreJewellery(!showMoreJewellery)}
+                      className="flex items-center justify-center space-x-2 w-full mt-4 py-3 text-purple-600 font-medium text-sm hover:bg-purple-50 rounded-lg transition-colors"
+                    >
+                      <span>{showMoreJewellery ? 'Less Jewellery' : 'More Jewellery'}</span>
+                      <ChevronRightIcon className={`h-4 w-4 transition-transform ${showMoreJewellery ? 'rotate-90' : ''}`} />
                     </button>
                   </div>
-                </div>
-              </div>
+
+                  {/* Promotional Slides */}
+                  <div className="px-4 py-2">
+                    <div className="relative rounded-lg overflow-hidden group">
+                      <img
+                        src={slides[currentSlide].image}
+                        alt={slides[currentSlide].alt}
+                        className="w-full h-auto object-cover transition-all duration-500 ease-in-out"
+                      />
+                      
+                      {/* Previous Arrow */}
+                      <button
+                        onClick={prevSlide}
+                        className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
+                      >
+                        <ChevronLeftIcon className="w-3 h-3" />
+                      </button>
+                      
+                      {/* Next Arrow */}
+                      <button
+                        onClick={nextSlide}
+                        className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
+                      >
+                        <ChevronRightIcon className="w-3 h-3" />
+                      </button>
+                      
+                      {/* Slide Navigation Dots */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {slides.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentSlide(index)}
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                              index === currentSlide ? 'bg-white' : 'bg-white/50'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Slide Counter */}
+                    <div className="flex justify-center mt-2">
+                      <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full">
+                        {currentSlide + 1}/{slides.length}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Category Sections Grid */}
+                  <div className="px-4 py-2">
+                    <div className="grid grid-cols-2 gap-3">
+                      {categorySections.map((category, index) => (
+                        <div 
+                          key={index} 
+                          className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                        >
+                          <img
+                            src={category.image}
+                            alt={category.name}
+                            className="w-full h-16 object-cover"
+                          />
+                          <div className="absolute top-2 left-2">
+                            <span className="text-sm font-semibold text-gray-800 bg-white/80 px-2 py-1 rounded">
+                              {category.name}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Products & Services Section */}
+                  <div className="px-4 py-2">
+                    <div className="text-center mb-3">
+                      <div className="flex items-center justify-center space-x-2 mb-1">
+                        <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+                        <span className="text-sm font-semibold text-purple-700 px-2">Products & Services</span>
+                        <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {productsServices.map((service, index) => (
+                        <div 
+                          key={index} 
+                          className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                        >
+                          <div className="flex items-start space-x-3">
+                            <div className="flex-shrink-0">
+                              <img
+                                src={service.image}
+                                alt={service.name}
+                                className="w-12 h-10 object-contain"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                                {service.name}
+                              </h3>
+                              <p className="text-xs text-gray-600 leading-relaxed">
+                                {service.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Mobile User Profile Section at Bottom */}
+                  <div className="px-4 py-3 border-t border-gray-200 mt-auto">
+                    <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-sm font-semibold text-purple-700 mb-1">abhishek chaurasia</h3>
+                          <p className="text-gray-600 text-xs">freefireprouser456@yahoo.com</p>
+                        </div>
+                        <button className="bg-white text-purple-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 transition-colors">
+                          LOGOUT
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

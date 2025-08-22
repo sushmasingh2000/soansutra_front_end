@@ -17,6 +17,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { endpoint } from "../../utils/APIRoutes";
 import { format, addDays } from "date-fns";
+import WarrantyFeatures from "../trustBadge";
 
 // Material UI style icons as SVG components
 const GoldIcon = () => (
@@ -638,6 +639,7 @@ const ProductDetailWebPage = () => {
         </div>
       </div>
       <div className="w-full">
+        <WarrantyFeatures/>
         <CustomerReviewSection productId={productData.product_id} />
         <Footer />
       </div>
