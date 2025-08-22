@@ -369,7 +369,7 @@ const ProductDetailWebPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+   <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <Header />
       
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4">
@@ -1030,10 +1030,10 @@ const ProductDetailWebPage = () => {
                     SIZE GUIDE
                   </button>
                 </div>
-                <div className="overflow-x-auto">
+               <div className="overflow-x-auto scrollbar-hide">
                   <div
                     className="flex space-x-2 pb-2"
-                    style={{ minWidth: "800px" }}
+                    // style={{ minWidth: "800px" }}
                   >
                     {[
                       { size: "5", mm: "44.8 mm", status: "Made to Order" },
