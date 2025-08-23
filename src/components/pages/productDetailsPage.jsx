@@ -380,8 +380,8 @@ const ProductDetailWebPage = () => {
                   onTouchEnd={handleTouchEnd}
                 >
                   <img
-                    src={productData.images[selectedImage]}
-                    alt={`${productData.name} ${selectedImage + 1}`}
+                    src={images[selectedImage]}
+                    alt=""
                     className="w-full h-full object-cover transition-transform duration-300"
                   />
                 </div>
@@ -631,7 +631,7 @@ const ProductDetailWebPage = () => {
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40">
         <div className="flex justify-end">
           <Link
-            to="/cart"
+            // to="/cart"
             state={{ product: { ...productData, selectedVariant } }}
             className="w-full text-white py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
             style={{
@@ -826,7 +826,7 @@ const ProductDetailWebPage = () => {
                 </div>
                 <div className="overflow-x-auto scrollbar-hide">
                   <div
-                    className="flex space-x-2 pb-2"
+                    className="grid grid-cols-4 gap-5 space-x-2 pb-2"
                   >
                     {[
                       { size: "5", mm: "44.8 mm", status: "Made to Order" },
@@ -854,7 +854,7 @@ const ProductDetailWebPage = () => {
                       <button
                         key={item.size}
                         onClick={() => setSelectedSize(item.size)}
-                        className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-16 ${selectedSize === item.size
+                        className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-28 ${selectedSize === item.size
                           ? "border-purple-300 bg-purple-50"
                           : "border-gray-200 hover:border-gray-300"
                           }`}

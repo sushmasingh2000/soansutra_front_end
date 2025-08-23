@@ -82,6 +82,13 @@ export const endpoint = {
   // update_product_attributes_value: `${domain}/api/v1/update-attribute-value`,
   // delete_product_attributes_value: `${domain}/api/v1/delete-attribute-value`,
 
+   //master materuial
+  create_master_material: `${domain}/api/v1/create-master-materials`,
+  get_master_material: `${domain}/api/v1/get-master-materials`,
+  update_master_material: `${domain}/api/v1/update-master-materials`,
+  delete_master_material: `${domain}/api/v1/delete-master-materials`,
+
+  
   //material
   create_material: `${domain}/api/v1/create-materials`,
   get_material: `${domain}/api/v1/get-materials`,

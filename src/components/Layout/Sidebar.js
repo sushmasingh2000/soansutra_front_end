@@ -71,13 +71,29 @@ const menuItems = [
         path: "/unit",
         roles: ["Support Engineer", "user"],
       },
-      {
-        id: "material",
+       {
+        id: "material-group",
         label: "Material",
         icon: "📦",
-        path: "/product-material",
         roles: ["Support Engineer", "user"],
-      },
+        children: [
+          {
+            id: "master-material",
+            label: "Master Material",
+            icon: "📦",
+            path: "/product-master-material",
+            roles: ["Support Engineer", "user"],
+          },
+          {
+            id: "sub-material",
+            label: "Sub Material",
+            icon: "📦",
+            path: "/product-material",
+            roles: ["Support Engineer", "user"],
+          }
+        ]
+      }
+      ,
       {
         id: "discount",
         label: "Discount",
@@ -138,15 +154,64 @@ const menuItems = [
   // },
 ];
 
+
 const Sidebar = ({ sidebarOpen = true }) => {
   const userRole = localStorage.getItem("role");
-  const filteredMenuItems = menuItems.filter((item) =>
-    item.roles.includes(userRole)
-  );
-  const [openSubMenu, setOpenSubMenu] = useState(null);
+  const [openSubMenu, setOpenSubMenu] = useState({});
 
   const toggleSubMenu = (id) => {
-    setOpenSubMenu((prev) => (prev === id ? null : id));
+    setOpenSubMenu((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const renderMenuItems = (items, level = 0) => {
+    return (
+      <ul className={level > 0 ? "ml-6" : ""}>
+        {items.map(({ id, label, icon, path, children, roles = [] }) => {
+          if (!roles.includes(userRole)) return null;
+
+          const isOpen = openSubMenu[id] || false;
+
+          return (
+            <li key={id}>
+              {children ? (
+                <div>
+                  <button
+                    onClick={() => toggleSubMenu(id)}
+                    className={`w-full text-left px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 ${
+                      level === 0 ? "font-medium text-gray-700" : "text-sm text-gray-600"
+                    }`}
+                  >
+                    <span className="text-lg">{icon}</span>
+                    <span className="flex-1">{label}</span>
+                    <span className="text-xs">{isOpen ? "▲" : "▼"}</span>
+                  </button>
+                  {isOpen && renderMenuItems(children, level + 1)}
+                </div>
+              ) : (
+                <NavLink
+                  to={path}
+                  className={({ isActive }) =>
+                    `block px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${
+                      isActive
+                        ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
+                        : level === 0
+                        ? "text-gray-700 font-medium"
+                        : "text-sm text-gray-600"
+                    }`
+                  }
+                >
+                  <span>{icon}</span>
+                  <span>{label}</span>
+                </NavLink>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    );
   };
 
   return (
@@ -161,62 +226,7 @@ const Sidebar = ({ sidebarOpen = true }) => {
             Navigation
           </h2>
         </div>
-        <ul className="mt-2">
-          {filteredMenuItems.map(({ id, label, icon, path, children }) => (
-            <li key={id}>
-              {children ? (
-                <div>
-                  <button
-                    onClick={() => toggleSubMenu(id)}
-                    className="w-full px-6 py-3 flex items-center space-x-3 font-medium text-gray-700 hover:bg-gray-100 focus:outline-none"
-                  >
-                    <span className="text-xl">{icon}</span>
-                    <span className="flex-1 text-left">{label}</span>
-                    <span className="text-xs">{openSubMenu === id ? "▲" : "▼"}</span>
-                  </button>
-
-                  {openSubMenu === id && (
-                    <ul className="ml-8">
-                      {children
-                        .filter((child) => child.roles.includes(userRole))
-                        .map(({ id, label, icon, path }) => (
-                          <li key={id}>
-                            <NavLink
-                              to={path}
-                              className={({ isActive }) =>
-                                `w-full text-left px-6 py-2 flex items-center space-x-2 hover:bg-gray-100 transition-colors ${
-                                  isActive
-                                    ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
-                                    : "text-gray-600"
-                                }`
-                              }
-                            >
-                              <span className="text-sm">{icon}</span>
-                              <span className="text-sm">{label}</span>
-                            </NavLink>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
-                </div>
-              ) : (
-                <NavLink
-                  to={path}
-                  className={({ isActive }) =>
-                    `w-full text-left px-6 py-3 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
-                        : "text-gray-700"
-                    }`
-                  }
-                >
-                  <span className="text-xl">{icon}</span>
-                  <span className="font-medium">{label}</span>
-                </NavLink>
-              )}
-            </li>
-          ))}
-        </ul>
+        {renderMenuItems(menuItems)}
       </nav>
     </aside>
   );
