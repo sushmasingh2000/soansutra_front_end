@@ -755,6 +755,106 @@ const ProductDetailWebPage = () => {
               </div>
             </div>
             <div className="p-4 space-y-6 mb-10">
+              {/* Section Header */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800 mb-4">
+                  GOLD PRICE BREAKUP
+                </h3>
+
+                {/* Header Row */}
+                <div className="grid grid-cols-4 gap-2 mb-3 text-xs font-medium text-purple-600">
+                  <div>COMPONENT</div>
+                  <div>RATE</div>
+                  <div>WEIGHT</div>
+                  <div>FINAL VALUE</div>
+                </div>
+
+                {/* Material Details */}
+                {selectedVariant?.material_details?.map((material, index) => (
+                  <div key={index} className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1">
+                    <div>{material.material_name}</div>
+                    <div>₹{material.material_price} / {material.v_un_name}</div>
+                    <div>{material.weight} {material.v_un_name}</div>
+                    <div>{formatPrice(calculateMaterialValue(material))}</div>
+                  </div>
+                ))}
+
+                {/* Total Gold Value */}
+                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
+                  <div>Total Gold Value</div>
+                  <div>-</div>
+                  <div>-</div>
+                  <div>{formatPrice(selectedVariant?.material_details?.filter(m => m.material_type === "gold")
+                    .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0))}</div>
+                </div>
+
+                {/* Total Diamond Value (if any) */}
+                {selectedVariant?.material_details?.some(m => m.material_type === "diamond") && (
+                  <>
+                    <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-4 font-semibold">
+                      <div>IJ-SI Round-{selectedVariant?.diamond_count || "0"} Nos.</div>
+                      <div>-</div>
+                      <div>
+                        {selectedVariant?.diamond_weight || "0.000"} ct
+                      </div>
+                      <div className="line-through text-gray-400">
+                        ₹{selectedVariant?.diamond_mrp || "0"}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 font-semibold">
+                      <div>Total Diamond Value</div>
+                      <div>-</div>
+                      <div>-</div>
+                      <div>₹{selectedVariant?.diamond_price || "0"}</div>
+                    </div>
+                  </>
+                )}
+
+                {/* Making Charges */}
+                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
+                  <div>Making Charges</div>
+                  <div>-</div>
+                  <div>-</div>
+                  <div>{formatPrice(selectedVariant?.making_charge || 0)}</div>
+                </div>
+
+                {/* Subtotal */}
+                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
+                  <div>Subtotal</div>
+                  <div>-</div>
+                  <div>-</div>
+                  <div>
+                    <span className="line-through text-gray-400 mr-1">
+                      ₹{selectedVariant?.mrp || "0"}
+                    </span>
+                    ₹{selectedVariant?.total_price || "0"}
+                  </div>
+                </div>
+
+                {/* Tax */}
+                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
+                  <div>Tax</div>
+                  <div>-</div>
+                  <div>-</div>
+                  <div>
+                    <span className="line-through text-gray-400 mr-1">
+                      ₹{selectedVariant?.tax_mrp || "0"}
+                    </span>
+                    ₹{selectedVariant?.tax || "0"}
+                  </div>
+                </div>
+
+                {/* Grand Total */}
+                <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
+                  <div>Grand Total</div>
+                  <div>-</div>
+                  <div>-</div>
+                  <div>₹{selectedVariant?.grand_total || "0"}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* <div className="p-4 space-y-6 mb-10">
               <div>
                 <h3 className="text-sm font-semibold text-gray-800 mb-4">
                   PRICE BREAKUP
@@ -774,7 +874,7 @@ const ProductDetailWebPage = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 

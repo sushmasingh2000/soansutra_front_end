@@ -199,6 +199,7 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
       <table className="w-full border">
         <thead>
           <tr>
+            <th className="border px-2 py-1">Master Material</th>
             <th className="border px-2 py-1">Material</th>
             <th className="border px-2 py-1">Percentage</th>
             <th className="border px-2 py-1">Weight</th>
@@ -209,6 +210,7 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
         <tbody>
           {materials.map((mat) => (
             <tr key={mat.variant_material_id}>
+              <td className="border px-2 py-1 text-center">{mat.ma_material_name}</td>
               <td className="border px-2 py-1 text-center">{mat.material_name}</td>
               <td className="border px-2 py-1 text-center">{mat.percentage}</td>
               <td className="border px-2 py-1 text-center">{mat.weight}</td>

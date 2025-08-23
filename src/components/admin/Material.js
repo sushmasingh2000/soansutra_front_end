@@ -192,10 +192,7 @@ const ProductMaterial = () => {
                         <h2 className="text-xl font-semibold">
                             {selectedMaterial ? "Edit Material" : "Add Material"}
                         </h2>
-
-                        
-
-                        <select
+                      <select
                             name="ma_material_id"
                             value={formData.ma_material_id}
                             onChange={(e) => setFormData({ ...formData, ma_material_id: e.target.value })}
