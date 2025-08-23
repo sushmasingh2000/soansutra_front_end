@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import axios from 'axios';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { endpoint } from '../utils/APIRoutes';
-import toast from 'react-hot-toast';
-import { IoClose } from 'react-icons/io5';
 
 const NavigationBar = () => {
   const navigate = useNavigate();
