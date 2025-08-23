@@ -14,6 +14,7 @@ const ProductMaterial = () => {
     const [formData, setFormData] = useState({
         material_name: "",
         unit: "",
+        material_price: ""
     });
 
     const fetchMaterials = async () => {
@@ -46,15 +47,16 @@ const ProductMaterial = () => {
         setFormData({
             material_name: "",
             unit: "",
+            material_price: ""
         });
         setSelectedMaterial(null);
     };
 
     const handleSubmit = async () => {
-        const { material_name, unit } = formData;
+        const { material_name, unit, material_price } = formData;
 
-        if (!material_name || !unit) {
-            toast.error("Name & Unit are required.");
+        if (!material_name || !unit || !material_price) {
+            toast.error("Name & Unit  & Price are required.");
             return;
         }
 
@@ -88,6 +90,8 @@ const ProductMaterial = () => {
         setFormData({
             material_name: material.material_name || "",
             unit: material.un_id || "",
+            material_price: material.material_price || "",
+
         });
         setModalOpen(true);
     };
@@ -121,17 +125,17 @@ const ProductMaterial = () => {
                             <th className="px-4 py-3 text-left">S.No</th>
                             <th className="px-4 py-3 text-left">Name</th>
                             <th className="px-4 py-3 text-left">Unit</th>
-                            <th className="px-4 py-3 text-left">Slug</th>
+                            <th className="px-4 py-3 text-left">Price</th>
                             <th className="px-4 py-3 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {materials.map((material, index) => (
                             <tr key={material.material_id} className="border-t hover:bg-gray-50">
-                                <td className="px-4 py-2">{index +1}</td>
+                                <td className="px-4 py-2">{index + 1}</td>
                                 <td className="px-4 py-2">{material.material_name || "--"}</td>
                                 <td className="px-4 py-2">{material.un_name || "--"}</td>
-                                <td className="px-4 py-2">{material.un_slug || "--"}</td>
+                                <td className="px-4 py-2">{material.material_price || "--"}</td>
                                 <td className="px-4 py-2 space-x-2">
                                     <button
                                         onClick={() => handleEdit(material)}
@@ -190,7 +194,14 @@ const ProductMaterial = () => {
                             ))}
                         </select>
 
-            
+                        <input
+                            type="text"
+                            name="material_price"
+                            placeholder="Material Price"
+                            value={formData.material_price}
+                            onChange={(e) => setFormData({ ...formData, material_price: e.target.value })}
+                            className="w-full border p-2 rounded"
+                        />
                         <div className="flex justify-end space-x-2">
                             <button
                                 onClick={() => {

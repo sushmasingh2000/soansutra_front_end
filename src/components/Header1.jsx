@@ -25,8 +25,8 @@ export default function Header() {
   const [showMoreJewellery, setShowMoreJewellery] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
-    const [categories, setCategories] = useState([]);
-  
+  const [categories, setCategories] = useState([]);
+
   const placeholders = ["Search Relationship", "Search Price"]
 
   useEffect(() => {
@@ -38,22 +38,36 @@ export default function Header() {
   }, [])
   const [loading, setLoading] = useState(false);
 
-   const fetchCategories = async () => {
-     try {
-       setLoading(true);
-       const response = await apiConnectorGet(endpoint.get_categroy_user);
-       console.log(cartItems)
-       setCategories(response?.data?.result || []);
-     } catch (err) {
-       toast.error("Failed to fetch categories.");
-     } finally {
-       setLoading(false);
-     }
-   };
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await apiConnectorGet(endpoint.get_categroy_user);
+      console.log(cartItems)
+      setCategories(response?.data?.result || []);
+    } catch (err) {
+      toast.error("Failed to fetch categories.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-   useEffect(()=>{
+  useEffect(() => {
     fetchCategories()
-   },[])
+  }, [])
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await apiConnectorGet(endpoint?.get_customer_profile);
+        setProfile(response?.data?.result)
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const slides = [
     { image: "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/22kt_m.png", alt: "22KT Everyday Collection" },
@@ -293,8 +307,8 @@ export default function Header() {
                       <div className="absolute top-full right-0  w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-[100]">
                         <div className="p-4">
                           <div className="text-center mb-4">
-                            <h3 className="text-lg font-semibold text-purple-700 mb-1">abhishek chaurasia</h3>
-                            <p className="text-gray-600 text-sm">freefireprouser456@yahoo.com</p>
+                            <h3 className="text-lg font-semibold text-purple-700 mb-1">{profile?.name}</h3>
+                            <p className="text-gray-600 text-sm">{profile?.cl_email}</p>
                           </div>
 
                           <hr className="border-t-2 border-purple-300 mb-4" />
