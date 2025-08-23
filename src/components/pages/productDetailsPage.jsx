@@ -29,7 +29,7 @@ import MobileVideoSlider from "../mobilevideoslider";
 import RelatedCategories from "../relatedcategories";
 import ShopByProducts from "../shopbyproduct";
 import toast from "react-hot-toast";
-import { apiConnectorPost } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -206,6 +206,29 @@ const ProductDetailWebPage = () => {
     } catch (error) {
       toast.error("Error adding to cart");
       console.error("Add to cart error:", error);
+    }
+  };
+
+  const handleWishlist = async () => {
+    if (!productData || !selectedVariant) {
+      toast.error("Product or variant not selected");
+      return;
+    }
+    const { product_id } = productData;
+    const { varient_id } = selectedVariant;
+    try {
+      const response = await apiConnectorGet(
+        `${endpoint.create_wishlist}?product_id=${product_id}&varient_id=${varient_id}`
+      );
+      if (response.data.success) {
+        setIsWishlisted(!isWishlisted);
+        toast.success(response.data.message || "Wishlist updated");
+      } else {
+        toast.error(response.data.message || "Failed to update wishlist");
+      }
+    } catch (error) {
+      console.error("Wishlist error:", error);
+      toast.error("Error updating wishlist");
     }
   };
 
@@ -465,17 +488,17 @@ const ProductDetailWebPage = () => {
                       {index === 0 && (
                         <div className="absolute top-2 right-2">
                           <button
-                            onClick={() => setIsWishlisted(!isWishlisted)}
+                            onClick={handleWishlist}
                             className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
                               } hover:text-red-500 transition-colors`}
                           >
                             <Heart
-                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
-                                }`}
+                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""}`}
                             />
                           </button>
                         </div>
                       )}
+
                     </div>
                   ));
                 })()}
@@ -486,7 +509,7 @@ const ProductDetailWebPage = () => {
             <div className="md:hidden flex items-center justify-between px-1">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  onClick={handleWishlist}
                   className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
                 >
                   <Heart
@@ -542,7 +565,7 @@ const ProductDetailWebPage = () => {
                 >
                   <div className="text-[1rem] text-gray-500 ">{material?.material_name}</div>
                   <div className="text-[0.5rem] font-medium text-gray-800">
-                    {selectedDiamond}
+                    {/* {selectedDiamond} */}
                   </div>
                 </button>
               ))}
@@ -634,7 +657,7 @@ const ProductDetailWebPage = () => {
                 </button>
 
                 <button
-                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  onClick={handleWishlist}
                   className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
                 >
                   <Heart
