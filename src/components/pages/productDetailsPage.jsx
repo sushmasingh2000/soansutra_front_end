@@ -61,6 +61,8 @@ const ProductDetailWebPage = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedGroup, setSelectedGroup] = useState("Gold"); // default group
+
 
 
   useEffect(() => {
@@ -231,6 +233,12 @@ const ProductDetailWebPage = () => {
       toast.error("Error updating wishlist");
     }
   };
+  const groupedMaterials = selectedVariant?.material_details?.reduce((acc, curr) => {
+    const key = curr.master_mat_name;
+    if (!acc[key]) acc[key] = true;
+    return acc;
+  }, {});
+
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
@@ -557,19 +565,18 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
             )}
-            <div className=" flex items-stretch bg-white border border-yellow-200 rounded-lg overflow-hidden mx-1 md:mx-0">
-              {selectedVariant?.material_details?.map((material, index) => (
-                <button
-                  onClick={() => setShowCustomizationModal(true)}
-                  className="flex-1 p-[1px] text-center border-r border-yellow-200 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="text-[1rem] text-gray-500 ">{material?.material_name}</div>
-                  <div className="text-[0.5rem] font-medium text-gray-800">
-                    {/* {selectedDiamond} */}
-                  </div>
-                </button>
-              ))}
-              <button
+            <div className="flex items-stretch w-fit bg-white border border-yellow-200 rounded-lg overflow-hidden mx-1 md:mx-0">
+              {groupedMaterials &&
+                Object.keys(groupedMaterials).map((groupName, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setShowCustomizationModal(true)}
+                    className="px-4 py-2 border-l border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
+                  >
+                    {groupName}
+                  </button>
+                ))}
+                   <button
                 onClick={() => setShowCustomizationModal(true)}
                 className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
               >
