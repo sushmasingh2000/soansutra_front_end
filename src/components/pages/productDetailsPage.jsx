@@ -28,6 +28,8 @@ import CaratLaneSignup from "../emailSubscription";
 import MobileVideoSlider from "../mobilevideoslider";
 import RelatedCategories from "../relatedcategories";
 import ShopByProducts from "../shopbyproduct";
+import toast from "react-hot-toast";
+import { apiConnectorPost } from "../../utils/ApiConnector";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -58,6 +60,8 @@ const ProductDetailWebPage = () => {
   const [selectedSize, setSelectedSize] = useState("5");
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -182,6 +186,27 @@ const ProductDetailWebPage = () => {
     );
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
+  };
+
+  const handleAddToCart = async () => {
+    if (!productData || !selectedVariant) {
+      toast.error("Product or variant not selected");
+      return;
+    }
+
+    const payload = {
+      product_id: productData.product_id,
+      varient_id: selectedVariant.varient_id,
+      quantity: quantity,
+    };
+
+    try {
+      const response = await apiConnectorPost(endpoint.create_cart, payload);
+      toast(response.data.message);
+    } catch (error) {
+      toast.error("Error adding to cart");
+      console.error("Add to cart error:", error);
+    }
   };
 
   const ProductDetailsSection = () => (
@@ -528,6 +553,33 @@ const ProductDetailWebPage = () => {
                 <span className="text-sm font-bold text-black">CUSTOMISE</span>
               </button>
             </div>
+            <div className="px-3 py-2 border-t border-gray-100">
+              <label className="text-gray-600 text-xs mb-1 font-semibold block">Quantity</label>
+              <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
+                <button
+                  onClick={() => setQuantity(prev => (prev > 1 ? prev - 1 : 1))}
+                  className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
+                  aria-label="Decrease quantity"
+                >
+                  -
+                </button>
+                <input
+                  type="text"
+                  readOnly
+                  value={quantity}
+                  className="w-10 text-center outline-none border-l border-r border-gray-300"
+                  aria-label="Quantity"
+                />
+                <button
+                  onClick={() => setQuantity(prev => prev + 1)}
+                  className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
             <div className="mt-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-2">
                 Available Variants
@@ -570,18 +622,17 @@ const ProductDetailWebPage = () => {
             </div>
             <div className="hidden md:block">
               <div className="flex items-center space-x-3">
-                <Link
-                  to="/cart"
-                  state={{ product: { ...productData, selectedVariant } }}
+                <button
+                  onClick={handleAddToCart}
                   className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
                   style={{
-                    background:
-                      "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
+                    background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
                   }}
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>ADD TO CART</span>
-                </Link>
+                </button>
+
                 <button
                   onClick={() => setIsWishlisted(!isWishlisted)}
                   className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
@@ -630,18 +681,16 @@ const ProductDetailWebPage = () => {
       </div>
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40">
         <div className="flex justify-end">
-          <Link
-            // to="/cart"
-            state={{ product: { ...productData, selectedVariant } }}
-            className="w-full text-white py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
+          <button
+            onClick={handleAddToCart}
+            className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
             style={{
-              background:
-                "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
+              background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
             }}
           >
             <ShoppingCart className="w-4 h-4" />
             <span>ADD TO CART</span>
-          </Link>
+          </button>
         </div>
       </div>
       {showPriceBreakupModal && (
