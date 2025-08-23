@@ -1,6 +1,7 @@
 import Login from "../authentiaction/Login";
 import Customer from "../components/admin/Customer";
 import Discount from "../components/admin/Discount";
+import MasterMaterial from "../components/admin/MasterMaterial";
 import ProductMaterial from "../components/admin/Material";
 import PaymentMethod from "../components/admin/Payment";
 import Products from "../components/admin/Product";
@@ -119,6 +120,14 @@ export const routes = [
       </MainLayout>
     ),
   },
+   {
+    path: "/product-master-material",
+    element: (
+      <MainLayout>
+        <MasterMaterial />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/product-material",
     element: (
@@ -127,6 +136,7 @@ export const routes = [
       </MainLayout>
     ),
   },
+ 
   {
     path: "/inventory",
     element: (

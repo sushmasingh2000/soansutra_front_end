@@ -6,15 +6,12 @@ import { DeleteForever, Edit } from "@mui/icons-material";
 
 const MasterMaterial = () => {
     const [materials, setMaterials] = useState([]);
-    const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
 
     const [formData, setFormData] = useState({
-        material_name: "",
-        unit: "",
-        material_price: ""
+        ma_material_name: "",
     });
 
     const fetchMaterials = async () => {
@@ -29,46 +26,34 @@ const MasterMaterial = () => {
         }
     };
 
-    const fetchUnits = async () => {
-        try {
-            const res = await apiConnectorGet(endpoint.get_product_unitt);
-            setUnits(res?.data?.result || []);
-        } catch {
-            toast.error("Failed to fetch units.");
-        }
-    };
-
-    useEffect(() => {
+     useEffect(()=>{
         fetchMaterials();
-        fetchUnits();
-    }, []);
+     },[])
+
 
     const resetForm = () => {
         setFormData({
-            material_name: "",
-            unit: "",
-            material_price: ""
+            ma_material_name: "",
         });
         setSelectedMaterial(null);
     };
 
     const handleSubmit = async () => {
-        const { material_name, unit, 
-         } = formData;
+        const { ma_material_name} = formData;
 
-        if (!material_name || !unit || !material_price) {
-            toast.error("Name & Unit  & Price are required.");
+        if (!ma_material_name) {
+            toast.error("Name are required.");
             return;
         }
 
         setLoading(true);
         const payload = selectedMaterial
-            ? { material_id: selectedMaterial.material_id, ...formData }
+            ? { ma_material_id: selectedMaterial.ma_material_id, ...formData }
             : { ...formData };
 
         const endpointUrl = selectedMaterial
-            ? endpoint.update_material
-            : endpoint.create_material;
+            ? endpoint.update_master_material
+            : endpoint.create_master_material;
 
         try {
             const res = await apiConnectorPost(endpointUrl, payload);
@@ -89,17 +74,15 @@ const MasterMaterial = () => {
     const handleEdit = (material) => {
         setSelectedMaterial(material);
         setFormData({
-            material_name: material.material_name || "",
-            unit: material.un_id || "",
-            material_price: material.material_price || "",
+            ma_ma_material_name: material.ma_material_name || "",
 
         });
         setModalOpen(true);
     };
 
-    const handleDelete = async (material_id) => {
+    const handleDelete = async (ma_material_id) => {
         try {
-            const res = await apiConnectorGet(`${endpoint.delete_material}?material_id=${material_id}`);
+            const res = await apiConnectorGet(`${endpoint.delete_master_material}?ma_ma_material_id=${ma_material_id}`);
             toast(res?.data?.message);
             fetchMaterials();
         } catch {
@@ -125,18 +108,14 @@ const MasterMaterial = () => {
                         <tr>
                             <th className="px-4 py-3 text-left">S.No</th>
                             <th className="px-4 py-3 text-left">Name</th>
-                            <th className="px-4 py-3 text-left">Unit</th>
-                            <th className="px-4 py-3 text-left">Price</th>
                             <th className="px-4 py-3 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {materials.map((material, index) => (
-                            <tr key={material.material_id} className="border-t hover:bg-gray-50">
+                            <tr key={material.ma_material_id} className="border-t hover:bg-gray-50">
                                 <td className="px-4 py-2">{index + 1}</td>
-                                <td className="px-4 py-2">{material.material_name || "--"}</td>
-                                <td className="px-4 py-2">{material.un_name || "--"}</td>
-                                <td className="px-4 py-2">{material.material_price || "--"}</td>
+                                <td className="px-4 py-2">{material.ma_material_name || "--"}</td>
                                 <td className="px-4 py-2 space-x-2">
                                     <button
                                         onClick={() => handleEdit(material)}
@@ -145,7 +124,7 @@ const MasterMaterial = () => {
                                         <Edit />
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(material.material_id)}
+                                        onClick={() => handleDelete(material.ma_material_id)}
                                         className="text-red-600 hover:underline"
                                     >
                                         <DeleteForever />
@@ -174,35 +153,13 @@ const MasterMaterial = () => {
 
                         <input
                             type="text"
-                            name="material_name"
+                            name="ma_material_name"
                             placeholder="Material Name"
-                            value={formData.material_name}
-                            onChange={(e) => setFormData({ ...formData, material_name: e.target.value })}
+                            value={formData.ma_material_name}
+                            onChange={(e) => setFormData({ ...formData, ma_material_name: e.target.value })}
                             className="w-full border p-2 rounded"
                         />
-
-                        <select
-                            name="unit"
-                            value={formData.unit}
-                            onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                            className="w-full border p-2 rounded"
-                        >
-                            <option value="">Select Unit</option>
-                            {units.map((unit) => (
-                                <option key={unit.un_id} value={unit.un_id}>
-                                    {unit.un_name}
-                                </option>
-                            ))}
-                        </select>
-
-                        <input
-                            type="text"
-                            name="material_price"
-                            placeholder="Material Price"
-                            value={formData.material_price}
-                            onChange={(e) => setFormData({ ...formData, material_price: e.target.value })}
-                            className="w-full border p-2 rounded"
-                        />
+                       
                         <div className="flex justify-end space-x-2">
                             <button
                                 onClick={() => {
