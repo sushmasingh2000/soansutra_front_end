@@ -1,9 +1,10 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
-import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import { endpoint } from '../utils/APIRoutes';
+import axios from "axios";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { endpoint } from "../utils/APIRoutes";
+import { apiConnectorGet } from "../utils/ApiConnector";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
@@ -13,9 +14,8 @@ const NavigationBar = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-
   const { data: categoryData } = useQuery(
-    ['get_product_category'],
+    ["get_product_category"],
     () => axios.get(endpoint?.get_categroy_user),
     { keepPreviousData: true }
   );
@@ -23,7 +23,7 @@ const NavigationBar = () => {
   const categories = categoryData?.data?.result || [];
 
   const handleHomeClick = () => {
-    navigate('/');
+    navigate("/");
     setIsMenuOpen(false);
   };
   const handleServiceClick = (slug) => {
@@ -32,10 +32,10 @@ const NavigationBar = () => {
     setIsMenuOpen(false);
   };
   const serviceLinks = [
-    { name: 'Store Locator', slug: '/store-locator' },
-    { name: 'Customer Service', slug: '/customer-service' },
-    { name: 'Size Guide', slug: '/size-guide' },
-    { name: 'Care Instructions', slug: '/care-instructions' }
+    { name: "Store Locator", slug: "/store-locator" },
+    { name: "Customer Service", slug: "/customer-service" },
+    { name: "Size Guide", slug: "/size-guide" },
+    { name: "Care Instructions", slug: "/care-instructions" },
   ];
   const fetchSubcategories = async (categoryId) => {
     if (activeCategoryId === categoryId && isDrawerOpen) {
@@ -46,13 +46,14 @@ const NavigationBar = () => {
 
     try {
       setActiveCategoryId(categoryId);
+      setActivecategoryId(categoryId);
       const response = await axios.get(
         `${endpoint.get_sub_categroy_user}?category_id=${categoryId}`
       );
       setSubcategories(response?.data?.result || []);
       setIsDrawerOpen(true);
     } catch (err) {
-      toast.error('Failed to fetch subcategories.');
+      toast.error("Failed to fetch subcategories.");
     }
   };
 
@@ -60,6 +61,22 @@ const NavigationBar = () => {
     setIsDrawerOpen(false);
     navigate(`/products_web/${subcategoryId}`);
   };
+
+  const [activecategoryId, setActivecategoryId] = useState(null);
+
+  const { data } = useQuery(
+    ["sub_cate_product", activecategoryId],
+    () =>
+      apiConnectorGet(
+        `${endpoint.get_categroy_filtered_item}?product_category_id=${activecategoryId}`
+      ),
+    {
+      keepPreviousData: true,
+      // enabled: !!activeSubcategoryId, // only fetch when activeSubcategoryId exists
+    }
+  );
+
+  const sub_cate_product = data?.data?.result || [];
 
   return (
     <nav className="bg-purple-700 text-white ">
@@ -71,12 +88,14 @@ const NavigationBar = () => {
                 key={cat.id}
                 className="group"
                 onMouseEnter={() => fetchSubcategories(cat.product_category_id)}
-              // onMouseLeave={() => {
-              //   setActiveCategoryId(null);
-              //   setSubcategories([]);
-              // }}
+                // onMouseLeave={() => {
+                //   setActiveCategoryId(null);
+                //   setSubcategories([]);
+                // }}
               >
-                <button className="text-sm font-semibold hover:text-pink-300  hover:font-bold">{cat.name}</button>
+                <button className="text-sm font-semibold hover:text-pink-300  hover:font-bold">
+                  {cat.name}
+                </button>
               </div>
             ))}
           </div>
@@ -84,7 +103,9 @@ const NavigationBar = () => {
           {activeCategoryId && subcategories.length > 0 && (
             <div className="absolute left-0 top-full !w-screen bg-white text-black shadow-lg z-50 p-6 grid grid-cols-6 gap-4">
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">Featured</h3>
+                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                  Featured
+                </h3>
                 <ul className="space-y-1 text-sm text-gray-500 font-semibold">
                   <li>Latest Designs</li>
                   <li>Best sellers</li>
@@ -93,13 +114,17 @@ const NavigationBar = () => {
                 </ul>
               </div>
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">By Style</h3>
+                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                  By Style
+                </h3>
                 <ul className="space-y-1 text-sm text-gray-500 font-semibold">
                   {subcategories.map((sub) => (
                     <li key={sub.product_subcategory_id}>
                       <button
                         className="text-sm hover:text-pink-600 transition"
-                        onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
+                        onClick={() =>
+                          handleSubcategoryClick(sub.product_subcategory_id)
+                        }
                       >
                         {sub.name}
                       </button>
@@ -107,30 +132,48 @@ const NavigationBar = () => {
                   ))}
                 </ul>
               </div>
+
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">By Metal & Stone</h3>
-                <ul className="space-y-1 text-sm text-gray-500 font-semibold">
-                  <li>Diamond</li>
-                  <li>Pearl</li>
-                  <li>Navratna</li>
-                  <li>Gemstone</li>
-                  <li>Platinum</li>
-                  <li>Gold</li>
-                  <li>Rose Gold</li>
-                  <li>White Gold</li>
-                  <li>22KT Gold</li>
-                </ul>
+                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                  By Metal & Stone
+                </h3>
+                {(() => {
+                  const seen = new Set();
+                  return sub_cate_product?.map((item, index) => {
+                    if (seen.has(item?.master_mat_name)) return null; // Skip duplicates
+                    seen.add(item?.master_mat_name);
+                    return (
+                      <ul
+                        key={index}
+                        className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer"
+                        >
+                        <li onClick={() =>
+                          handleSubcategoryClick(item.product_subcategory_id)
+                        } >{item?.master_mat_name}</li>
+                        <li onClick={() =>
+                          handleSubcategoryClick(item.product_subcategory_id)
+                        } >{item?.material_name}</li>
+                      </ul>
+                    );
+                  });
+                })()}
               </div>
+
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">By Price</h3>
-                <ul className="space-y-1 text-sm text-gray-500 font-semibold">
-                  <li>Under ₹ 10k</li>
-                  <li>₹ 10k - ₹ 20k</li>
-                  <li>₹ 20k - ₹ 30k</li>
-                  <li>₹ 30k - ₹ 50k</li>
-                  <li>₹ 50k - ₹ 75k</li>
-                  <li>₹ 75k & Above</li>
-                </ul>
+                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                  By Price
+                </h3>
+                {sub_cate_product?.map((item) => {
+                  return (
+                    <>
+                      <ul className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer">
+                        <li onClick={() =>
+                          handleSubcategoryClick(item.product_subcategory_id)
+                        } >₹ {item?.price_group}</li>
+                      </ul>
+                    </>
+                  );
+                })}
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
@@ -141,7 +184,9 @@ const NavigationBar = () => {
                     className="w-48 h-48 rounded shadow"
                   />
                 ) : (
-                  <div className="text-sm text-gray-400">No image available</div>
+                  <div className="text-sm text-gray-400">
+                    No image available
+                  </div>
                 )}
               </div>
               <div>
@@ -153,15 +198,16 @@ const NavigationBar = () => {
                     className="w-48 h-48 rounded shadow"
                   />
                 ) : (
-                  <div className="text-sm text-gray-400">No image available</div>
+                  <div className="text-sm text-gray-400">
+                    No image available
+                  </div>
                 )}
               </div>
             </div>
           )}
         </div>
-
       </div>
-   
+
       <div className="lg:hidden">
         <div className="flex items-center justify-between px-4 h-14">
           <button
@@ -175,8 +221,9 @@ const NavigationBar = () => {
             className="p-2 rounded-md hover:bg-white/10 transition-colors duration-200"
           >
             <svg
-              className={`w-6 h-6 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''
-                }`}
+              className={`w-6 h-6 transition-transform duration-300 ${
+                isMenuOpen ? "rotate-90" : ""
+              }`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -201,8 +248,9 @@ const NavigationBar = () => {
         </div>
 
         <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-            }`}
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+          }`}
         >
           <div className="px-4 py-4 border-t border-white/20">
             {/* Mobile Categories */}
@@ -216,23 +264,24 @@ const NavigationBar = () => {
                     {item.name}
                   </button>
 
-                  {activeCategoryId === item.product_category_id && subcategories.length > 0 && (
-                    <div className="pl-6 mt-1 space-y-1">
-                      {subcategories.map((sub) => (
-                        <button
-                          key={sub.product_subcategory_id}
-                          onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
-                          className="block w-full text-left py-2 text-sm text-pink-200 hover:text-white transition-colors duration-200"
-                        >
-                          {sub.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  {activeCategoryId === item.product_category_id &&
+                    subcategories.length > 0 && (
+                      <div className="pl-6 mt-1 space-y-1">
+                        {subcategories.map((sub) => (
+                          <button
+                            key={sub.product_subcategory_id}
+                            onClick={() =>
+                              handleSubcategoryClick(sub.product_subcategory_id)
+                            }
+                            className="block w-full text-left py-2 text-sm text-pink-200 hover:text-white transition-colors duration-200"
+                          >
+                            {sub.name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                 </div>
               ))}
-
-
             </div>
 
             {/* Mobile Services */}
@@ -243,8 +292,9 @@ const NavigationBar = () => {
               >
                 <span>Services</span>
                 <svg
-                  className={`w-4 h-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''
-                    }`}
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    isServicesOpen ? "rotate-180" : ""
+                  }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -259,8 +309,9 @@ const NavigationBar = () => {
               </button>
 
               <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${isServicesOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  isServicesOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                }`}
               >
                 <div className="pl-6 pr-3 py-2 space-y-1">
                   {serviceLinks.map((service, index) => (
@@ -379,7 +430,6 @@ const NavigationBar = () => {
           </div>
         </div>
       )} */}
-
     </nav>
   );
 };

@@ -1,11 +1,26 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Star, Heart, ShoppingCart } from 'lucide-react';
+import { apiConnectorGet } from '../utils/ApiConnector';
+import { endpoint } from '../utils/APIRoutes';
+import { useQuery } from 'react-query';
 
 // Hero Banner Component with Dynamic Content
 const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const slides = [
+  const { data } = useQuery(
+    ["banner_data"],
+    () =>
+      apiConnectorGet(endpoint?.get_banner),
+    {
+      keepPreviousData: true,
+      // enabled: !!activeSubcategoryId, // only fetch when activeSubcategoryId exists
+    }
+  );
+  
+  const slides = data?.data?.result || [];
+
+  const hdsjhjd = [
     {
       id: 1,
       image: 'https://cdn.caratlane.com/media/static/images/V4/2025/CL/06_JUNE/Banner/swirl/01/Desktop.jpg',
@@ -58,7 +73,7 @@ const HeroBanner = () => {
               {slides.map((slide, index) => (
                 <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
                   <img
-                    src={slide.image}
+                    src={slide.ban_image}
                     alt={slide.alt}
                     className="w-full h-auto object-contain object-center"
                     style={{ minWidth: '100%', minHeight: '100%' }}

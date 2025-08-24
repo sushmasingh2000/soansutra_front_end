@@ -1,4 +1,5 @@
 import Login from "../authentiaction/Login";
+import Banner from "../components/admin/Banner";
 import Customer from "../components/admin/Customer";
 import Discount from "../components/admin/Discount";
 import MasterMaterial from "../components/admin/MasterMaterial";
@@ -158,6 +159,14 @@ export const routes = [
     element: (
       <MainLayout>
         <ProductDiscount />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/banner",
+    element: (
+      <MainLayout>
+        <Banner />{" "}
       </MainLayout>
     ),
   },

@@ -9,15 +9,17 @@ import {
   UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { BrandLogo } from "./brand-logo";
 import { TreasureChestIcon } from "./treasure-chest-icon";
-import { apiConnectorGet } from "../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import { Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import SubcategoryView from "./SubcategoryView";
+import { useQuery } from "react-query";
+import { debounce } from "lodash";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,15 +55,15 @@ export default function Header() {
   };
 
   useEffect(() => {
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
   const [profile, setProfile] = useState({});
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await apiConnectorGet(endpoint?.get_customer_profile);
-        setProfile(response?.data?.result)
+        setProfile(response?.data?.result);
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
@@ -69,6 +71,34 @@ export default function Header() {
 
     fetchProfile();
   }, []);
+
+  const navigate = useNavigate()
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+
+  const debouncedSetSearchQuery = useCallback(
+    debounce((query) => {
+      setDebouncedSearchQuery(query);
+    }, 500), // 500ms debounce delay
+    []
+  );
+
+  // Update on input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    debouncedSetSearchQuery(e.target.value);
+  };
+
+  const { data, isLoading, error } = useQuery(
+    ["search_product", debouncedSearchQuery],
+    () =>
+      apiConnectorPost(endpoint.get_search_product, {
+        search: debouncedSearchQuery,
+      }),
+    {
+      enabled: !!debouncedSearchQuery, // only fetch if there is a search query
+      keepPreviousData: true,
+    }
+  );
 
   const slides = [
     {
@@ -204,7 +234,7 @@ export default function Header() {
                 type="text"
                 placeholder={placeholders[currentPlaceholder]}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="w-full pl-3 pr-10 py-2 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm border-r-0 transition-all duration-500"
                 style={{
                   animation: "placeholderSlide 0.5s ease-in-out",
@@ -227,6 +257,29 @@ export default function Header() {
               >
                 <MagnifyingGlassIcon className="h-4 w-4" />
               </button>
+              {debouncedSearchQuery && data?.data?.result?.length > 0 && (
+                <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
+                  {data.data.result.map((item , index) => (
+                 <div
+                 key={`${item.product_id}-${index}`}
+                 onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setTimeout(() => {
+                    navigate("/productdetails", { state: { product: item } });
+                  }, 0);
+                  setSearchQuery("");
+                }}
+                
+                 className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
+               >
+                 <div className="font-medium">{item.pro_name}</div>
+                 <div className="text-xs text-gray-500">{item.cat_name}</div>
+               </div>
+                 
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -263,7 +316,7 @@ export default function Header() {
                 type="text"
                 placeholder={placeholders[currentPlaceholder]}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="w-full pl-4 pr-12 py-2.5 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm border-r-0 transition-all duration-500"
                 style={{
                   animation: "placeholderSlide 0.5s ease-in-out",
@@ -285,6 +338,29 @@ export default function Header() {
               >
                 <MagnifyingGlassIcon className="h-5 w-5" />
               </button>
+              {debouncedSearchQuery && data?.data?.result?.length > 0 && (
+                <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
+                  {data.data.result.map((item ,index) => (
+                   <div
+                   key={`${item.product_id}-${index}`}
+                   onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setTimeout(() => {
+                      navigate("/productdetails", { state: { product: item } });
+                    }, 0);
+                    setSearchQuery("");
+                  }}
+                  
+                   className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
+                 >
+                   <div className="font-medium">{item.pro_name}</div>
+                   <div className="text-xs text-gray-500">{item.cat_name}</div>
+                 </div>
+                  
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -341,8 +417,12 @@ export default function Header() {
                       <div className="absolute top-full right-0  w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-[100]">
                         <div className="p-4">
                           <div className="text-center mb-4">
-                            <h3 className="text-lg font-semibold text-purple-700 mb-1">{profile?.name}</h3>
-                            <p className="text-gray-600 text-sm">{profile?.cl_email}</p>
+                            <h3 className="text-lg font-semibold text-purple-700 mb-1">
+                              {profile?.name}
+                            </h3>
+                            <p className="text-gray-600 text-sm">
+                              {profile?.cl_email}
+                            </p>
                           </div>
 
                           <hr className="border-t-2 border-purple-300 mb-4" />

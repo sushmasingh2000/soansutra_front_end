@@ -1,5 +1,5 @@
-export const domain = "http://192.168.18.214:2000";
-// export const domain ="https://sonashutra.onrender.com";
+// export const domain = "http://192.168.18.214:2000";
+export const domain ="https://sonashutra.onrender.com";
 
 export const endpoint = {
 
@@ -67,6 +67,13 @@ export const endpoint = {
   get_product_unitt: `${domain}/api/v1/get-all-units`,
   update_product_unitt: `${domain}/api/v1/update-units`,
   delete_product_unitt: `${domain}/api/v1/delete-units`,
+
+  //bnanner
+  create_banner: `${domain}/api/v1/create-banner`,
+  get_banner: `${domain}/api/v1/get-banner`,
+  update_banner: `${domain}/api/v1/update-banner`,
+  delete_banner: `${domain}/api/v1/delete-banner`,
+ status_banner: `${domain}/api/v1/change-banner-status`,
 
   //pending
 
@@ -145,7 +152,6 @@ export const endpoint = {
 
   //auth
   login_customer: `${domain}/api/v1/login-customer`,
-
   //prduct 
   get_categroy_user: `${domain}/api/v1/u-get-category`,
   get_sub_categroy_user: `${domain}/api/v1/u-get-sub-category`,
@@ -161,5 +167,20 @@ export const endpoint = {
 //cart 
 create_cart: `${domain}/api/v1/create-cart-items`,
 get_cart: `${domain}/api/v1/get-cart-items`,
+
+//similar_items
+similar_items: `${domain}/api/v1/u-get-similar-items`,
+latest_items: `${domain}/api/v1/u-get-latest-items`,
+recent_items: `${domain}/api/v1/u-get-recent-viewed-items`,
+related_sub_items: `${domain}/api/v1/u-get-related-subcategories`,
+get_discount_high: `${domain}/api/v1/u-get-highlt-discount-product`,
+get_most_frequent: `${domain}/api/v1/u-get-most-frequent-search-items`,
+get_categroy_filtered_item: `${domain}/api/v1/u-get-home-filtered-items`,
+get_search_product: `${domain}/api/v1/u-get-search-product`,
+
+
+
+
+
 
 };

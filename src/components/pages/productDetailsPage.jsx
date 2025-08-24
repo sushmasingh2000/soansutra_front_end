@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   Heart,
@@ -30,6 +29,7 @@ import RelatedCategories from "../relatedcategories";
 import ShopByProducts from "../shopbyproduct";
 import toast from "react-hot-toast";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import { useQuery } from "react-query";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -46,6 +46,7 @@ const DiamondIcon = () => (
 const ProductDetailWebPage = () => {
   const location = useLocation();
   const productData = location.state?.product;
+  console.log(productData)
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [variants, setVariants] = useState([]);
@@ -63,12 +64,12 @@ const ProductDetailWebPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedGroup, setSelectedGroup] = useState("Gold"); // default group
 
-
-
   useEffect(() => {
     const fetchVariants = async () => {
       try {
-        const response = await axios.get(`${endpoint?.u_get_variant}?product_id=${productData.product_id}`);
+        const response = await axios.get(
+          `${endpoint?.u_get_variant}?product_id=${productData.product_id}`
+        );
         if (response.data.success) {
           setVariants(response.data.result);
           if (response.data.result.length > 0) {
@@ -114,9 +115,27 @@ const ProductDetailWebPage = () => {
     );
   }
 
-  const images = (productData.product_images || [])
+  const image = (
+    typeof productData.product_images === "string"
+      ? JSON.parse(productData.product_images)
+      : productData.product_images
+  ) || [];
+  
+  const images = image
     .filter((img) => img?.p_image_url)
     .map((img) => img.p_image_url);
+  
+  // let images = [];
+
+  // try {
+  //   const parsed = JSON.parse(productData?.product_images || "[]");
+  //   images = parsed
+  //     .filter((img) => img?.p_image_url)
+  //     .map((img) => img?.p_image_url);
+  // } catch (e) {
+  //   console.error("Failed to parse product images", e);
+  //   images = [];
+  // }
 
   const formatPrice = (price) => {
     const num = Number(price);
@@ -233,12 +252,14 @@ const ProductDetailWebPage = () => {
       toast.error("Error updating wishlist");
     }
   };
-  const groupedMaterials = selectedVariant?.material_details?.reduce((acc, curr) => {
-    const key = curr.master_mat_name;
-    if (!acc[key]) acc[key] = true;
-    return acc;
-  }, {});
-
+  const groupedMaterials = selectedVariant?.material_details?.reduce(
+    (acc, curr) => {
+      const key = curr.master_mat_name;
+      if (!acc[key]) acc[key] = true;
+      return acc;
+    },
+    {}
+  );
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
@@ -311,7 +332,9 @@ const ProductDetailWebPage = () => {
               <div>
                 <p className="text-gray-600 mb-1">Weight</p>
                 <p className="text-gray-800">
-                  {selectedVariant?.varient_weight || productData.weight || "N/A"}
+                  {selectedVariant?.varient_weight ||
+                    productData.weight ||
+                    "N/A"}
                 </p>
               </div>
               <div>
@@ -452,10 +475,11 @@ const ProductDetailWebPage = () => {
                       <button
                         key={index}
                         onClick={() => handleDotClick(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
-                          ? "bg-purple-500 shadow-lg"
-                          : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
-                          }`}
+                        className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                          index === selectedImage
+                            ? "bg-purple-500 shadow-lg"
+                            : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
+                        }`}
                       />
                     ))}
                   </div>
@@ -481,10 +505,11 @@ const ProductDetailWebPage = () => {
                     <div
                       key={index}
                       onClick={() => setSelectedImage(index % images.length)}
-                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
-                        ? "border-purple-500 shadow-md"
-                        : "border-gray-200 hover:border-gray-300"
-                        }`}
+                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                        selectedImage === index % images.length
+                          ? "border-purple-500 shadow-md"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
                     >
                       <div className="w-full h-100 overflow-hidden">
                         <img
@@ -497,16 +522,18 @@ const ProductDetailWebPage = () => {
                         <div className="absolute top-2 right-2">
                           <button
                             onClick={handleWishlist}
-                            className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
-                              } hover:text-red-500 transition-colors`}
+                            className={`p-1.5 rounded-full bg-white shadow-md ${
+                              isWishlisted ? "text-red-500" : "text-gray-400"
+                            } hover:text-red-500 transition-colors`}
                           >
                             <Heart
-                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""}`}
+                              className={`w-3 h-3 ${
+                                isWishlisted ? "fill-current" : ""
+                              }`}
                             />
                           </button>
                         </div>
                       )}
-
                     </div>
                   ));
                 })()}
@@ -521,17 +548,15 @@ const ProductDetailWebPage = () => {
                   className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
                 >
                   <Heart
-                    className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""
-                      }`}
+                    className={`w-4 h-4 ${
+                      isWishlisted ? "text-red-500 fill-current" : ""
+                    }`}
                   />
                 </button>
                 <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
                   <Share2 className="w-4 h-4" />
                 </button>
-                <button
-
-                  className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
-                >
+                <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
                   <Copy className="w-4 h-4" />
                 </button>
               </div>
@@ -539,7 +564,9 @@ const ProductDetailWebPage = () => {
             <div className="space-y-1 px-1 md:px-0">
               <div className="flex items-center space-x-2">
                 <span className="text-xl font-bold text-gray-900">
-                  {formatPrice(selectedVariant?.varient_price || productData.price)}
+                  {formatPrice(
+                    selectedVariant?.varient_price || productData.price
+                  )}
                 </span>
                 {originalPrice && originalPriceNum > priceNum && (
                   <span className="text-sm text-gray-500 line-through">
@@ -576,7 +603,7 @@ const ProductDetailWebPage = () => {
                     {groupName}
                   </button>
                 ))}
-                   <button
+              <button
                 onClick={() => setShowCustomizationModal(true)}
                 className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
               >
@@ -584,10 +611,14 @@ const ProductDetailWebPage = () => {
               </button>
             </div>
             <div className="px-3 py-2 border-t border-gray-100">
-              <label className="text-gray-600 text-xs mb-1 font-semibold block">Quantity</label>
+              <label className="text-gray-600 text-xs mb-1 font-semibold block">
+                Quantity
+              </label>
               <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
                 <button
-                  onClick={() => setQuantity(prev => (prev > 1 ? prev - 1 : 1))}
+                  onClick={() =>
+                    setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
+                  }
                   className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
                   aria-label="Decrease quantity"
                 >
@@ -601,7 +632,7 @@ const ProductDetailWebPage = () => {
                   aria-label="Quantity"
                 />
                 <button
-                  onClick={() => setQuantity(prev => prev + 1)}
+                  onClick={() => setQuantity((prev) => prev + 1)}
                   className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
                   aria-label="Increase quantity"
                 >
@@ -617,37 +648,39 @@ const ProductDetailWebPage = () => {
               <div className="flex flex-wrap gap-3">
                 {variants.length
                   ? variants.map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                      <button
+                        key={variant.varient_id}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
+                          selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))
+                      >
+                        SKU: {variant.varient_sku}
+                      </button>
+                    ))
                   : [
-                    {
-                      varient_id: "default",
-                      varient_sku: "Default",
-                      varient_price: productData.price,
-                      varient_weight: productData.weight || "",
-                      unit_name: productData.unit_name || "",
-                    },
-                  ].map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                      {
+                        varient_id: "default",
+                        varient_sku: "Default",
+                        varient_price: productData.price,
+                        varient_weight: productData.weight || "",
+                        unit_name: productData.unit_name || "",
+                      },
+                    ].map((variant) => (
+                      <button
+                        key={variant.varient_id}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
+                          selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))}
+                      >
+                        SKU: {variant.varient_sku}
+                      </button>
+                    ))}
               </div>
             </div>
             <div className="hidden md:block">
@@ -656,7 +689,8 @@ const ProductDetailWebPage = () => {
                   onClick={handleAddToCart}
                   className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
                   style={{
-                    background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
+                    background:
+                      "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
                   }}
                 >
                   <ShoppingCart className="w-4 h-4" />
@@ -668,8 +702,11 @@ const ProductDetailWebPage = () => {
                   className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
                 >
                   <Heart
-                    className={`w-5 h-5 ${isWishlisted ? "text-red-500 fill-current" : "text-gray-600"
-                      }`}
+                    className={`w-5 h-5 ${
+                      isWishlisted
+                        ? "text-red-500 fill-current"
+                        : "text-gray-600"
+                    }`}
                   />
                 </button>
                 <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
@@ -698,14 +735,14 @@ const ProductDetailWebPage = () => {
         <WarrantyFeatures />
         <BannerSlidder />
         <YouMayLike />
-        <SimilarProducts />
+        <SimilarProducts productData={productData} />
         <CustomerReviewSection productId={productData.product_id} />
         <RecentlyViewed />
         <ContinueBrowsing />
         <More18KProducts />
         <CaratLaneSignup />
         <MobileVideoSlider />
-        <RelatedCategories />
+        <RelatedCategories productData={productData} />
         <ShopByProducts />
         <Footer />
       </div>
@@ -715,7 +752,8 @@ const ProductDetailWebPage = () => {
             onClick={handleAddToCart}
             className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
             style={{
-              background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
+              background:
+                "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
             }}
           >
             <ShoppingCart className="w-4 h-4" />
@@ -729,12 +767,12 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showPriceBreakupModal
-              ? "translate-y-0 md:translate-x-0"
-              : "translate-y-full md:translate-x-full"
-              }`}
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+              showPriceBreakupModal
+                ? "translate-y-0 md:translate-x-0"
+                : "translate-y-full md:translate-x-full"
+            }`}
           >
-
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-purple-800">
@@ -778,10 +816,17 @@ const ProductDetailWebPage = () => {
 
                 {/* Material Details */}
                 {selectedVariant?.material_details?.map((material, index) => (
-                  <div key={index} className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1">
+                  <div
+                    key={index}
+                    className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
+                  >
                     <div>{material.material_name}</div>
-                    <div>₹{material.material_price} / {material.v_un_name}</div>
-                    <div>{material.weight} {material.v_un_name}</div>
+                    <div>
+                      ₹{material.material_price} / {material.v_un_name}
+                    </div>
+                    <div>
+                      {material.weight} {material.v_un_name}
+                    </div>
                     <div>{formatPrice(calculateMaterialValue(material))}</div>
                   </div>
                 ))}
@@ -791,19 +836,29 @@ const ProductDetailWebPage = () => {
                   <div>Total Gold Value</div>
                   <div>-</div>
                   <div>-</div>
-                  <div>{formatPrice(selectedVariant?.material_details?.filter(m => m.material_type === "gold")
-                    .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0))}</div>
+                  <div>
+                    {formatPrice(
+                      selectedVariant?.material_details
+                        ?.filter((m) => m.material_type === "gold")
+                        .reduce(
+                          (acc, cur) => acc + calculateMaterialValue(cur),
+                          0
+                        )
+                    )}
+                  </div>
                 </div>
 
                 {/* Total Diamond Value (if any) */}
-                {selectedVariant?.material_details?.some(m => m.material_type === "diamond") && (
+                {selectedVariant?.material_details?.some(
+                  (m) => m.material_type === "diamond"
+                ) && (
                   <>
                     <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-4 font-semibold">
-                      <div>IJ-SI Round-{selectedVariant?.diamond_count || "0"} Nos.</div>
-                      <div>-</div>
                       <div>
-                        {selectedVariant?.diamond_weight || "0.000"} ct
+                        IJ-SI Round-{selectedVariant?.diamond_count || "0"} Nos.
                       </div>
+                      <div>-</div>
+                      <div>{selectedVariant?.diamond_weight || "0.000"} ct</div>
                       <div className="line-through text-gray-400">
                         ₹{selectedVariant?.diamond_mrp || "0"}
                       </div>
@@ -884,7 +939,6 @@ const ProductDetailWebPage = () => {
             </div> */}
           </div>
         </div>
-
       )}
       {showCustomizationModal && (
         <div
@@ -892,10 +946,11 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showCustomizationModal
-              ? "translate-y-0 md:translate-x-0"
-              : "translate-y-full md:translate-x-full"
-              }`}
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+              showCustomizationModal
+                ? "translate-y-0 md:translate-x-0"
+                : "translate-y-full md:translate-x-full"
+            }`}
           >
             <div className="sticky top-0 bg-white border-b border-gray-200 p-3 rounded-t-3xl md:rounded-t-lg">
               <div className="flex items-start justify-between">
@@ -944,25 +999,28 @@ const ProductDetailWebPage = () => {
                   Choice of Metal
                 </h3>
                 <div className="grid grid-cols-3 gap-2">
-                  {["18 KT Rose Gold", "18 KT White Gold", "18 KT Yellow Gold"].map(
-                    (metal) => (
-                      <button
-                        key={metal}
-                        onClick={() => setSelectedMetal(metal)}
-                        className={`p-2 rounded-lg border-2 text-center transition-all ${selectedMetal === metal
+                  {[
+                    "18 KT Rose Gold",
+                    "18 KT White Gold",
+                    "18 KT Yellow Gold",
+                  ].map((metal) => (
+                    <button
+                      key={metal}
+                      onClick={() => setSelectedMetal(metal)}
+                      className={`p-2 rounded-lg border-2 text-center transition-all ${
+                        selectedMetal === metal
                           ? "border-purple-300 bg-purple-50"
                           : "border-gray-200 hover:border-gray-300"
-                          }`}
-                      >
-                        <div className="text-xs font-medium text-gray-900">
-                          {metal.replace("18 KT ", "")}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          Made to Order
-                        </div>
-                      </button>
-                    )
-                  )}
+                      }`}
+                    >
+                      <div className="text-xs font-medium text-gray-900">
+                        {metal.replace("18 KT ", "")}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Made to Order
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
               <div>
@@ -979,10 +1037,11 @@ const ProductDetailWebPage = () => {
                     <button
                       key={diamond}
                       onClick={() => setSelectedDiamond(diamond)}
-                      className={`p-2 rounded-lg border-2 text-center transition-all ${selectedDiamond === diamond
-                        ? "border-purple-300 bg-purple-50"
-                        : "border-gray-200 hover:border-gray-300"
-                        }`}
+                      className={`p-2 rounded-lg border-2 text-center transition-all ${
+                        selectedDiamond === diamond
+                          ? "border-purple-300 bg-purple-50"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
                     >
                       <div className="text-xs font-medium text-gray-900">
                         {diamond}
@@ -1004,9 +1063,7 @@ const ProductDetailWebPage = () => {
                   </button>
                 </div>
                 <div className="overflow-x-auto scrollbar-hide">
-                  <div
-                    className="grid grid-cols-4 gap-5 space-x-2 pb-2"
-                  >
+                  <div className="grid grid-cols-4 gap-5 space-x-2 pb-2">
                     {[
                       { size: "5", mm: "44.8 mm", status: "Made to Order" },
                       { size: "6", mm: "45.9 mm", status: "Made to Order" },
@@ -1033,20 +1090,22 @@ const ProductDetailWebPage = () => {
                       <button
                         key={item.size}
                         onClick={() => setSelectedSize(item.size)}
-                        className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-28 ${selectedSize === item.size
-                          ? "border-purple-300 bg-purple-50"
-                          : "border-gray-200 hover:border-gray-300"
-                          }`}
+                        className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-28 ${
+                          selectedSize === item.size
+                            ? "border-purple-300 bg-purple-50"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
                       >
                         <div className="text-sm font-bold text-gray-900">
                           {item.size}
                         </div>
                         <div className="text-xs text-gray-600">{item.mm}</div>
                         <div
-                          className={`text-xs mt-1 ${item.status.includes("left")
-                            ? "text-red-600"
-                            : "text-gray-500"
-                            }`}
+                          className={`text-xs mt-1 ${
+                            item.status.includes("left")
+                              ? "text-red-600"
+                              : "text-gray-500"
+                          }`}
                         >
                           {item.status}
                         </div>

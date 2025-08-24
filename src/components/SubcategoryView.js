@@ -4,6 +4,8 @@ import axios from "axios";
 import { endpoint } from "../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { apiConnectorGet } from "../utils/ApiConnector";
 
 const SubcategoryView = ({ category, onBack }) => {
   const [subcategories, setSubcategories] = useState([]);
@@ -26,71 +28,84 @@ const SubcategoryView = ({ category, onBack }) => {
     navigate(`/products_web/${subcategoryId}`);
   };
 
+  const { data } = useQuery(
+    ["sub_cate_product"],
+    () =>
+      apiConnectorGet(
+        `${endpoint.get_categroy_filtered_item}?product_category_id=${category?.product_category_id}`
+      ),
+    {
+      keepPreviousData: true,
+      // enabled: !!activeSubcategoryId, // only fetch when activeSubcategoryId exists
+    }
+  );
+  const sub_filtered = data?.data?.result || [];
+
   const jewelryData = {
-      subcategories: {
-        featured: [
-          { name: "Engagement Rings" },
-          { name: "Wedding Bands" },
-          { name: "Diamond Rings" },
-          { name: "Gold Rings" },
-        ],
-        byStyle: [
-          {
-            name: "Solitaire",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png",
-          },
-          {
-            name: "Halo",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
-          },
-          {
-            name: "Vintage",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
-          },
-          {
-            name: "Modern",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
-          },
-        ],
-        byMetal: [
-          {
-            name: "Gold",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
-          },
-          {
-            name: "Platinum",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
-          },
-          {
-            name: "Silver",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
-          },
-          {
-            name: "Rose Gold",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
-          },
-        ],
-        banners: [
-          {
-            name: "New Arrivals",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/22kt_m.png",
-          },
-          {
-            name: "Best Sellers",
-            image:
-              "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/wearyourwins_m.png",
-          },
-        ],
-      },
+    subcategories: {
+      featured: [
+        { name: "Engagement Rings" },
+        { name: "Wedding Bands" },
+        { name: "Diamond Rings" },
+        { name: "Gold Rings" },
+      ],
+      byStyle: [
+        {
+          name: "Solitaire",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/solitaire.png",
+        },
+        {
+          name: "Halo",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+        },
+        {
+          name: "Vintage",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+        },
+        {
+          name: "Modern",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+        },
+      ],
+      byMetal: [
+        {
+          name: "Gold",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+        },
+        {
+          name: "Platinum",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+        },
+        {
+          name: "Silver",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+        },
+        {
+          name: "Rose Gold",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2025/CL/03_MAR/Banner/hamburger/02/top-categories/01/rings.png",
+        },
+      ],
+      banners: [
+        {
+          name: "New Arrivals",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/22kt_m.png",
+        },
+        {
+          name: "Best Sellers",
+          image:
+            "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/slide/wearyourwins_m.png",
+        },
+      ],
+    },
     Earrings: {
       subcategories: {
         featured: [
@@ -435,26 +450,16 @@ const SubcategoryView = ({ category, onBack }) => {
 
       {/* Featured Section */}
       {selectedCategoryMock?.subcategories?.featured?.length > 0 && (
-        <FeaturedSection
-          items={selectedCategoryMock.subcategories.featured}
-        />
+        <FeaturedSection items={selectedCategoryMock.subcategories.featured} />
       )}
       {/* By Style Section */}
-      <StyleSection
-        items={subcategories}
-        onClick={handleSubcategoryClick}
-      />
+      <StyleSection items={subcategories} onClick={handleSubcategoryClick} />
 
       {/* By Metal & Stone Section */}
-      {selectedCategoryMock?.subcategories?.byMetal?.length > 0 && (
-        <MetalSection
-          items={selectedCategoryMock.subcategories.byMetal}
-          // onItemClick={(item) => console.log("By Metal clicked:", item)}
-        />
-      )}
+      <MetalSection items={sub_filtered} onClick={handleSubcategoryClick} />
 
       <PriceRangeSection
-        // onPriceClick={(item) => console.log("Price clicked:", item)}
+      items={sub_filtered} onClick={handleSubcategoryClick}
       />
 
       {selectedCategoryMock?.subcategories?.banners?.length > 0 && (
@@ -465,7 +470,7 @@ const SubcategoryView = ({ category, onBack }) => {
       )}
 
       <GenderCategoriesSection
-        // onGenderClick={(item) => console.log("Gender clicked:", item)}
+      // onGenderClick={(item) => console.log("Gender clicked:", item)}
       />
     </div>
   );
@@ -521,57 +526,64 @@ const StyleSection = ({ items, onClick }) => (
 );
 
 // Metal & Stone Component
-const MetalSection = ({ items, onItemClick }) => (
+const MetalSection = ({ items, onClick }) => (
   <div className="px-4 py-3">
     <h3 className="text-sm font-medium text-gray-700 mb-3">By Metal & Stone</h3>
     <div className="grid grid-cols-2 gap-4">
-      {items.map((item, index) => (
-        <button
-          key={index}
-          // onClick={() => onItemClick(item)}
-          className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
-        >
-          <div className="flex flex-col items-center text-center space-y-2">
-            {item.image && (
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-10 h-10 object-contain"
-              />
-            )}
-            <span className="text-xs font-medium text-gray-800 leading-tight">
-              {item.name}
-            </span>
-          </div>
-        </button>
-      ))}
+      {(() => {
+        const seenMasterNames = new Set();
+
+        return items?.map((item, index) => {
+          const isMasterNameNew = !seenMasterNames.has(item.master_mat_name);
+          if (isMasterNameNew) seenMasterNames.add(item.master_mat_name);
+
+          return (
+            <React.Fragment key={index}>
+              {isMasterNameNew && (
+                <button
+                  onClick={() => onClick(item.product_subcategory_id)}
+                  className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <span className="text-xs font-medium text-gray-800 leading-tight">
+                      {item.master_mat_name}
+                    </span>
+                  </div>
+                </button>
+              )}
+
+              <button
+                onClick={() => onClick(item.product_subcategory_id)}
+                className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <span className="text-xs font-medium text-gray-800 leading-tight">
+                    {item.material_name}
+                  </span>
+                </div>
+              </button>
+            </React.Fragment>
+          );
+        });
+      })()}
     </div>
   </div>
 );
 
 // Price Range Component
-const PriceRangeSection = ({ onPriceClick }) => {
-  const priceRanges = [
-    "Under ₹ 10k",
-    "₹ 10k - ₹ 20k",
-    "₹ 20k - ₹ 30k",
-    "₹ 30k - ₹ 50k",
-    "₹ 40k - ₹ 50k",
-    "₹ 50k - ₹ 75k",
-    "₹ 75k & Above",
-  ];
+const PriceRangeSection = ({ items , onClick }) => {
 
   return (
     <div className="px-4 py-3">
       <h3 className="text-sm font-medium text-gray-700 mb-3">By Price</h3>
       <div className="grid grid-cols-2 gap-2">
-        {priceRanges.slice(0, 6).map((price, index) => (
+        {items?.map((price, index) => (
           <button
             key={index}
-            // onClick={() => onPriceClick({ name: price })}
+            onClick={() => onClick(price.product_subcategory_id)}
             className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 text-center hover:bg-purple-100 transition-colors"
           >
-            <span className="text-xs font-medium text-purple-700">{price}</span>
+            <span className="text-xs font-medium text-purple-700">{price?.price_group}</span>
           </button>
         ))}
       </div>

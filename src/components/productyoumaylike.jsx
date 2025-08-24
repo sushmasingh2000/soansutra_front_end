@@ -1,59 +1,52 @@
 import React, { useState } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
+import { apiConnectorGet } from '../utils/ApiConnector';
+import { endpoint } from '../utils/APIRoutes';
+import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 const YouMayLike = () => {
   const [showMore, setShowMore] = useState(false);
+  const navigate = useNavigate();
 
-  const products = [
-    {
-      id: 1,
-      name: "Dainty Scallop Diamond Band",
-      price: "₹12,165",
-      originalPrice: "₹14,300",
-      discount: "15% OFF",
-      image: "https://cdn.caratlane.com/media/catalog/product/J/R/JR07840-1YS300_1_lar.jpg"
-    },
-    {
-      id: 2,
-      name: "Sky Rover Gemstone Ring",
-      price: "₹15,323",
-      originalPrice: "₹17,977",
-      discount: "15% OFF",
-      image: "https://cdn.caratlane.com/media/catalog/product/J/R/JR06551-YGS300_1_lar.jpg"
-    },
-    {
-      id: 3,
-      name: "Shiny Pods Diamond Ring",
-      price: "₹10,687",
-      originalPrice: "₹12,587",
-      discount: "15% OFF",
-      image: "https://cdn.caratlane.com/media/catalog/product/J/R/JR07840-1YS300_1_lar.jpg"
-    },
-    {
-      id: 4,
-      name: "Whirl Line Diamond Ring",
-      price: "₹10,458",
-      originalPrice: "₹12,104",
-      discount: "14% OFF",
-      image: "https://cdn.caratlane.com/media/catalog/product/J/R/JR06551-YGS300_1_lar.jpg"
-    },
-    {
-      id: 5,
-      name: "Classic Band Ring",
-      price: "₹8,999",
-      originalPrice: "₹10,587",
-      discount: "15% OFF",
-      image: "https://cdn.caratlane.com/media/catalog/product/J/R/JR07840-1YS300_1_lar.jpg"
-    },
-    {
-      id: 6,
-      name: "Elegant Stone Ring",
-      price: "₹13,245",
-      originalPrice: "₹15,582",
-      discount: "15% OFF",
-      image: "https://cdn.caratlane.com/media/catalog/product/J/R/JR06551-YGS300_1_lar.jpg"
+  const { data } = useQuery(
+    ["frequent_product"],
+    () => apiConnectorGet(endpoint.get_most_frequent),
+    { keepPreviousData: true }
+  );
+
+  const rawProducts = data?.data?.result || [];
+
+  // Transform product data into UI-friendly structure
+  const products = rawProducts.map((product) => {
+    let image = 'https://via.placeholder.com/300x300?text=Jewelry';
+    try {
+      const parsed = JSON.parse(product.product_images);
+      if (Array.isArray(parsed) && parsed[0]?.p_image_url) {
+        image = parsed[0].p_image_url;
+      }
+    } catch (err) {
+      console.warn("Failed to parse product_images", err);
     }
-  ];
+
+    const price = parseFloat(product.price);
+    const originalPrice = price * 1.2; // fake original price with 20% markup
+    const discount = `Save ${Math.round(((originalPrice - price) / originalPrice) * 100)}%`;
+
+    return {
+      id: product.product_id,
+      name: product.name || 'Unnamed Product',
+      image,
+      price: `₹${price.toLocaleString("en-IN")}`,
+      originalPrice: `₹${originalPrice.toLocaleString("en-IN")}`,
+      discount,
+      fullProduct: product, // for navigation
+    };
+  });
+
+  const handleClick = (product) => {
+    navigate("/productdetails", { state: { product } });
+  };
 
   const displayedProducts = showMore ? products : products.slice(0, 3);
 
@@ -65,7 +58,7 @@ const YouMayLike = () => {
         
         <div className="grid grid-cols-3 gap-8 mb-8">
           {displayedProducts.map((product) => (
-            <div key={product.id} className="flex flex-col items-center">
+            <div key={product.id} className="flex flex-col items-center cursor-pointer" onClick={() => handleClick(product.fullProduct)}>
               <div className="relative mb-4">
                 <span className="absolute top-2 left-2 bg-purple-800 text-white text-xs px-2 py-1 rounded">
                   {product.discount}
@@ -106,7 +99,7 @@ const YouMayLike = () => {
         
         <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
           {products.slice(0, 3).map((product) => (
-            <div key={product.id} className="flex-shrink-0 w-40">
+            <div key={product.id} className="flex-shrink-0 w-40 cursor-pointer" onClick={() => handleClick(product.fullProduct)}>
               <div className="relative mb-3">
                 <span className="absolute top-2 left-2 bg-purple-800 text-white text-xs px-2 py-1 rounded z-10">
                   {product.discount}
@@ -126,7 +119,7 @@ const YouMayLike = () => {
               </div>
             </div>
           ))}
-          
+
           {/* See More Card */}
           <div className="flex-shrink-0 w-40 h-40 flex items-center justify-center">
             <button className="flex flex-col items-center justify-center text-purple-600 hover:text-purple-700 transition-colors">

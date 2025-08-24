@@ -3,6 +3,7 @@ import { ChevronDown, ArrowRight } from 'lucide-react';
 
 const SimilarProducts = () => {
   const [showMore, setShowMore] = useState(false);
+ 
 
   const products = [
     {

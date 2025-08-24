@@ -118,6 +118,14 @@ const menuItems = [
     roles: ["Support Engineer", "user"],
   },
   {
+    id: "banner",
+    label: "Banner",
+    icon: "📦",
+    path: "/banner",
+    roles: ["Support Engineer", "user"],
+  },
+  
+  {
     id: "customer",
     label: "Customer",
     icon: "📦",
