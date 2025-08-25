@@ -46,7 +46,6 @@ const DiamondIcon = () => (
 const ProductDetailWebPage = () => {
   const location = useLocation();
   const productData = location.state?.product;
-  console.log(productData)
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [variants, setVariants] = useState([]);
@@ -62,7 +61,8 @@ const ProductDetailWebPage = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedGroup, setSelectedGroup] = useState("Gold"); // default group
+  const [selectedMaterialGroup, setSelectedMaterialGroup] = useState([]);
+
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -120,11 +120,11 @@ const ProductDetailWebPage = () => {
       ? JSON.parse(productData.product_images)
       : productData.product_images
   ) || [];
-  
+
   const images = image
     .filter((img) => img?.p_image_url)
     .map((img) => img.p_image_url);
-  
+
   // let images = [];
 
   // try {
@@ -252,14 +252,15 @@ const ProductDetailWebPage = () => {
       toast.error("Error updating wishlist");
     }
   };
-  const groupedMaterials = selectedVariant?.material_details?.reduce(
-    (acc, curr) => {
-      const key = curr.master_mat_name;
-      if (!acc[key]) acc[key] = true;
-      return acc;
-    },
-    {}
-  );
+  const groupedMaterials = {};
+
+  selectedVariant?.material_details.forEach((mat) => {
+    const group = mat.master_mat_name;
+    if (!groupedMaterials[group]) {
+      groupedMaterials[group] = [];
+    }
+    groupedMaterials[group].push(mat);
+  });
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
@@ -475,11 +476,10 @@ const ProductDetailWebPage = () => {
                       <button
                         key={index}
                         onClick={() => handleDotClick(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                          index === selectedImage
-                            ? "bg-purple-500 shadow-lg"
-                            : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
+                          ? "bg-purple-500 shadow-lg"
+                          : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
+                          }`}
                       />
                     ))}
                   </div>
@@ -505,11 +505,10 @@ const ProductDetailWebPage = () => {
                     <div
                       key={index}
                       onClick={() => setSelectedImage(index % images.length)}
-                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
-                        selectedImage === index % images.length
-                          ? "border-purple-500 shadow-md"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
+                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
+                        ? "border-purple-500 shadow-md"
+                        : "border-gray-200 hover:border-gray-300"
+                        }`}
                     >
                       <div className="w-full h-100 overflow-hidden">
                         <img
@@ -522,14 +521,12 @@ const ProductDetailWebPage = () => {
                         <div className="absolute top-2 right-2">
                           <button
                             onClick={handleWishlist}
-                            className={`p-1.5 rounded-full bg-white shadow-md ${
-                              isWishlisted ? "text-red-500" : "text-gray-400"
-                            } hover:text-red-500 transition-colors`}
+                            className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
+                              } hover:text-red-500 transition-colors`}
                           >
                             <Heart
-                              className={`w-3 h-3 ${
-                                isWishlisted ? "fill-current" : ""
-                              }`}
+                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
+                                }`}
                             />
                           </button>
                         </div>
@@ -548,9 +545,8 @@ const ProductDetailWebPage = () => {
                   className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
                 >
                   <Heart
-                    className={`w-4 h-4 ${
-                      isWishlisted ? "text-red-500 fill-current" : ""
-                    }`}
+                    className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""
+                      }`}
                   />
                 </button>
                 <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
@@ -597,14 +593,33 @@ const ProductDetailWebPage = () => {
                 Object.keys(groupedMaterials).map((groupName, index) => (
                   <button
                     key={index}
-                    onClick={() => setShowCustomizationModal(true)}
+                    onClick={() => {
+                      const group = groupedMaterials[groupName] || [];
+                      setSelectedMaterialGroup(group);
+                      setShowCustomizationModal(true);
+                    }}
+
                     className="px-4 py-2 border-l border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
                   >
                     {groupName}
                   </button>
                 ))}
+
+              {/* {groupedMaterials &&
+                Object.keys(groupedMaterials).map((groupName, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setShowCustomizationModal(true)}
+                    className="px-4 py-2 border-l border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
+                  >
+                    {groupName}
+                  </button>
+                ))} */}
               <button
-                onClick={() => setShowCustomizationModal(true)}
+                onClick={() => {
+                  setSelectedMaterialGroup(selectedVariant?.material_details); // all materials
+                  setShowCustomizationModal(true);
+                }}
                 className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
               >
                 <span className="text-sm font-bold text-black">CUSTOMISE</span>
@@ -648,39 +663,37 @@ const ProductDetailWebPage = () => {
               <div className="flex flex-wrap gap-3">
                 {variants.length
                   ? variants.map((variant) => (
-                      <button
-                        key={variant.varient_id}
-                        onClick={() => setSelectedVariant(variant)}
-                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
-                          selectedVariant?.varient_id === variant.varient_id
-                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                    <button
+                      key={variant.varient_id}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
-                      >
-                        SKU: {variant.varient_sku}
-                      </button>
-                    ))
+                    >
+                      SKU: {variant.varient_sku}
+                    </button>
+                  ))
                   : [
-                      {
-                        varient_id: "default",
-                        varient_sku: "Default",
-                        varient_price: productData.price,
-                        varient_weight: productData.weight || "",
-                        unit_name: productData.unit_name || "",
-                      },
-                    ].map((variant) => (
-                      <button
-                        key={variant.varient_id}
-                        onClick={() => setSelectedVariant(variant)}
-                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
-                          selectedVariant?.varient_id === variant.varient_id
-                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                    {
+                      varient_id: "default",
+                      varient_sku: "Default",
+                      varient_price: productData.price,
+                      varient_weight: productData.weight || "",
+                      unit_name: productData.unit_name || "",
+                    },
+                  ].map((variant) => (
+                    <button
+                      key={variant.varient_id}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
-                      >
-                        SKU: {variant.varient_sku}
-                      </button>
-                    ))}
+                    >
+                      SKU: {variant.varient_sku}
+                    </button>
+                  ))}
               </div>
             </div>
             <div className="hidden md:block">
@@ -702,11 +715,10 @@ const ProductDetailWebPage = () => {
                   className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
                 >
                   <Heart
-                    className={`w-5 h-5 ${
-                      isWishlisted
-                        ? "text-red-500 fill-current"
-                        : "text-gray-600"
-                    }`}
+                    className={`w-5 h-5 ${isWishlisted
+                      ? "text-red-500 fill-current"
+                      : "text-gray-600"
+                      }`}
                   />
                 </button>
                 <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
@@ -767,11 +779,10 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
-              showPriceBreakupModal
-                ? "translate-y-0 md:translate-x-0"
-                : "translate-y-full md:translate-x-full"
-            }`}
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showPriceBreakupModal
+              ? "translate-y-0 md:translate-x-0"
+              : "translate-y-full md:translate-x-full"
+              }`}
           >
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
@@ -800,11 +811,8 @@ const ProductDetailWebPage = () => {
               </div>
             </div>
             <div className="p-4 space-y-6 mb-10">
-              {/* Section Header */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-800 mb-4">
-                  GOLD PRICE BREAKUP
-                </h3>
+                <h3 className="text-sm font-semibold text-gray-800 mb-4">PRICE BREAKUP</h3>
 
                 {/* Header Row */}
                 <div className="grid grid-cols-4 gap-2 mb-3 text-xs font-medium text-purple-600">
@@ -814,63 +822,77 @@ const ProductDetailWebPage = () => {
                   <div>FINAL VALUE</div>
                 </div>
 
-                {/* Material Details */}
-                {selectedVariant?.material_details?.map((material, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
-                  >
-                    <div>{material.material_name}</div>
-                    <div>
-                      ₹{material.material_price} / {material.v_un_name}
-                    </div>
-                    <div>
-                      {material.weight} {material.v_un_name}
-                    </div>
-                    <div>{formatPrice(calculateMaterialValue(material))}</div>
-                  </div>
-                ))}
-
-                {/* Total Gold Value */}
-                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
-                  <div>Total Gold Value</div>
-                  <div>-</div>
-                  <div>-</div>
-                  <div>
-                    {formatPrice(
-                      selectedVariant?.material_details
-                        ?.filter((m) => m.material_type === "gold")
-                        .reduce(
-                          (acc, cur) => acc + calculateMaterialValue(cur),
-                          0
-                        )
-                    )}
-                  </div>
-                </div>
-
-                {/* Total Diamond Value (if any) */}
+                {/* GOLD Section */}
                 {selectedVariant?.material_details?.some(
-                  (m) => m.material_type === "diamond"
+                  (m) => m.master_mat_name.toLowerCase() === "gold"
                 ) && (
-                  <>
-                    <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-4 font-semibold">
-                      <div>
-                        IJ-SI Round-{selectedVariant?.diamond_count || "0"} Nos.
+                    <>
+                      <div className="text-xs text-gray-700 font-semibold mb-1">GOLD</div>
+                      {selectedVariant.material_details
+                        .filter((m) => m.master_mat_name.toLowerCase() === "gold")
+                        .map((material, index) => (
+                          <div
+                            key={`gold-${index}`}
+                            className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
+                          >
+                            <div>{material.material_name}</div>
+                            <div>₹{material.material_price} / {material.v_un_name}</div>
+                            <div>{material.weight}</div>
+                            <div>{formatPrice(calculateMaterialValue(material))}</div>
+                          </div>
+                        ))}
+
+                      {/* Total Gold */}
+                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
+                        <div>Total Gold Value</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          {formatPrice(
+                            selectedVariant.material_details
+                              .filter((m) => m.master_mat_name.toLowerCase() === "gold")
+                              .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0)
+                          )}
+                        </div>
                       </div>
-                      <div>-</div>
-                      <div>{selectedVariant?.diamond_weight || "0.000"} ct</div>
-                      <div className="line-through text-gray-400">
-                        ₹{selectedVariant?.diamond_mrp || "0"}
+                    </>
+                  )}
+
+                {/* DIAMOND Section */}
+                {selectedVariant?.material_details?.some(
+                  (m) => m.master_mat_name.toLowerCase() === "diamond"
+                ) && (
+                    <>
+                      <div className="text-xs text-gray-700 font-semibold mt-4 mb-1">DIAMOND</div>
+                      {selectedVariant.material_details
+                        .filter((m) => m.master_mat_name.toLowerCase() === "diamond")
+                        .map((material, index) => (
+                          <div
+                            key={`diamond-${index}`}
+                            className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
+                          >
+                            <div>{material.material_name}</div>
+                            <div>₹{material.material_price} / {material.v_un_name}</div>
+                            <div>{material.weight}</div>
+                            <div>{formatPrice(calculateMaterialValue(material))}</div>
+                          </div>
+                        ))}
+
+                      {/* Total Diamond */}
+                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
+                        <div>Total Diamond Value</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          {formatPrice(
+                            selectedVariant.material_details
+                              .filter((m) => m.master_mat_name.toLowerCase() === "diamond")
+                              .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0)
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 font-semibold">
-                      <div>Total Diamond Value</div>
-                      <div>-</div>
-                      <div>-</div>
-                      <div>₹{selectedVariant?.diamond_price || "0"}</div>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
 
                 {/* Making Charges */}
                 <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
@@ -916,6 +938,8 @@ const ProductDetailWebPage = () => {
               </div>
             </div>
 
+
+
             {/* <div className="p-4 space-y-6 mb-10">
               <div>
                 <h3 className="text-sm font-semibold text-gray-800 mb-4">
@@ -946,11 +970,10 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
-              showCustomizationModal
-                ? "translate-y-0 md:translate-x-0"
-                : "translate-y-full md:translate-x-full"
-            }`}
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showCustomizationModal
+              ? "translate-y-0 md:translate-x-0"
+              : "translate-y-full md:translate-x-full"
+              }`}
           >
             <div className="sticky top-0 bg-white border-b border-gray-200 p-3 rounded-t-3xl md:rounded-t-lg">
               <div className="flex items-start justify-between">
@@ -998,32 +1021,28 @@ const ProductDetailWebPage = () => {
                 <h3 className="text-sm font-medium text-gray-900 mb-3">
                   Choice of Metal
                 </h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    "18 KT Rose Gold",
-                    "18 KT White Gold",
-                    "18 KT Yellow Gold",
-                  ].map((metal) => (
-                    <button
-                      key={metal}
-                      onClick={() => setSelectedMetal(metal)}
-                      className={`p-2 rounded-lg border-2 text-center transition-all ${
-                        selectedMetal === metal
+                {Array.isArray(selectedMaterialGroup) && selectedMaterialGroup.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {selectedMaterialGroup.map((metal, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedMetal(metal)}
+                        className={`p-2 rounded-lg border-2 text-center transition-all ${selectedMetal === metal
                           ? "border-purple-300 bg-purple-50"
                           : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="text-xs font-medium text-gray-900">
-                        {metal.replace("18 KT ", "")}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        Made to Order
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                          }`}
+                      >
+                        <div className="text-xs font-medium text-gray-900">
+                          {metal.material_name}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">Made to Order</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
               </div>
-              <div>
+              {/* <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-medium text-gray-900">
                     Diamond Quality
@@ -1037,11 +1056,10 @@ const ProductDetailWebPage = () => {
                     <button
                       key={diamond}
                       onClick={() => setSelectedDiamond(diamond)}
-                      className={`p-2 rounded-lg border-2 text-center transition-all ${
-                        selectedDiamond === diamond
-                          ? "border-purple-300 bg-purple-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
+                      className={`p-2 rounded-lg border-2 text-center transition-all ${selectedDiamond === diamond
+                        ? "border-purple-300 bg-purple-50"
+                        : "border-gray-200 hover:border-gray-300"
+                        }`}
                     >
                       <div className="text-xs font-medium text-gray-900">
                         {diamond}
@@ -1052,7 +1070,7 @@ const ProductDetailWebPage = () => {
                     </button>
                   ))}
                 </div>
-              </div>
+              </div> */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-medium text-gray-900">
@@ -1090,22 +1108,20 @@ const ProductDetailWebPage = () => {
                       <button
                         key={item.size}
                         onClick={() => setSelectedSize(item.size)}
-                        className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-28 ${
-                          selectedSize === item.size
-                            ? "border-purple-300 bg-purple-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
+                        className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-28 ${selectedSize === item.size
+                          ? "border-purple-300 bg-purple-50"
+                          : "border-gray-200 hover:border-gray-300"
+                          }`}
                       >
                         <div className="text-sm font-bold text-gray-900">
                           {item.size}
                         </div>
                         <div className="text-xs text-gray-600">{item.mm}</div>
                         <div
-                          className={`text-xs mt-1 ${
-                            item.status.includes("left")
-                              ? "text-red-600"
-                              : "text-gray-500"
-                          }`}
+                          className={`text-xs mt-1 ${item.status.includes("left")
+                            ? "text-red-600"
+                            : "text-gray-500"
+                            }`}
                         >
                           {item.status}
                         </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { useQuery } from 'react-query';
-import { apiConnectorGet } from '../utils/ApiConnector';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ const SimilarProducts = ({ productData }) => {
     ['similar_items', productData.product_id],
     () =>
       apiConnectorGet(`${endpoint.similar_items}?product_id=${productData.product_id}`),
-    { keepPreviousData: true }
+    usequeryBoolean
   );
 
   const products = data?.data?.result || [];
@@ -27,7 +27,7 @@ const SimilarProducts = ({ productData }) => {
   };
 
   const handleClick = (product) => {
-    window.scrollTo(0, 0); 
+    window.scrollTo(0, 0);
     navigate('/productdetails', { state: { product } });
   };
 
