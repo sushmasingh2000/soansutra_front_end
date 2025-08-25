@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { endpoint } from "../utils/APIRoutes";
-import { apiConnectorGet } from "../utils/ApiConnector";
+import { apiConnectorGet, usequeryBoolean } from "../utils/ApiConnector";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const NavigationBar = () => {
   const { data: categoryData } = useQuery(
     ["get_product_category"],
     () => axios.get(endpoint?.get_categroy_user),
-    { keepPreviousData: true }
+   usequeryBoolean
   );
 
   const categories = categoryData?.data?.result || [];
@@ -43,7 +43,6 @@ const NavigationBar = () => {
       setSubcategories([]);
       return;
     }
-
     try {
       setActiveCategoryId(categoryId);
       setActivecategoryId(categoryId);
@@ -70,9 +69,8 @@ const NavigationBar = () => {
       apiConnectorGet(
         `${endpoint.get_categroy_filtered_item}?product_category_id=${activecategoryId}`
       ),
-    {
-      keepPreviousData: true,
-      // enabled: !!activeSubcategoryId, // only fetch when activeSubcategoryId exists
+    { ...usequeryBoolean,
+      enabled: !!activecategoryId,
     }
   );
 

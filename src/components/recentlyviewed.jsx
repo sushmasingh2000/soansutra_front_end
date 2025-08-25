@@ -12,7 +12,13 @@ const RecentlyViewed = () => {
   const { data } = useQuery(
     ["recent_product"],
     () => apiConnectorGet(endpoint.recent_items),
-    { keepPreviousData: true }
+   {
+    // keepPreviousData: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount:false,
+    refetchOnReconnect:false,
+    retry:false
+  }
   );
 
   const recent_product = data?.data?.result || [];

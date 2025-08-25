@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { apiConnectorGet } from "../utils/ApiConnector";
+import { apiConnectorGet, usequeryBoolean } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 
 const RelatedCategories = ({ productData }) => {
@@ -10,7 +10,7 @@ const RelatedCategories = ({ productData }) => {
       apiConnectorGet(
         `${endpoint.related_sub_items}?product_id=${productData.product_id}`
       ),
-    { keepPreviousData: true }
+      usequeryBoolean
   );
 
   const related_cate_product = data?.data?.result || [];

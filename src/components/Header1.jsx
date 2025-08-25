@@ -9,11 +9,11 @@ import {
   UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrandLogo } from "./brand-logo";
 import { TreasureChestIcon } from "./treasure-chest-icon";
-import { apiConnectorGet, apiConnectorPost } from "../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import { Lock } from "lucide-react";
 import toast from "react-hot-toast";
@@ -30,6 +30,8 @@ export default function Header() {
   const [categories, setCategories] = useState([]);
   const [showSubcategory, setShowSubcategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchRef = useRef(null);
 
   const placeholders = ["Search Relationship", "Search Price"];
 
@@ -53,6 +55,18 @@ export default function Header() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     fetchCategories();
@@ -92,14 +106,17 @@ export default function Header() {
     ["search_product", debouncedSearchQuery],
     () =>
       apiConnectorPost(endpoint.get_search_product, {
-        search: debouncedSearchQuery,
+        search: debouncedSearchQuery?.trim(),
       }),
+
     {
-      enabled: !!debouncedSearchQuery, // only fetch if there is a search query
-      keepPreviousData: true,
+      ...usequeryBoolean,
+      enabled: !!debouncedSearchQuery,
     }
   );
-
+  const handleClick = (product) => {
+    navigate("/productdetails", { state: { product } });
+  };
   const slides = [
     {
       image:
@@ -228,60 +245,60 @@ export default function Header() {
           </Link>
 
           {/* Search Bar */}
-          <div className="flex-1 mx-3 max-w-xs">
-            <div className="relative">
+          <div className="flex flex-1 max-w-4xl mx-4" ref={searchRef}>
+            <div className="relative w-full">
               <input
                 type="text"
                 placeholder={placeholders[currentPlaceholder]}
                 value={searchQuery}
-                onChange={handleSearchChange}
-                className="w-full pl-3 pr-10 py-2 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm border-r-0 transition-all duration-500"
+                onChange={(e) => {
+                  handleSearchChange(e);
+                  setShowDropdown(true); // show dropdown when typing
+                }}
+                className="w-full pl-4 pr-12 py-2.5 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm border-r-0 transition-all duration-500"
                 style={{
                   animation: "placeholderSlide 0.5s ease-in-out",
                 }}
               />
               <button
-                className="absolute right-0 top-0 h-full px-3 hover:opacity-90 text-white border-0 transition-all overflow-hidden"
+                className="absolute right-0 top-0 h-full px-4 hover:opacity-90 text-white border-0 transition-all overflow-hidden"
                 style={{
-                  background:
-                    "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
+                  background: "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
                   border: "none",
-                  outline: "none",
-                  width: "44px",
-                  right: "-6px",
+                  width: "54px",
+                  right: "-9px",
                   top: "0px",
                   height: "calc(100% - 0px)",
                 }}
               >
-                <MagnifyingGlassIcon className="h-4 w-4" />
+                <MagnifyingGlassIcon className="h-5 w-5" />
               </button>
-              {debouncedSearchQuery && data?.data?.result?.length > 0 && (
-                <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
-                  {data.data.result.map((item , index) => (
-                 <div
-                 key={`${item.product_id}-${index}`}
-                 onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setTimeout(() => {
-                    navigate("/productdetails", { state: { product: item } });
-                  }, 0);
-                  setSearchQuery("");
-                }}
-                
-                 className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
-               >
-                 <div className="font-medium">{item.pro_name}</div>
-                 <div className="text-xs text-gray-500">{item.cat_name}</div>
-               </div>
-                 
-                  ))}
-                </div>
-              )}
+
+              {debouncedSearchQuery &&
+                showDropdown &&
+                data?.data?.result?.length > 0 && (
+                  <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
+                    {data.data.result.map((item, index) => (
+                      <div
+                        key={`${item.product_id}-${index}`}
+                        onMouseDown={() => {
+                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          setShowDropdown(false);
+                        }}
+
+                        className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
+                      >
+                        <div className="font-medium">{item.pro_name}</div>
+                        <div className="text-xs text-gray-500">{item.cat_name}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
+
 
           {/* Heart and Cart Icons */}
           <div className="flex items-center space-x-1">
@@ -310,13 +327,16 @@ export default function Header() {
             <BrandLogo />
           </Link>
 
-          <div className="flex flex-1 max-w-4xl mx-4">
+          <div className="flex flex-1 max-w-4xl mx-4" ref={searchRef}>
             <div className="relative w-full">
               <input
                 type="text"
                 placeholder={placeholders[currentPlaceholder]}
                 value={searchQuery}
-                onChange={handleSearchChange}
+                onChange={(e) => {
+                  handleSearchChange(e);
+                  setShowDropdown(true); // show dropdown when typing
+                }}
                 className="w-full pl-4 pr-12 py-2.5 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm border-r-0 transition-all duration-500"
                 style={{
                   animation: "placeholderSlide 0.5s ease-in-out",
@@ -325,8 +345,7 @@ export default function Header() {
               <button
                 className="absolute right-0 top-0 h-full px-4 hover:opacity-90 text-white border-0 transition-all overflow-hidden"
                 style={{
-                  background:
-                    "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
+                  background: "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
                   border: "none",
@@ -338,31 +357,29 @@ export default function Header() {
               >
                 <MagnifyingGlassIcon className="h-5 w-5" />
               </button>
-              {debouncedSearchQuery && data?.data?.result?.length > 0 && (
-                <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
-                  {data.data.result.map((item ,index) => (
-                   <div
-                   key={`${item.product_id}-${index}`}
-                   onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setTimeout(() => {
-                      navigate("/productdetails", { state: { product: item } });
-                    }, 0);
-                    setSearchQuery("");
-                  }}
-                  
-                   className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
-                 >
-                   <div className="font-medium">{item.pro_name}</div>
-                   <div className="text-xs text-gray-500">{item.cat_name}</div>
-                 </div>
-                  
-                  ))}
-                </div>
-              )}
+
+              {debouncedSearchQuery &&
+                showDropdown &&
+                data?.data?.result?.length > 0 && (
+                  <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
+                    {data.data.result.map((item, index) => (
+                      <div
+                        key={`${item.product_id}-${index}`}
+                        onClick={() => {
+                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          setShowDropdown(false); // Close on item click
+                        }}
+                        className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
+                      >
+                        <div className="font-medium">{item.pro_name}</div>
+                        <div className="text-xs text-gray-500">{item.cat_name}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
+
 
           {/* Desktop Navigation - close to right edge */}
           <div className="flex items-center space-x-2 pr-2">
@@ -594,9 +611,8 @@ export default function Header() {
                           : "More Jewellery"}
                       </span>
                       <ChevronRightIcon
-                        className={`h-4 w-4 transition-transform ${
-                          showMoreJewellery ? "rotate-90" : ""
-                        }`}
+                        className={`h-4 w-4 transition-transform ${showMoreJewellery ? "rotate-90" : ""
+                          }`}
                       />
                     </button>
                   </div>
@@ -632,11 +648,10 @@ export default function Header() {
                           <button
                             key={index}
                             onClick={() => setCurrentSlide(index)}
-                            className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                              index === currentSlide
-                                ? "bg-white"
-                                : "bg-white/50"
-                            }`}
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${index === currentSlide
+                              ? "bg-white"
+                              : "bg-white/50"
+                              }`}
                           />
                         ))}
                       </div>

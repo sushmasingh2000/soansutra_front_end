@@ -126,3 +126,10 @@ export const apiConnectorPostWithdouToken = async (
     };
   }
 };
+
+export const usequeryBoolean = {
+   refetchOnWindowFocus: false,
+    refetchOnMount:false,
+    refetchOnReconnect:false,
+    retry:false
+}

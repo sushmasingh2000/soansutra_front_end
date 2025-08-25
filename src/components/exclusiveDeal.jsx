@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { apiConnectorGet } from '../utils/ApiConnector';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
 
 export default function JewelryPromoCard() {
@@ -10,7 +10,7 @@ export default function JewelryPromoCard() {
   const { data } = useQuery(
     ["discount_high"],
     () => apiConnectorGet(endpoint.get_discount_high),
-    { keepPreviousData: true }
+    usequeryBoolean
   );
 
   const discount_high = data?.data?.result || [];

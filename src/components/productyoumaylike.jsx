@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
-import { apiConnectorGet } from '../utils/ApiConnector';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -9,11 +9,12 @@ const YouMayLike = () => {
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
-  const { data } = useQuery(
-    ["frequent_product"],
-    () => apiConnectorGet(endpoint.get_most_frequent),
-    { keepPreviousData: true }
-  );
+ const { data } = useQuery(
+  ["frequent_product"],
+  () => apiConnectorGet(endpoint.get_most_frequent),
+  usequeryBoolean,
+);
+
 
   const rawProducts = data?.data?.result || [];
 
@@ -55,7 +56,7 @@ const YouMayLike = () => {
       {/* Desktop View */}
       <div className="hidden md:block">
         <h2 className="text-2xl font-medium text-gray-800 text-center mb-8">Products You May Like</h2>
-        
+
         <div className="grid grid-cols-3 gap-8 mb-8">
           {displayedProducts.map((product) => (
             <div key={product.id} className="flex flex-col items-center cursor-pointer" onClick={() => handleClick(product.fullProduct)}>
@@ -63,8 +64,8 @@ const YouMayLike = () => {
                 <span className="absolute top-2 left-2 bg-purple-800 text-white text-xs px-2 py-1 rounded">
                   {product.discount}
                 </span>
-                <img 
-                  src={product.image} 
+                <img
+                  src={product.image}
                   alt={product.name}
                   className="w-full h-64 object-cover rounded-lg"
                 />
@@ -82,7 +83,7 @@ const YouMayLike = () => {
 
         {!showMore && (
           <div className="flex justify-center">
-            <button 
+            <button
               onClick={() => setShowMore(true)}
               className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-full text-gray-600 hover:bg-gray-50 transition-colors"
             >
@@ -96,7 +97,7 @@ const YouMayLike = () => {
       {/* Mobile View */}
       <div className="block md:hidden">
         <h2 className="text-xl font-medium text-gray-800 mb-6">Products You May Like</h2>
-        
+
         <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
           {products.slice(0, 3).map((product) => (
             <div key={product.id} className="flex-shrink-0 w-40 cursor-pointer" onClick={() => handleClick(product.fullProduct)}>
@@ -104,8 +105,8 @@ const YouMayLike = () => {
                 <span className="absolute top-2 left-2 bg-purple-800 text-white text-xs px-2 py-1 rounded z-10">
                   {product.discount}
                 </span>
-                <img 
-                  src={product.image} 
+                <img
+                  src={product.image}
                   alt={product.name}
                   className="w-full h-40 object-cover rounded-lg"
                 />

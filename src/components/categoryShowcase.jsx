@@ -1,5 +1,5 @@
 import React from 'react';
-import { apiConnectorGet } from '../utils/ApiConnector';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ const JewelryCategories = () => {
   const { data } = useQuery(
     ["frequent_product"],
     () => apiConnectorGet(endpoint.get_most_frequent),
-    { keepPreviousData: true }
+   usequeryBoolean
   );
 
   const products = data?.data?.result || [];

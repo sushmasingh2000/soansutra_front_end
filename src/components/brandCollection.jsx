@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { apiConnectorGet } from '../utils/ApiConnector';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
 
 const SonasutraCollections = () => {
@@ -10,7 +10,7 @@ const SonasutraCollections = () => {
   const { data } = useQuery(
     ["latest_product"],
     () => apiConnectorGet(endpoint.latest_items),
-    { keepPreviousData: true }
+    usequeryBoolean
   );
 
   const collections = data?.data?.result || [];
