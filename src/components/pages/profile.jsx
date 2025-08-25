@@ -1559,6 +1559,9 @@ import EGoldContent from '../egoldcontent';
 import TreasureChestContent from '../treasurechestcontent';
 import Header1 from '../Header1';
 import Footer from '../Footer1';
+import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
+import { endpoint } from '../../utils/APIRoutes';
+import { useQuery } from 'react-query';
 
 const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState('PROFILE');
@@ -1602,17 +1605,15 @@ const ProfileDashboard = () => {
     }
   ];
 
-  // Profile data
-  const profileData = {
-    name: 'abhishek',
-    email: 'firefireprouser456@yahoo.com',
-    mobile: '7905140270',
-    pincode: '201308',
-    birthday: '-',
-    anniversary: '-',
-    occupation: '-',
-    spouseBirthday: '-'
-  };
+   const { data } = useQuery(
+      ['profile'],
+      () =>
+       apiConnectorGet(endpoint?.get_customer_profile),
+      usequeryBoolean
+    );
+  
+    const profileData = data?.data?.result || [];
+
 
   // Handle navigation click for mobile
   const handleNavClick = (tabId) => {
@@ -1683,10 +1684,8 @@ const ProfileDashboard = () => {
           {/* User Info */}
           <div className="p-3 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900 text-base">{profileData.name}</h3>
-            <p className="text-xs text-gray-500">{profileData.email}</p>
-            <button className="text-purple-600 hover:text-purple-700 text-xs mt-1 transition-colors">
-              Edit Profile
-            </button>
+            <p className="text-xs text-gray-500">{profileData.cl_email}</p>
+            
           </div>
 
           {/* Navigation */}
