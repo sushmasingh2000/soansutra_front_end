@@ -137,6 +137,11 @@ export const endpoint = {
   update_product_tax: `${domain}/api/v1/update-product-tax`,
   delete_product_tax: `${domain}/api/v1/delete-product-tax`,
 
+  //
+   get_customer_order : `${domain}/api/v1/get-custom-orders`,
+   create_custom_order : `${domain}/api/v1/u-create-custom-order`,
+  
+
   //payment
   create_payment_method: `${domain}/api/v1/create-payment-method`,
   get_payment_method: `${domain}/api/v1/get-payment-method`,

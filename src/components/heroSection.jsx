@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Star, Heart, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
-import { useQuery } from 'react-query';
 
 // Hero Banner Component with Dynamic Content
 const HeroBanner = () => {

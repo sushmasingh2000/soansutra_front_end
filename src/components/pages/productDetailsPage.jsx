@@ -1,35 +1,31 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { addDays, format } from "date-fns";
 import {
+  Copy,
   Heart,
   Share2,
   ShoppingCart,
-  Star,
-  Shield,
-  Truck,
-  Copy,
+  Star
 } from "lucide-react";
-import Header from "../Header1";
-import NavigationBar from "../navigationbar";
-import Footer from "../Footer1";
-import CustomerReviewSection from "../customerReview";
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 import { endpoint } from "../../utils/APIRoutes";
-import { format, addDays } from "date-fns";
-import WarrantyFeatures from "../trustBadge";
+import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import Footer from "../Footer1";
+import Header from "../Header1";
 import BannerSlidder from "../bannerSlidder";
-import YouMayLike from "../productyoumaylike";
-import SimilarProducts from "../similarproduct";
-import RecentlyViewed from "../recentlyviewed";
 import ContinueBrowsing from "../continuebrowsing";
-import More18KProducts from "../moreproduct";
+import CustomerReviewSection from "../customerReview";
 import CaratLaneSignup from "../emailSubscription";
 import MobileVideoSlider from "../mobilevideoslider";
+import More18KProducts from "../moreproduct";
+import YouMayLike from "../productyoumaylike";
+import RecentlyViewed from "../recentlyviewed";
 import RelatedCategories from "../relatedcategories";
 import ShopByProducts from "../shopbyproduct";
-import toast from "react-hot-toast";
-import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
-import { useQuery } from "react-query";
+import SimilarProducts from "../similarproduct";
+import WarrantyFeatures from "../trustBadge";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -55,14 +51,12 @@ const ProductDetailWebPage = () => {
   const [showPriceBreakupModal, setShowPriceBreakupModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showCustomizationModal, setShowCustomizationModal] = useState(false);
-  const [selectedMetal, setSelectedMetal] = useState("18 KT Yellow Gold");
-  const [selectedDiamond, setSelectedDiamond] = useState("IJ-SI");
+  const [selectedMetal, setSelectedMetal] = useState("");
   const [selectedSize, setSelectedSize] = useState("5");
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedMaterialGroup, setSelectedMaterialGroup] = useState([]);
-
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -115,11 +109,10 @@ const ProductDetailWebPage = () => {
     );
   }
 
-  const image = (
-    typeof productData.product_images === "string"
+  const image =
+    (typeof productData.product_images === "string"
       ? JSON.parse(productData.product_images)
-      : productData.product_images
-  ) || [];
+      : productData.product_images) || [];
 
   const images = image
     .filter((img) => img?.p_image_url)
@@ -159,6 +152,44 @@ const ProductDetailWebPage = () => {
     addDays(new Date(), deliveryDays),
     "dd MMM yyyy"
   );
+
+  const StaticSize = [
+    { size: "5", value: "44.8 mm", status: "Made to Order" },
+    { size: "6", value: "45.9 mm", status: "Made to Order" },
+    { size: "7", value: "47.1 mm", status: "Made to Order" },
+    { size: "8", value: "48.1 mm", status: "Made to Order" },
+    { size: "9", value: "49.0 mm", status: "Made to Order" },
+    { size: "10", value: "50.0 mm", status: "Made to Order" },
+    { size: "11", value: "50.9 mm", status: "Made to Order" },
+    { size: "12", value: "51.8 mm", status: "Made to Order" },
+    { size: "13", value: "52.8 mm", status: "Made to Order" },
+    { size: "14", value: "54.0 mm", status: "Made to Order" },
+    { size: "15", value: "55.0 mm", status: "Made to Order" },
+    { size: "16", value: "55.9 mm", status: "Made to Order" },
+    { size: "17", value: "56.9 mm", status: "Made to Order" },
+    { size: "18", value: "57.8 mm", status: "Made to Order" },
+    { size: "19", value: "59.1 mm", status: "Made to Order" },
+    { size: "20", value: "60.0 mm", status: "Made to Order" },
+    { size: "21", value: "60.9 mm", status: "Made to Order" },
+    { size: "22", value: "61.9 mm", status: "Made to Order" },
+    { size: "23", value: "62.8 mm", status: "Made to Order" },
+    { size: "24", value: "63.8 mm", status: "Made to Order" },
+    { size: "25", value: "64.7 mm", status: "Made to Order" },
+  ];
+
+  const getAttributeValue = (variant, attrName) => {
+    return (
+      variant?.attributes?.find((attr) => attr.attribute_name === attrName)
+        ?.value || null
+    );
+  };
+
+  const getThicknessUnit = (variant) => {
+    return (
+      variant?.attributes?.find((attr) => attr.attribute_name === "Thickness")
+        ?.un_name || "mm"
+    );
+  };
 
   const handleDotClick = (index) => {
     setSelectedImage(index);
@@ -201,6 +232,38 @@ const ProductDetailWebPage = () => {
     }
   };
 
+  const handleConfirmCustomization = async () => {
+    if (!selectedVariant) {
+      toast.error("Please select a variant");
+      return;
+    }
+  
+    const product_id = selectedVariant.product_id;
+    const size = getAttributeValue(selectedVariant, "Size");
+    const thickness = getAttributeValue(selectedVariant, "Thickness");
+  
+    const payload = {
+      product_id,
+      request: JSON.stringify({
+        Size: size,
+        Thickness: thickness,
+      }),
+    };
+  
+    try {
+      const res = await apiConnectorPost(endpoint.create_custom_order, payload);
+      toast(res?.data?.message)
+      if (res?.data?.success) {
+        // toast.success("Customization confirmed!");
+        setShowCustomizationModal(false);
+      } else {
+        toast.error(res?.data?.message || "Failed to create custom order");
+      }
+    } catch (err) {
+      toast.error("API error while confirming customization");
+    }
+  };
+  
   const handleCopySKU = () => {
     navigator.clipboard.writeText(
       selectedVariant?.varient_sku || "Default SKU"
@@ -262,13 +325,15 @@ const ProductDetailWebPage = () => {
     groupedMaterials[group].push(mat);
   });
 
-  const totalGoldValue = selectedVariant?.material_details
-    ?.filter((m) => m.master_mat_name.toLowerCase() === "gold")
-    .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
+  const totalGoldValue =
+    selectedVariant?.material_details
+      ?.filter((m) => m.master_mat_name.toLowerCase() === "gold")
+      .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
 
-  const totalDiamondValue = selectedVariant?.material_details
-    ?.filter((m) => m.master_mat_name.toLowerCase() === "diamond")
-    .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
+  const totalDiamondValue =
+    selectedVariant?.material_details
+      ?.filter((m) => m.master_mat_name.toLowerCase() === "diamond")
+      .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
 
   // Static making charges example:
   const makingCharges = 2000 + 5000; // Gold + Diamond
@@ -487,10 +552,11 @@ const ProductDetailWebPage = () => {
                       <button
                         key={index}
                         onClick={() => handleDotClick(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
-                          ? "bg-purple-500 shadow-lg"
-                          : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
-                          }`}
+                        className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                          index === selectedImage
+                            ? "bg-purple-500 shadow-lg"
+                            : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
+                        }`}
                       />
                     ))}
                   </div>
@@ -516,10 +582,11 @@ const ProductDetailWebPage = () => {
                     <div
                       key={index}
                       onClick={() => setSelectedImage(index % images.length)}
-                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
-                        ? "border-purple-500 shadow-md"
-                        : "border-gray-200 hover:border-gray-300"
-                        }`}
+                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                        selectedImage === index % images.length
+                          ? "border-purple-500 shadow-md"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
                     >
                       <div className="w-full h-100 overflow-hidden">
                         <img
@@ -532,12 +599,14 @@ const ProductDetailWebPage = () => {
                         <div className="absolute top-2 right-2">
                           <button
                             onClick={handleWishlist}
-                            className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
-                              } hover:text-red-500 transition-colors`}
+                            className={`p-1.5 rounded-full bg-white shadow-md ${
+                              isWishlisted ? "text-red-500" : "text-gray-400"
+                            } hover:text-red-500 transition-colors`}
                           >
                             <Heart
-                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
-                                }`}
+                              className={`w-3 h-3 ${
+                                isWishlisted ? "fill-current" : ""
+                              }`}
                             />
                           </button>
                         </div>
@@ -556,8 +625,9 @@ const ProductDetailWebPage = () => {
                   className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
                 >
                   <Heart
-                    className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""
-                      }`}
+                    className={`w-4 h-4 ${
+                      isWishlisted ? "text-red-500 fill-current" : ""
+                    }`}
                   />
                 </button>
                 <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
@@ -609,7 +679,6 @@ const ProductDetailWebPage = () => {
                       setSelectedMaterialGroup(group);
                       setShowCustomizationModal(true);
                     }}
-
                     className="px-4 py-2 border-l border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
                   >
                     {groupName}
@@ -637,8 +706,8 @@ const ProductDetailWebPage = () => {
               </button>
             </div>
             <div className="flex justify-start gap-5 items-center">
-              {(selectedVariant?.inventory_details?.stock_status && selectedVariant?.inventory_details?.stock_status !== "OK")
-                && (
+              {selectedVariant?.inventory_details?.stock_status &&
+                selectedVariant?.inventory_details?.stock_status !== "OK" && (
                   <div>
                     <label className="text-gray-600 text-xs mb-1 font-semibold block">
                       Stock
@@ -648,7 +717,6 @@ const ProductDetailWebPage = () => {
                     </span>
                   </div>
                 )}
-
 
               <div className="px-3 py-2 border-t border-gray-100">
                 <label className="text-gray-600 text-xs mb-1 font-semibold block">
@@ -689,37 +757,39 @@ const ProductDetailWebPage = () => {
               <div className="flex flex-wrap gap-3">
                 {variants.length
                   ? variants.map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                      <button
+                        key={variant.varient_id}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
+                          selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))
+                      >
+                        SKU: {variant.varient_sku}
+                      </button>
+                    ))
                   : [
-                    {
-                      varient_id: "default",
-                      varient_sku: "Default",
-                      varient_price: productData.price,
-                      varient_weight: productData.weight || "",
-                      unit_name: productData.unit_name || "",
-                    },
-                  ].map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                      {
+                        varient_id: "default",
+                        varient_sku: "Default",
+                        varient_price: productData.price,
+                        varient_weight: productData.weight || "",
+                        unit_name: productData.unit_name || "",
+                      },
+                    ].map((variant) => (
+                      <button
+                        key={variant.varient_id}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
+                          selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))}
+                      >
+                        SKU: {variant.varient_sku}
+                      </button>
+                    ))}
               </div>
             </div>
             <div className="hidden md:block">
@@ -741,10 +811,11 @@ const ProductDetailWebPage = () => {
                   className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
                 >
                   <Heart
-                    className={`w-5 h-5 ${isWishlisted
-                      ? "text-red-500 fill-current"
-                      : "text-gray-600"
-                      }`}
+                    className={`w-5 h-5 ${
+                      isWishlisted
+                        ? "text-red-500 fill-current"
+                        : "text-gray-600"
+                    }`}
                   />
                 </button>
                 <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
@@ -755,7 +826,6 @@ const ProductDetailWebPage = () => {
             <div className="self-start">
               <ProductDetailsSection />
             </div>
-
           </div>
         </div>
       </div>
@@ -795,10 +865,11 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showPriceBreakupModal
-              ? "translate-y-0 md:translate-x-0"
-              : "translate-y-full md:translate-x-full"
-              }`}
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+              showPriceBreakupModal
+                ? "translate-y-0 md:translate-x-0"
+                : "translate-y-full md:translate-x-full"
+            }`}
           >
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
@@ -828,7 +899,9 @@ const ProductDetailWebPage = () => {
             </div>
             <div className="p-4 space-y-6 mb-10">
               <div>
-                <h3 className="text-sm font-semibold text-gray-800 mb-4">PRICE BREAKUP</h3>
+                <h3 className="text-sm font-semibold text-gray-800 mb-4">
+                  PRICE BREAKUP
+                </h3>
 
                 {/* Header Row */}
                 <div className="grid grid-cols-4 gap-2 mb-3 text-xs font-medium text-purple-600">
@@ -842,65 +915,75 @@ const ProductDetailWebPage = () => {
                 {selectedVariant?.material_details?.some(
                   (m) => m.master_mat_name.toLowerCase() === "gold"
                 ) && (
-                    <>
-                      <div className="text-xs text-gray-700 font-semibold mb-1">GOLD</div>
-                      {selectedVariant.material_details
-                        .filter((m) => m.master_mat_name.toLowerCase() === "gold")
-                        .map((material, index) => (
-                          <div
-                            key={`gold-${index}`}
-                            className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
-                          >
-                            <div>{material.material_name}</div>
-                            <div>₹{material.material_price} / {material.v_un_name}</div>
-                            <div>{material.weight}</div>
-                            <div>{formatPrice(calculateMaterialValue(material))}</div>
+                  <>
+                    <div className="text-xs text-gray-700 font-semibold mb-1">
+                      GOLD
+                    </div>
+                    {selectedVariant.material_details
+                      .filter((m) => m.master_mat_name.toLowerCase() === "gold")
+                      .map((material, index) => (
+                        <div
+                          key={`gold-${index}`}
+                          className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
+                        >
+                          <div>{material.material_name}</div>
+                          <div>
+                            ₹{material.material_price} / {material.v_un_name}
                           </div>
-                        ))}
-
-                      {/* Total Gold */}
-                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
-                        <div>Total Gold Value</div>
-                        <div>-</div>
-                        <div>-</div>
-                        <div>
-                          {formatPrice(totalGoldValue)}
+                          <div>{material.weight}</div>
+                          <div>
+                            {formatPrice(calculateMaterialValue(material))}
+                          </div>
                         </div>
-                      </div>
-                    </>
-                  )}
+                      ))}
+
+                    {/* Total Gold */}
+                    <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
+                      <div>Total Gold Value</div>
+                      <div>-</div>
+                      <div>-</div>
+                      <div>{formatPrice(totalGoldValue)}</div>
+                    </div>
+                  </>
+                )}
 
                 {/* DIAMOND Section */}
                 {selectedVariant?.material_details?.some(
                   (m) => m.master_mat_name.toLowerCase() === "diamond"
                 ) && (
-                    <>
-                      <div className="text-xs text-gray-700 font-semibold mt-4 mb-1">DIAMOND</div>
-                      {selectedVariant.material_details
-                        .filter((m) => m.master_mat_name.toLowerCase() === "diamond")
-                        .map((material, index) => (
-                          <div
-                            key={`diamond-${index}`}
-                            className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
-                          >
-                            <div>{material.material_name}</div>
-                            <div>₹{material.material_price} / {material.v_un_name}</div>
-                            <div>{material.weight}</div>
-                            <div>{formatPrice(calculateMaterialValue(material))}</div>
+                  <>
+                    <div className="text-xs text-gray-700 font-semibold mt-4 mb-1">
+                      DIAMOND
+                    </div>
+                    {selectedVariant.material_details
+                      .filter(
+                        (m) => m.master_mat_name.toLowerCase() === "diamond"
+                      )
+                      .map((material, index) => (
+                        <div
+                          key={`diamond-${index}`}
+                          className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
+                        >
+                          <div>{material.material_name}</div>
+                          <div>
+                            ₹{material.material_price} / {material.v_un_name}
                           </div>
-                        ))}
-
-                      {/* Total Diamond */}
-                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
-                        <div>Total Diamond Value</div>
-                        <div>-</div>
-                        <div>-</div>
-                        <div>
-                          {formatPrice(totalDiamondValue)}
+                          <div>{material.weight}</div>
+                          <div>
+                            {formatPrice(calculateMaterialValue(material))}
+                          </div>
                         </div>
-                      </div>
-                    </>
-                  )}
+                      ))}
+
+                    {/* Total Diamond */}
+                    <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
+                      <div>Total Diamond Value</div>
+                      <div>-</div>
+                      <div>-</div>
+                      <div>{formatPrice(totalDiamondValue)}</div>
+                    </div>
+                  </>
+                )}
 
                 {/* Making Charges (static display) */}
 
@@ -914,20 +997,21 @@ const ProductDetailWebPage = () => {
                   <div>Making Charges</div>
                   <div>-</div>
                   <div>-</div>
-                  <div>+{formatPrice(makingCharges)}</div>
+                  <div>+{formatPrice(selectedVariant?.making_price)}</div>
                 </div>
                 {/* Final Subtotal */}
                 <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
                   <div>GrandTotal</div>
                   <div>-</div>
                   <div>-</div>
-                  <div>{formatPrice(totalGoldValue + totalDiamondValue + makingCharges)}</div>
+                  <div>
+                    {formatPrice(
+                      totalGoldValue + totalDiamondValue + selectedVariant?.making_price
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-
-
-
 
             {/* <div className="p-4 space-y-6 mb-10">
               <div>
@@ -959,10 +1043,11 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showCustomizationModal
-              ? "translate-y-0 md:translate-x-0"
-              : "translate-y-full md:translate-x-full"
-              }`}
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+              showCustomizationModal
+                ? "translate-y-0 md:translate-x-0"
+                : "translate-y-full md:translate-x-full"
+            }`}
           >
             <div className="sticky top-0 bg-white border-b border-gray-200 p-3 rounded-t-3xl md:rounded-t-lg">
               <div className="flex items-start justify-between">
@@ -980,7 +1065,6 @@ const ProductDetailWebPage = () => {
                       </span>
                     )}
                   </div>
-
                 </div>
                 <button
                   onClick={() => setShowCustomizationModal(false)}
@@ -1007,26 +1091,29 @@ const ProductDetailWebPage = () => {
                 <h3 className="text-sm font-medium text-gray-900 mb-3">
                   Choice of Metal
                 </h3>
-                {Array.isArray(selectedMaterialGroup) && selectedMaterialGroup.length > 0 && (
-                  <div className="grid grid-cols-3 gap-2">
-                    {selectedMaterialGroup.map((metal, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setSelectedMetal(metal)}
-                        className={`p-2 rounded-lg border-2 text-center transition-all ${selectedMetal === metal
-                          ? "border-purple-300 bg-purple-50"
-                          : "border-gray-200 hover:border-gray-300"
+                {Array.isArray(selectedMaterialGroup) &&
+                  selectedMaterialGroup.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2">
+                      {selectedMaterialGroup.map((metal, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setSelectedMetal(metal)}
+                          className={`p-2 rounded-lg border-2 text-center transition-all ${
+                            selectedMetal === metal
+                              ? "border-purple-300 bg-purple-50"
+                              : "border-gray-200 hover:border-gray-300"
                           }`}
-                      >
-                        <div className="text-xs font-medium text-gray-900">
-                          {metal.material_name}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">Made to Order</div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-
+                        >
+                          <div className="text-xs font-medium text-gray-900">
+                            {metal.material_name}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            Made to Order
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
               </div>
               {/* <div>
                 <div className="flex items-center justify-between mb-3">
@@ -1067,37 +1154,69 @@ const ProductDetailWebPage = () => {
                   </button>
                 </div>
                 <div className="overflow-x-auto scrollbar-hide">
-                  <div className="grid grid-cols-4 gap-5 space-x-2 pb-2">
-                    {selectedVariant?.material_details?.map((item) => (
-                      <button
-                        key={item.size}
-                        onClick={() => setSelectedSize(item.weight)}
-                        className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-28 ${selectedSize === item.size
-                          ? "border-purple-300 bg-purple-50"
-                          : "border-gray-200 hover:border-gray-300"
+                  <div className="grid grid-cols-4 gap-4  pb-2">
+                    {StaticSize.map((staticSize, index) => {
+                      const variantSize = getAttributeValue(
+                        selectedVariant,
+                        "Size"
+                      );
+                      const thickness = getAttributeValue(
+                        selectedVariant,
+                        "Thickness"
+                      );
+                      const thicknessUnit = getThicknessUnit(selectedVariant);
+
+                      const isSizeMatch = variantSize === staticSize.size;
+
+                      const stockStatus =
+                        isSizeMatch &&
+                        selectedVariant?.inventory_details?.stock_status &&
+                        selectedVariant?.inventory_details?.stock_status !==
+                          "OK"
+                          ? selectedVariant.inventory_details.stock_status
+                          : isSizeMatch
+                          ? "Made to Order"
+                          : staticSize.status;
+
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => setSelectedSize(staticSize.size)}
+                          className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-24 ${
+                            isSizeMatch || selectedSize === staticSize.size
+                              ? "border-purple-300 bg-purple-50"
+                              : "border-gray-200 hover:border-gray-300"
                           }`}
-                      >
-                        <div className="text-sm font-bold text-gray-900">
-                          {item.weight}
-                        </div>
-                        <div className="text-xs text-gray-600">{item.m_un_name}</div>
-                        {/* <div
-                          className={`text-xs mt-1 ${item.status.includes("left")
-                            ? "text-red-600"
-                            : "text-gray-500"
-                            }`}
                         >
-                          {item.status}
-                        </div> */}
-                      </button>
-                    ))}
+                          <div className="text-sm font-bold text-gray-900">
+                            {staticSize.size}
+                          </div>
+
+                          <div className="text-xs text-gray-600">
+                            {isSizeMatch && thickness
+                              ? `${thickness} ${thicknessUnit}`
+                              : staticSize.value}
+                          </div>
+
+                          <div
+                            className={`text-xs mt-1 ${
+                              stockStatus?.toLowerCase().includes("made")
+                                ? "text-purple-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {stockStatus}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             </div>
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-3">
               <button
-                onClick={() => setShowCustomizationModal(false)}
+               onClick={handleConfirmCustomization}
                 className="w-full bg-purple-600 text-white py-2.5 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-sm"
               >
                 CONFIRM CUSTOMISATION

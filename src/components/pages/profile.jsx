@@ -1539,29 +1539,37 @@
 
 // export default ProfileDashboard;
 
-import React, { useState } from 'react';
-import { 
-  User, Package, CreditCard, RefreshCcw, Calendar, Home, Gift, Ticket, 
-  Users, Award, Gem, Star, Lock, Trash2, ChevronRight, Menu, X, 
-  MapPin, Phone, Mail, Clock, CheckCircle, XCircle, AlertCircle,
-  Eye, Download, Plus, Minus
+import {
+  Award,
+  ChevronRight,
+  CreditCard,
+  Gem,
+  Home,
+  Menu,
+  Package,
+  RefreshCcw,
+  Star,
+  Ticket,
+  User,
+  X
 } from 'lucide-react';
+import React, { useState } from 'react';
 
 // Import your separate components here
-import ProfileContent from '../profilecontent';
-import OrdersContent from '../orderscomponent';
-import PaymentContent from '../paymentcontent';
-import ManageRefundsContent from '../managerefundcontent';
-import TryAtHomeContent from '../tryathomecontent';
-import CouponsContent from '../coupnscontent';
-import XclusiveContent from '../xclusivecontent';
-import EGoldContent from '../egoldcontent';
-import TreasureChestContent from '../treasurechestcontent';
-import Header1 from '../Header1';
-import Footer from '../Footer1';
+import { useQuery } from 'react-query';
 import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
 import { endpoint } from '../../utils/APIRoutes';
-import { useQuery } from 'react-query';
+import CouponsContent from '../coupnscontent';
+import EGoldContent from '../egoldcontent';
+import Footer from '../Footer1';
+import Header1 from '../Header1';
+import ManageRefundsContent from '../managerefundcontent';
+import OrdersContent from '../orderscomponent';
+import PaymentContent from '../paymentcontent';
+import ProfileContent from '../profilecontent';
+import TreasureChestContent from '../treasurechestcontent';
+import TryAtHomeContent from '../tryathomecontent';
+import XclusiveContent from '../xclusivecontent';
 
 const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState('PROFILE');
