@@ -262,6 +262,17 @@ const ProductDetailWebPage = () => {
     groupedMaterials[group].push(mat);
   });
 
+  const totalGoldValue = selectedVariant?.material_details
+    ?.filter((m) => m.master_mat_name.toLowerCase() === "gold")
+    .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
+
+  const totalDiamondValue = selectedVariant?.material_details
+    ?.filter((m) => m.master_mat_name.toLowerCase() === "diamond")
+    .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
+
+  // Static making charges example:
+  const makingCharges = 2000 + 5000; // Gold + Diamond
+
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
       <div className="bg-gradient-to-r from-purple-100 to-blue-100 px-3 py-2 flex justify-between items-center">
@@ -729,17 +740,7 @@ const ProductDetailWebPage = () => {
             <div className="self-start">
               <ProductDetailsSection />
             </div>
-            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md flex items-center space-x-3">
-              <Truck className="w-5 h-5 text-green-600" />
-              <div>
-                <p className="text-green-800 font-semibold">
-                  Free Delivery by {estimatedDeliveryDate}
-                </p>
-                <p className="text-green-700 text-xs">
-                  Order within {deliveryDays} days for free delivery
-                </p>
-              </div>
-            </div>
+        
           </div>
         </div>
       </div>
@@ -848,11 +849,7 @@ const ProductDetailWebPage = () => {
                         <div>-</div>
                         <div>-</div>
                         <div>
-                          {formatPrice(
-                            selectedVariant.material_details
-                              .filter((m) => m.master_mat_name.toLowerCase() === "gold")
-                              .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0)
-                          )}
+                          {formatPrice(totalGoldValue)}
                         </div>
                       </div>
                     </>
@@ -884,59 +881,36 @@ const ProductDetailWebPage = () => {
                         <div>-</div>
                         <div>-</div>
                         <div>
-                          {formatPrice(
-                            selectedVariant.material_details
-                              .filter((m) => m.master_mat_name.toLowerCase() === "diamond")
-                              .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0)
-                          )}
+                          {formatPrice(totalDiamondValue)}
                         </div>
                       </div>
                     </>
                   )}
 
-                {/* Making Charges */}
-                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
+                {/* Making Charges (static display) */}
+               
+                <div className="grid grid-cols-4 gap-2 text-xs text-black pt-2 font-bold border-t mt-2">
+                  <div>SubTotal</div>
+                  <div>-</div>
+                  <div>-</div>
+                  <div>{formatPrice(totalGoldValue + totalDiamondValue)}</div>
+                </div>
+                 <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
                   <div>Making Charges</div>
                   <div>-</div>
                   <div>-</div>
-                  <div>{formatPrice(selectedVariant?.making_charge || 0)}</div>
+                  <div>+{formatPrice(makingCharges)}</div>
                 </div>
-
-                {/* Subtotal */}
-                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
-                  <div>Subtotal</div>
-                  <div>-</div>
-                  <div>-</div>
-                  <div>
-                    <span className="line-through text-gray-400 mr-1">
-                      ₹{selectedVariant?.mrp || "0"}
-                    </span>
-                    ₹{selectedVariant?.total_price || "0"}
-                  </div>
-                </div>
-
-                {/* Tax */}
-                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
-                  <div>Tax</div>
-                  <div>-</div>
-                  <div>-</div>
-                  <div>
-                    <span className="line-through text-gray-400 mr-1">
-                      ₹{selectedVariant?.tax_mrp || "0"}
-                    </span>
-                    ₹{selectedVariant?.tax || "0"}
-                  </div>
-                </div>
-
-                {/* Grand Total */}
+                {/* Final Subtotal */}
                 <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
-                  <div>Grand Total</div>
+                  <div>GrandTotal</div>
                   <div>-</div>
                   <div>-</div>
-                  <div>₹{selectedVariant?.grand_total || "0"}</div>
+                  <div>{formatPrice(totalGoldValue + totalDiamondValue + makingCharges)}</div>
                 </div>
               </div>
             </div>
+
 
 
 
@@ -991,10 +965,7 @@ const ProductDetailWebPage = () => {
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1">Delivery by</div>
-                  <div className="text-sm font-semibold text-gray-900">
-                    {estimatedDeliveryDate}
-                  </div>
+                 
                 </div>
                 <button
                   onClick={() => setShowCustomizationModal(false)}
