@@ -5,6 +5,8 @@ import WarrantyFeatures from '../trustBadge';
 import CartHeader from '../shoppingCartHeader';
 import { apiConnectorGet } from '../../utils/ApiConnector';
 import { endpoint } from '../../utils/APIRoutes';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function ResponsiveCart() {
   const navigate = useNavigate();
@@ -31,9 +33,22 @@ export default function ResponsiveCart() {
     navigate(-1);
   };
 
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
+  // const removeItem = (id) => {
+  //   setCartItems(cartItems.filter(item => item.id !== id));
+  // };
+
+  const removeItem = async(id)=>{
+      try{
+        const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`)
+        toast(response?.data?.message)
+        if(response?.data?.success){
+          getCart()
+        }
+      }
+      catch(e){
+        console.log("somthing went wrong")
+      }
+  }
   // Calculate subtotal by summing variant price * quantity
   const subtotal = cartItems.reduce(
     (sum, item) => sum + (item.varient_details.varient_price * item.quantity),

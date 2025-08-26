@@ -458,7 +458,7 @@ const ProductCard = ({ product, onWishlist }) => {
       <div className="relative group">
         <div
           className="aspect-square bg-gray-100 overflow-hidden cursor-pointer"
-          onClick={handleImageClick}
+          onClick={() => handleImageClick(product)}
         >
           <img
             src={images[currentImageIndex]}
