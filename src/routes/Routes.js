@@ -7,6 +7,7 @@ import MasterMaterial from "../components/admin/MasterMaterial";
 import ProductMaterial from "../components/admin/Material";
 import PaymentMethod from "../components/admin/Payment";
 import Products from "../components/admin/Product";
+import ProductAttributes from "../components/admin/ProductAttributes.js";
 import ProductCategories from "../components/admin/ProductCategories";
 import ProductDiscount from "../components/admin/ProductDiscount";
 import ProductInventory from "../components/admin/ProductInventory";
@@ -197,6 +198,15 @@ export const routes = [
       </MainLayout>
     ),
   },
+  {
+    path: "/product-attribute",
+    element: (
+      <MainLayout>
+        <ProductAttributes />{" "}
+      </MainLayout>
+    ),
+  },
+  
   {
     path: "/payment",
     element: (
