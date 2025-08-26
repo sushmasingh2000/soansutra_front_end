@@ -15,8 +15,8 @@ export default function JewelryPromoCard() {
 
   const discount_high = data?.data?.result || [];
 
-  const handleClick = (product) => {
-    navigate("/productdetails", { state: { product } });
+  const handleClick = () => {
+    navigate("/product");
   };
   
   return (
@@ -37,7 +37,7 @@ export default function JewelryPromoCard() {
           return (
             <div
               key={index}
-              onClick={() => handleClick(item)}
+              // onClick={() => handleClick()}
               className="max-w-xs w-full cursor-pointer bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300"
             >
               <div className="flex justify-center mb-4">
