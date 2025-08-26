@@ -1,6 +1,7 @@
 import Login from "../authentiaction/Login";
 import Banner from "../components/admin/Banner";
 import Customer from "../components/admin/Customer";
+import CustomOrder from "../components/admin/Customizatiion.js";
 import Discount from "../components/admin/Discount";
 import MasterMaterial from "../components/admin/MasterMaterial";
 import ProductMaterial from "../components/admin/Material";
@@ -146,6 +147,15 @@ export const routes = [
       </MainLayout>
     ),
   },
+   {
+    path: "/custom",
+    element: (
+      <MainLayout>
+        <CustomOrder />{" "}
+      </MainLayout>
+    ),
+  },
+  
   {
     path: "/discount",
     element: (

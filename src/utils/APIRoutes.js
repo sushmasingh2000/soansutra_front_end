@@ -138,7 +138,7 @@ export const endpoint = {
   delete_product_tax: `${domain}/api/v1/delete-product-tax`,
 
   //
-   get_customer_order : `${domain}/api/v1/get-custom-orders`,
+   get_custom_order : `${domain}/api/v1/get-custom-orders`,
    create_custom_order : `${domain}/api/v1/u-create-custom-order`,
   
 

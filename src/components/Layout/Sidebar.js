@@ -110,6 +110,13 @@ const menuItems = [
       },
     ],
   },
+   {
+    id: "custpm",
+    label: "Custom Order",
+    icon: "📈",
+    path: "/custom",
+    roles: ["superuser", "Support Engineer", "user"],
+  },
   {
     id: "payment",
     label: "Payment",
@@ -139,6 +146,7 @@ const menuItems = [
     path: "/",
     roles: ["superuser", "Support Engineer", "user"],
   },
+   
   // {
   //   id: "reports",
   //   label: "Reports",
