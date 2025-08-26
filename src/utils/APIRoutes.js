@@ -1,5 +1,5 @@
-// export const domain = "http://192.168.18.214:2000";
-export const domain ="https://sonashutra.onrender.com";
+export const domain = "http://192.168.18.214:2000";
+// export const domain ="https://sonashutra.onrender.com";
 
 export const endpoint = {
 
@@ -95,6 +95,11 @@ export const endpoint = {
   update_master_material: `${domain}/api/v1/update-master-materials`,
   delete_master_material: `${domain}/api/v1/delete-master-materials`,
 
+
+  //get_demo call
+  req_demo_call: `${domain}/api/v1/u-req-demo-call`,
+  get_demo_call: `${domain}/api/v1/get-demo-calls`,
+  update_demo_call: `${domain}/api/v1/update-demo-calls`,
   
   //material
   create_material: `${domain}/api/v1/create-materials`,

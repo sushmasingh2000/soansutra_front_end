@@ -1,93 +1,96 @@
+import { AdUnits, AodOutlined, Call, DashboardCustomizeOutlined, GroupAdd, Logout, ManageAccountsRounded, Maximize, PaymentSharp, PermScanWifi, Person, ProductionQuantityLimitsOutlined, RollerShadesClosed, Store, TaxiAlert } from "@mui/icons-material";
+import { Disc2Icon, Eye, Image, MarsStroke, Minimize2Icon, User2Icon, Utensils } from "lucide-react";
 import React, { useState } from "react";
+import { FaFirstOrder } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
 const menuItems = [
   {
     id: "dashboard",
     label: "Dashboard",
-    icon: "📊",
+    icon: <DashboardCustomizeOutlined/>,
     path: "/dashboard",
     roles: ["superuser", "Support Engineer", "user"],
   },
   {
     id: "stores",
     label: "Store Management",
-    icon: "🏪",
+    icon: <Store/>,
     path: "/stores",
     roles: ["superuser"],
   },
   {
     id: "users",
     label: "User Management",
-    icon: "👥",
+    icon: <User2Icon/>,
     path: "/users",
     roles: ["superuser"],
   },
   {
     id: "roles",
     label: "Role",
-    icon: "🔐",
+    icon: <RollerShadesClosed/>,
     path: "/roles",
     roles: ["superuser"],
   },
   {
     id: "permissions",
     label: "Permissions",
-    icon: "🔐",
+    icon: <PermScanWifi/>,
     path: "/permissions",
     roles: ["superuser"],
   },
   {
     id: "categories",
     label: "Categories",
-    icon: "📂",
+    icon: <AodOutlined/>,
     path: "/categories",
     roles: ["Support Engineer", "user"],
   },
   {
     id: "subcategories",
     label: "Sub Categories",
-    icon: "📂",
+    icon: <Minimize2Icon/>,
     path: "/sub_categories",
     roles: ["Support Engineer", "user"],
   },
   {
     id: "products",
     label: "Products",
-    icon: "📦",
+    icon: <MarsStroke/>,
     path: "/products",
     roles: ["Support Engineer", "user"],
   },
   {
     id: "utils",
     label: "Utils",
-    icon: "🛠️",
+    icon: <Eye/>,
     roles: ["Support Engineer", "user"],
     children: [
       {
         id: "unit",
         label: "Units",
-        icon: "📦",
+        icon: <AdUnits/>,
         path: "/unit",
         roles: ["Support Engineer", "user"],
       },
-       {
+      {
         id: "material-group",
         label: "Material",
-        icon: "📦",
+        icon: <GroupAdd/>,
         roles: ["Support Engineer", "user"],
         children: [
           {
             id: "master-material",
             label: "Master Material",
-            icon: "📦",
+            icon: <ProductionQuantityLimitsOutlined/>,
             path: "/product-master-material",
             roles: ["Support Engineer", "user"],
           },
           {
             id: "sub-material",
             label: "Sub Material",
-            icon: "📦",
+            icon: <ManageAccountsRounded/>,
             path: "/product-material",
             roles: ["Support Engineer", "user"],
           }
@@ -97,56 +100,62 @@ const menuItems = [
       {
         id: "discount",
         label: "Discount",
-        icon: "📦",
+        icon: <Disc2Icon/>,
         path: "/discount",
         roles: ["Support Engineer", "user"],
       },
       {
         id: "tax",
         label: "Tax",
-        icon: "📦",
+        icon: <TaxiAlert/>,
         path: "/tax",
         roles: ["Support Engineer", "user"],
       },
     ],
   },
-   {
+  {
     id: "custpm",
     label: "Custom Order",
-    icon: "📈",
+    icon: <FaFirstOrder/>,
     path: "/custom",
     roles: ["superuser", "Support Engineer", "user"],
   },
   {
     id: "payment",
     label: "Payment",
-    icon: "📦",
+    icon: <PaymentSharp/>,
     path: "/payment",
     roles: ["Support Engineer", "user"],
   },
   {
     id: "banner",
     label: "Banner",
-    icon: "📦",
+    icon: <Image/>,
     path: "/banner",
     roles: ["Support Engineer", "user"],
   },
-  
+  {
+    id: "demo",
+    label: "Requset Call",
+    icon: <Call />,
+    path: "/demo-call",
+    roles: ["Support Engineer", "user"],
+  },
   {
     id: "customer",
     label: "Customer",
-    icon: "📦",
+    icon: <Person />,
     path: "/customer",
     roles: ["Support Engineer", "user"],
   },
-{
+  {
     id: "logout",
     label: "LogOut",
-    icon: "📈",
+    icon: <Logout/>,
     path: "/",
     roles: ["superuser", "Support Engineer", "user"],
   },
-   
+
   // {
   //   id: "reports",
   //   label: "Reports",
@@ -196,9 +205,8 @@ const Sidebar = ({ sidebarOpen = true }) => {
                 <div>
                   <button
                     onClick={() => toggleSubMenu(id)}
-                    className={`w-full text-left px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 ${
-                      level === 0 ? "font-medium text-gray-700" : "text-sm text-gray-600"
-                    }`}
+                    className={`w-full text-left px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 ${level === 0 ? "font-medium text-gray-700" : "text-sm text-gray-600"
+                      }`}
                   >
                     <span className="text-lg">{icon}</span>
                     <span className="flex-1">{label}</span>
@@ -210,10 +218,9 @@ const Sidebar = ({ sidebarOpen = true }) => {
                 <NavLink
                   to={path}
                   className={({ isActive }) =>
-                    `block px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
-                        : level === 0
+                    `block px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${isActive
+                      ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
+                      : level === 0
                         ? "text-gray-700 font-medium"
                         : "text-sm text-gray-600"
                     }`
@@ -232,9 +239,8 @@ const Sidebar = ({ sidebarOpen = true }) => {
 
   return (
     <aside
-      className={`h-full bg-white shadow-lg transition-all duration-300 z-40 ${
-        sidebarOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
-      }`}
+      className={`h-full bg-white shadow-lg transition-all duration-300 z-40 ${sidebarOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
+        }`}
     >
       <nav className="mt-4">
         <div className="px-4 py-2">

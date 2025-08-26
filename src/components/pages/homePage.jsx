@@ -12,6 +12,7 @@ import SonasutraCollections from '../brandCollection.jsx'
 import BannerSlidder from '../bannerSlidder.jsx'
 import ExclusiveDealsSection from '../exclusiveDeal.jsx'
 import CaratLaneSignup from '../emailSubscription.jsx'
+import FloatingSupportMenu from './ClientDemo/Support.js'
 // import JoinInsider from '../emailSubscription.jsx'
 // import SonasutraSignup from '../emailSubscription.jsx'
 
@@ -32,6 +33,7 @@ const HomePage = () => {
             {/* <JoinInsider/> */}
             <CaratLaneSignup/>
             <Footer/>
+            <FloatingSupportMenu/>
         </div>
     )
 }

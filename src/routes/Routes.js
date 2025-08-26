@@ -12,6 +12,7 @@ import ProductDiscount from "../components/admin/ProductDiscount";
 import ProductInventory from "../components/admin/ProductInventory";
 import ProductTax from "../components/admin/ProductTax";
 import ProductVariant from "../components/admin/ProductVariant";
+import RequestDemo from "../components/admin/ReqDemo.js";
 import SubCategory from "../components/admin/SubCategories";
 import Tax from "../components/admin/Tax";
 import ProductUnits from "../components/admin/Unit";
@@ -201,6 +202,14 @@ export const routes = [
     element: (
       <MainLayout>
         <PaymentMethod />{" "}
+      </MainLayout>
+    ),
+  },
+    {
+    path: "/demo-call",
+    element: (
+      <MainLayout>
+        <RequestDemo />{" "}
       </MainLayout>
     ),
   },
