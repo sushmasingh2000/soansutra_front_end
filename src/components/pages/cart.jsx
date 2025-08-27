@@ -33,10 +33,6 @@ export default function ResponsiveCart() {
     navigate(-1);
   };
 
-  // const removeItem = (id) => {
-  //   setCartItems(cartItems.filter(item => item.id !== id));
-  // };
-
   const removeItem = async(id)=>{
       try{
         const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`)

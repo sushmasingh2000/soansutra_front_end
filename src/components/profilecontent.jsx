@@ -1028,6 +1028,14 @@ const ProfileContent = () => {
               label: "SPOUSE BIRTHDAY",
               value: profileData.spouse_birthday || "-",
             },
+            {
+              label: "Goverment Id Name",
+              value: profileData.govt_identity || "-",
+            },
+            {
+              label: "Goverment Id Number",
+              value: profileData.govt_no || "-",
+            },
           ].map((item, index) => (
             <div
               key={index}
@@ -1039,6 +1047,20 @@ const ProfileContent = () => {
               <span className="text-xs text-gray-900">{item.value}</span>
             </div>
           ))}
+        </div>
+        <div className="px-3 py-3 flex justify-between items-center border-t">
+          <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+            Government Id Image
+          </span>
+          {profileData?.govt_id_image ? (
+            <img
+              src={profileData.govt_id_image}
+              alt="Government ID"
+              className="h-12 w-20 object-contain rounded"
+            />
+          ) : (
+            <span className="text-xs text-gray-900">-</span>
+          )}
         </div>
       </div>
 
