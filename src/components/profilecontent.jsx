@@ -1,7 +1,7 @@
 
 import { useFormik } from "formik";
 import { Gift, Trash2, X } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useQuery, useQueryClient } from "react-query";
 import {
@@ -11,6 +11,7 @@ import {
 } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import Swal from "sweetalert2";
+import { Download } from "@mui/icons-material";
 
 const ProfileContent = () => {
   const [isEditing, setIsEditing] = React.useState(false);
@@ -21,6 +22,7 @@ const ProfileContent = () => {
   const [uploadedFile, setUploadedFile] = React.useState(null);
   const [showUploadOptions, setShowUploadOptions] = React.useState(false);
   const [showChangePassword, setShowChangePassword] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = React.useRef(null);
 
   const { data } = useQuery(
@@ -114,6 +116,24 @@ const ProfileContent = () => {
       }
     } catch (e) {
       console.log("somthing went wrong");
+    }
+  };
+  const handleImageDownload = async (imageUrl) => {
+    try {
+      const response = await fetch(imageUrl, { mode: "cors" });
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "government-id.png"; // change filename if needed
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Image download failed:", error);
+      alert("Image download failed. Try again.");
     }
   };
 
@@ -1053,15 +1073,40 @@ const ProfileContent = () => {
             Government Id Image
           </span>
           {profileData?.govt_id_image ? (
-            <img
-              src={profileData.govt_id_image}
-              alt="Government ID"
-              className="h-12 w-20 object-contain rounded"
-            />
+            <div className="flex items-center gap-2">
+              <img
+                src={profileData.govt_id_image}
+                alt="Government ID"
+                className="h-5 w-20 object-contain rounded cursor-pointer hover:scale-105 transition"
+              />
+              <Download
+                className="!text-green-500 !text-2xl cursor-pointer"
+                onClick={() => handleImageDownload(profileData.govt_id_image)}
+              />
+            </div>
           ) : (
             <span className="text-xs text-gray-900">-</span>
           )}
         </div>
+
+
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center">
+            <div className="relative">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-0 right-0 text-white text-2xl font-bold px-2"
+              >
+                &times;
+              </button>
+              <img
+                src={profileData.govt_id_image}
+                alt="Zoomed Government ID"
+                className="max-h-[80vh] max-w-[90vw] rounded shadow-lg"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-4">
