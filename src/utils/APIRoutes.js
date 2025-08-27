@@ -181,7 +181,12 @@ export const endpoint = {
   create_cart: `${domain}/api/v1/create-cart-items`,
   get_cart: `${domain}/api/v1/get-cart-items`,
   remove_cart: `${domain}/api/v1/remove-from-cart-items`,
-  
+
+  change_password: `${domain}/api/v1/change-customer-password`,
+  disable_customer_account: `${domain}/api/v1/dissable-customer-account`,
+
+ 
+ 
 
   //similar_items
   similar_items: `${domain}/api/v1/u-get-similar-items`,

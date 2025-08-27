@@ -10,6 +10,7 @@ import {
   usequeryBoolean,
 } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
+import Swal from "sweetalert2";
 
 const ProfileContent = () => {
   const [isEditing, setIsEditing] = React.useState(false);
@@ -35,10 +36,13 @@ const ProfileContent = () => {
     name: profileData?.name || "",
     email: profileData?.cl_email || "",
     mobile: profileData?.cl_phone || "",
-    birthday: profileData?.birthday || "",
+    spouse_birthday: profileData?.spouse_birthday || "",
     occupation: profileData?.occupation || "",
     pincode: profileData?.pincode || "",
-    anniversary: profileData?.anniversary || "",
+    anniversary: profileData?.aniversary || "",
+    date_of_birth: profileData?.date_of_birth || "",
+    govt_no: profileData?.govt_no || "",
+    govt_identity: profileData?.govt_identity || ""
   };
 
   const fk = useFormik({
@@ -49,16 +53,28 @@ const ProfileContent = () => {
         name: fk?.values?.name,
         mobile: fk?.values?.mobile,
         email: fk?.values?.email,
-        birthday: fk?.values?.birthday,
+        spouse_birthday: fk?.values?.spouse_birthday,
         occupation: fk?.values?.occupation,
         pincode: fk?.values?.pincode,
-        anniversary: fk?.values?.anniversary,
+        aniversary: fk?.values?.anniversary,
+        date_of_birth: fk?.values?.date_of_birth,
+        govt_identity: selectedDocument,
+        govt_no: fk.values?.govt_no,
       };
-      updatecustomer(reqbody);
+      const formData = new FormData();
+
+      for (let key in reqbody) {
+        if (reqbody.hasOwnProperty(key)) {
+          formData.append(key, reqbody[key]);
+        }
+      }
+      formData.append("file", uploadedFile)
+      updatecustomer(formData);
     },
   });
 
   const updatecustomer = async (reqbody) => {
+
     try {
       const response = await apiConnectorPost(
         endpoint?.update_customer_profile,
@@ -73,9 +89,8 @@ const ProfileContent = () => {
     }
   };
   const initialValuesgfg = {
-    old: "",
-    new: "",
-    confirm: "",
+    old_password: "",
+    new_password: "",
   };
 
   const formik = useFormik({
@@ -83,24 +98,16 @@ const ProfileContent = () => {
     enableReinitialize: true,
     onSubmit: () => {
       const reqbody = {
-        old: formik?.values?.old,
-        new: formik?.values?.new,
-        confirm: formik?.values?.confirm,
+        old_password: formik.values.old_password,
+        new_password: formik.values.new_password,
       };
       changepassword(reqbody);
     },
   });
-  const changepassword = async () => {
-    const reqbody = {
-      old_password: formik.values.oldPassword,
-      new_password: formik.values.newPassword,
-      confirm_password: formik.values.confirmPassword,
-    };
+
+  const changepassword = async (reqbody) => {
     try {
-      const response = await apiConnectorPost(
-        endpoint?.change_password,
-        reqbody
-      );
+      const response = await apiConnectorPost(endpoint?.change_password, reqbody);
       toast(response?.data?.message);
       if (response?.data?.success) {
         client.refetchQueries("profile");
@@ -139,6 +146,29 @@ const ProfileContent = () => {
 
   const handleSaveOccasions = () => {
     alert("Occasion details saved successfully!");
+  };
+
+  const DeleteAccountFn = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action will delete your account and cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await apiConnectorGet(endpoint?.disable_customer_account);
+        Swal.fire('Deleted!', response?.data?.message);
+      } catch (e) {
+        Swal.fire('Error!', 'Something went wrong while deleting the account.', 'error');
+        console.log('Something went wrong');
+      }
+    }
   };
 
 
@@ -227,11 +257,11 @@ const ProfileContent = () => {
                   OLD PASSWORD
                 </label>
                 <input
-                  type="password"
-                  id="old"
-                  name="old"
-                  value={fk.values.old}
-                  onChange={fk.handleChange}
+                  type="text"
+                  id="old_password"
+                  name="old_password"
+                  value={formik.values.old_password}
+                  onChange={formik.handleChange}
                   className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
@@ -241,33 +271,21 @@ const ProfileContent = () => {
                   NEW PASSWORD
                 </label>
                 <input
-                  type="password"
-                  id="new"
-                  name="new"
-                  value={fk.values.new}
-                  onChange={fk.handleChange}
+                  type="text"
+                  id="new_password"
+                  name="new_password"
+                  value={formik.values.new_password}
+                  onChange={formik.handleChange}
                   className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  CONFIRM NEW PASSWORD
-                </label>
-                <input
-                  type="password"
-                  id="confirm"
-                  name="confirm"
-                  value={fk.values.confirm}
-                  onChange={fk.handleChange}
-                  className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
               <button
-                onClick={fk.handleSubmit}
+                onClick={formik.handleSubmit}
                 className="flex-1 py-3 bg-gray-300 text-gray-600 font-medium rounded-lg text-sm transition-colors hover:bg-gray-400"
               >
                 Change Password
@@ -319,9 +337,8 @@ const ProfileContent = () => {
             >
               <h2 className="font-medium text-gray-900">Personal Details</h2>
               <svg
-                className={`w-5 h-5 text-gray-600 transition-transform ${
-                  personalExpanded ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 text-gray-600 transition-transform ${personalExpanded ? "rotate-180" : ""
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -404,9 +421,9 @@ const ProfileContent = () => {
                       </p>
                       <input
                         type="date"
-                        id="birthday"
-                        name="birthday"
-                        value={fk?.values?.birthday}
+                        id="date_of_birth"
+                        name="date_of_birth"
+                        value={fk?.values?.date_of_birth}
                         onChange={fk.handleChange}
                         className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                       />
@@ -557,9 +574,9 @@ const ProfileContent = () => {
                       </p>
                       <input
                         type="date"
-                        id="birthday"
-                        name="birthday"
-                        value={fk?.values?.birthday}
+                        id="spouse_birthday"
+                        name="spouse_birthday"
+                        value={fk?.values?.spouse_birthday}
                         onChange={fk.handleChange}
                         className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                       />
@@ -587,9 +604,8 @@ const ProfileContent = () => {
             >
               <h2 className="font-medium text-gray-900">Occasion Details</h2>
               <svg
-                className={`w-5 h-5 text-gray-600 transition-transform ${
-                  occasionExpanded ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 text-gray-600 transition-transform ${occasionExpanded ? "rotate-180" : ""
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -653,11 +669,10 @@ const ProfileContent = () => {
                       <button
                         key={person}
                         onClick={() => handleGiftPreferenceToggle(person)}
-                        className={`px-3 py-2 text-sm font-medium rounded-lg border transition-colors ${
-                          occasionData.giftPreferences.includes(person)
-                            ? "bg-purple-100 text-purple-700 border-purple-300"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                        }`}
+                        className={`px-3 py-2 text-sm font-medium rounded-lg border transition-colors ${occasionData.giftPreferences.includes(person)
+                          ? "bg-purple-100 text-purple-700 border-purple-300"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                          }`}
                       >
                         {person}
                       </button>
@@ -728,11 +743,10 @@ const ProfileContent = () => {
                       <button
                         key={celebration}
                         onClick={() => handleCelebrationToggle(celebration)}
-                        className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
-                          occasionData.celebrationType.includes(celebration)
-                            ? "bg-purple-100 text-purple-700 border-purple-300"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                        }`}
+                        className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${occasionData.celebrationType.includes(celebration)
+                          ? "bg-purple-100 text-purple-700 border-purple-300"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                          }`}
                       >
                         {celebration}
                       </button>
@@ -760,9 +774,8 @@ const ProfileContent = () => {
             >
               <h2 className="font-medium text-gray-900">Govt. ID</h2>
               <svg
-                className={`w-5 h-5 text-gray-600 transition-transform ${
-                  govtIdExpanded ? "" : "rotate-180"
-                }`}
+                className={`w-5 h-5 text-gray-600 transition-transform ${govtIdExpanded ? "" : "rotate-180"
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -801,7 +814,11 @@ const ProfileContent = () => {
                   <div className="space-y-3">
                     <input
                       type="text"
+                      id="govt_no"
+                      name="govt_no"
                       placeholder={getPlaceholder()}
+                      value={fk.values.govt_no}
+                      onChange={fk.handleChange}
                       className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
 
@@ -947,7 +964,10 @@ const ProfileContent = () => {
           </div>
 
           <button
-            onClick={() => setShowUploadOptions(false)}
+            onClick={() => {
+              fk.handleSubmit()
+              setShowUploadOptions(false)
+            }}
             className="w-full py-4 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg text-sm transition-colors"
           >
             SAVE DETAILS
@@ -1001,12 +1021,12 @@ const ProfileContent = () => {
             { label: "EMAIL", value: profileData?.cl_email },
             { label: "MOBILE NO.", value: profileData?.cl_phone },
             { label: "PINCODE", value: profileData.pincode },
-            { label: "BIRTHDAY", value: profileData.birthday || "-" },
-            { label: "ANNIVERSARY", value: profileData.anniversary || "-" },
+            { label: "DOB", value: profileData.spouse_birthday || "-" },
+            { label: "ANNIVERSARY", value: profileData.aniversary || "-" },
             { label: "OCCUPATION", value: profileData.occupation || "-" },
             {
               label: "SPOUSE BIRTHDAY",
-              value: profileData.spouseBirthday || "-",
+              value: profileData.spouse_birthday || "-",
             },
           ].map((item, index) => (
             <div
@@ -1029,7 +1049,8 @@ const ProfileContent = () => {
         >
           Change Password
         </button>
-        <button className="text-red-600 hover:text-red-700 px-4 py-2 font-medium transition-colors flex items-center justify-center text-xs">
+        <button className="text-red-600 hover:text-red-700 px-4 py-2 font-medium
+         transition-colors flex items-center justify-center text-xs" onClick={DeleteAccountFn}>
           <Trash2 className="w-3 h-3 mr-1" />
           Delete My Account
         </button>
