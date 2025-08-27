@@ -1,5 +1,5 @@
-export const domain = "http://192.168.18.214:2000";
-// export const domain ="https://sonashutra.onrender.com";
+// export const domain = "http://192.168.18.214:2000";
+export const domain ="https://backend.sonasutra.in";
 
 export const endpoint = {
 
@@ -185,8 +185,9 @@ export const endpoint = {
   change_password: `${domain}/api/v1/change-customer-password`,
   disable_customer_account: `${domain}/api/v1/dissable-customer-account`,
 
- 
- 
+  get_order: `${domain}/api/v1/get-order-details`,
+  get_order_detail_by: `${domain}/api/v1/get-order-details-by-order-id`,
+
 
   //similar_items
   similar_items: `${domain}/api/v1/u-get-similar-items`,
@@ -197,10 +198,5 @@ export const endpoint = {
   get_most_frequent: `${domain}/api/v1/u-get-most-frequent-search-items`,
   get_categroy_filtered_item: `${domain}/api/v1/u-get-home-filtered-items`,
   get_search_product: `${domain}/api/v1/u-get-search-product`,
-
-
-
-
-
 
 };

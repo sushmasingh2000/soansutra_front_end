@@ -1,189 +1,193 @@
-import { AdUnits, AodOutlined, Call, DashboardCustomizeOutlined, GroupAdd, Logout, ManageAccountsRounded, Maximize, PaymentSharp, PermScanWifi, Person, ProductionQuantityLimitsOutlined, RollerShadesClosed, Store, TaxiAlert } from "@mui/icons-material";
-import { Disc2Icon, Eye, Image, MarsStroke, Minimize2Icon, User2Icon, Utensils } from "lucide-react";
 import React, { useState } from "react";
-import { FaFirstOrder } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import {
+  AdUnits,
+  AodOutlined,
+  Call,
+  DashboardCustomizeOutlined,
+  GroupAdd,
+  Logout,
+  ManageAccountsRounded,
+  PaymentSharp,
+  PermScanWifi,
+  Person,
+  ProductionQuantityLimitsOutlined,
+  RollerShadesClosed,
+  Store,
+  TaxiAlert,
+} from "@mui/icons-material";
+import {
+  Disc2Icon,
+  Eye,
+  Image,
+  MarsStroke,
+  Minimize2Icon,
+  User2Icon,
+  Utensils,
+} from "lucide-react";
+import { FaFirstOrder } from "react-icons/fa";
 
-const menuItems = [
+// Role-specific access list
+const superAdminAccess = [
+  "Dashboard",
+  "Store Management",
+  "User Management",
+  "Role",
+  "Permissions",
+  "LogOut",
+];
+
+// Full menu list
+const fullMenuItems = [
   {
     id: "dashboard",
     label: "Dashboard",
-    icon: <DashboardCustomizeOutlined/>,
+    icon: <DashboardCustomizeOutlined />,
     path: "/dashboard",
-    roles: ["superuser", "Support Engineer", "user"],
   },
   {
     id: "stores",
     label: "Store Management",
-    icon: <Store/>,
+    icon: <Store />,
     path: "/stores",
-    roles: ["superuser"],
   },
   {
     id: "users",
     label: "User Management",
-    icon: <User2Icon/>,
+    icon: <User2Icon />,
     path: "/users",
-    roles: ["superuser"],
   },
   {
     id: "roles",
     label: "Role",
-    icon: <RollerShadesClosed/>,
+    icon: <RollerShadesClosed />,
     path: "/roles",
-    roles: ["superuser"],
   },
   {
     id: "permissions",
     label: "Permissions",
-    icon: <PermScanWifi/>,
+    icon: <PermScanWifi />,
     path: "/permissions",
-    roles: ["superuser"],
   },
   {
     id: "categories",
     label: "Categories",
-    icon: <AodOutlined/>,
+    icon: <AodOutlined />,
     path: "/categories",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "subcategories",
     label: "Sub Categories",
-    icon: <Minimize2Icon/>,
+    icon: <Minimize2Icon />,
     path: "/sub_categories",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "products",
     label: "Products",
-    icon: <MarsStroke/>,
+    icon: <MarsStroke />,
     path: "/products",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "utils",
     label: "Utils",
-    icon: <Eye/>,
-    roles: ["Support Engineer", "user"],
+    icon: <Eye />,
     children: [
       {
         id: "unit",
         label: "Units",
-        icon: <AdUnits/>,
+        icon: <AdUnits />,
         path: "/unit",
-        roles: ["Support Engineer", "user"],
       },
       {
         id: "material-group",
         label: "Material",
-        icon: <GroupAdd/>,
-        roles: ["Support Engineer", "user"],
+        icon: <GroupAdd />,
         children: [
           {
             id: "master-material",
             label: "Master Material",
-            icon: <ProductionQuantityLimitsOutlined/>,
+            icon: <ProductionQuantityLimitsOutlined />,
             path: "/product-master-material",
-            roles: ["Support Engineer", "user"],
           },
           {
             id: "sub-material",
             label: "Sub Material",
-            icon: <ManageAccountsRounded/>,
+            icon: <ManageAccountsRounded />,
             path: "/product-material",
-            roles: ["Support Engineer", "user"],
-          }
-        ]
-      }
-      ,
+          },
+        ],
+      },
       {
         id: "discount",
         label: "Discount",
-        icon: <Disc2Icon/>,
+        icon: <Disc2Icon />,
         path: "/discount",
-        roles: ["Support Engineer", "user"],
       },
       {
         id: "tax",
         label: "Tax",
-        icon: <TaxiAlert/>,
+        icon: <TaxiAlert />,
         path: "/tax",
-        roles: ["Support Engineer", "user"],
       },
     ],
   },
   {
-    id: "custpm",
+    id: "custom",
     label: "Custom Order",
-    icon: <FaFirstOrder/>,
+    icon: <FaFirstOrder />,
     path: "/custom",
-    roles: ["superuser", "Support Engineer", "user"],
   },
   {
     id: "payment",
     label: "Payment",
-    icon: <PaymentSharp/>,
+    icon: <PaymentSharp />,
     path: "/payment",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "banner",
     label: "Banner",
-    icon: <Image/>,
+    icon: <Image />,
     path: "/banner",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "demo",
-    label: "Requset Call",
+    label: "Request Call",
     icon: <Call />,
     path: "/demo-call",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "customer",
     label: "Customer",
     icon: <Person />,
     path: "/customer",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "logout",
     label: "LogOut",
-    icon: <Logout/>,
+    icon: <Logout />,
     path: "/",
-    roles: ["superuser", "Support Engineer", "user"],
   },
-
-  // {
-  //   id: "reports",
-  //   label: "Reports",
-  //   icon: "📈",
-  //   path: "/reports",
-  //   roles: ["superuser", "Support Engineer", "user"],
-  // },
-  // {
-  //   id: "profile",
-  //   label: "Profile",
-  //   icon: "👤",
-  //   path: "/profile",
-  //   roles: ["superuser", "Support Engineer", "user"],
-  // },
-  // {
-  //   id: "settings",
-  //   label: "Settings",
-  //   icon: "⚙️",
-  //   path: "/settings",
-  //   roles: ["superuser", "Support Engineer", "user"],
-  // },
 ];
 
-
 const Sidebar = ({ sidebarOpen = true }) => {
-  const userRole = localStorage.getItem("role");
   const [openSubMenu, setOpenSubMenu] = useState({});
+  const userRole = localStorage.getItem("role");
+  const alwaysVisible = ["Dashboard", "LogOut"];
+  // Filter menu based on user role
+  const menuItems = fullMenuItems.filter((item) => {
+    const isAlwaysVisible = alwaysVisible.includes(item.label);
+    const isSuperAdminItem = superAdminAccess.includes(item.label);
 
+    if (isAlwaysVisible) {
+      return true;
+    }
+
+    if (userRole === "superuser") {
+      return isSuperAdminItem;
+    }
+
+    return !isSuperAdminItem; // Hide superadmin-only items for others
+  });
   const toggleSubMenu = (id) => {
     setOpenSubMenu((prev) => ({
       ...prev,
@@ -191,51 +195,49 @@ const Sidebar = ({ sidebarOpen = true }) => {
     }));
   };
 
-  const renderMenuItems = (items, level = 0) => {
-    return (
-      <ul className={level > 0 ? "ml-6" : ""}>
-        {items.map(({ id, label, icon, path, children, roles = [] }) => {
-          if (!roles.includes(userRole)) return null;
+  const renderMenuItems = (items, level = 0) => (
+    <ul className={level > 0 ? "ml-6" : ""}>
+      {items.map(({ id, label, icon, path, children }) => {
+        const isOpen = openSubMenu[id] || false;
 
-          const isOpen = openSubMenu[id] || false;
-
-          return (
-            <li key={id}>
-              {children ? (
-                <div>
-                  <button
-                    onClick={() => toggleSubMenu(id)}
-                    className={`w-full text-left px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 ${level === 0 ? "font-medium text-gray-700" : "text-sm text-gray-600"
-                      }`}
-                  >
-                    <span className="text-lg">{icon}</span>
-                    <span className="flex-1">{label}</span>
-                    <span className="text-xs">{isOpen ? "▲" : "▼"}</span>
-                  </button>
-                  {isOpen && renderMenuItems(children, level + 1)}
-                </div>
-              ) : (
-                <NavLink
-                  to={path}
-                  className={({ isActive }) =>
-                    `block px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${isActive
-                      ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
-                      : level === 0
-                        ? "text-gray-700 font-medium"
-                        : "text-sm text-gray-600"
-                    }`
-                  }
+        return (
+          <li key={id}>
+            {children ? (
+              <div>
+                <button
+                  onClick={() => toggleSubMenu(id)}
+                  className={`w-full text-left px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 ${level === 0
+                    ? "font-medium text-gray-700"
+                    : "text-sm text-gray-600"
+                    }`}
                 >
-                  <span>{icon}</span>
-                  <span>{label}</span>
-                </NavLink>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    );
-  };
+                  <span className="text-lg">{icon}</span>
+                  <span className="flex-1">{label}</span>
+                  <span className="text-xs">{isOpen ? "▲" : "▼"}</span>
+                </button>
+                {isOpen && renderMenuItems(children, level + 1)}
+              </div>
+            ) : (
+              <NavLink
+                to={path}
+                className={({ isActive }) =>
+                  `block px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${isActive
+                    ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
+                    : level === 0
+                      ? "text-gray-700 font-medium"
+                      : "text-sm text-gray-600"
+                  }`
+                }
+              >
+                <span>{icon}</span>
+                <span>{label}</span>
+              </NavLink>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
 
   return (
     <aside
