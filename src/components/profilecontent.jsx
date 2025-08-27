@@ -1078,6 +1078,7 @@ const ProfileContent = () => {
                 src={profileData.govt_id_image}
                 alt="Government ID"
                 className="h-5 w-20 object-contain rounded cursor-pointer hover:scale-105 transition"
+                onClick={() => setIsModalOpen(true)}
               />
               <Download
                 className="!text-green-500 !text-2xl cursor-pointer"
