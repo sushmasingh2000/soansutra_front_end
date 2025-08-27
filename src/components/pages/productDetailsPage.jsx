@@ -26,6 +26,7 @@ import RelatedCategories from "../relatedcategories";
 import ShopByProducts from "../shopbyproduct";
 import SimilarProducts from "../similarproduct";
 import WarrantyFeatures from "../trustBadge";
+import { useLoginModal } from "../../context/Login";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -57,6 +58,9 @@ const ProductDetailWebPage = () => {
   const [touchEnd, setTouchEnd] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedMaterialGroup, setSelectedMaterialGroup] = useState([]);
+  const { setShowLoginModal } = useLoginModal();
+
+  const isLoggedIn = !!localStorage.getItem('token');
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -271,13 +275,17 @@ const ProductDetailWebPage = () => {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
   };
-
+  
   const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true); // ✅ This will work from anywhere
+      return;
+    }
     if (!productData || !selectedVariant) {
       toast.error("Product or variant not selected");
       return;
     }
-
+  
     const payload = {
       product_id: productData.product_id,
       varient_id: selectedVariant.varient_id,

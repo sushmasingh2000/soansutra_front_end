@@ -441,17 +441,12 @@ const ProductCard = ({ product, onWishlist }) => {
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
-
-  const user = localStorage.getItem("token")
   const handleImageClick = (product) => {
-    if (user) {
-      navigate("/productdetails", {
-        state: { product },
-      });
-    } else {
-      toast("Please login first." , {id:1});
-    }
+    navigate("/productdetails", {
+      state: { product },
+    });
   };
+
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">

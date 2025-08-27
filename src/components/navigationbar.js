@@ -13,6 +13,7 @@ const NavigationBar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
 
   const { data: categoryData } = useQuery(
     ["get_product_category"],
@@ -327,107 +328,7 @@ const NavigationBar = () => {
           </div>
         </div>
       </div>
-      {/* Drawer */}
-      {/* {isDrawerOpen && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-          <div className="bg-white w-full max-w-md h-full overflow-y-auto p-4 relative text-black">
-            <div className="flex items-center mb-4">
-              <button onClick={() => setIsDrawerOpen(false)} className="text-purple-700 text-lg font-semibold mr-2">
-                ←
-              </button>
-              <h2 className="text-lg font-bold text-purple-700">{
-                categories.find(cat => cat.product_category_id === activeCategoryId)?.name || "Category"
-              }</h2>
-            </div>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {["Latest Designs", "Bestsellers", "Fast Delivery", "Special Deals"].map((item) => (
-                <button key={item} className="px-3 py-1 bg-purple-100 text-sm text-purple-700 rounded-full">
-                  {item}
-                </button>
-              ))}
-            </div>
-            <h3 className="text-sm font-bold text-purple-700 mb-2">By Style</h3>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {subcategories.map((sub) => (
-                <div
-                  key={sub.product_subcategory_id}
-                  onClick={() => handleSubcategoryClick(sub.product_subcategory_id)}
-                  className="flex items-center space-x-2 cursor-pointer"
-                >
-                  <img
-                    src={sub.subcat_image || '/placeholder.png'} // fallback image
-                    alt={sub.name}
-                    className="w-10 h-10 rounded border object-cover"
-                  />
-                  <span className="text-sm font-medium text-gray-800">{sub.name}</span>
-                </div>
-              ))}
-            </div>
-            <h3 className="text-sm font-bold text-purple-700 mb-2">By Metal & Stone</h3>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-6 text-sm text-gray-700">
-              {[
-                { name: 'Diamond', color: '#ccc', icon: '💎' },
-                { name: 'Pearl', color: '#eee', icon: '⚪' },
-                { name: 'Navratna', color: '#FF5733', icon: '🔴' },
-                { name: 'Gemstone', color: '#000', icon: '💠' },
-                { name: 'Platinum', color: '#B0BEC5', icon: '⚙️' },
-                { name: 'Gold', color: '#FFD700', icon: '🟡' },
-                { name: 'Rose Gold', color: '#E0BFB8', icon: '🌸' },
-                { name: 'Yellow Gold', color: '#F7DC6F', icon: '🟡' },
-                { name: 'White Gold', color: '#F0F0F0', icon: '⚪' },
-                { name: '22KT Gold', color: '#FFD700', icon: '🟡' },
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center space-x-2">
-                  <span
-                    className="inline-block w-4 h-4 rounded-full"
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span>{item.name}</span>
-                </div>
-              ))}
-            </div>
-
-            <h3 className="text-sm font-bold text-purple-700 mb-2">By Price</h3>
-            <div className="flex flex-wrap gap-2 mb-6">
-              {[
-                'Under ₹ 10k',
-                '₹ 10k – ₹ 20k',
-                '₹ 20k – ₹ 30k',
-                '₹ 30k – ₹ 50k',
-                '₹ 40k – ₹ 50k',
-                '₹ 50k – ₹ 75k',
-                '₹ 75k & Above',
-              ].map((price, idx) => (
-                <span
-                  key={idx}
-                  className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full"
-                >
-                  {price}
-                </span>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              {subcategories.slice(0, 2).map((sub, idx) => (
-                <div key={idx}>
-                  {sub.subcat_image ? (
-                    <img
-                      src={sub.subcat_image}
-                      alt={`Preview ${idx + 1}`}
-                      className="w-full h-32 object-cover rounded-lg shadow-sm"
-                    />
-                  ) : (
-                    <div className="w-full h-32 bg-gray-100 flex items-center justify-center text-sm text-gray-400 rounded">
-                      No image
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      )} */}
+      
     </nav>
   );
 };

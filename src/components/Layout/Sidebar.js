@@ -22,8 +22,7 @@ import {
   Image,
   MarsStroke,
   Minimize2Icon,
-  User2Icon,
-  Utensils,
+  User2Icon
 } from "lucide-react";
 import { FaFirstOrder } from "react-icons/fa";
 

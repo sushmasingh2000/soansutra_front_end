@@ -13,13 +13,18 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrandLogo } from "./brand-logo";
 import { TreasureChestIcon } from "./treasure-chest-icon";
-import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../utils/ApiConnector";
+import {
+  apiConnectorGet,
+  apiConnectorPost,
+  usequeryBoolean,
+} from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import { Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import SubcategoryView from "./SubcategoryView";
 import { useQuery } from "react-query";
 import { debounce } from "lodash";
+import LoginModal from "./pages/LoginPage";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,6 +36,7 @@ export default function Header() {
   const [showSubcategory, setShowSubcategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const searchRef = useRef(null);
 
   const placeholders = ["Search Relationship", "Search Price"];
@@ -86,7 +92,7 @@ export default function Header() {
     fetchProfile();
   }, []);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
 
   const debouncedSetSearchQuery = useCallback(
@@ -114,9 +120,7 @@ export default function Header() {
       enabled: !!debouncedSearchQuery,
     }
   );
-  const handleClick = (product) => {
-    navigate("/productdetails", { state: { product } });
-  };
+
   const slides = [
     {
       image:
@@ -263,7 +267,8 @@ export default function Header() {
               <button
                 className="absolute right-0 top-0 h-full px-4 hover:opacity-90 text-white border-0 transition-all overflow-hidden"
                 style={{
-                  background: "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
+                  background:
+                    "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
                   border: "none",
@@ -287,18 +292,18 @@ export default function Header() {
                           navigate(`/products_web/${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
-
                         className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
                       >
                         <div className="font-medium">{item.pro_name}</div>
-                        <div className="text-xs text-gray-500">{item.cat_name}</div>
+                        <div className="text-xs text-gray-500">
+                          {item.cat_name}
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
             </div>
           </div>
-
 
           {/* Heart and Cart Icons */}
           <div className="flex items-center space-x-1">
@@ -345,7 +350,8 @@ export default function Header() {
               <button
                 className="absolute right-0 top-0 h-full px-4 hover:opacity-90 text-white border-0 transition-all overflow-hidden"
                 style={{
-                  background: "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
+                  background:
+                    "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
                   border: "none",
@@ -372,14 +378,15 @@ export default function Header() {
                         className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
                       >
                         <div className="font-medium">{item.pro_name}</div>
-                        <div className="text-xs text-gray-500">{item.cat_name}</div>
+                        <div className="text-xs text-gray-500">
+                          {item.cat_name}
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
             </div>
           </div>
-
 
           {/* Desktop Navigation - close to right edge */}
           <div className="flex items-center space-x-2 pr-2">
@@ -451,7 +458,11 @@ export default function Header() {
                             >
                               MY ACCOUNTS
                             </Link>
-                            <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded transition-colors">
+                            <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded
+                             transition-colors" onClick={() => {
+                              localStorage.clear();
+                              window.location.reload();
+                            }}>
                               LOGOUT
                             </button>
                           </div>
@@ -461,12 +472,12 @@ export default function Header() {
                   </div>
                 </>
               ) : (
-                <Link
-                  to={"/login"}
-                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors"
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="text-purple-600 text-2xl"
                 >
                   <Lock className="h-6 w-6" />
-                </Link>
+                </button>
               )}
               <Link
                 to={"/myaccount/profile"}
@@ -538,13 +549,9 @@ export default function Header() {
                           <UserIcon className="h-5 w-5" />
                         </Link>
                       ) : (
-                        <Link
-                          to={"/login"}
-                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          <Lock className="h-5 w-5" />
-                        </Link>
+                        <button onClick={() => setShowLoginModal(true)} className="text-purple-600 text-2xl">
+                        <Lock />
+                      </button>
                       )}
 
                       <Link
@@ -611,8 +618,9 @@ export default function Header() {
                           : "More Jewellery"}
                       </span>
                       <ChevronRightIcon
-                        className={`h-4 w-4 transition-transform ${showMoreJewellery ? "rotate-90" : ""
-                          }`}
+                        className={`h-4 w-4 transition-transform ${
+                          showMoreJewellery ? "rotate-90" : ""
+                        }`}
                       />
                     </button>
                   </div>
@@ -648,10 +656,11 @@ export default function Header() {
                           <button
                             key={index}
                             onClick={() => setCurrentSlide(index)}
-                            className={`w-1.5 h-1.5 rounded-full transition-colors ${index === currentSlide
-                              ? "bg-white"
-                              : "bg-white/50"
-                              }`}
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                              index === currentSlide
+                                ? "bg-white"
+                                : "bg-white/50"
+                            }`}
                           />
                         ))}
                       </div>
@@ -734,13 +743,17 @@ export default function Header() {
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
                           <h3 className="text-sm font-semibold text-purple-700 mb-1">
-                            abhishek chaurasia
+                          {profile?.name}
                           </h3>
                           <p className="text-gray-600 text-xs">
-                            freefireprouser456@yahoo.com
+                          {profile?.cl_email}
                           </p>
                         </div>
-                        <button className="bg-white text-purple-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 transition-colors">
+                        <button className="bg-white text-purple-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 
+                        transition-colors" onClick={() => {
+                          localStorage.clear();
+                          window.location.reload();
+                        }}>
                           LOGOUT
                         </button>
                       </div>
@@ -751,6 +764,7 @@ export default function Header() {
             </div>
           </div>
         )}
+          <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </div>
 
       {/* CSS Animation for placeholder slide effect */}
