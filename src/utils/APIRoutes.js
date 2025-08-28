@@ -1,5 +1,5 @@
-export const domain = "http://192.168.18.214:2000";
-// export const domain ="https://backend.sonasutra.in";
+// export const domain = "http://192.168.18.214:2000";
+export const domain ="https://backend.sonasutra.in";
 
 export const endpoint = {
 
