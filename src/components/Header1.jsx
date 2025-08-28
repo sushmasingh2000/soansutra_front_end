@@ -317,6 +317,10 @@ const jewelryTypes = [
     // You can add navigation or other logic here
     // For example: navigate to product listing page
   }
+   const navigate = useNavigate();
+  const handlegoldclick=()=>{
+    navigate('/e-gold');
+  };
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 relative">
@@ -435,13 +439,13 @@ const jewelryTypes = [
             </button>
 
             {/* Gold/Location Info */}
-            <div className="flex items-center space-x-2 px-3 py-2 bg-yellow-100 rounded-lg border border-[rgb(176,135,0)]">
+            <button className="flex items-center space-x-2 px-3 py-2 bg-yellow-100 rounded-lg border border-[rgb(176,135,0)]" onClick={handlegoldclick}>
               <img
                 src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png"
                 alt="e-Gold"
                 className="h-6 w-auto"
               />
-            </div>
+            </button>
 
             {/* Indian Flag */}
             <div className="px-2">
@@ -552,23 +556,29 @@ const jewelryTypes = [
                     
                     {/* Right side - Account, Heart, and Cart icons */}
                     <div className="flex items-center space-x-0">
-                      <Link 
-                        to={"/login"} 
-                        className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                      {/* Account */}
+                      <Link
+                        to={"/login"}
+                        className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <UserIcon className="h-5 w-5" />
+                        <span className="font-medium text-sm">Account</span>
                       </Link>
-                      <Link 
-                        to={"/myaccount/profile"} 
+
+                      {/* Wishlist */}
+                      <Link
+                        to={"/myaccount/profile"}
                         className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <HeartIcon className="h-5 w-5" />
                       </Link>
-                      <Link 
-                        to={"/shopping-cart"} 
-                        className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative"
+
+                      {/* Cart */}
+                      <Link
+                        to={"/shopping-cart"}
+                        className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <ShoppingCartIcon className="h-5 w-5" />
@@ -579,17 +589,8 @@ const jewelryTypes = [
                     </div>
                   </div>
 
-                  {/* Login Button */}
-                  <div className="px-4 py-3">
-                    <Link 
-                      to={"/login"}
-                      className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <UserIcon className="h-5 w-5" />
-                      <span className="font-medium text-sm">LOGIN</span>
-                    </Link>
-                  </div>
+                 
+                  
 
                   {/* Jewelry Categories - Updated with click handlers */}
                   <div className="px-4 py-2">

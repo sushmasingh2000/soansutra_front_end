@@ -30,6 +30,11 @@ import ProductTax from "../components/admin/ProductTax";
 import PaymentMethod from "../components/admin/Payment";
 import Customer from "../components/admin/Customer";
 import WishlistPage from "../components/pages/Wishlist";
+import SonaSutraDigitalGoldHome from "../components/pages/egoldhome";
+import BuyGold from "../components/pages/buygold";
+import SellGold from "../components/pages/sellgold";
+import ExchangeRedeemComponent from "../components/pages/exchangeegold";
+import TreasureChestBanner from "../components/pages/treasurechest";
 
 export const routes = [
   {
@@ -225,6 +230,26 @@ export const routes = [
     {
     path: "/wish",
     element: <WishlistPage />,
+  },
+   {
+    path: "/e-gold",
+    element: <SonaSutraDigitalGoldHome/>,
+  },
+  {
+    path: "/buy-gold",
+    element: <BuyGold/>,
+  },
+  {
+    path: "/sell-gold",
+    element: <SellGold/>,
+  },
+  {
+    path: "/exchange-redeem",
+    element: <ExchangeRedeemComponent/>,
+  },
+    {
+    path: "/treasure-chest",
+    element: <TreasureChestBanner/>,
   },
 ];
 
