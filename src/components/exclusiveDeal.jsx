@@ -15,10 +15,10 @@ export default function JewelryPromoCard() {
 
   const discount_high = data?.data?.result || [];
 
-  const handleClick = () => {
-    navigate("/product");
+  const handleClick = (subcategoryId) => {
+    navigate(`/products_web/${subcategoryId}`);
   };
-  
+
   return (
     <div className="p-4 mb-5" style={{ backgroundColor: '#ebebff' }}>
       <div className="text-center py-6">
@@ -33,11 +33,11 @@ export default function JewelryPromoCard() {
           const discountText = item?.discount_details?.[0]?.discount_value
             ? `Up to ${item.discount_details[0].discount_value}% off on MRP`
             : 'Special Discount';
-
+          const subcategoryId = item?.product_details?.cat_subcat_details?.product_subcategory_id;
           return (
             <div
               key={index}
-              // onClick={() => handleClick()}
+              onClick={() => handleClick(subcategoryId)}
               className="max-w-xs w-full cursor-pointer bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300"
             >
               <div className="flex justify-center mb-4">

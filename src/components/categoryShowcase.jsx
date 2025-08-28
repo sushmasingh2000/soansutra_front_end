@@ -50,7 +50,7 @@ const JewelryCategories = () => {
             }
 
             return (
-              <div
+              <div id='viewcollection_scroll'
               key={product.product_id}
               className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg"
               onClick={() => handleClick(product)}

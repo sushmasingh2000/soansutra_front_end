@@ -256,14 +256,17 @@ const ProductDetailWebPage = () => {
 
     try {
       const res = await apiConnectorPost(endpoint.create_custom_order, payload);
-      toast(res?.data?.message)
+      if (res?.data?.message !== "Unauthorised User!") {
+        toast(res?.data?.message, { id: 1 })
+      }
+
       if (res?.data?.message === "Unauthorised User!") {
         setShowLoginModal(true);
       }
       if (res?.data?.success) {
         toast.success("Customization confirmed!");
         setShowCustomizationModal(false);
-      } 
+      }
     } catch (err) {
       toast.error("API error while confirming customization");
     }
@@ -291,7 +294,9 @@ const ProductDetailWebPage = () => {
 
     try {
       const response = await apiConnectorPost(endpoint.create_cart, payload);
-      toast(response.data.message, {id:1});
+      if (response?.data?.message !== "Unauthorised User!") {
+        toast(response?.data?.message, { id: 1 })
+      }
       if (response?.data?.message === "Unauthorised User!") {
         setShowLoginModal(true);
       }
@@ -312,14 +317,16 @@ const ProductDetailWebPage = () => {
       const response = await apiConnectorGet(
         `${endpoint.create_wishlist}?product_id=${product_id}&varient_id=${varient_id}`
       );
+      if (response?.data?.message !== "Unauthorised User!") {
+        toast(response?.data?.message, { id: 1 })
+      }
+
       if (response?.data?.message === "Unauthorised User!") {
         setShowLoginModal(true);
       }
       if (response.data.success) {
         setIsWishlisted(!isWishlisted);
-        toast.success(response.data.message,{id:1});
-      } else {
-        toast.error(response.data.message);
+        toast.success(response.data.message, { id: 1 });
       }
     } catch (error) {
       console.error("Wishlist error:", error);
@@ -564,8 +571,8 @@ const ProductDetailWebPage = () => {
                         key={index}
                         onClick={() => handleDotClick(index)}
                         className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
-                            ? "bg-purple-500 shadow-lg"
-                            : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
+                          ? "bg-purple-500 shadow-lg"
+                          : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
                           }`}
                       />
                     ))}
@@ -593,8 +600,8 @@ const ProductDetailWebPage = () => {
                       key={index}
                       onClick={() => setSelectedImage(index % images.length)}
                       className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
-                          ? "border-purple-500 shadow-md"
-                          : "border-gray-200 hover:border-gray-300"
+                        ? "border-purple-500 shadow-md"
+                        : "border-gray-200 hover:border-gray-300"
                         }`}
                     >
                       <div className="w-full h-100 overflow-hidden">
@@ -767,8 +774,8 @@ const ProductDetailWebPage = () => {
                       key={variant.varient_id}
                       onClick={() => setSelectedVariant(variant)}
                       className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                          ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                          : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
                     >
                       SKU: {variant.varient_sku}
@@ -787,8 +794,8 @@ const ProductDetailWebPage = () => {
                       key={variant.varient_id}
                       onClick={() => setSelectedVariant(variant)}
                       className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                          ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                          : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
                         }`}
                     >
                       SKU: {variant.varient_sku}
@@ -816,8 +823,8 @@ const ProductDetailWebPage = () => {
                 >
                   <Heart
                     className={`w-5 h-5 ${isWishlisted
-                        ? "text-red-500 fill-current"
-                        : "text-gray-600"
+                      ? "text-red-500 fill-current"
+                      : "text-gray-600"
                       }`}
                   />
                 </button>
@@ -869,8 +876,8 @@ const ProductDetailWebPage = () => {
         >
           <div
             className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showPriceBreakupModal
-                ? "translate-y-0 md:translate-x-0"
-                : "translate-y-full md:translate-x-full"
+              ? "translate-y-0 md:translate-x-0"
+              : "translate-y-full md:translate-x-full"
               }`}
           >
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
@@ -1046,8 +1053,8 @@ const ProductDetailWebPage = () => {
         >
           <div
             className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showCustomizationModal
-                ? "translate-y-0 md:translate-x-0"
-                : "translate-y-full md:translate-x-full"
+              ? "translate-y-0 md:translate-x-0"
+              : "translate-y-full md:translate-x-full"
               }`}
           >
             <div className="sticky top-0 bg-white border-b border-gray-200 p-3 rounded-t-3xl md:rounded-t-lg">
@@ -1100,8 +1107,8 @@ const ProductDetailWebPage = () => {
                           key={index}
                           onClick={() => setSelectedMetal(metal)}
                           className={`p-2 rounded-lg border-2 text-center transition-all ${selectedMetal === metal
-                              ? "border-purple-300 bg-purple-50"
-                              : "border-gray-200 hover:border-gray-300"
+                            ? "border-purple-300 bg-purple-50"
+                            : "border-gray-200 hover:border-gray-300"
                             }`}
                         >
                           <div className="text-xs font-medium text-gray-900">
@@ -1183,8 +1190,8 @@ const ProductDetailWebPage = () => {
                           key={index}
                           onClick={() => setSelectedSize(staticSize.size)}
                           className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-24 ${isSizeMatch || selectedSize === staticSize.size
-                              ? "border-purple-300 bg-purple-50"
-                              : "border-gray-200 hover:border-gray-300"
+                            ? "border-purple-300 bg-purple-50"
+                            : "border-gray-200 hover:border-gray-300"
                             }`}
                         >
                           <div className="text-sm font-bold text-gray-900">
@@ -1199,8 +1206,8 @@ const ProductDetailWebPage = () => {
 
                           <div
                             className={`text-xs mt-1 ${stockStatus?.toLowerCase().includes("made")
-                                ? "text-purple-600"
-                                : "text-red-600"
+                              ? "text-purple-600"
+                              : "text-red-600"
                               }`}
                           >
                             {stockStatus}

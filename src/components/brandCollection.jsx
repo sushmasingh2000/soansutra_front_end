@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
+import { handleScroll } from '../utils/scroll';
 
 const SonasutraCollections = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const SonasutraCollections = () => {
 
   const collections = data?.data?.result || [];
   const handleClick = (product) => {
-    window.scrollTo(0, 0); 
+    window.scrollTo(0, 0);
     navigate("/productdetails", { state: { product } });
   };
 
@@ -42,7 +43,7 @@ const SonasutraCollections = () => {
             }
             const imageUrl = images.length > 0 ? images[0].p_image_url : null;
 
-           
+
             return (
               <div
                 key={collection.product_id}
@@ -101,8 +102,10 @@ const SonasutraCollections = () => {
         </div>
 
         {/* View All Collections Button */}
-        <div className="flex justify-center mt-8">
-          <button className="bg-purple-800 hover:bg-purple-900 text-white text-sm font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+        <div className="flex justify-center mt-8" >
+          <button className="bg-purple-800 hover:bg-purple-900 text-white text-sm font-semibold py-3 px-8 rounded-full
+           transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            onClick={() => handleScroll("viewcollection_scroll")}>
             VIEW ALL COLLECTIONS
           </button>
         </div>
