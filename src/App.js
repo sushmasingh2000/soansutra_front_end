@@ -14,9 +14,9 @@ function App() {
   const { showLoginModal, setShowLoginModal } = useLoginModal();
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/"  element = {<HomePage/>} />
-      <Route path="/admin-login"  element = {<Login/>} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/admin-login" element={<Login />} />
         {admin ? (
           routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />
@@ -24,17 +24,20 @@ function App() {
         ) : (
           <Route path="*" element={<Login />} />
         )}
-       
-         { routes.map((route, i) => (
-            <Route key={i} path={route.path} element={route.element} />
-          ))}
-          <Route path="*" element={<LoginPage />} />
-    </Routes>
-    {showLoginModal && (
-          <LoginModal onClose={() => setShowLoginModal(false)} />
-        )}
+
+        {routes.map((route, i) => (
+          <Route key={i} path={route.path} element={route.element} />
+        ))}
+        <Route path="*" element={<LoginPage />} />
+      </Routes>
+      {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        />
+      )}
     </BrowserRouter>
-    
+
   );
 }
 

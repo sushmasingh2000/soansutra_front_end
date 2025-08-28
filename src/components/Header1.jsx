@@ -207,24 +207,21 @@ export default function Header() {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
   const user = localStorage.getItem("token");
-  const [cartItems, setCartItems] = useState([]);
+  const { data: cart } = useQuery(
+    ["get_cart"],
+    () => apiConnectorGet(endpoint.get_cart),
+    usequeryBoolean
+  );
 
-  const getCart = async () => {
-    try {
-      const response = await apiConnectorGet(endpoint?.get_cart);
-      if (response?.data?.success) {
-        setCartItems(response.data.result);
-      } else {
-        console.error("Failed to fetch cart:", response?.data?.message);
-      }
-    } catch (e) {
-      console.log("something went wrong", e);
-    }
-  };
+  const cartItems = cart?.data?.result || [];
 
-  useEffect(() => {
-    getCart();
-  }, []);
+  const { data: wish } = useQuery(
+    ["get_wish"],
+    () => apiConnectorGet(endpoint.get_wishlist),
+    usequeryBoolean
+  );
+
+  const wishlistitems = wish?.data?.result || [];
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 relative">
@@ -307,32 +304,60 @@ export default function Header() {
 
           {/* Heart and Cart Icons */}
           <div className="flex items-center space-x-1">
-            <Link
-              to={"/myaccount/profile"}
-              className="p-2 text-gray-700 hover:text-purple-600 transition-colors"
-            >
-              <HeartIcon className="h-6 w-6" />
-            </Link>
-            <Link
-              to={"/shopping-cart"}
-              className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
-            >
-              <ShoppingCartIcon className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {cartItems?.length}
-              </span>
-            </Link>
+
+            {user ? (
+              <>
+                <Link
+                  to={"/myaccount/profile"}
+                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors"
+                >
+                  <UserIcon className="h-6 w-6" />
+                </Link>
+                <Link
+                  to="/shopping-cart"
+                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
+                >
+                  <ShoppingCartIcon className="h-6 w-6" />
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItems?.length}
+                  </span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
+                >
+                  <UserIcon className="h-6 w-6" />
+                 
+                </button>
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
+                >
+                  <ShoppingCartIcon className="h-6 w-6" />
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItems?.length}
+                  </span>
+                </button>
+              </>
+            )}
+
           </div>
         </div>
 
         {/* Desktop Header */}
-        <div className="hidden lg:flex items-center justify-between h-16 px-2">
-          {/* Logo - close to left edge */}
-          <Link to={"/"} className="flex-shrink-0 pl-2">
-            <BrandLogo />
-          </Link>
+        <div className="hidden lg:flex items-center justify-between px-4 h-20 w-full border-b border-gray-200 shadow-sm bg-white">
+          {/* Left - Logo */}
+          <div className="flex items-center space-x-4 flex-shrink-0">
+            <Link to="/" className="flex-shrink-0">
+              <BrandLogo />
+            </Link>
+          </div>
 
-          <div className="flex flex-1 max-w-4xl mx-4" ref={searchRef}>
+          {/* Middle - Search Bar */}
+          <div className="flex flex-1 max-w-3xl mx-6">
             <div className="relative w-full">
               <input
                 type="text"
@@ -340,163 +365,117 @@ export default function Header() {
                 value={searchQuery}
                 onChange={(e) => {
                   handleSearchChange(e);
-                  setShowDropdown(true); // show dropdown when typing
+                  setShowDropdown(true);
                 }}
-                className="w-full pl-4 pr-12 py-2.5 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm border-r-0 transition-all duration-500"
-                style={{
-                  animation: "placeholderSlide 0.5s ease-in-out",
-                }}
+                className="w-full pl-4 pr-12 py-2.5 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm border-r-0"
               />
               <button
-                className="absolute right-0 top-0 h-full px-4 hover:opacity-90 text-white border-0 transition-all overflow-hidden"
+                className="absolute top-0 right-0 h-full px-4 text-white"
                 style={{
-                  background:
-                    "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
+                  background: "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
-                  border: "none",
-                  width: "54px",
-                  right: "-9px",
-                  top: "0px",
-                  height: "calc(100% - 0px)",
                 }}
               >
                 <MagnifyingGlassIcon className="h-5 w-5" />
               </button>
-
-              {debouncedSearchQuery &&
-                showDropdown &&
-                data?.data?.result?.length > 0 && (
-                  <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
-                    {data.data.result.map((item, index) => (
-                      <div
-                        key={`${item.product_id}-${index}`}
-                        onClick={() => {
-                          navigate(`/products_web/${item?.product_sub_cat_id}`);
-                          setShowDropdown(false); // Close on item click
-                        }}
-                        className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
-                      >
-                        <div className="font-medium">{item.pro_name}</div>
-                        <div className="text-xs text-gray-500">
-                          {item.cat_name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
             </div>
           </div>
 
-          {/* Desktop Navigation - close to right edge */}
-          <div className="flex items-center space-x-2 pr-2">
+          {/* Right - Icons & Actions */}
+          <div className="flex items-center space-x-3">
             {/* Treasure Chest */}
-            <button className="flex items-center space-x-2 px-3 py-2 bg-[#F8EBFB] text-gray-700 hover:text-purple-600 transition-colors rounded-lg border border-purple-500">
-              <TreasureChestIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">Treasure Chest</span>
-              <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-1">
-                NEW
-              </span>
+            <button className="flex items-center px-3 py-1.5 text-sm rounded-md bg-[#F8EBFB] border border-purple-500">
+              <TreasureChestIcon className="h-5 w-5 mr-1" />
+              Treasure Chest
+              <span className="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">NEW</span>
             </button>
 
             {/* Store Locator */}
-            <button className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-purple-600 transition-colors rounded-lg border border-[rgb(176,0,21)]">
-              <MapPinIcon className="h-5 w-5 text-red-600" />
-              <span className="text-sm font-medium">Store locator</span>
+            <button className="flex items-center px-3 py-1.5 text-sm rounded-md border border-red-600">
+              <MapPinIcon className="h-5 w-5 mr-1 text-red-600" />
+              Store Locator
             </button>
 
-            {/* Gold/Location Info */}
-            <div className="flex items-center space-x-2 px-3 py-2 bg-yellow-100 rounded-lg border border-[rgb(176,135,0)]">
+            {/* e-Gold */}
+            <div className="px-3 py-1.5 bg-yellow-100 border border-yellow-500 rounded-md">
               <img
                 src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png"
                 alt="e-Gold"
-                className="h-6 w-auto"
+                className="h-6"
               />
             </div>
 
-            {/* Indian Flag */}
-            <div className="px-2">
-              <img
-                src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
-                alt="Indian Flag"
-                className="w-6 h-auto"
-              />
-            </div>
+            {/* Flag */}
+            <img
+              src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
+              alt="India"
+              className="h-5 w-6 rounded-sm"
+            />
 
-            {/* User Actions */}
-            <div className="flex items-center space-x-1">
-              {/* User Icon with Dropdown */}
-              {user ? (
-                <>
-                  <div
-                    className="relative"
-                    onMouseEnter={() => setShowUserDropdown(true)}
-                    onMouseLeave={() => setShowUserDropdown(false)}
-                  >
-                    <Link className="p-2 text-gray-700 hover:text-purple-600 transition-colors">
-                      <UserIcon className="h-6 w-6" />
-                    </Link>
-                    {/* Desktop User Dropdown */}
-                    {showUserDropdown && (
-                      <div className="absolute top-full right-0  w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-[100]">
-                        <div className="p-4">
-                          <div className="text-center mb-4">
-                            <h3 className="text-lg font-semibold text-purple-700 mb-1">
-                              {profile?.name}
-                            </h3>
-                            <p className="text-gray-600 text-sm">
-                              {profile?.cl_email}
-                            </p>
-                          </div>
-
-                          <hr className="border-t-2 border-purple-300 mb-4" />
-
-                          <div className="space-y-2">
-                            <Link
-                              to="/myaccount/profile"
-                              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded transition-colors"
-                            >
-                              MY ACCOUNTS
-                            </Link>
-                            <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded
-                             transition-colors" onClick={() => {
-                              localStorage.clear();
-                              window.location.reload();
-                            }}>
-                              LOGOUT
-                            </button>
-                          </div>
-                        </div>
+            {/* User */}
+            {user ? (
+              <div
+                className="relative"
+                onMouseEnter={() => setShowUserDropdown(true)}
+                onMouseLeave={() => setShowUserDropdown(false)}
+              >
+                <UserIcon className="h-6 w-6 text-gray-700 hover:text-purple-600 cursor-pointer" />
+                {showUserDropdown && (
+                  <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg border rounded-md z-50">
+                    {/* User Dropdown content here */}
+                    <div className="p-4">
+                      <div className="text-center mb-3">
+                        <h3 className="text-lg font-semibold">{profile?.name}</h3>
+                        <p className="text-sm text-gray-600">{profile?.cl_email}</p>
                       </div>
-                    )}
+                      <hr />
+                      <div className="mt-3 space-y-2">
+                        <Link to="/myaccount/profile" className="block text-sm text-left text-gray-700 hover:bg-gray-100 px-3 py-2 rounded">My Account</Link>
+                        <button
+                          onClick={() => {
+                            localStorage.clear();
+                            window.location.reload();
+                          }}
+                          className="block w-full text-left text-sm text-gray-700 hover:bg-gray-100 px-3 py-2 rounded"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </>
-              ) : (
-                <button
-                  onClick={() => setShowLoginModal(true)}
-                  className="text-purple-600 text-2xl"
-                >
-                  <Lock className="h-6 w-6" />
-                </button>
-              )}
-              <Link
-                to={"/myaccount/profile"}
-                className="p-2 text-gray-700 hover:text-purple-600 transition-colors"
-              >
-                <HeartIcon className="h-6 w-6" />
-              </Link>
-              <Link
-                to={"/shopping-cart"}
-                className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
-              >
-                <ShoppingCartIcon className="h-6 w-6" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartItems?.length}
-                </span>
-              </Link>
-            </div>
+                )}
+              </div>
+            ) : (
+              <button onClick={() => setShowLoginModal(true)}>
+                <Lock className="h-6 w-6 text-purple-600" />
+              </button>
+            )}
+            {/* Wishlist */}
+            <button
+              onClick={() => user ? navigate("/wish") : setShowLoginModal(true)}
+              className="relative text-gray-700 hover:text-purple-600"
+            >
+              <HeartIcon className="h-6 w-6" />
+              <span className="absolute -top-3 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {wishlistitems?.length}
+              </span>
+            </button>
+            {/* Cart */}
+            <button
+              onClick={() => user ? navigate("/shopping-cart") : setShowLoginModal(true)}
+              className="relative text-gray-700 hover:text-purple-600"
+            >
+              <ShoppingCartIcon className="h-6 w-6" />
+              <span className="absolute -top-3 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {cartItems?.length}
+              </span>
+            </button>
+
+
           </div>
         </div>
+
 
         {/* Mobile Sidebar Overlay */}
         {isMobileMenuOpen && (
@@ -541,45 +520,65 @@ export default function Header() {
                     {/* Right side - Account, Heart, and Cart icons */}
                     <div className="flex items-center space-x-0">
                       {user ? (
-                        <Link
-                          to={"/myaccount/profile"}
-                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          <UserIcon className="h-5 w-5" />
-                        </Link>
+                        <>
+                          <Link
+                            to={"/myaccount/profile"}
+                            className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <UserIcon className="h-5 w-5" />
+                          </Link>
+                          <Link
+                            to={"/shopping-cart"}
+                            className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <ShoppingCartIcon className="h-5 w-5" />
+                            <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                              {cartItems?.length}
+                            </span>
+                          </Link>
+                        </>
                       ) : (
-                        <button onClick={() => setShowLoginModal(true)} className="text-purple-600 text-2xl">
-                        <Lock />
-                      </button>
+                        <>
+                          <button onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }} className="text-purple-600 text-2xl">
+                            <UserIcon className="h-5 w-5" />
+                          </button>
+                          <button onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }} className="text-purple-600 text-2xl">
+                            <ShoppingCartIcon className="h-5 w-5" />
+                            <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                              {cartItems?.length}
+                            </span>
+                          </button>
+                        </>
                       )}
 
-                      <Link
-                        to={"/shopping-cart"}
-                        className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <ShoppingCartIcon className="h-5 w-5" />
-                        <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                          {cartItems?.length}
-                        </span>
-                      </Link>
+
                     </div>
                   </div>
 
                   {/* Login Button */}
                   {user ? (
-                    ""
+                    <div className="px-4 py-3">
+                      <button
+                        className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                        onClick={() => navigate('/myaccount/profile')}
+                      >
+                        <UserIcon className="h-5 w-5" />
+                      </button>
+                    </div>
                   ) : (
                     <div className="px-4 py-3">
-                      <Link
-                        to={"/login"}
+                      <button
                         className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setShowLoginModal(true)
+                        }}
                       >
                         <UserIcon className="h-5 w-5" />
                         <span className="font-medium text-sm">LOGIN</span>
-                      </Link>
+                      </button>
                     </div>
                   )}
                   <div className="px-4 py-2">
@@ -618,9 +617,8 @@ export default function Header() {
                           : "More Jewellery"}
                       </span>
                       <ChevronRightIcon
-                        className={`h-4 w-4 transition-transform ${
-                          showMoreJewellery ? "rotate-90" : ""
-                        }`}
+                        className={`h-4 w-4 transition-transform ${showMoreJewellery ? "rotate-90" : ""
+                          }`}
                       />
                     </button>
                   </div>
@@ -656,11 +654,10 @@ export default function Header() {
                           <button
                             key={index}
                             onClick={() => setCurrentSlide(index)}
-                            className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                              index === currentSlide
-                                ? "bg-white"
-                                : "bg-white/50"
-                            }`}
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${index === currentSlide
+                              ? "bg-white"
+                              : "bg-white/50"
+                              }`}
                           />
                         ))}
                       </div>
@@ -743,17 +740,17 @@ export default function Header() {
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
                           <h3 className="text-sm font-semibold text-purple-700 mb-1">
-                          {profile?.name}
+                            {profile?.name}
                           </h3>
                           <p className="text-gray-600 text-xs">
-                          {profile?.cl_email}
+                            {profile?.cl_email}
                           </p>
                         </div>
                         <button className="bg-white text-purple-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 
                         transition-colors" onClick={() => {
-                          localStorage.clear();
-                          window.location.reload();
-                        }}>
+                            localStorage.clear();
+                            window.location.reload();
+                          }}>
                           LOGOUT
                         </button>
                       </div>
@@ -764,7 +761,7 @@ export default function Header() {
             </div>
           </div>
         )}
-          <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </div>
 
       {/* CSS Animation for placeholder slide effect */}
