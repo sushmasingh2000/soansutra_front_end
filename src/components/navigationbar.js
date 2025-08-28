@@ -213,7 +213,7 @@ const NavigationBar = () => {
             onClick={handleHomeClick}
             className="text-lg font-semibold hover:text-pink-200 transition-colors duration-200"
           >
-            CaratLane
+            Sonasutra 
           </button>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}

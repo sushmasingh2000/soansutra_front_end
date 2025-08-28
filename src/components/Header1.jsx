@@ -12,6 +12,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrandLogo } from "./brand-logo";
+import  logo  from "../assets/desklogo.jpg";
 import { TreasureChestIcon } from "./treasure-chest-icon";
 import {
   apiConnectorGet,
@@ -242,7 +243,7 @@ export default function Header() {
 
           {/* Brand Logo */}
           <Link to={"/"} className="flex-shrink-0">
-            <BrandLogo />
+           <img src={logo} alt="" className="w-10 h-5"/>
           </Link>
 
           {/* Search Bar */}
@@ -352,7 +353,7 @@ export default function Header() {
           {/* Left - Logo */}
           <div className="flex items-center space-x-4 flex-shrink-0">
             <Link to="/" className="flex-shrink-0">
-              <BrandLogo />
+              <img src={logo} alt="" className="h-10 w-28"/>
             </Link>
           </div>
 
