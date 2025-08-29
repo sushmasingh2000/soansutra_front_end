@@ -97,7 +97,7 @@ const MobileFilterModal = ({
                       />
                       <span className="text-xs text-gray-700">
                         {option.label || option.value}
-                        <span className="text-gray-400"> ({option.count})</span>
+                        {/* <span className="text-gray-400"> ({option.count})</span> */}
                       </span>
                     </label>
                   ))}
@@ -542,7 +542,8 @@ const DynamicProductListingPage = () => {
       tags: [],
     };
     setFilters(clearedFilters);
-    applyBackendFilters(clearedFilters); // 🧹 clear backend filters too
+    applyBackendFilters(clearedFilters);
+    window.location.reload(); // 🧹 clear backend filters too
   };
 
   const { data: high } = useQuery(
