@@ -172,6 +172,9 @@ export const endpoint = {
   u_get_variant: `${domain}/api/v1/u-get-varients`,
 
 
+  u_filte_by: `${domain}/api/v1/u-filter-by`,
+
+
   //wishlist 
   create_wishlist: `${domain}/api/v1/create-wish-list-items`,
   get_wishlist: `${domain}/api/v1/get-wish-list-items`,
@@ -181,6 +184,7 @@ export const endpoint = {
   create_cart: `${domain}/api/v1/create-cart-items`,
   get_cart: `${domain}/api/v1/get-cart-items`,
   remove_cart: `${domain}/api/v1/remove-from-cart-items`,
+
 
   change_password: `${domain}/api/v1/change-customer-password`,
   disable_customer_account: `${domain}/api/v1/dissable-customer-account`,

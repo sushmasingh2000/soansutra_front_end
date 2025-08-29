@@ -60,8 +60,6 @@ const ProductDetailWebPage = () => {
   const [selectedMaterialGroup, setSelectedMaterialGroup] = useState([]);
   const { setShowLoginModal } = useLoginModal();
 
-  const isLoggedIn = !!localStorage.getItem('token');
-
   useEffect(() => {
     const fetchVariants = async () => {
       try {
@@ -353,8 +351,7 @@ const ProductDetailWebPage = () => {
       ?.filter((m) => m.master_mat_name.toLowerCase() === "diamond")
       .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
 
-  // Static making charges example:
-  const makingCharges = 2000 + 5000; // Gold + Diamond
+
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">

@@ -6,10 +6,10 @@ import Header from "../Header1";
 import { useQuery } from "react-query";
 import { endpoint } from "../../utils/APIRoutes";
 import axios from "axios";
-import { apiConnectorGet } from "../../utils/ApiConnector";
+import { apiConnectorGet, usequeryBoolean } from "../../utils/ApiConnector";
 import toast from "react-hot-toast";
 
-// Enhanced Category Configuration with 5 Jewelry Types
+
 const CATEGORY_CONFIG = {
   rings: {
     title: "Rings Collection - 234 Designs",
@@ -252,6 +252,7 @@ const CATEGORY_CONFIG = {
     tabs: ["All", "New In", "Bracelets", "Bangles", "Traditional"],
   },
 };
+
 
 
 // Dynamic Filter Tabs Component
@@ -721,6 +722,44 @@ const DynamicProductListingPage = () => {
     });
     setFilters(clearedFilters);
   };
+  const { data: high } = useQuery(
+    ["filter_product"],
+    () => apiConnectorGet(endpoint.u_filte_by),
+    usequeryBoolean
+  );
+
+  const filter_product = high?.data?.result || [];
+
+  const dynamicFilters = {
+    product_tags: {
+      label: "Occasion",
+      options: filter_product?.product_tags_details?.map((tag) => ({
+        value: tag.product_tags,
+        label: tag.product_tags,
+      })) || [],
+    },
+    price: {
+      label: "Price Range",
+      options: filter_product?.price_groups?.map((range) => ({
+        value: range,
+        label: range,
+      })) || [],
+    },
+    size: {
+      label: "Size",
+      options: filter_product?.sizes?.map((s) => ({
+        value: s.size,
+        label: s.size,
+      })) || [],
+    },
+    material: {
+      label: "Material",
+      options: filter_product?.master_materials?.map((m) => ({
+        value: m,
+        label: m,
+      })) || [],
+    },
+  };
 
   if (loading) {
     return (
@@ -769,17 +808,62 @@ const DynamicProductListingPage = () => {
             <Filter className="w-5 h-5" />
           </button>
 
-          <DynamicSidebarFilters
-            categoryConfig={categoryConfig}
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onClearAll={handleClearAll}
-          />
+          <div className="hidden lg:block w-64 bg-white p-4 border-r border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-sm text-gray-800 flex items-center gap-2">
+                <Filter className="w-4 h-4" />
+                FILTERS
+                <span className="bg-gray-200 text-xs px-2 py-1 rounded">
+                  {Object.values(filters).flat().length}
+                </span>
+              </h3>
+              <button
+                // onClick={onClearAll}
+                className="text-pink-500 text-xs font-medium"
+              >
+                CLEAR ALL
+              </button>
+            </div>
+
+            {Object.entries(categoryConfig.filters).map(
+              ([filterKey, filterConfig]) => (
+                <div key={filterKey} className="mb-6">
+                  <h4 className="font-medium text-sm text-gray-800 mb-3">
+                    {filterConfig.label}
+                  </h4>
+                  <div className="space-y-2">
+                    {filterConfig.options.map((option) => (
+                      <label
+                        key={option.value}
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 text-purple-600 rounded border-gray-300"
+                          checked={
+                            filters[filterKey]?.includes(option.value) || false
+                          }
+                          // onChange={(e) =>
+                          //   onFilterChange(filterKey, option.value, e.target.checked)
+                          // }
+                        />
+                        <span className="text-xs text-gray-700">
+                          {option.label || option.value}
+                          <span className="text-gray-400"> ({option.count})</span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+
 
           <MobileFilterModal
             isOpen={mobileFiltersOpen}
             onClose={() => setMobileFiltersOpen(false)}
-            categoryConfig={categoryConfig}
+            categoryConfig={{ filters: dynamicFilters }}
             filters={filters}
             onFilterChange={handleFilterChange}
             onClearAll={handleClearAll}

@@ -12,7 +12,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrandLogo } from "./brand-logo";
-import  logo  from "../assets/desklogo.jpg";
+import logo from "../assets/desklogo.jpg";
 import { TreasureChestIcon } from "./treasure-chest-icon";
 import {
   apiConnectorGet,
@@ -78,20 +78,16 @@ export default function Header() {
   useEffect(() => {
     fetchCategories();
   }, []);
-  const [profile, setProfile] = useState({});
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await apiConnectorGet(endpoint?.get_customer_profile);
-        setProfile(response?.data?.result);
-      } catch (error) {
-        console.error("Failed to fetch profile:", error);
-      }
-    };
 
-    fetchProfile();
-  }, []);
+  const { data: profile_user } = useQuery(
+    ["profile_user"],
+    () =>
+      apiConnectorGet(endpoint?.get_customer_profile),
+    usequeryBoolean
+  );
+
+  const profile = profile_user?.data?.result || [];
 
   const navigate = useNavigate();
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -243,7 +239,7 @@ export default function Header() {
 
           {/* Brand Logo */}
           <Link to={"/"} className="flex-shrink-0">
-           <img src={logo} alt="" className="w-10 h-5"/>
+            <img src={logo} alt="" className="w-10 h-5" />
           </Link>
 
           {/* Search Bar */}
@@ -331,7 +327,7 @@ export default function Header() {
                   className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
                 >
                   <UserIcon className="h-6 w-6" />
-                 
+
                 </button>
                 <button
                   onClick={() => setShowLoginModal(true)}
@@ -353,7 +349,7 @@ export default function Header() {
           {/* Left - Logo */}
           <div className="flex items-center space-x-4 flex-shrink-0">
             <Link to="/" className="flex-shrink-0">
-              <img src={logo} alt="" className="h-10 w-28"/>
+              <img src={logo} alt="" className="h-10 w-28" />
             </Link>
           </div>
 
@@ -497,6 +493,7 @@ export default function Header() {
               ) : (
                 <>
                   {/* Sidebar Header */}
+                  {/* Left side - Close button and Flag */}
                   <div className="flex items-center justify-between p-2 border-b">
                     {/* Left side - Close button and Flag */}
                     <div className="flex items-center space-x-2">
@@ -512,49 +509,78 @@ export default function Header() {
                           alt="Indian Flag"
                           className="w-5 h-auto"
                         />
-                        <span className="font-medium text-sm text-gray-800">
-                          INDIA
-                        </span>
+                        <span className="font-medium text-sm text-gray-800">INDIA</span>
                       </div>
                     </div>
 
                     {/* Right side - Account, Heart, and Cart icons */}
                     <div className="flex items-center space-x-0">
-                      {user ? (
+
+                      {user ? <>
+                        <Link
+                          to={"/myaccount/profile"}
+                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <UserIcon className="h-5 w-5" />
+
+                        </Link>
+                        {/* Wishlist */}
+                        <Link
+                          to={"/wish"}
+                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <HeartIcon className="h-5 w-5" />
+                          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            {wishlistitems?.length}
+                          </span>
+                        </Link>
+
+                        {/* Cart */}
+                        <Link
+                          to={"/shopping-cart"}
+                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <ShoppingCartIcon className="h-5 w-5" />
+                          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            {cartItems?.length}
+                          </span>
+                        </Link>
+
+                      </>
+                        :
                         <>
                           <Link
-                            to={"/myaccount/profile"}
+                            className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                            onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }}
+                          >
+                            <UserIcon className="h-5 w-5" />
+                            <span className="font-medium text-sm">Account</span>
+                          </Link>
+                          <Link
                             className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }}
                           >
-                            <UserIcon className="h-5 w-5" />
+                            <HeartIcon className="h-5 w-5" />
+                            <span className="absolute top-1 right-10 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                              {wishlistitems?.length}
+                            </span>
                           </Link>
+
                           <Link
-                            to={"/shopping-cart"}
-                            className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
+                            onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }}
                           >
                             <ShoppingCartIcon className="h-5 w-5" />
                             <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                               {cartItems?.length}
                             </span>
                           </Link>
-                        </>
-                      ) : (
-                        <>
-                          <button onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }} className="text-purple-600 text-2xl">
-                            <UserIcon className="h-5 w-5" />
-                          </button>
-                          <button onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }} className="text-purple-600 text-2xl">
-                            <ShoppingCartIcon className="h-5 w-5" />
-                            <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                              {cartItems?.length}
-                            </span>
-                          </button>
-                        </>
-                      )}
 
-
+                        </>
+                        }
                     </div>
                   </div>
 

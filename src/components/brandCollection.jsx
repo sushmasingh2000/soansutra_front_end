@@ -34,7 +34,6 @@ const SonasutraCollections = () => {
         {/* Mobile View - 2 columns grid */}
         <div className="grid grid-cols-2 gap-3 md:hidden">
           {collections.map((collection) => {
-            // Parse images from JSON string
             let images = [];
             try {
               images = JSON.parse(collection.product_images);
@@ -42,26 +41,24 @@ const SonasutraCollections = () => {
               images = [];
             }
             const imageUrl = images.length > 0 ? images[0].p_image_url : null;
-
-
             return (
               <div
                 key={collection.product_id}
                 className="group cursor-pointer"
-                onClick={() => handleClick(collection)}   >
+                onClick={() => handleClick(collection)}  >
                 <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                   <img
-                    src={imageUrl || `https://via.placeholder.com/400x320/6B46C1/FFFFFF?text=${encodeURIComponent(collection.name)}`}
+                    src={imageUrl}
                     alt={collection.name}
                     className="w-full h-auto object-contain bg-white"
                     onError={(e) => {
-                      e.target.src = `https://via.placeholder.com/400x320/6B46C1/FFFFFF?text=${encodeURIComponent(collection.name)}`;
+                      e.target.src = `https://via.placeholder.com/400x320/6B46C1/FFFFFF?text=${collection.name}`;
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
 
@@ -69,7 +66,7 @@ const SonasutraCollections = () => {
         <div className="hidden md:block">
           <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-6 pb-4 min-w-max px-2">
-              {collections.map((collection) => {
+             {collections?.slice(0,3)?.map((collection) => {
                 let images = [];
                 try {
                   images = JSON.parse(collection.product_images);
@@ -79,33 +76,30 @@ const SonasutraCollections = () => {
                 const imageUrl = images.length > 0 ? images[0].p_image_url : null;
 
                 return (
-                  <div
-                    key={collection.product_id}
-                    className="flex-shrink-0 w-80 lg:w-96 group cursor-pointer"
-                    onClick={() => handleClick(collection)}  >
-                    <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                      <img
-                        src={imageUrl || `https://via.placeholder.com/400x320/6B46C1/FFFFFF?text=${encodeURIComponent(collection.name)}`}
-                        alt={collection.name}
-                        className="w-full h-auto object-contain bg-white"
-                        onError={(e) => {
-                          e.target.src = `https://via.placeholder.com/400x320/6B46C1/FFFFFF?text=${encodeURIComponent(collection.name)}`;
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
+                <div
+                  key={collection.product_id}
+                  className="flex-shrink-0 w-80 lg:w-96 group cursor-pointer"
+                onClick={() => handleClick(collection)}>
+                  <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    <img
+                      src={imageUrl}
+                      alt={collection.name}
+                      className="w-full h-auto object-contain bg-white"
+                      onError={(e) => {
+                        e.target.src = `https://via.placeholder.com/400x320/6B46C1/FFFFFF?text=${collection.name}`;
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                );
-              })}
+                </div>
+              )})}
             </div>
           </div>
         </div>
 
         {/* View All Collections Button */}
-        <div className="flex justify-center mt-8" >
-          <button className="bg-purple-800 hover:bg-purple-900 text-white text-sm font-semibold py-3 px-8 rounded-full
-           transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            onClick={() => handleScroll("viewcollection_scroll")}>
+        <div className="flex justify-center mt-8" onClick={() => handleScroll("viewcollection_scroll")}>
+          <button className="bg-purple-800 hover:bg-purple-900 text-white text-sm font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
             VIEW ALL COLLECTIONS
           </button>
         </div>
