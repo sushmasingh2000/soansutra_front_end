@@ -12,7 +12,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrandLogo } from "./brand-logo";
-import logo from "../assets/desklogo.jpg";
+import logo from "../assets/desklogo.png";
 import { TreasureChestIcon } from "./treasure-chest-icon";
 import {
   apiConnectorGet,
