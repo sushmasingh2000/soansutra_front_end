@@ -173,6 +173,7 @@ export const endpoint = {
 
 
   u_filte_by: `${domain}/api/v1/u-filter-by`,
+  filter_u_filte_by: `${domain}/api/v1/u-filtered-data`,
 
 
   //wishlist 
