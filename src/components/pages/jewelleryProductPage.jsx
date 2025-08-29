@@ -556,15 +556,15 @@ const DynamicProductListingPage = () => {
   const filterData = filter_product?.[0] || {};
 
   const dynamicFilters = {
-    metal: {
-      label: "Metal",
-      options: filterData.master_materials?.map((material) => ({
-        value: material,
-        label: material,
-        // count: 0, // Update this with count from backend if available
+     size: {
+      label: "Size",
+      options: filterData.sizes?.map((s) => ({
+        value: s.size,
+        label: s.size,
+        // count: 0,
       })) || [],
     },
-    price: {
+     price: {
       label: "Price Range",
       options:
         (filterData.price_groups || [])
@@ -580,13 +580,12 @@ const DynamicProductListingPage = () => {
             label: price,
           })),
     },
-
-    size: {
-      label: "Size",
-      options: filterData.sizes?.map((s) => ({
-        value: s.size,
-        label: s.size,
-        // count: 0,
+    metal: {
+      label: "Metal",
+      options: filterData.master_materials?.map((material) => ({
+        value: material,
+        label: material,
+        // count: 0, // Update this with count from backend if available
       })) || [],
     },
     tags: {
