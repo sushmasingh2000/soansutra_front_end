@@ -7,8 +7,10 @@ import { Delete, Edit } from "lucide-react";
 const VariantMaterialModal = ({ variant, units, onClose }) => {
   const [materials, setMaterials] = useState([]);
   const [material_products, setMaterialProducts] = useState([]);
+  const [Mastmaterials, setMastMaterials] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    master_mat_id: "",
     material_id: "",
     percentage: "",
     weight: "",
@@ -30,12 +32,27 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
     fetchMaterials();
     fetchProductMaterials(); // <== This loads the dropdown
   }, [variant]);
-  
+
   useEffect(() => {
     if (variant?.varient_id) {
       fetchMaterials();
     }
   }, [variant]);
+  const fetchMasterMaterials = async () => {
+    try {
+      setLoading(true);
+      const res = await apiConnectorGet(endpoint.get_master_material);
+      setMastMaterials(res?.data?.result || []);
+    } catch {
+      toast.error("Failed to fetch materials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMasterMaterials();
+  }, [])
 
   const fetchMaterials = async () => {
     try {
@@ -82,6 +99,7 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
 
   const handleEdit = (material) => {
     setFormData({
+       master_mat_id: material.master_mat_id,
       material_id: material.material_id,
       percentage: material.percentage || "",
       weight: material.weight || "",
@@ -111,18 +129,36 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
       {/* Form */}
       <div className="grid grid-cols-4 gap-4 mb-4">
         <select
+          name="master_mat_id"
+          value={formData.master_mat_id}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+        >
+          <option value="">Select Master Material</option>
+          {Mastmaterials.map((item) => (
+            <option key={item.ma_material_id} value={item.ma_material_id}>
+              {item.ma_material_name}
+            </option>
+          ))}
+        </select>
+
+        <select
           name="material_id"
           value={formData.material_id}
           onChange={handleChange}
           className="border p-2"
         >
           <option value="">Select Material</option>
-          {material_products.map((mat) => (
-            <option key={mat.material_id} value={mat.material_id}>
-              {mat.material_name}
-            </option>
-          ))}
+          {material_products
+            .filter(mat => String(mat.master_mat_id) === String(formData.master_mat_id))
+            .map((mat) => (
+              <option key={mat.material_id} value={mat.material_id}>
+                {mat.material_name}
+              </option>
+            ))}
+
         </select>
+
 
         <input
           name="percentage"
@@ -163,6 +199,7 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
       <table className="w-full border">
         <thead>
           <tr>
+            <th className="border px-2 py-1">Master Material</th>
             <th className="border px-2 py-1">Material</th>
             <th className="border px-2 py-1">Percentage</th>
             <th className="border px-2 py-1">Weight</th>
@@ -173,6 +210,7 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
         <tbody>
           {materials.map((mat) => (
             <tr key={mat.variant_material_id}>
+              <td className="border px-2 py-1 text-center">{mat.ma_material_name}</td>
               <td className="border px-2 py-1 text-center">{mat.material_name}</td>
               <td className="border px-2 py-1 text-center">{mat.percentage}</td>
               <td className="border px-2 py-1 text-center">{mat.weight}</td>
@@ -182,13 +220,13 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
                   onClick={() => handleEdit(mat)}
                   className="text-blue-600 hover:underline"
                 >
-                  <Edit/>
+                  <Edit />
                 </button>
                 <button
                   onClick={() => handleDelete(mat.variant_material_id)}
                   className="text-red-600 hover:underline"
                 >
-                  <Delete/>
+                  <Delete />
                 </button>
               </td>
             </tr>

@@ -30,7 +30,7 @@ export default function CaratLaneSignup() {
             {/* Text Content */}
             <div className="text-white">
               <h1 className="text-2xl md:text-3xl font-bold mb-2">
-                Join CaratLane Insider
+                Join SonaSutra Insider
               </h1>
               <p className="text-sm md:text-base text-gray-200">
                 To discover enticing deals, latest arrivals, & more

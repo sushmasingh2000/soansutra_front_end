@@ -97,12 +97,14 @@ const ProductVariant = () => {
             <th className="border px-4 py-2 text-center">S.No</th>
             <th className="border px-4 py-2 text-center">SKU</th>
             <th className="border px-4 py-2 text-center">Price (₹)</th>
+            <th className="border px-4 py-2 text-center">Making Price (₹)</th>
             <th className="border px-4 py-2 text-center">Weight</th>
             <th className="border px-4 py-2 text-center">Dimension Unit</th>
             <th className="border px-4 py-2 text-center">Quantity</th>
             <th className="border px-4 py-2 text-center">Reserved Quantity</th>
             <th className="border px-4 py-2 text-center">Minimum Quantity</th>
             <th className="border px-4 py-2 text-center">Inventory</th>
+            <th className="border px-4 py-2 text-center">Attribute</th>
             <th className="border px-4 py-2 text-center">Material</th>
             <th className="border px-4 py-2 text-center">Discount</th>
             <th className="border px-4 py-2 text-center">Tax</th>
@@ -129,6 +131,9 @@ const ProductVariant = () => {
                   {variant.varient_price || "--"}
                 </td>
                 <td className="border px-4 py-2 text-center">
+                  {variant.making_price || "--"}
+                </td>
+                <td className="border px-4 py-2 text-center">
                   {variant.varient_weight || "--"}
                 </td>
                 <td className="border px-4 py-2 text-center">
@@ -152,6 +157,16 @@ const ProductVariant = () => {
                     className="text-indigo-600 hover:underline"
                   >
                     <Edit2/>
+                  </button>
+                </td>
+                  <td className="border text-center px-4 py-2">
+                  <button
+                  onClick={() =>
+                      navigate(`/product-attribute?variant_id=${variant.varient_id}&&product_id=${variant?.product_id}`)
+                    }
+                    className="text-green-600 hover:underline"
+                  >
+                    <Edit />
                   </button>
                 </td>
                 <td className="border text-center px-4 py-2">

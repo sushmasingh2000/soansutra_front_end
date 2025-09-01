@@ -1,159 +1,247 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import {
+  AdUnits,
+  AodOutlined,
+  Call,
+  DashboardCustomizeOutlined,
+  GroupAdd,
+  Logout,
+  ManageAccountsRounded,
+  PaymentSharp,
+  PermScanWifi,
+  Person,
+  ProductionQuantityLimitsOutlined,
+  RollerShadesClosed,
+  Store,
+  TaxiAlert,
+} from "@mui/icons-material";
+import {
+  Disc2Icon,
+  Eye,
+  Image,
+  MarsStroke,
+  Minimize2Icon,
+  User2Icon
+} from "lucide-react";
+import { FaFirstOrder } from "react-icons/fa";
 
-const menuItems = [
+// Role-specific access list
+const superAdminAccess = [
+  "Dashboard",
+  "Store Management",
+  "User Management",
+  "Role",
+  "Permissions",
+  "LogOut",
+];
+
+// Full menu list
+const fullMenuItems = [
   {
     id: "dashboard",
     label: "Dashboard",
-    icon: "📊",
+    icon: <DashboardCustomizeOutlined />,
     path: "/dashboard",
-    roles: ["superuser", "Support Engineer", "user"],
   },
   {
     id: "stores",
     label: "Store Management",
-    icon: "🏪",
+    icon: <Store />,
     path: "/stores",
-    roles: ["superuser"],
   },
   {
     id: "users",
     label: "User Management",
-    icon: "👥",
+    icon: <User2Icon />,
     path: "/users",
-    roles: ["superuser"],
   },
   {
     id: "roles",
     label: "Role",
-    icon: "🔐",
+    icon: <RollerShadesClosed />,
     path: "/roles",
-    roles: ["superuser"],
   },
   {
     id: "permissions",
     label: "Permissions",
-    icon: "🔐",
+    icon: <PermScanWifi />,
     path: "/permissions",
-    roles: ["superuser"],
   },
   {
     id: "categories",
     label: "Categories",
-    icon: "📂",
+    icon: <AodOutlined />,
     path: "/categories",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "subcategories",
     label: "Sub Categories",
-    icon: "📂",
+    icon: <Minimize2Icon />,
     path: "/sub_categories",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "products",
     label: "Products",
-    icon: "📦",
+    icon: <MarsStroke />,
     path: "/products",
-    roles: ["Support Engineer", "user"],
   },
   {
     id: "utils",
     label: "Utils",
-    icon: "🛠️",
-    roles: ["Support Engineer", "user"],
+    icon: <Eye />,
     children: [
       {
         id: "unit",
         label: "Units",
-        icon: "📦",
+        icon: <AdUnits />,
         path: "/unit",
-        roles: ["Support Engineer", "user"],
       },
       {
-        id: "material",
+        id: "material-group",
         label: "Material",
-        icon: "📦",
-        path: "/product-material",
-        roles: ["Support Engineer", "user"],
+        icon: <GroupAdd />,
+        children: [
+          {
+            id: "master-material",
+            label: "Master Material",
+            icon: <ProductionQuantityLimitsOutlined />,
+            path: "/product-master-material",
+          },
+          {
+            id: "sub-material",
+            label: "Sub Material",
+            icon: <ManageAccountsRounded />,
+            path: "/product-material",
+          },
+        ],
       },
       {
         id: "discount",
         label: "Discount",
-        icon: "📦",
+        icon: <Disc2Icon />,
         path: "/discount",
-        roles: ["Support Engineer", "user"],
       },
       {
         id: "tax",
         label: "Tax",
-        icon: "📦",
+        icon: <TaxiAlert />,
         path: "/tax",
-        roles: ["Support Engineer", "user"],
       },
     ],
   },
   {
+    id: "custom",
+    label: "Custom Order",
+    icon: <FaFirstOrder />,
+    path: "/custom",
+  },
+  {
     id: "payment",
     label: "Payment",
-    icon: "📦",
+    icon: <PaymentSharp />,
     path: "/payment",
-    roles: ["Support Engineer", "user"],
+  },
+  {
+    id: "banner",
+    label: "Banner",
+    icon: <Image />,
+    path: "/banner",
+  },
+  {
+    id: "demo",
+    label: "Request Call",
+    icon: <Call />,
+    path: "/demo-call",
   },
   {
     id: "customer",
     label: "Customer",
-    icon: "📦",
+    icon: <Person />,
     path: "/customer",
-    roles: ["Support Engineer", "user"],
   },
-{
+  {
     id: "logout",
     label: "LogOut",
-    icon: "📈",
+    icon: <Logout />,
     path: "/",
-    roles: ["superuser", "Support Engineer", "user"],
   },
-  // {
-  //   id: "reports",
-  //   label: "Reports",
-  //   icon: "📈",
-  //   path: "/reports",
-  //   roles: ["superuser", "Support Engineer", "user"],
-  // },
-  // {
-  //   id: "profile",
-  //   label: "Profile",
-  //   icon: "👤",
-  //   path: "/profile",
-  //   roles: ["superuser", "Support Engineer", "user"],
-  // },
-  // {
-  //   id: "settings",
-  //   label: "Settings",
-  //   icon: "⚙️",
-  //   path: "/settings",
-  //   roles: ["superuser", "Support Engineer", "user"],
-  // },
 ];
 
 const Sidebar = ({ sidebarOpen = true }) => {
+  const [openSubMenu, setOpenSubMenu] = useState({});
   const userRole = localStorage.getItem("role");
-  const filteredMenuItems = menuItems.filter((item) =>
-    item.roles.includes(userRole)
-  );
-  const [openSubMenu, setOpenSubMenu] = useState(null);
+  const alwaysVisible = ["Dashboard", "LogOut"];
+  // Filter menu based on user role
+  const menuItems = fullMenuItems.filter((item) => {
+    const isAlwaysVisible = alwaysVisible.includes(item.label);
+    const isSuperAdminItem = superAdminAccess.includes(item.label);
 
+    if (isAlwaysVisible) {
+      return true;
+    }
+
+    if (userRole === "superuser") {
+      return isSuperAdminItem;
+    }
+
+    return !isSuperAdminItem; // Hide superadmin-only items for others
+  });
   const toggleSubMenu = (id) => {
-    setOpenSubMenu((prev) => (prev === id ? null : id));
+    setOpenSubMenu((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
+
+  const renderMenuItems = (items, level = 0) => (
+    <ul className={level > 0 ? "ml-6" : ""}>
+      {items.map(({ id, label, icon, path, children }) => {
+        const isOpen = openSubMenu[id] || false;
+
+        return (
+          <li key={id}>
+            {children ? (
+              <div>
+                <button
+                  onClick={() => toggleSubMenu(id)}
+                  className={`w-full text-left px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 ${level === 0
+                    ? "font-medium text-gray-700"
+                    : "text-sm text-gray-600"
+                    }`}
+                >
+                  <span className="text-lg">{icon}</span>
+                  <span className="flex-1">{label}</span>
+                  <span className="text-xs">{isOpen ? "▲" : "▼"}</span>
+                </button>
+                {isOpen && renderMenuItems(children, level + 1)}
+              </div>
+            ) : (
+              <NavLink
+                to={path}
+                className={({ isActive }) =>
+                  `block px-6 py-2 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${isActive
+                    ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
+                    : level === 0
+                      ? "text-gray-700 font-medium"
+                      : "text-sm text-gray-600"
+                  }`
+                }
+              >
+                <span>{icon}</span>
+                <span>{label}</span>
+              </NavLink>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
 
   return (
     <aside
-      className={`h-full bg-white shadow-lg transition-all duration-300 z-40 ${
-        sidebarOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
-      }`}
+      className={`h-full bg-white shadow-lg transition-all duration-300 z-40 ${sidebarOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
+        }`}
     >
       <nav className="mt-4">
         <div className="px-4 py-2">
@@ -161,62 +249,7 @@ const Sidebar = ({ sidebarOpen = true }) => {
             Navigation
           </h2>
         </div>
-        <ul className="mt-2">
-          {filteredMenuItems.map(({ id, label, icon, path, children }) => (
-            <li key={id}>
-              {children ? (
-                <div>
-                  <button
-                    onClick={() => toggleSubMenu(id)}
-                    className="w-full px-6 py-3 flex items-center space-x-3 font-medium text-gray-700 hover:bg-gray-100 focus:outline-none"
-                  >
-                    <span className="text-xl">{icon}</span>
-                    <span className="flex-1 text-left">{label}</span>
-                    <span className="text-xs">{openSubMenu === id ? "▲" : "▼"}</span>
-                  </button>
-
-                  {openSubMenu === id && (
-                    <ul className="ml-8">
-                      {children
-                        .filter((child) => child.roles.includes(userRole))
-                        .map(({ id, label, icon, path }) => (
-                          <li key={id}>
-                            <NavLink
-                              to={path}
-                              className={({ isActive }) =>
-                                `w-full text-left px-6 py-2 flex items-center space-x-2 hover:bg-gray-100 transition-colors ${
-                                  isActive
-                                    ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
-                                    : "text-gray-600"
-                                }`
-                              }
-                            >
-                              <span className="text-sm">{icon}</span>
-                              <span className="text-sm">{label}</span>
-                            </NavLink>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
-                </div>
-              ) : (
-                <NavLink
-                  to={path}
-                  className={({ isActive }) =>
-                    `w-full text-left px-6 py-3 flex items-center space-x-3 hover:bg-gray-100 transition-colors ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
-                        : "text-gray-700"
-                    }`
-                  }
-                >
-                  <span className="text-xl">{icon}</span>
-                  <span className="font-medium">{label}</span>
-                </NavLink>
-              )}
-            </li>
-          ))}
-        </ul>
+        {renderMenuItems(menuItems)}
       </nav>
     </aside>
   );

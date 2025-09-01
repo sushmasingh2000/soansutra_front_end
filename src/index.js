@@ -5,12 +5,14 @@ import './index.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Toaster } from 'react-hot-toast'
 import App from './App.js'
+import { LoginModalProvider } from './context/Login.js'
 
 // Create a client
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <LoginModalProvider>
     <QueryClientProvider client={queryClient}>
     <Toaster
         toastOptions={{
@@ -28,5 +30,7 @@ createRoot(document.getElementById('root')).render(
       />
       <App/>
     </QueryClientProvider>
+    </LoginModalProvider>
+   
   </StrictMode>
 )

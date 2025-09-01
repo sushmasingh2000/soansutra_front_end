@@ -3,7 +3,13 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 
-const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => {
+const VariantModal = ({
+  product,
+  variant,
+  units,
+  onClose,
+  refreshVariants,
+}) => {
   const [form, setForm] = useState({
     sku: "",
     price: "",
@@ -36,9 +42,12 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
         sku: variant.varient_sku || "",
         price: variant.varient_price || "",
         weight: variant.varient_weight || "",
-        dimensions: units.find(
-          (u) => u.un_name === variant.unit_name || u.un_slug === variant.unit_slug
-        )?.un_id || "",
+        making_price: variant.making_price || "",
+        dimensions:
+          units.find(
+            (u) =>
+              u.un_name === variant.unit_name || u.un_slug === variant.unit_slug
+          )?.un_id || "",
         attributes: variant.attributes || [],
       });
     } else {
@@ -51,6 +60,7 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
       sku: "",
       price: "",
       weight: "",
+      making_price: "",
       dimensions: "",
       attributes: [],
     });
@@ -84,10 +94,10 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
   };
 
   const handleSave = async () => {
-    if (!form.price || form.attributes.length === 0) {
-      toast.error("Price and at least one attribute are required.");
-      return;
-    }
+    // if (!form.price || form.attributes.length === 0) {
+    //   toast.error("Price and at least one attribute are required.");
+    //   return;
+    // }
 
     setLoading(true);
     const payload = {
@@ -95,6 +105,7 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
       sku: form.sku,
       price: form.price,
       weight: form.weight,
+      making_price: form.making_price,
       dimensions: form.dimensions,
       attributes: form.attributes,
     };
@@ -145,6 +156,13 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
         />
         <input
           type="number"
+          placeholder="Making Price"
+          value={form.making_price}
+          onChange={(e) => setForm({ ...form, making_price: e.target.value })}
+          className="border p-2 rounded"
+        />
+        <input
+          type="number"
           placeholder="Weight"
           value={form.weight}
           onChange={(e) => setForm({ ...form, weight: e.target.value })}
@@ -173,7 +191,10 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
             <select
               value={newAttr.attribute_id}
               onChange={(e) =>
-                setNewAttr((prev) => ({ ...prev, attribute_id: e.target.value }))
+                setNewAttr((prev) => ({
+                  ...prev,
+                  attribute_id: e.target.value,
+                }))
               }
               className="border p-2 rounded flex-1"
             >
@@ -188,7 +209,9 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
               type="text"
               placeholder="Value"
               value={newAttr.value}
-              onChange={(e) => setNewAttr((prev) => ({ ...prev, value: e.target.value }))}
+              onChange={(e) =>
+                setNewAttr((prev) => ({ ...prev, value: e.target.value }))
+              }
               className="border p-2 rounded flex-1"
             />
             <button
@@ -207,9 +230,14 @@ const VariantModal = ({ product, variant, units, onClose, refreshVariants }) => 
 
         <ul className="list-disc ml-5">
           {form.attributes.map((attr) => {
-            const attrName = attributesList.find((a) => a.attribute_id === attr.attribute_id)?.name || attr.attribute_id;
+            const attrName =
+              attributesList.find((a) => a.attribute_id === attr.attribute_id)
+                ?.name || attr.attribute_id;
             return (
-              <li key={attr.attribute_id} className="flex justify-between items-center">
+              <li
+                key={attr.attribute_id}
+                className="flex justify-between items-center"
+              >
                 <span>
                   {attrName}: {attr.value}
                 </span>

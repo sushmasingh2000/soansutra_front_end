@@ -1,59 +1,75 @@
-import React from 'react';
+import React from "react";
+import { apiConnectorGet, usequeryBoolean } from "../../utils/ApiConnector";
+import { endpoint } from "../../utils/APIRoutes";
+import { useQuery } from "react-query";
+
+// Mapping for label, color, and icon for known metrics
+const metricMap = {
+  product_category_count: { label: "Product Categories", color: "purple" },
+  product_count: { label: "Total Products", color: "blue" },
+  user_count: { label: "Users", color: "green" },
+  customer_count: { label: "Customers", color: "orange" },
+
+  // Order statuses
+  order_status_Pending: { label: "Orders - Pending", color: "yellow" },
+  order_status_Shipped: { label: "Orders - Shipped", color: "blue" },
+  order_status_In_Transit: { label: "Orders - In Transit", color: "purple" },
+  order_status_Delivered: { label: "Orders - Delivered", color: "green" },
+  order_status_Cancelled: { label: "Orders - Cancelled", color: "red" },
+
+  // Custom orders
+  custom_order_status_Pending: { label: "Custom Orders - Pending", color: "yellow" },
+  custom_order_status_Processing: { label: "Custom Orders - Processing", color: "blue" },
+  custom_order_status_Rejected: { label: "Custom Orders - Rejected", color: "red" },
+  custom_order_status_Success: { label: "Custom Orders - Success", color: "green" },
+
+  // Demo call statuses
+  demo_call_status_Pending: { label: "Demo Calls - Pending", color: "yellow" },
+  demo_call_status_Processing: { label: "Demo Calls - Processing", color: "blue" },
+  demo_call_status_Rejected: { label: "Demo Calls - Rejected", color: "red" },
+  demo_call_status_Success: { label: "Demo Calls - Success", color: "green" },
+};
 
 const Dashboard = () => {
-  const dashboardStats = {
-    totalStores: 12,
-    totalUsers: 48,
-    totalCategories: 25,
-    activeRoles: 5
-  };
+  const { data } = useQuery(
+    ["get_dashboard_Count"],
+    () => apiConnectorGet(endpoint.get_dashboard_Count),
+    usequeryBoolean
+  );
+
+  const dashboardData = data?.data?.result || [];
 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* Cards */}
-        {/* Total Stores */}
-        <StatCard color="blue" label="Total Stores" value={dashboardStats.totalStores} icon={(
-          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-          </svg>
-        )} />
-        
-        {/* Total Users */}
-        <StatCard color="green" label="Total Users" value={dashboardStats.totalUsers} icon={(
-          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-          </svg>
-        )} />
 
-        {/* Categories */}
-        <StatCard color="purple" label="Categories" value={dashboardStats.totalCategories} icon={(
-          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
-          </svg>
-        )} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {dashboardData.map((item, index) => {
+          const key = item.metric.replaceAll(" ", "_"); // handle spaces
+          const mapItem = metricMap[key];
 
-        {/* Active Roles */}
-        <StatCard color="orange" label="Active Roles" value={dashboardStats.activeRoles} icon={(
-          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd"/>
-          </svg>
-        )} />
+          if (!mapItem) return null; // skip unknown metrics
+
+          return (
+            <StatCard
+              key={index}
+              label={mapItem.label}
+              value={item.total_count}
+              color={mapItem.color}
+            />
+          );
+        })}
       </div>
     </div>
   );
 };
 
-const StatCard = ({ color, label, value, icon }) => (
+const StatCard = ({ color, label, value }) => (
   <div className={`bg-${color}-50 p-6 rounded-lg border border-${color}-200`}>
     <div className="flex items-center justify-between">
       <div>
         <p className={`text-${color}-600 text-sm font-medium`}>{label}</p>
         <p className={`text-3xl font-bold text-${color}-700`}>{value}</p>
-      </div>
-      <div className={`text-${color}-500`}>
-        {icon}
       </div>
     </div>
   </div>

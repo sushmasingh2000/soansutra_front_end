@@ -1,29 +1,22 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Star, Heart, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
+import { endpoint } from '../utils/APIRoutes';
 
 // Hero Banner Component with Dynamic Content
 const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const slides = [
-    {
-      id: 1,
-      image: 'https://cdn.caratlane.com/media/static/images/V4/2025/CL/06_JUNE/Banner/swirl/01/Desktop.jpg',
-      alt: 'Diamond Jewelry Collection'
-    },
-    {
-      id: 2,
-      image: 'https://cdn.caratlane.com/media/static/images/V4/2025/CL/06_JUNE/Push/06/Desktop_1760x630.jpg',
-      alt: 'Digital Gold Balance Offer'
-    },
-    {
-      id: 3,
-      image: 'https://cdn.caratlane.com/media/static/images/V4/2025/CL/06_JUNE/Banner/bundle%20offer/02/Desktop_1760x630.jpg',
-      alt: 'Bundle Offer'
-    }
-  ];
+  const { data } = useQuery(
+    ["banner_data"],
+    () =>
+      apiConnectorGet(endpoint?.get_banner),
+  usequeryBoolean
+  );
 
-  // Auto-slide functionality
+  const slides = data?.data?.result || [];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -49,7 +42,7 @@ const HeroBanner = () => {
       <div className="relative w-full max-w-full mx-auto">
         {/* Main carousel container */}
         <div className="relative bg-white rounded-lg overflow-hidden shadow-lg">
-<div className="relative w-full overflow-hidden">
+          <div className="relative w-full overflow-hidden">
             {/* Slides container */}
             <div
               className="flex transition-transform duration-700 ease-in-out h-full"
@@ -58,7 +51,7 @@ const HeroBanner = () => {
               {slides.map((slide, index) => (
                 <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
                   <img
-                    src={slide.image}
+                    src={slide.ban_image}
                     alt={slide.alt}
                     className="w-full h-auto object-contain object-center"
                     style={{ minWidth: '100%', minHeight: '100%' }}
@@ -119,8 +112,8 @@ const HeroBanner = () => {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 ${index === currentSlide
-                    ? 'bg-purple-600 scale-125 shadow-lg'
-                    : 'bg-gray-400 hover:bg-gray-600 hover:scale-110'
+                  ? 'bg-purple-600 scale-125 shadow-lg'
+                  : 'bg-gray-400 hover:bg-gray-600 hover:scale-110'
                   }`}
                 aria-label={`Go to slide ${index + 1}`}
               />

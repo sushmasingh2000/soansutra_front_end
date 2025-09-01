@@ -1,11 +1,13 @@
 // export const domain = "http://192.168.18.214:2000";
-export const domain ="https://sonashutra.onrender.com";
+export const domain ="https://backend.sonasutra.in";
 
 export const endpoint = {
 
   login: `${domain}/api/v1/login-user`,
   //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
+  //dashboard 
+  get_dashboard_Count: `${domain}/api/v1/get-dashboard-details`,
   //store
   create_store: `${domain}/api/v1/create-store`,
   get_store: `${domain}/api/v1/get-store`,
@@ -68,6 +70,13 @@ export const endpoint = {
   update_product_unitt: `${domain}/api/v1/update-units`,
   delete_product_unitt: `${domain}/api/v1/delete-units`,
 
+  //bnanner
+  create_banner: `${domain}/api/v1/create-banner`,
+  get_banner: `${domain}/api/v1/get-banner`,
+  update_banner: `${domain}/api/v1/update-banner`,
+  delete_banner: `${domain}/api/v1/delete-banner`,
+  status_banner: `${domain}/api/v1/change-banner-status`,
+
   //pending
 
   // attribute
@@ -77,10 +86,23 @@ export const endpoint = {
   delete_product_attributes: `${domain}/api/v1/delete-product-attributes`,
 
   // product attribute values
-  // create_product_attributes_value: `${domain}/api/v1/create-product-attribute-value`,
-  // get_product_attributes_value: `${domain}/api/v1/get-product-attribute-value`,
+  create_update_product_attributes: `${domain}/api/v1/add-update-product-varients`,
+  get_product_attributes_value: `${domain}/api/v1/get-product-attribute-value`,
+  delete_product_attributes_value: `${domain}/api/v1/delete-attribute-value`,
+
   // update_product_attributes_value: `${domain}/api/v1/update-attribute-value`,
-  // delete_product_attributes_value: `${domain}/api/v1/delete-attribute-value`,
+
+  //master materuial
+  create_master_material: `${domain}/api/v1/create-master-materials`,
+  get_master_material: `${domain}/api/v1/get-master-materials`,
+  update_master_material: `${domain}/api/v1/update-master-materials`,
+  delete_master_material: `${domain}/api/v1/delete-master-materials`,
+
+
+  //get_demo call
+  req_demo_call: `${domain}/api/v1/u-req-demo-call`,
+  get_demo_call: `${domain}/api/v1/get-demo-calls`,
+  update_demo_call: `${domain}/api/v1/update-demo-calls`,
 
   //material
   create_material: `${domain}/api/v1/create-materials`,
@@ -123,6 +145,11 @@ export const endpoint = {
   update_product_tax: `${domain}/api/v1/update-product-tax`,
   delete_product_tax: `${domain}/api/v1/delete-product-tax`,
 
+  //
+  get_custom_order: `${domain}/api/v1/get-custom-orders`,
+  create_custom_order: `${domain}/api/v1/u-create-custom-order`,
+
+
   //payment
   create_payment_method: `${domain}/api/v1/create-payment-method`,
   get_payment_method: `${domain}/api/v1/get-payment-method`,
@@ -138,7 +165,6 @@ export const endpoint = {
 
   //auth
   login_customer: `${domain}/api/v1/login-customer`,
-
   //prduct 
   get_categroy_user: `${domain}/api/v1/u-get-category`,
   get_sub_categroy_user: `${domain}/api/v1/u-get-sub-category`,
@@ -146,11 +172,36 @@ export const endpoint = {
   u_get_variant: `${domain}/api/v1/u-get-varients`,
 
 
+  u_filte_by: `${domain}/api/v1/u-filter-by`,
+  filter_u_filte_by: `${domain}/api/v1/u-filtered-data`,
+
+
   //wishlist 
   create_wishlist: `${domain}/api/v1/create-wish-list-items`,
   get_wishlist: `${domain}/api/v1/get-wish-list-items`,
   remove_wishlist: `${domain}/api/v1/remove-wish-list-items`,
 
+  //cart 
+  create_cart: `${domain}/api/v1/create-cart-items`,
+  get_cart: `${domain}/api/v1/get-cart-items`,
+  remove_cart: `${domain}/api/v1/remove-from-cart-items`,
 
+
+  change_password: `${domain}/api/v1/change-customer-password`,
+  disable_customer_account: `${domain}/api/v1/dissable-customer-account`,
+
+  get_order: `${domain}/api/v1/get-order-details`,
+  get_order_detail_by: `${domain}/api/v1/get-order-details-by-order-id`,
+
+
+  //similar_items
+  similar_items: `${domain}/api/v1/u-get-similar-items`,
+  latest_items: `${domain}/api/v1/u-get-latest-items`,
+  recent_items: `${domain}/api/v1/u-get-recent-viewed-items`,
+  related_sub_items: `${domain}/api/v1/u-get-related-subcategories`,
+  get_discount_high: `${domain}/api/v1/u-get-highlt-discount-product`,
+  get_most_frequent: `${domain}/api/v1/u-get-most-frequent-search-items`,
+  get_categroy_filtered_item: `${domain}/api/v1/u-get-home-filtered-items`,
+  get_search_product: `${domain}/api/v1/u-get-search-product`,
 
 };

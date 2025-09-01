@@ -102,7 +102,7 @@ const Customer = () => {
             </div>
 
             {/* Search bar */}
-           
+
 
             {/* Table */}
             <div className="overflow-auto rounded border">
@@ -112,34 +112,54 @@ const Customer = () => {
                             <th className="px-4 py-2 border-b">Name</th>
                             <th className="px-4 py-2 border-b">Email</th>
                             <th className="px-4 py-2 border-b">Phone</th>
+                            <th className="px-4 py-2 border-b">DOB</th>
+                            <th className="px-4 py-2 border-b">Anniversary</th>
+                            <th className="px-4 py-2 border-b">Spouse Birthday</th>
+                            <th className="px-4 py-2 border-b">Occupation</th>
+                            <th className="px-4 py-2 border-b">Govt ID Type</th>
+                            <th className="px-4 py-2 border-b">Govt ID No</th>
+                            <th className="px-4 py-2 border-b">Govt ID Image</th>
                             <th className="px-4 py-2 border-b">City</th>
                             <th className="px-4 py-2 border-b">Country</th>
                             <th className="px-4 py-2 border-b">Created</th>
                             <th className="px-4 py-2 border-b">Status</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         {customers.map((c) => (
-                            <tr key={c.customer_id} className="">
+                            <tr key={c.customer_id}>
                                 <td className="px-4 py-2 border-b">{c.name}</td>
                                 <td className="px-4 py-2 border-b">{c.cl_email}</td>
                                 <td className="px-4 py-2 border-b">{c.cl_phone}</td>
+                                <td className="px-4 py-2 border-b">{c.date_of_birth || "-"}</td>
+                                <td className="px-4 py-2 border-b">{c.aniversary || "-"}</td>
+                                <td className="px-4 py-2 border-b">{c.spouse_birthday || "-"}</td>
+                                <td className="px-4 py-2 border-b">{c.occupation || "-"}</td>
+                                <td className="px-4 py-2 border-b">{c.govt_identity || "-"}</td>
+                                <td className="px-4 py-2 border-b">{c.govt_no || "-"}</td>
+
+                                <td className="px-4 py-2 border-b">
+                                    {c.govt_id_image ? (
+                                        <img
+                                            src={c.govt_id_image}
+                                            alt="Govt ID"
+                                            className="h-10 w-16 object-cover rounded cursor-pointer hover:scale-105 transition"
+                                            onClick={() => window.open(c.govt_id_image, "_blank")}
+                                        />
+                                    ) : (
+                                        "-"
+                                    )}
+                                </td>
+
                                 <td className="px-4 py-2 border-b">{c.city}</td>
                                 <td className="px-4 py-2 border-b">{c.country}</td>
                                 <td className="px-4 py-2 border-b">
                                     {moment(c.created_at).format("YYYY-MM-DD")}
                                 </td>
                                 <td className="px-4 py-2 border-b">{c.cl_lgn_status}</td>
-
-                                {/* <td className="px-4 py-2 border-b">
-                                    <button
-                                        onClick={() => openModal(c)}
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        <Edit2 size={16} />
-                                    </button>
-                                </td> */}
                             </tr>
+
                         ))}
                         {customers.length === 0 && (
                             <tr>
@@ -200,6 +220,7 @@ const Customer = () => {
                         { label: "State", name: "state" },
                         { label: "Country", name: "country" },
                         { label: "Pincode", name: "pincode" },
+
                     ].map((f) => (
                         <input
                             key={f.name}

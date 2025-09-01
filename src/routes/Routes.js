@@ -1,35 +1,37 @@
-import { createBrowserRouter } from "react-router-dom";
-import App from "../App";
-import LoginPage from "../components/pages/LoginPage";
-import SignUpPage from "../components/pages/signup";
-import HomePage from "../components/pages/homePage";
-import DynamicProductListingPage from "../components/pages/jewelleryProductPage";
-import ProfileDashboard from "../components/pages/profile";
-import ProductPage from "../components/pages/productDetailsPage";
+import Login from "../authentiaction/Login";
+import Banner from "../components/admin/Banner";
+import Customer from "../components/admin/Customer";
+import CustomOrder from "../components/admin/Customizatiion.js";
+import Discount from "../components/admin/Discount";
+import MasterMaterial from "../components/admin/MasterMaterial";
+import ProductMaterial from "../components/admin/Material";
+import PaymentMethod from "../components/admin/Payment";
+import Products from "../components/admin/Product";
+import ProductAttributes from "../components/admin/ProductAttributes.js";
+import ProductCategories from "../components/admin/ProductCategories";
+import ProductDiscount from "../components/admin/ProductDiscount";
+import ProductInventory from "../components/admin/ProductInventory";
+import ProductTax from "../components/admin/ProductTax";
+import ProductVariant from "../components/admin/ProductVariant";
+import RequestDemo from "../components/admin/ReqDemo.js";
+import SubCategory from "../components/admin/SubCategories";
+import Tax from "../components/admin/Tax";
+import ProductUnits from "../components/admin/Unit";
+import AdminLayout from "../components/layout";
+import Dashboard from "../components/Layout/Dashboard";
+import MainLayout from "../components/Layout/MainLayout";
 import ShoppingCart from "../components/pages/cart";
 import CheckoutHeader from "../components/pages/checkout";
-import AdminLayout from "../components/layout";
-import Login from "../authentiaction/Login";
-import ProductUnits from "../components/admin/Unit";
-import ProductVariant from "../components/admin/ProductVariant";
-import MainLayout from "../components/Layout/MainLayout";
-import Dashboard from "../components/Layout/Dashboard";
-import ProductCategories from "../components/admin/ProductCategories";
-import SubCategory from "../components/admin/SubCategories";
-import Products from "../components/admin/Product";
+import DynamicProductListingPage from "../components/pages/jewelleryProductPage";
+import LoginPage from "../components/pages/LoginPage";
+import ProductPage from "../components/pages/productDetailsPage";
+import ProfileDashboard from "../components/pages/profile";
+import SignUpPage from "../components/pages/signup";
+import WishlistPage from "../components/pages/Wishlist";
+import Permissions from "../components/superadmin/Permissions";
+import Role from "../components/superadmin/Role";
 import StoreManagement from "../components/superadmin/StoreMangement";
 import UserManagement from "../components/superadmin/UserManagement";
-import Role from "../components/superadmin/Role";
-import Permissions from "../components/superadmin/Permissions";
-import ProductMaterial from "../components/admin/Material";
-import ProductInventory from "../components/admin/ProductInventory";
-import Discount from "../components/admin/Discount";
-import ProductDiscount from "../components/admin/ProductDiscount";
-import Tax from "../components/admin/Tax";
-import ProductTax from "../components/admin/ProductTax";
-import PaymentMethod from "../components/admin/Payment";
-import Customer from "../components/admin/Customer";
-import WishlistPage from "../components/pages/Wishlist";
 
 export const routes = [
   {
@@ -122,6 +124,14 @@ export const routes = [
       </MainLayout>
     ),
   },
+   {
+    path: "/product-master-material",
+    element: (
+      <MainLayout>
+        <MasterMaterial />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/product-material",
     element: (
@@ -130,6 +140,7 @@ export const routes = [
       </MainLayout>
     ),
   },
+ 
   {
     path: "/inventory",
     element: (
@@ -138,6 +149,15 @@ export const routes = [
       </MainLayout>
     ),
   },
+   {
+    path: "/custom",
+    element: (
+      <MainLayout>
+        <CustomOrder />{" "}
+      </MainLayout>
+    ),
+  },
+  
   {
     path: "/discount",
     element: (
@@ -151,6 +171,14 @@ export const routes = [
     element: (
       <MainLayout>
         <ProductDiscount />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/banner",
+    element: (
+      <MainLayout>
+        <Banner />{" "}
       </MainLayout>
     ),
   },
@@ -171,10 +199,27 @@ export const routes = [
     ),
   },
   {
+    path: "/product-attribute",
+    element: (
+      <MainLayout>
+        <ProductAttributes />{" "}
+      </MainLayout>
+    ),
+  },
+  
+  {
     path: "/payment",
     element: (
       <MainLayout>
         <PaymentMethod />{" "}
+      </MainLayout>
+    ),
+  },
+    {
+    path: "/demo-call",
+    element: (
+      <MainLayout>
+        <RequestDemo />{" "}
       </MainLayout>
     ),
   },

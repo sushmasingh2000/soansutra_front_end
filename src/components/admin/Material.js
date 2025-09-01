@@ -6,15 +6,34 @@ import { DeleteForever, Edit } from "@mui/icons-material";
 
 const ProductMaterial = () => {
     const [materials, setMaterials] = useState([]);
+    const [Mastmaterials, setMastMaterials] = useState([]);
     const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
 
     const [formData, setFormData] = useState({
+        ma_material_id: "",
         material_name: "",
         unit: "",
+        material_price: ""
     });
+
+    const fetchMasterMaterials = async () => {
+        try {
+            setLoading(true);
+            const res = await apiConnectorGet(endpoint.get_master_material);
+            setMastMaterials(res?.data?.result || []);
+        } catch {
+            toast.error("Failed to fetch materials.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchMasterMaterials();
+    }, [])
 
     const fetchMaterials = async () => {
         try {
@@ -44,23 +63,25 @@ const ProductMaterial = () => {
 
     const resetForm = () => {
         setFormData({
+            ma_material_id:"",
             material_name: "",
             unit: "",
+            material_price: ""
         });
         setSelectedMaterial(null);
     };
 
     const handleSubmit = async () => {
-        const { material_name, unit } = formData;
+        const { ma_material_id ,material_name, unit, material_price } = formData;
 
-        if (!material_name || !unit) {
-            toast.error("Name & Unit are required.");
+        if ( !ma_material_id || !material_name || !unit || !material_price) {
+            toast.error("Name & Unit  & Price are required.");
             return;
         }
 
         setLoading(true);
         const payload = selectedMaterial
-            ? { material_id: selectedMaterial.material_id, ...formData }
+            ? { ma_material_id: selectedMaterial.ma_material_id, ...formData }
             : { ...formData };
 
         const endpointUrl = selectedMaterial
@@ -86,8 +107,11 @@ const ProductMaterial = () => {
     const handleEdit = (material) => {
         setSelectedMaterial(material);
         setFormData({
+            ma_material_id: material.master_mat_id  || "",
             material_name: material.material_name || "",
             unit: material.un_id || "",
+            material_price: material.material_price || "",
+
         });
         setModalOpen(true);
     };
@@ -119,19 +143,21 @@ const ProductMaterial = () => {
                     <thead className="bg-gray-50">
                         <tr>
                             <th className="px-4 py-3 text-left">S.No</th>
+                            <th className="px-4 py-3 text-left">Master Material</th>
                             <th className="px-4 py-3 text-left">Name</th>
                             <th className="px-4 py-3 text-left">Unit</th>
-                            <th className="px-4 py-3 text-left">Slug</th>
+                            <th className="px-4 py-3 text-left">Price</th>
                             <th className="px-4 py-3 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {materials.map((material, index) => (
                             <tr key={material.material_id} className="border-t hover:bg-gray-50">
-                                <td className="px-4 py-2">{index +1}</td>
+                                <td className="px-4 py-2">{index + 1}</td>
+                                <td className="px-4 py-2">{material.ma_material_name || "--"}</td>
                                 <td className="px-4 py-2">{material.material_name || "--"}</td>
                                 <td className="px-4 py-2">{material.un_name || "--"}</td>
-                                <td className="px-4 py-2">{material.un_slug || "--"}</td>
+                                <td className="px-4 py-2">{material.material_price || "--"}</td>
                                 <td className="px-4 py-2 space-x-2">
                                     <button
                                         onClick={() => handleEdit(material)}
@@ -166,7 +192,19 @@ const ProductMaterial = () => {
                         <h2 className="text-xl font-semibold">
                             {selectedMaterial ? "Edit Material" : "Add Material"}
                         </h2>
-
+                      <select
+                            name="ma_material_id"
+                            value={formData.ma_material_id}
+                            onChange={(e) => setFormData({ ...formData, ma_material_id: e.target.value })}
+                            className="w-full border p-2 rounded"
+                        >
+                            <option value="">Select Master Material</option>
+                            {Mastmaterials.map((item) => (
+                                <option key={item.ma_material_id} value={item.ma_material_id}>
+                                    {item.ma_material_name}
+                                </option>
+                            ))}
+                        </select>
                         <input
                             type="text"
                             name="material_name"
@@ -175,7 +213,6 @@ const ProductMaterial = () => {
                             onChange={(e) => setFormData({ ...formData, material_name: e.target.value })}
                             className="w-full border p-2 rounded"
                         />
-
                         <select
                             name="unit"
                             value={formData.unit}
@@ -190,7 +227,14 @@ const ProductMaterial = () => {
                             ))}
                         </select>
 
-            
+                        <input
+                            type="text"
+                            name="material_price"
+                            placeholder="Material Price"
+                            value={formData.material_price}
+                            onChange={(e) => setFormData({ ...formData, material_price: e.target.value })}
+                            className="w-full border p-2 rounded"
+                        />
                         <div className="flex justify-end space-x-2">
                             <button
                                 onClick={() => {

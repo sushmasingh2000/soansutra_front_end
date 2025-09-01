@@ -101,17 +101,17 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <h3 className="text-base font-semibold mb-3" style={{color: sectionTitleColor}}>Contact Us</h3>
             <div className="space-y-3">
-              <p className="text-gray-800 font-medium text-sm">CaratLane Trading Pvt Ltd</p>
+              <p className="text-gray-800 font-medium text-sm">Sonasutra Private Limited</p>
               <p className="text-gray-600 text-xs leading-relaxed">
-                No.727, 1st Floor, TIL Park Anna Salai, Pathari Road, Thousand Lights, Chennai, Tamil Nadu 600006.
+                {/* No.727, 1st Floor, TIL Park Anna Salai, Pathari Road, Thousand Lights, Chennai, Tamil Nadu 600006. */}
               </p>
               
               <div className="mt-4">
                 <p className="text-gray-800 font-medium mb-1 text-sm">24X7 ENQUIRY SUPPORT (ALL DAYS)</p>
                 <div className="space-y-1 text-xs">
-                  <p className="text-gray-600">General: <a href="mailto:contactus@caratlane.com" className="text-purple-600 hover:text-purple-800">contactus@caratlane.com</a></p>
-                  <p className="text-gray-600">Corporate: <a href="mailto:b2b@caratlane.com" className="text-purple-600 hover:text-purple-800">b2b@caratlane.com</a></p>
-                  <p className="text-gray-600">Hr: <a href="mailto:careers@caratlane.com" className="text-purple-600 hover:text-purple-800">careers@caratlane.com</a></p>
+                  <p className="text-gray-600">General: <a href="mailto:contactus@sonasutra.in" className="text-purple-600 hover:text-purple-800">contactus@sonasutra.in</a></p>
+                  <p className="text-gray-600">Corporate: <a href="mailto:contactus@sonasutra.in" className="text-purple-600 hover:text-purple-800">contactus@sonasutra.in</a></p>
+                  <p className="text-gray-600">Hr: <a href="mailto:contactus@sonasutra.in" className="text-purple-600 hover:text-purple-800">contactus@sonasutra.in</a></p>
                   <p className="text-gray-600">Grievance: <a href="#" className="text-purple-600 hover:text-purple-800">click here</a></p>
                 </div>
               </div>

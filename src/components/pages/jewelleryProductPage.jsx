@@ -6,267 +6,8 @@ import Header from "../Header1";
 import { useQuery } from "react-query";
 import { endpoint } from "../../utils/APIRoutes";
 import axios from "axios";
-import { apiConnectorGet } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
 import toast from "react-hot-toast";
-
-// Enhanced Category Configuration with 5 Jewelry Types
-const CATEGORY_CONFIG = {
-  rings: {
-    title: "Rings Collection - 234 Designs",
-    breadcrumb: "RINGS",
-    filters: {
-      ringSize: {
-        label: "Ring Size",
-        options: [
-          { value: "16", count: 45 },
-          { value: "17", count: 138 },
-          { value: "18", count: 156 },
-          { value: "19", count: 102 },
-          { value: "20", count: 89 },
-          { value: "21", count: 67 },
-        ],
-      },
-      metal: {
-        label: "Metal",
-        options: [
-          { value: "gold", label: "Gold", count: 189 },
-          { value: "silver", label: "Silver", count: 145 },
-          { value: "platinum", label: "Platinum", count: 78 },
-          { value: "rose-gold", label: "Rose Gold", count: 92 },
-        ],
-      },
-      price: {
-        label: "Price Range",
-        options: [
-          { value: "5000-10000", label: "₹5,000 - ₹10,000", count: 89 },
-          { value: "10001-20000", label: "₹10,001 - ₹20,000", count: 143 },
-          { value: "20001-50000", label: "₹20,001 - ₹50,000", count: 102 },
-          { value: "50001-100000", label: "₹50,001 - ₹1,00,000", count: 67 },
-        ],
-      },
-      occasion: {
-        label: "Occasion",
-        options: [
-          { value: "engagement", label: "Engagement", count: 78 },
-          { value: "wedding", label: "Wedding", count: 145 },
-          { value: "daily-wear", label: "Daily Wear", count: 234 },
-          { value: "party", label: "Party", count: 89 },
-        ],
-      },
-    },
-    tabs: ["All", "New In"],
-  },
-
-  earrings: {
-    title: "Earrings Collection - 189 Designs",
-    breadcrumb: "EARRINGS",
-    filters: {
-      type: {
-        label: "Type",
-        options: [
-          { value: "studs", label: "Studs", count: 145 },
-          { value: "hoops", label: "Hoops", count: 89 },
-          { value: "drops", label: "Drop Earrings", count: 123 },
-          { value: "chandbali", label: "Chandbali", count: 67 },
-          { value: "jhumkas", label: "Jhumkas", count: 98 },
-        ],
-      },
-      metal: {
-        label: "Metal",
-        options: [
-          { value: "gold", label: "Gold", count: 156 },
-          { value: "silver", label: "Silver", count: 134 },
-          { value: "rose-gold", label: "Rose Gold", count: 78 },
-        ],
-      },
-      gemstone: {
-        label: "Gemstone",
-        options: [
-          { value: "diamond", label: "Diamond", count: 89 },
-          { value: "pearl", label: "Pearl", count: 67 },
-          { value: "ruby", label: "Ruby", count: 45 },
-          { value: "emerald", label: "Emerald", count: 34 },
-        ],
-      },
-      price: {
-        label: "Price Range",
-        options: [
-          { value: "3000-8000", label: "₹3,000 - ₹8,000", count: 78 },
-          { value: "8001-15000", label: "₹8,001 - ₹15,000", count: 123 },
-          { value: "15001-30000", label: "₹15,001 - ₹30,000", count: 89 },
-          { value: "30001-60000", label: "₹30,001 - ₹60,000", count: 45 },
-        ],
-      },
-    },
-    tabs: ["All", "New In", "Studs", "Hoops", "Traditional"],
-  },
-
-  mangalsutra: {
-    title: "Mangalsutra Collection - 156 Designs",
-    breadcrumb: "MANGALSUTRA",
-    filters: {
-      style: {
-        label: "Style",
-        options: [
-          { value: "traditional", label: "Traditional", count: 89 },
-          { value: "modern", label: "Modern", count: 134 },
-          { value: "designer", label: "Designer", count: 67 },
-          { value: "layered", label: "Layered", count: 45 },
-        ],
-      },
-      length: {
-        label: "Chain Length",
-        options: [
-          { value: "16-18", label: "16-18 inches", count: 78 },
-          { value: "18-20", label: "18-20 inches", count: 123 },
-          { value: "20-22", label: "20-22 inches", count: 89 },
-          { value: "22-24", label: "22-24 inches", count: 56 },
-        ],
-      },
-      metal: {
-        label: "Metal",
-        options: [
-          { value: "gold", label: "Gold", count: 145 },
-          { value: "silver", label: "Silver", count: 89 },
-          { value: "two-tone", label: "Two Tone", count: 67 },
-        ],
-      },
-      price: {
-        label: "Price Range",
-        options: [
-          { value: "15000-25000", label: "₹15,000 - ₹25,000", count: 67 },
-          { value: "25001-50000", label: "₹25,001 - ₹50,000", count: 89 },
-          { value: "50001-100000", label: "₹50,001 - ₹1,00,000", count: 78 },
-          { value: "100001-200000", label: "₹1,00,001 - ₹2,00,000", count: 45 },
-        ],
-      },
-    },
-    tabs: ["All", "New In", "Traditional", "Modern", "Designer"],
-  },
-
-  necklaces: {
-    title: "Necklaces Collection - 267 Designs",
-    breadcrumb: "NECKLACES",
-    filters: {
-      type: {
-        label: "Type",
-        options: [
-          { value: "choker", label: "Choker", count: 78 },
-          { value: "pendant", label: "Pendant", count: 156 },
-          { value: "chain", label: "Chain", count: 134 },
-          { value: "statement", label: "Statement", count: 89 },
-          { value: "layered", label: "Layered", count: 67 },
-        ],
-      },
-      length: {
-        label: "Length",
-        options: [
-          { value: "14-16", label: "14-16 inches (Choker)", count: 89 },
-          { value: "16-18", label: "16-18 inches (Princess)", count: 145 },
-          { value: "18-20", label: "18-20 inches (Matinee)", count: 123 },
-          { value: "20-24", label: "20-24 inches (Opera)", count: 78 },
-        ],
-      },
-      metal: {
-        label: "Metal",
-        options: [
-          { value: "gold", label: "Gold", count: 189 },
-          { value: "silver", label: "Silver", count: 156 },
-          { value: "platinum", label: "Platinum", count: 67 },
-          { value: "rose-gold", label: "Rose Gold", count: 89 },
-        ],
-      },
-      gemstone: {
-        label: "Gemstone",
-        options: [
-          { value: "diamond", label: "Diamond", count: 123 },
-          { value: "pearl", label: "Pearl", count: 89 },
-          { value: "ruby", label: "Ruby", count: 67 },
-          { value: "emerald", label: "Emerald", count: 45 },
-          { value: "sapphire", label: "Sapphire", count: 34 },
-        ],
-      },
-      price: {
-        label: "Price Range",
-        options: [
-          { value: "8000-15000", label: "₹8,000 - ₹15,000", count: 89 },
-          { value: "15001-30000", label: "₹15,001 - ₹30,000", count: 134 },
-          { value: "30001-60000", label: "₹30,001 - ₹60,000", count: 78 },
-          { value: "60001-120000", label: "₹60,001 - ₹1,20,000", count: 45 },
-        ],
-      },
-    },
-    tabs: ["All", "New In", "Pendants", "Chains", "Statement"],
-  },
-
-  bracelets: {
-    title: "Bracelets & Bangles - 198 Designs",
-    breadcrumb: "BRACELETS & BANGLES",
-    filters: {
-      type: {
-        label: "Type",
-        options: [
-          { value: "bracelets", label: "Bracelets", count: 123 },
-          { value: "bangles", label: "Bangles", count: 156 },
-          { value: "kada", label: "Kada", count: 78 },
-          { value: "charm", label: "Charm Bracelets", count: 67 },
-        ],
-      },
-      size: {
-        label: "Size",
-        options: [
-          { value: "2.4", label: "2.4 inches", count: 45 },
-          { value: "2.6", label: "2.6 inches", count: 89 },
-          { value: "2.8", label: "2.8 inches", count: 123 },
-          { value: "3.0", label: "3.0 inches", count: 78 },
-        ],
-      },
-      metal: {
-        label: "Metal",
-        options: [
-          { value: "gold", label: "Gold", count: 167 },
-          { value: "silver", label: "Silver", count: 134 },
-          { value: "rose-gold", label: "Rose Gold", count: 89 },
-          { value: "white-gold", label: "White Gold", count: 67 },
-        ],
-      },
-      style: {
-        label: "Style",
-        options: [
-          { value: "traditional", label: "Traditional", count: 123 },
-          { value: "modern", label: "Modern", count: 145 },
-          { value: "ethnic", label: "Ethnic", count: 89 },
-          { value: "contemporary", label: "Contemporary", count: 78 },
-        ],
-      },
-      price: {
-        label: "Price Range",
-        options: [
-          { value: "5000-12000", label: "₹5,000 - ₹12,000", count: 78 },
-          { value: "12001-25000", label: "₹12,001 - ₹25,000", count: 123 },
-          { value: "25001-50000", label: "₹25,001 - ₹50,000", count: 89 },
-          { value: "50001-100000", label: "₹50,001 - ₹1,00,000", count: 56 },
-        ],
-      },
-    },
-    tabs: ["All", "New In", "Bracelets", "Bangles", "Traditional"],
-  },
-};
-
-// Dynamic Header Component
-const DynamicHeader = ({ categoryConfig }) => {
-  return (
-    <header className="bg-white border-b border-gray-200 px-4 py-3">
-      <h1 className="text-lg font-semibold text-gray-800">
-        {categoryConfig.title}
-      </h1>
-      <nav className="text-xs text-gray-600 mt-1">
-        <span>HOME</span> &gt;{" "}
-        <span className="text-purple-600">{categoryConfig.breadcrumb}</span>
-      </nav>
-    </header>
-  );
-};
 
 // Dynamic Filter Tabs Component
 const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
@@ -356,7 +97,7 @@ const MobileFilterModal = ({
                       />
                       <span className="text-xs text-gray-700">
                         {option.label || option.value}
-                        <span className="text-gray-400"> ({option.count})</span>
+                        {/* <span className="text-gray-400"> ({option.count})</span> */}
                       </span>
                     </label>
                   ))}
@@ -419,7 +160,7 @@ const DynamicSidebarFilters = ({
                   />
                   <span className="text-xs text-gray-700">
                     {option.label || option.value}
-                    <span className="text-gray-400"> ({option.count})</span>
+                    {/* <span className="text-gray-400"> ({option.count})</span> */}
                   </span>
                 </label>
               ))}
@@ -455,19 +196,19 @@ const ProductCard = ({ product, onWishlist }) => {
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
-
-  const handleImageClick = () => {
-    navigate(`/productdetails`, {
+  const handleImageClick = (product) => {
+    navigate("/productdetails", {
       state: { product },
     });
   };
+
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       <div className="relative group">
         <div
           className="aspect-square bg-gray-100 overflow-hidden cursor-pointer"
-          onClick={handleImageClick}
+          onClick={() => handleImageClick(product)}
         >
           <img
             src={images[currentImageIndex]}
@@ -574,7 +315,6 @@ const SortDropdown = ({ sortBy, onSortChange }) => {
 
 
 
-// Main Dynamic Product Listing Component
 const DynamicProductListingPage = () => {
   const { id } = useParams();
   const [currentCategory, setCurrentCategory] = useState("rings");
@@ -589,7 +329,6 @@ const DynamicProductListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const categoryConfig = CATEGORY_CONFIG[currentCategory];
 
   const navigate = useNavigate();
 
@@ -715,6 +454,69 @@ const DynamicProductListingPage = () => {
     setProducts(filteredProducts);
   }, [activeTab, filters, sortBy, allProducts]);
 
+  // const handleFilterChange = (filterKey, value, isChecked) => {
+  //   setFilters((prev) => {
+  //     const newFilters = { ...prev };
+  //     if (isChecked) {
+  //       newFilters[filterKey] = [...(newFilters[filterKey] || []), value];
+  //     } else {
+  //       newFilters[filterKey] = (newFilters[filterKey] || []).filter(
+  //         (v) => v !== value
+  //       );
+  //     }
+  //     return newFilters;
+  //   });
+  // };
+
+  const applyBackendFilters = async (newFilters) => {
+    const payload = {};
+
+    if (newFilters.price) payload.price_group = newFilters.price;
+    if (newFilters.tags) payload.product_tags = newFilters.tags;
+    if (newFilters.size) payload.attribute_value = newFilters.size;
+    if (newFilters.metal) payload.ma_mat_name = newFilters.metal;
+
+    try {
+      const response = await apiConnectorPost(endpoint.filter_u_filte_by, payload);
+      const filtered = response?.data?.result || [];
+
+      // 🔁 Map to match ProductCard expected format
+      const transformed = filtered.map((item, i) => {
+        const product = item.product_details;
+        const originalPrice = parseFloat(item.varient_price);
+        const discount = item?.discount_details?.[0];
+
+        const discountAmount =
+          discount?.discount_type === "Percentage"
+            ? (originalPrice * parseFloat(discount?.discount_value)) / 100
+            : parseFloat(discount?.discount_value || 0);
+
+        const finalPrice = discount ? originalPrice - discountAmount : originalPrice;
+
+        return {
+          product_id: item.product_id,
+          name: product?.product_name || "Product",
+          price: finalPrice,
+          originalPrice: discount ? originalPrice : null,
+          product_images: [
+            {
+              p_image_url:
+                product?.product_image?.p_image_url ||
+                "https://via.placeholder.com/400x400",
+            },
+          ],
+          isNew: Math.random() > 0.7,
+        };
+      });
+
+      setAllProducts(transformed);
+      setProducts(transformed);
+    } catch (error) {
+      toast.error("Failed to apply filters.");
+      console.error(error);
+    }
+  };
+
   const handleFilterChange = (filterKey, value, isChecked) => {
     setFilters((prev) => {
       const newFilters = { ...prev };
@@ -725,17 +527,89 @@ const DynamicProductListingPage = () => {
           (v) => v !== value
         );
       }
+
+      applyBackendFilters(newFilters); // 🔁 call backend on change
+
       return newFilters;
     });
   };
 
   const handleClearAll = () => {
-    const clearedFilters = {};
-    Object.keys(filters).forEach((key) => {
-      clearedFilters[key] = [];
-    });
+    const clearedFilters = {
+      metal: [],
+      price: [],
+      size: [],
+      tags: [],
+    };
     setFilters(clearedFilters);
+    applyBackendFilters(clearedFilters);
+    window.location.reload(); // 🧹 clear backend filters too
   };
+
+  const { data: high } = useQuery(
+    ["filter_product"],
+    () => apiConnectorGet(endpoint.u_filte_by),
+    usequeryBoolean
+  );
+
+  const filter_product = high?.data?.result || [];
+  const filterData = filter_product?.[0] || {};
+
+  const dynamicFilters = {
+     size: {
+      label: "Size",
+      options: filterData.sizes?.map((s) => ({
+        value: s.size,
+        label: s.size,
+        // count: 0,
+      })) || [],
+    },
+     price: {
+      label: "Price Range",
+      options:
+        (filterData.price_groups || [])
+          .sort((a, b) => {
+            const getStart = (range) => {
+              const match = range.match(/(\d+)/);
+              return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
+            };
+            return getStart(a) - getStart(b);
+          })
+          .map((price) => ({
+            value: price,
+            label: price,
+          })),
+    },
+    metal: {
+      label: "Metal",
+      options: filterData.master_materials?.map((material) => ({
+        value: material,
+        label: material,
+        // count: 0, // Update this with count from backend if available
+      })) || [],
+    },
+    tags: {
+      label: "Occassion",
+      options: filterData.product_tags_details?.map((tag) => ({
+        value: tag.product_tags,
+        label: tag.product_tags,
+        // count: 0,
+      })) || [],
+    }
+  };
+
+  const CATEGORY_CONFIG = {
+    rings: {
+      title: "Rings Collection",
+      breadcrumb: "RINGS",
+      filters: {
+        ...dynamicFilters
+      },
+      tabs: ["All", "New In"],
+    }
+  };
+
+  const categoryConfig = CATEGORY_CONFIG[currentCategory];
 
   if (loading) {
     return (
