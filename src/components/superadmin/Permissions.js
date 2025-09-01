@@ -13,7 +13,7 @@ const Permissions = () => {
 
   const [rolePermissions, setRolePermissions] = useState([]);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const limit = 10;
 
   const totalPages = Math.ceil(rolePermissions.length / limit);
   const paginatedPermissions = rolePermissions.slice(

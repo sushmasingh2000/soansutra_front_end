@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { domain, endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
+import { Delete, Edit, Eye } from "lucide-react";
+import { DeleteForever } from "@mui/icons-material";
 
 const ProductCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -211,27 +213,27 @@ const ProductCategories = () => {
 
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       <div className="flex space-x-2">
-                        <button
+                        {/* <button
                           onClick={() => handleViewCategory(category)}
                           className="text-blue-600 hover:text-blue-800"
                           title="View"
                         >
-                          👁️
-                        </button>
+                         <Eye/>
+                        </button> */}
 
                         <button
                           onClick={() => openEditModal(category)}
                           className="text-green-600 hover:text-green-800"
                           title="Edit"
                         >
-                          ✏️
+                          <Edit />
                         </button>
                         <button
                           onClick={() => deleteCategory(category)}
                           className="text-red-600 hover:text-red-800"
                           title="Delete"
                         >
-                          🗑️
+                          <DeleteForever />
                         </button>
                       </div>
                     </td>
@@ -289,7 +291,7 @@ const ProductCategories = () => {
                       disabled={loading}
                       title="Edit Store"
                     >
-                      ✏️
+                      <Edit />
                     </button>
                     <button
                       onClick={() => deleteCategory(store)}
@@ -297,7 +299,7 @@ const ProductCategories = () => {
                       disabled={loading}
                       title="Delete Store"
                     >
-                      🗑️
+                      <DeleteForever />
                     </button>
                   </div>
                 </div>

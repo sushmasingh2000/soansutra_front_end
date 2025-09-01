@@ -12,7 +12,7 @@ const VariantModal = ({
 }) => {
   const [form, setForm] = useState({
     sku: "",
-    price: "",
+    price: "1.0",
     weight: "",
     dimensions: "",
     attributes: [],
@@ -40,7 +40,7 @@ const VariantModal = ({
       // Populate form with variant data
       setForm({
         sku: variant.varient_sku || "",
-        price: variant.varient_price || "",
+        price: 1.0 || "",
         weight: variant.varient_weight || "",
         making_price: variant.making_price || "",
         dimensions:
@@ -58,7 +58,7 @@ const VariantModal = ({
   const resetForm = () => {
     setForm({
       sku: "",
-      price: "",
+      price: "1.0",
       weight: "",
       making_price: "",
       dimensions: "",
@@ -103,7 +103,7 @@ const VariantModal = ({
     const payload = {
       product_id: product.product_id,
       sku: form.sku,
-      price: form.price,
+      price:1.0,
       weight: form.weight,
       making_price: form.making_price,
       dimensions: form.dimensions,
@@ -147,13 +147,13 @@ const VariantModal = ({
           onChange={(e) => setForm({ ...form, sku: e.target.value })}
           className="border p-2 rounded"
         />
-        <input
+        {/* <input
           type="number"
           placeholder="Price"
           value={form.price}
           onChange={(e) => setForm({ ...form, price: e.target.value })}
           className="border p-2 rounded"
-        />
+        /> */}
         <input
           type="number"
           placeholder="Making Price"

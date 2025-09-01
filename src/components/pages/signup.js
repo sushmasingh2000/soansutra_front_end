@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import SummaryApi from '../../common/index';
-import { BrandLogo } from '../brand-logo';
-import Header from "../Header1"
-import NavigationBar from "../navigationbar"
-import Footer from "../Footer1"
-import { endpoint } from '../../utils/APIRoutes';
 import axios from 'axios';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { endpoint } from '../../utils/APIRoutes';
+import { BrandLogo } from '../brand-logo';
+import Footer from "../Footer1";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({

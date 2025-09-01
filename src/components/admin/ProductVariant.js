@@ -96,7 +96,7 @@ const ProductVariant = () => {
           <tr className="bg-gray-100">
             <th className="border px-4 py-2 text-center">S.No</th>
             <th className="border px-4 py-2 text-center">SKU</th>
-            <th className="border px-4 py-2 text-center">Price (₹)</th>
+            {/* <th className="border px-4 py-2 text-center">Price (₹)</th> */}
             <th className="border px-4 py-2 text-center">Making Price (₹)</th>
             <th className="border px-4 py-2 text-center">Weight</th>
             <th className="border px-4 py-2 text-center">Dimension Unit</th>
@@ -127,9 +127,9 @@ const ProductVariant = () => {
                 <td className="border px-4 py-2 text-center">
                   {variant.varient_sku || "--"}
                 </td>
-                <td className="border px-4 py-2 text-center">
+                {/* <td className="border px-4 py-2 text-center">
                   {variant.varient_price || "--"}
-                </td>
+                </td> */}
                 <td className="border px-4 py-2 text-center">
                   {variant.making_price || "--"}
                 </td>

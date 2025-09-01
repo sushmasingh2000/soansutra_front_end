@@ -376,6 +376,27 @@ export default function Header() {
               >
                 <MagnifyingGlassIcon className="h-5 w-5" />
               </button>
+              {debouncedSearchQuery &&
+                showDropdown &&
+                data?.data?.result?.length > 0 && (
+                  <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
+                    {data.data.result.map((item, index) => (
+                      <div
+                        key={`${item.product_id}-${index}`}
+                        onMouseDown={() => {
+                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          setShowDropdown(false);
+                        }}
+                        className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
+                      >
+                        <div className="font-medium">{item.pro_name}</div>
+                        <div className="text-xs text-gray-500">
+                          {item.cat_name}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
 
@@ -419,7 +440,7 @@ export default function Header() {
               >
                 <UserIcon className="h-6 w-6 text-gray-700 hover:text-purple-600 cursor-pointer" />
                 {showUserDropdown && (
-                  <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg border rounded-md z-50">
+                  <div className="absolute right-0  w-72 bg-white shadow-lg border rounded-md z-50">
                     {/* User Dropdown content here */}
                     <div className="p-4">
                       <div className="text-center mb-3">
@@ -445,7 +466,7 @@ export default function Header() {
               </div>
             ) : (
               <button onClick={() => setShowLoginModal(true)}>
-                <Lock className="h-6 w-6 text-purple-600" />
+                <UserIcon className="h-6 w-6 text-purple-600" />
               </button>
             )}
             {/* Wishlist */}
@@ -580,7 +601,7 @@ export default function Header() {
                           </Link>
 
                         </>
-                        }
+                      }
                     </div>
                   </div>
 

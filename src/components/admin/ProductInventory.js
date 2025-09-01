@@ -54,7 +54,7 @@ const ProductInventory = () => {
       reserved_quantity: Number(inv.reserved_quantity) || "",
       minimum_quantity: Number(inv.minimum_quantity) || "",
       batch_number: inv.batch_number || "",
-      expiry_date: inv.expiry_date?.split("T")[0] || "",
+      expiry_date:  "",
       barcode: inv.barcode || "",
     });
     setModalOpen(true);
@@ -134,7 +134,7 @@ const ProductInventory = () => {
               <th className="py-2 px-4 border-b">Reserved</th>
               <th className="py-2 px-4 border-b">Minimum</th>
               <th className="py-2 px-4 border-b">Batch #</th>
-              <th className="py-2 px-4 border-b">Expiry</th>
+              {/* <th className="py-2 px-4 border-b">Expiry</th> */}
               <th className="py-2 px-4 border-b">Barcode</th>
             </tr>
           </thead>
@@ -151,7 +151,7 @@ const ProductInventory = () => {
                 <td className="py-2 px-4 border-b">{inventory.reserved_quantity}</td>
                 <td className="py-2 px-4 border-b">{inventory.minimum_quantity}</td>
                 <td className="py-2 px-4 border-b">{inventory.batch_number || "N/A"}</td>
-                <td className="py-2 px-4 border-b">{inventory.expiry_date?.split("T")[0] || "N/A"}</td>
+                {/* <td className="py-2 px-4 border-b">{inventory.expiry_date?.split("T")[0] || "N/A"}</td> */}
                 <td className="py-2 px-4 border-b">{inventory.barcode || "N/A"}</td>
               </tr>
             )}
@@ -215,7 +215,7 @@ const ProductInventory = () => {
               className="border p-2"
             />
           </div>
-          <div>
+          {/* <div>
             <label>Expiry date</label>
             <input
               name="expiry_date"
@@ -224,7 +224,7 @@ const ProductInventory = () => {
               onChange={handleChange}
               className="border p-2"
             />
-          </div>
+          </div> */}
           <div>
             <label>Barcode</label>
             <input
