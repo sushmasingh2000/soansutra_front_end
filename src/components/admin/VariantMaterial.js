@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { Delete, Edit } from "lucide-react";
+import { useQuery } from "react-query";
 
 const VariantMaterialModal = ({ variant, units, onClose }) => {
   const [materials, setMaterials] = useState([]);
@@ -12,9 +13,10 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
   const [formData, setFormData] = useState({
     master_mat_id: "",
     material_id: "",
-    percentage: "",
+    material_purity_id :"",
+    percentage: "0",
     weight: "",
-    unit: "",
+    unit: "0",
     variant_material_id: null,
   });
   const fetchProductMaterials = async () => {
@@ -32,6 +34,14 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
     fetchMaterials();
     fetchProductMaterials(); // <== This loads the dropdown
   }, [variant]);
+
+  const { data } = useQuery(
+    ["purity_materail"],
+    () => apiConnectorGet(endpoint.get_material_purity),
+    usequeryBoolean
+  );
+
+  const purity = data?.data?.result || [];
 
   useEffect(() => {
     if (variant?.varient_id) {
@@ -87,9 +97,10 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
       fetchMaterials();
       setFormData({
         material_id: "",
-        percentage: "",
+        material_purity_id :"",
+        percentage: "0",
         weight: "",
-        unit: "",
+        unit: "0",
         variant_material_id: null,
       });
     } catch {
@@ -101,9 +112,10 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
     setFormData({
        master_mat_id: material.master_mat_id,
       material_id: material.material_id,
-      percentage: material.percentage || "",
+      material_purity_id : material.material_purity_id,
+      percentage: 0 || "",
       weight: material.weight || "",
-      unit: material.unit || "",
+      unit: 0 || "",
       variant_material_id: material.variant_material_id,
     });
   };
@@ -141,6 +153,23 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
             </option>
           ))}
         </select>
+         
+        <select
+          name="material_purity_id"
+          value={formData.material_purity_id}
+          onChange={handleChange}
+          className="border p-2"
+        >
+          <option value="">Select Purity  Material</option>
+          {purity
+            .filter(mat => String(mat.master_mat_id) === String(formData.pur_id))
+            .map((mat) => (
+              <option key={mat.pur_id} value={mat.pur_id}>
+                {mat.pur_stamp_name}
+              </option>
+            ))}
+
+        </select>
 
         <select
           name="material_id"
@@ -160,13 +189,7 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
         </select>
 
 
-        <input
-          name="percentage"
-          placeholder="Percentage"
-          value={formData.percentage}
-          onChange={handleChange}
-          className="border p-2"
-        />
+      
         <input
           name="weight"
           placeholder="Weight"
@@ -174,19 +197,6 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
           onChange={handleChange}
           className="border p-2"
         />
-        <select
-          name="unit"
-          value={formData.unit}
-          onChange={handleChange}
-          className="border p-2"
-        >
-          <option value="">Select Unit</option>
-          {units.map((u) => (
-            <option key={u.un_id} value={u.un_id}>
-              {u.un_name}
-            </option>
-          ))}
-        </select>
       </div>
       <button
         onClick={handleSubmit}
@@ -201,9 +211,9 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
           <tr>
             <th className="border px-2 py-1">Master Material</th>
             <th className="border px-2 py-1">Material</th>
-            <th className="border px-2 py-1">Percentage</th>
+            <th className="border px-2 py-1">Stamp Name</th>
             <th className="border px-2 py-1">Weight</th>
-            <th className="border px-2 py-1">Unit</th>
+            
             <th className="border px-2 py-1">Actions</th>
           </tr>
         </thead>
@@ -212,9 +222,8 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
             <tr key={mat.variant_material_id}>
               <td className="border px-2 py-1 text-center">{mat.ma_material_name}</td>
               <td className="border px-2 py-1 text-center">{mat.material_name}</td>
-              <td className="border px-2 py-1 text-center">{mat.percentage}</td>
+              <td className="border px-2 py-1 text-center">{mat.pur_stamp_name}</td>
               <td className="border px-2 py-1 text-center">{mat.weight}</td>
-              <td className="border px-2 py-1 text-center">{mat.unit}</td>
               <td className="border px-2 py-1 text-center space-x-2">
                 <button
                   onClick={() => handleEdit(mat)}

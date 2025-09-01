@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import {
+  apiConnectorGet,
+  apiConnectorPost,
+  usequeryBoolean,
+} from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit } from "@mui/icons-material";
+import { useQuery } from "react-query";
 
-const MasterMaterial = () => {
+const PurityMaterial = () => {
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
 
   const [formData, setFormData] = useState({
-    ma_material_name: "",
-    ma_price: "",
-    ma_unit: "cr",
-    ma_value: "",
+    pur_master_mat_id: "",
+    pur_stamp_name: "",
+    pur_purity_percent: 100,
   });
 
   const fetchMaterials = async () => {
@@ -35,38 +39,46 @@ const MasterMaterial = () => {
 
   const resetForm = () => {
     setFormData({
-      ma_material_name: "",
-      ma_price: "",
-      ma_unit: "ct",
-      ma_value: "",
+      pur_master_mat_id: "",
+      pur_stamp_name: "",
+      pur_purity_percent: 100,
     });
     setSelectedMaterial(null);
   };
 
-  const handleSubmit = async () => {
-    const { ma_material_name, ma_price, ma_unit, ma_value } = formData;
+  const { data } = useQuery(
+    ["purity_materail"],
+    () => apiConnectorGet(endpoint.get_material_purity),
+    usequeryBoolean
+  );
 
-    if (!ma_material_name || !ma_price || !ma_unit || !ma_value) {
+  const purity = data?.data?.result || [];
+
+  const handleSubmit = async () => {
+    const { pur_master_mat_id, pur_stamp_name, pur_purity_percent } = formData;
+
+    if (!pur_master_mat_id || !pur_stamp_name || !pur_purity_percent) {
       toast.error("All fields are required.");
       return;
     }
 
     setLoading(true);
+
     const payload = selectedMaterial
-      ? { ma_material_id: selectedMaterial.ma_material_id, ...formData }
+      ? { pur_id: selectedMaterial.pur_id, ...formData }
       : { ...formData };
 
     const endpointUrl = selectedMaterial
-      ? endpoint.update_master_material
-      : endpoint.create_master_material;
+      ? endpoint.update_material_purity
+      : endpoint.create_material_purity;
 
     try {
       const res = await apiConnectorPost(endpointUrl, payload);
-      toast(res?.data?.message);
+      toast.success(res?.data?.message || "Operation successful.");
       if (res?.data?.success) {
-        fetchMaterials();
         setModalOpen(false);
         resetForm();
+        // refetch purity list
       }
     } catch {
       toast.error("Operation failed.");
@@ -78,24 +90,11 @@ const MasterMaterial = () => {
   const handleEdit = (material) => {
     setSelectedMaterial(material);
     setFormData({
-      ma_material_name: material.ma_material_name || "",
-      ma_price: material.ma_price || "",
-      ma_unit: material.ma_unit || "ct",
-      ma_value: material.ma_value || "",
+      pur_master_mat_id: material.ma_material_id || "",
+      pur_stamp_name: material.pur_stamp_name || "",
+      pur_purity_percent: material.pur_purity_percent || 100,
     });
     setModalOpen(true);
-  };
-
-  const handleDelete = async (ma_material_id) => {
-    try {
-      const res = await apiConnectorGet(
-        `${endpoint.delete_master_material}?ma_material_id=${ma_material_id}`
-      );
-      toast(res?.data?.message);
-      fetchMaterials();
-    } catch {
-      toast.error("Delete failed.");
-    }
   };
 
   return (
@@ -115,26 +114,23 @@ const MasterMaterial = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left">S.No</th>
+              <th className="px-4 py-3 text-left">Master Material</th>
               <th className="px-4 py-3 text-left">Name</th>
-              <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Unit</th>
-              <th className="px-4 py-3 text-left">Value</th>
-              <th className="px-4 py-3 text-left">Actions</th>
+              <th className="px-4 py-3 text-left">Purity</th>
+              <th className="px-4 py-3 text-left">Actionn</th>
             </tr>
           </thead>
           <tbody>
-            {materials.map((material, index) => (
-              <tr
-                key={material.ma_material_id}
-                className="border-t hover:bg-gray-50"
-              >
+            {purity.map((material, index) => (
+              <tr key={material.pur_id} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2">
-                  {material.ma_material_name || "--"}
+                <td className="px-4 py-2"> {material.ma_material_name|| "--"}
                 </td>
-                <td className="px-4 py-2">{material.ma_price || "--"}</td>
-                <td className="px-4 py-2">{material.ma_unit || "--"}</td>
-                <td className="px-4 py-2">{material.ma_value || "--"}</td>
+                <td className="px-4 py-2">{material.pur_stamp_name || "--"}</td>
+                <td className="px-4 py-2">
+                  {material.pur_purity_percent || "--"}%
+                </td>
+               
                 <td className="px-4 py-2 space-x-2">
                   <button
                     onClick={() => handleEdit(material)}
@@ -142,19 +138,13 @@ const MasterMaterial = () => {
                   >
                     <Edit />
                   </button>
-                  <button
-                    onClick={() => handleDelete(material.ma_material_id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    <DeleteForever />
-                  </button>
                 </td>
               </tr>
             ))}
-            {materials.length === 0 && (
+            {purity.length === 0 && (
               <tr>
                 <td colSpan={4} className="py-4 text-center text-gray-500">
-                  No materials found.
+                  No purity data found.
                 </td>
               </tr>
             )}
@@ -169,46 +159,42 @@ const MasterMaterial = () => {
             <h2 className="text-xl font-semibold">
               {selectedMaterial ? "Edit Material" : "Add Material"}
             </h2>
-
-            <input
-              type="text"
-              name="ma_material_name"
-              placeholder="Material Name"
-              value={formData.ma_material_name}
-              onChange={(e) =>
-                setFormData({ ...formData, ma_material_name: e.target.value })
-              }
-              className="w-full border p-2 rounded"
-            />
-            <input
-              type="number"
-              name="ma_price"
-              placeholder="Material Price"
-              value={formData.ma_price}
-              onChange={(e) =>
-                setFormData({ ...formData, ma_price: e.target.value })
-              }
-              className="w-full border p-2 rounded"
-            />
             <select
-              name="ma_unit"
-              value={formData.ma_unit}
+              name="pur_master_mat_id"
+              value={formData.pur_master_mat_id}
               onChange={(e) =>
-                setFormData({ ...formData, ma_unit: e.target.value })
+                setFormData({ ...formData, pur_master_mat_id: e.target.value })
               }
               className="w-full border p-2 rounded"
             >
-              <option value="ct">ct</option>
-              <option value="g">g</option>
+              <option value="">-- Select Material --</option>
+              {materials.map((mat) => (
+                <option key={mat.ma_material_id} value={mat.ma_material_id}>
+                  {mat.ma_material_name}
+                </option>
+              ))}
             </select>
 
+            {/* Purity Stamp Name */}
+            <input
+              type="text"
+              name="pur_stamp_name"
+              placeholder="Purity Stamp Name"
+              value={formData.pur_stamp_name}
+              onChange={(e) =>
+                setFormData({ ...formData, pur_stamp_name: e.target.value })
+              }
+              className="w-full border p-2 rounded"
+            />
+
+            {/* Purity Percent */}
             <input
               type="number"
-              name="ma_value"
-              placeholder="Material Value"
-              value={formData.ma_value}
+              name="pur_purity_percent"
+              placeholder="Purity (%)"
+              value={formData.pur_purity_percent}
               onChange={(e) =>
-                setFormData({ ...formData, ma_value: e.target.value })
+                setFormData({ ...formData, pur_purity_percent: e.target.value })
               }
               className="w-full border p-2 rounded"
             />
@@ -239,4 +225,4 @@ const MasterMaterial = () => {
   );
 };
 
-export default MasterMaterial;
+export default PurityMaterial;

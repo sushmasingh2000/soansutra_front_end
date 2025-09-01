@@ -12,6 +12,7 @@ import {
   PermScanWifi,
   Person,
   ProductionQuantityLimitsOutlined,
+  PublishRounded,
   RollerShadesClosed,
   Store,
   TaxiAlert,
@@ -109,11 +110,18 @@ const fullMenuItems = [
             path: "/product-master-material",
           },
           {
+            id: "purity-material",
+            label: "Purity Material",
+            icon: <PublishRounded />,
+            path: "/purity",
+          },
+          {
             id: "sub-material",
             label: "Sub Material",
             icon: <ManageAccountsRounded />,
             path: "/product-material",
           },
+          
         ],
       },
       {

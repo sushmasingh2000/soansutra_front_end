@@ -98,6 +98,13 @@ export const endpoint = {
   update_master_material: `${domain}/api/v1/update-master-materials`,
   delete_master_material: `${domain}/api/v1/delete-master-materials`,
 
+  //purity
+  create_material_purity: `${domain}/api/v1/create-materials-purity`,
+  update_material_purity: `${domain}/api/v1/update-materials-purity`,
+  get_material_purity: `${domain}/api/v1/get-materials-purity`,
+
+  
+
 
   //get_demo call
   req_demo_call: `${domain}/api/v1/u-req-demo-call`,
