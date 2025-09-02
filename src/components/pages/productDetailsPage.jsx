@@ -959,7 +959,7 @@ const ProductDetailWebPage = () => {
                                 <div>
                                   ₹{material?.ma_price_per_unit} / {material?.ma_unit}
                                 </div>
-                                <div>{material?.weight} / {material?.v_un_name}</div>
+                                <div>{material?.weight} / {material?.ma_unit}</div>
                                 <div>{material?.sub_total_price}</div>
                               </div>
                             ))}
