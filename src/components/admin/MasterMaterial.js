@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
-import { endpoint } from "../../utils/APIRoutes";
+import { endpoint, rupees } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit } from "@mui/icons-material";
 
@@ -117,7 +117,6 @@ const MasterMaterial = () => {
               <th className="px-4 py-3 text-left">S.No</th>
               <th className="px-4 py-3 text-left">Name</th>
               <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Unit</th>
               <th className="px-4 py-3 text-left">Value</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
@@ -132,9 +131,8 @@ const MasterMaterial = () => {
                 <td className="px-4 py-2">
                   {material.ma_material_name || "--"}
                 </td>
-                <td className="px-4 py-2">{material.ma_price || "--"}</td>
-                <td className="px-4 py-2">{material.ma_unit || "--"}</td>
-                <td className="px-4 py-2">{material.ma_value || "--"}</td>
+                <td className="px-4 py-2">{material.ma_price || "--"} {rupees}</td>
+                <td className="px-4 py-2">{material.ma_value || "--"}  {material.ma_unit || "--"}</td>
                 <td className="px-4 py-2 space-x-2">
                   <button
                     onClick={() => handleEdit(material)}

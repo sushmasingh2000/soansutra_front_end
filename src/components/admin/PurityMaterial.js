@@ -115,7 +115,7 @@ const PurityMaterial = () => {
             <tr>
               <th className="px-4 py-3 text-left">S.No</th>
               <th className="px-4 py-3 text-left">Master Material</th>
-              <th className="px-4 py-3 text-left">Name</th>
+              <th className="px-4 py-3 text-left">Stamp Name</th>
               <th className="px-4 py-3 text-left">Purity</th>
               <th className="px-4 py-3 text-left">Actionn</th>
             </tr>

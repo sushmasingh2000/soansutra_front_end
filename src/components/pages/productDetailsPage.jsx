@@ -64,7 +64,7 @@ const ProductDetailWebPage = () => {
     const fetchVariants = async () => {
       try {
         const response = await axios.get(
-          `${endpoint?.u_get_variant}?product_id=${productData.product_id}`
+          `${endpoint?.u_get_variant}?product_id=${productData.product_id}&varient_id=${productData.selected_variant_id}`
         );
         if (response.data.success) {
           setVariants(response.data.result);
@@ -138,22 +138,8 @@ const ProductDetailWebPage = () => {
     return `₹${num.toLocaleString()}`;
   };
 
-  const originalPrice = productData.originalPrice || null;
   const discount = productData.discount || null;
   const priceNum = Number(productData.price);
-  const originalPriceNum = Number(originalPrice);
-  const calculateMaterialValue = (material) => {
-    const pricePerGram = Number(material.material_price);
-    const weight = Number(material.weight);
-    if (isNaN(pricePerGram) || isNaN(weight)) return 0;
-    return pricePerGram * weight;
-  };
-
-  const deliveryDays = Number(productData.deliveryTime?.split(" ")[0]) || 5;
-  const estimatedDeliveryDate = format(
-    addDays(new Date(), deliveryDays),
-    "dd MMM yyyy"
-  );
 
   const StaticSize = [
     { size: "5", value: "44.8 mm", status: "Made to Order" },
@@ -340,18 +326,6 @@ const ProductDetailWebPage = () => {
     }
     groupedMaterials[group].push(mat);
   });
-
-  const totalGoldValue =
-    selectedVariant?.material_details
-      ?.filter((m) => m.master_mat_name.toLowerCase() === "gold")
-      .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
-
-  const totalDiamondValue =
-    selectedVariant?.material_details
-      ?.filter((m) => m.master_mat_name.toLowerCase() === "diamond")
-      .reduce((acc, cur) => acc + calculateMaterialValue(cur), 0) || 0;
-
-
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
@@ -651,15 +625,12 @@ const ProductDetailWebPage = () => {
             <div className="space-y-1 px-1 md:px-0">
               <div className="flex items-center space-x-2">
                 <span className="text-xl font-bold text-gray-900">
-                  {formatPrice(
-                    selectedVariant?.varient_price || productData.price
-                  )}
+                  ₹ {selectedVariant?.material_details?.reduce(
+                    (acc, mat) => acc + (Number(mat?.sub_total_price || 0 ) || 0),
+                    0
+                  ).toLocaleString()}
                 </span>
-                {originalPrice && originalPriceNum > priceNum && (
-                  <span className="text-sm text-gray-500 line-through">
-                    {formatPrice(originalPrice)}
-                  </span>
-                )}
+
               </div>
               <p className="text-sm text-gray-600">
                 (MRP Inclusive of all taxes)
@@ -1050,15 +1021,12 @@ const ProductDetailWebPage = () => {
                   <div className="text-xs text-gray-500">Estimated price</div>
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-bold text-gray-900">
-                      {formatPrice(
-                        selectedVariant?.varient_price || productData.price
-                      )}
+                      ₹ {selectedVariant?.material_details?.reduce(
+                        (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
+                        0
+                      ).toLocaleString()}
                     </span>
-                    {originalPrice && originalPriceNum > priceNum && (
-                      <span className="text-xs text-gray-500 line-through">
-                        {formatPrice(originalPrice)}
-                      </span>
-                    )}
+
                   </div>
                 </div>
                 <button

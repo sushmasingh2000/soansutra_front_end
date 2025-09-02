@@ -262,13 +262,8 @@ const ProductCard = ({ product, onWishlist }) => {
 
         <div className="flex items-center gap-2 mb-1">
           <span className="text-sm font-semibold text-gray-800">
-            ₹{parseFloat(product.price).toLocaleString()}
+            ₹{Number(product.total_product_price).toFixed(0,2)}
           </span>
-          {product.originalPrice && (
-            <span className="text-xs text-gray-400 line-through">
-              ₹{parseFloat(product.originalPrice).toLocaleString()}
-            </span>
-          )}
         </div>
 
         <button className="text-pink-500 text-xs font-medium hover:text-pink-600">
