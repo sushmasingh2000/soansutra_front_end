@@ -972,9 +972,11 @@ const ProductDetailWebPage = () => {
                         {selectedVariant?.mak_price_type === "Flat" ?
                           <div>+{formatPrice(selectedVariant?.making_price || 0)}</div>
                           : <div>
-                             {Number(selectedVariant?.making_price)?.toFixed(0, 2) || 0}%
-                            <span className="text-xs text-blue-600 px-2">+ {rupees}
-                           ({(Number(totalMaterialValue) * Number(selectedVariant?.making_price) / 100).toFixed(2)})</span>
+                            
+                            <span className="text-xs font-extrabold ">+ {rupees}
+                           {(Number(totalMaterialValue) * Number(selectedVariant?.making_price) / 100).toFixed(2)}</span>
+                           {" "}
+                          ({Number(selectedVariant?.making_price)?.toFixed(0, 2) || 0}%)
                            </div>}
                       </div>
 
