@@ -44,7 +44,7 @@ const VariantModal = ({
         weight: variant.varient_weight || "",
         making_price: variant.making_price || "",
         mak_price_type: variant.mak_price_type === "Flat" ? "1" : variant.mak_price_type === "Percent"? "2": "",
-        dimensions: 1 || "",
+        dimensions:  "",
           // units.find(
           //   (u) =>
           //     u.un_name === variant.unit_name || u.un_slug === variant.unit_slug

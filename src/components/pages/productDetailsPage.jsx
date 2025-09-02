@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
-import { endpoint } from "../../utils/APIRoutes";
+import { endpoint, rupees } from "../../utils/APIRoutes";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import Footer from "../Footer1";
 import Header from "../Header1";
@@ -319,13 +319,23 @@ const ProductDetailWebPage = () => {
   };
   const groupedMaterials = {};
 
-  selectedVariant?.material_details.forEach((mat) => {
-    const group = mat.master_mat_name;
-    if (!groupedMaterials[group]) {
-      groupedMaterials[group] = [];
-    }
-    groupedMaterials[group].push(mat);
-  });
+  if (Array.isArray(selectedVariant?.material_details)) {
+    selectedVariant.material_details.forEach((mat) => {
+      const group = mat.master_mat_name;
+      if (!groupedMaterials[group]) {
+        groupedMaterials[group] = [];
+      }
+      groupedMaterials[group].push(mat);
+    });
+  }
+
+  // selectedVariant?.material_details.forEach((mat) => {
+  //   const group = mat.master_mat_name;
+  //   if (!groupedMaterials[group]) {
+  //     groupedMaterials[group] = [];
+  //   }
+  //   groupedMaterials[group].push(mat);
+  // });
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
@@ -626,7 +636,7 @@ const ProductDetailWebPage = () => {
               <div className="flex items-center space-x-2">
                 <span className="text-xl font-bold text-gray-900">
                   ₹ {selectedVariant?.material_details?.reduce(
-                    (acc, mat) => acc + (Number(mat?.sub_total_price || 0 ) || 0),
+                    (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
                     0
                   ).toLocaleString()}
                 </span>
@@ -951,7 +961,7 @@ const ProductDetailWebPage = () => {
                         <div>SubTotal</div>
                         <div>-</div>
                         <div>-</div>
-                        <div>{formatPrice(totalMaterialValue)}</div>
+                        <div>{rupees}{totalMaterialValue}</div>
                       </div>
 
                       {/* Making Charges */}
@@ -959,7 +969,13 @@ const ProductDetailWebPage = () => {
                         <div>Making Charges</div>
                         <div>-</div>
                         <div>-</div>
-                        <div>+{formatPrice(selectedVariant?.making_price || 0)}</div>
+                        {selectedVariant?.mak_price_type === "Flat" ?
+                          <div>+{formatPrice(selectedVariant?.making_price || 0)}</div>
+                          : <div>
+                             {Number(selectedVariant?.making_price)?.toFixed(0, 2) || 0}%
+                            <span className="text-xs text-blue-600 px-2">+ {rupees}
+                           ({(Number(totalMaterialValue) * Number(selectedVariant?.making_price) / 100).toFixed(2)})</span>
+                           </div>}
                       </div>
 
                       {/* Grand Total */}
@@ -969,7 +985,10 @@ const ProductDetailWebPage = () => {
                         <div>-</div>
                         <div>
                           {formatPrice(
-                            totalMaterialValue + (Number(selectedVariant?.making_price) || 0)
+                            totalMaterialValue +
+                            (selectedVariant?.mak_price_type === "Percent"
+                              ? (Number(selectedVariant?.making_price || 0) / 100 * totalMaterialValue)
+                              : Number(selectedVariant?.making_price || 0))
                           )}
                         </div>
                       </div>
