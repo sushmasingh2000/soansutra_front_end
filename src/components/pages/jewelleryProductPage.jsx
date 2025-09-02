@@ -8,6 +8,7 @@ import { endpoint } from "../../utils/APIRoutes";
 import axios from "axios";
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
 import toast from "react-hot-toast";
+import { useLoginModal } from "../../context/Login";
 
 // Dynamic Filter Tabs Component
 const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
@@ -243,7 +244,7 @@ const ProductCard = ({ product, onWishlist }) => {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onWishlist(product.product_id);
+            onWishlist(product.product_id, product?.selected_variant_id);
           }}
           className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
         >
@@ -323,16 +324,22 @@ const DynamicProductListingPage = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { setShowLoginModal } = useLoginModal();
 
 
   const navigate = useNavigate();
 
-  const handleWishlist = async (productId) => {
+  const handleWishlist = async (productId , variantId) => {
     try {
       const response = await apiConnectorGet(
-        `${endpoint?.create_wishlist}?product_id=${productId}`
+        `${endpoint?.create_wishlist}?product_id=${productId}&varient_id=${variantId}`
       );
-      toast(response.data.message);
+       if (response?.data?.message !== "Unauthorised User!") {
+              toast(response?.data?.message, { id: 1 })
+            }
+       if (response?.data?.message === "Unauthorised User!") {
+        setShowLoginModal(true);
+      }
     } catch (error) {
       console.error("Wishlist API error:", error);
     }
