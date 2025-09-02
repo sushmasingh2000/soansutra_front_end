@@ -43,11 +43,12 @@ const VariantModal = ({
         price: 1.0 || "",
         weight: variant.varient_weight || "",
         making_price: variant.making_price || "",
-        dimensions:
-          units.find(
-            (u) =>
-              u.un_name === variant.unit_name || u.un_slug === variant.unit_slug
-          )?.un_id || "",
+        mak_price_type: variant.mak_price_type === "Flat" ? "1" : variant.mak_price_type === "Percent"? "2": "",
+        dimensions: 1 || "",
+          // units.find(
+          //   (u) =>
+          //     u.un_name === variant.unit_name || u.un_slug === variant.unit_slug
+          // )?.un_id || "",
         attributes: variant.attributes || [],
       });
     } else {
@@ -61,6 +62,7 @@ const VariantModal = ({
       price: "1.0",
       weight: "",
       making_price: "",
+      mak_price_type: "",
       dimensions: "",
       attributes: [],
     });
@@ -98,14 +100,20 @@ const VariantModal = ({
     //   toast.error("Price and at least one attribute are required.");
     //   return;
     // }
+    if (!form.making_price || !form.mak_price_type) {
+      toast.error("Please enter making price and select type.");
+      return;
+    }
+
 
     setLoading(true);
     const payload = {
       product_id: product.product_id,
       sku: form.sku,
-      price:1.0,
+      price: 1.0,
       weight: form.weight,
       making_price: form.making_price,
+      mak_price_type: form.mak_price_type,
       dimensions: form.dimensions,
       attributes: form.attributes,
     };
@@ -161,6 +169,16 @@ const VariantModal = ({
           onChange={(e) => setForm({ ...form, making_price: e.target.value })}
           className="border p-2 rounded"
         />
+        <select
+          value={form.mak_price_type}
+          onChange={(e) => setForm({ ...form, mak_price_type: e.target.value })}
+          className="border p-2 rounded"
+        >
+          <option value="">Select Price Type</option>
+          <option value="1">Flat</option>
+          <option value="2">Percent</option>
+        </select>
+
         <input
           type="number"
           placeholder="Weight"
@@ -168,7 +186,7 @@ const VariantModal = ({
           onChange={(e) => setForm({ ...form, weight: e.target.value })}
           className="border p-2 rounded"
         />
-        <select
+        {/* <select
           value={form.dimensions}
           onChange={(e) => setForm({ ...form, dimensions: e.target.value })}
           className="border p-2 rounded"
@@ -179,7 +197,7 @@ const VariantModal = ({
               {unit.un_name} ({unit.un_slug})
             </option>
           ))}
-        </select>
+        </select> */}
       </div>
 
       {/* Attributes section */}
@@ -239,7 +257,7 @@ const VariantModal = ({
                 className="flex justify-between items-center"
               >
                 <span>
-                  {attrName}: {attr.value}
+               {attrName}: {attr.value}
                 </span>
                 {!editing && (
                   <button
