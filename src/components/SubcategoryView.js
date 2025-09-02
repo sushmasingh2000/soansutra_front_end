@@ -459,13 +459,13 @@ const SubcategoryView = ({ category, onBack }) => {
       <MetalSection items={sub_filtered} onClick={handleSubcategoryClick} />
 
       <PriceRangeSection
-      items={sub_filtered} onClick={handleSubcategoryClick}
+        items={sub_filtered} onClick={handleSubcategoryClick}
       />
 
       {selectedCategoryMock?.subcategories?.banners?.length > 0 && (
         <BannerSection
           banners={selectedCategoryMock.subcategories.banners}
-          // onBannerClick={(item) => console.log("Banner clicked:", item)}
+        // onBannerClick={(item) => console.log("Banner clicked:", item)}
         />
       )}
 
@@ -571,21 +571,32 @@ const MetalSection = ({ items, onClick }) => (
 );
 
 // Price Range Component
-const PriceRangeSection = ({ items , onClick }) => {
+const PriceRangeSection = ({ items, onClick }) => {
 
   return (
     <div className="px-4 py-3">
       <h3 className="text-sm font-medium text-gray-700 mb-3">By Price</h3>
       <div className="grid grid-cols-2 gap-2">
-        {items?.map((price, index) => (
-          <button
-            key={index}
-            onClick={() => onClick(price.product_subcategory_id)}
-            className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 text-center hover:bg-purple-100 transition-colors"
-          >
-            <span className="text-xs font-medium text-purple-700">{price?.price_group}</span>
-          </button>
-        ))}
+        {[...new Map(items.map(price => [price.price_group, price])).values()]
+          .sort((a, b) => {
+            const getSortValue = (item) => {
+              const match = item.price_group.match(/(\d+)(?!.*\d)/);
+              return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
+            };
+            return getSortValue(a) - getSortValue(b);
+          })
+          .map((price, index) => (
+            <button
+              key={index}
+              onClick={() => onClick(price.product_subcategory_id)}
+              className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 text-center hover:bg-purple-100 transition-colors"
+            >
+              <span className="text-xs font-medium text-purple-700">
+                {price?.price_group}
+              </span>
+            </button>
+          ))}
+
       </div>
     </div>
   );

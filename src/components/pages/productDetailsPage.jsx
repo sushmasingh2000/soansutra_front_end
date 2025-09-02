@@ -917,107 +917,97 @@ const ProductDetailWebPage = () => {
                   <div>FINAL VALUE</div>
                 </div>
 
-                {/* GOLD Section */}
-                {selectedVariant?.material_details?.some(
-                  (m) => m.master_mat_name.toLowerCase() === "gold"
-                ) && (
+                {/* Start of Dynamic Material Grouping */}
+                {(() => {
+                  let totalMaterialValue = 0;
+
+                  const uniqueMaterials = [
+                    ...new Set(
+                      selectedVariant?.material_details?.map(
+                        (m) => m.master_mat_name?.toLowerCase()
+                      )
+                    ),
+                  ];
+
+                  return (
                     <>
-                      <div className="text-xs text-gray-700 font-semibold mb-1">
-                        GOLD
-                      </div>
-                      {selectedVariant.material_details
-                        .filter((m) => m.master_mat_name.toLowerCase() === "gold")
-                        .map((material, index) => (
-                          <div
-                            key={`gold-${index}`}
-                            className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
-                          >
-                            <div>{material.material_name}</div>
-                            <div>
-                              ₹{material.material_price} / {material.v_un_name}
+                      {uniqueMaterials.map((matName, i) => {
+                        const materials = selectedVariant.material_details.filter(
+                          (m) => m.master_mat_name?.toLowerCase() === matName
+                        );
+                        const totalValue = materials.reduce(
+                          (acc, m) => acc + (Number(m.sub_total_price) || 0),
+                          0
+                        );
+                        totalMaterialValue += totalValue;
+                        return (
+                          <div key={i} className="mb-4">
+                            {/* Material Group Name */}
+                            <div className="text-xs text-gray-700 font-semibold mb-1 capitalize">
+                              {matName}
                             </div>
-                            <div>{material.weight}</div>
-                            <div>
-                              {formatPrice(calculateMaterialValue(material))}
+
+                            {/* Material Rows */}
+                            {materials.map((material, index) => (
+                              <div
+                                key={`mat-${i}-${index}`}
+                                className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
+                              >
+                                <div>
+                                  {material?.pur_stamp_name} {material?.material_name}
+                                </div>
+                                <div>
+                                  ₹{material?.ma_price_per_unit} / {material?.ma_unit}
+                                </div>
+                                <div>{material?.weight} / {material?.v_un_name}</div>
+                                <div>{material?.sub_total_price}</div>
+                              </div>
+                            ))}
+
+                            {/* Total per Material */}
+                            <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
+                              <div>Total {matName} Value</div>
+                              <div>-</div>
+                              <div>-</div>
+                              <div>₹{totalValue.toFixed(2)}</div>
                             </div>
                           </div>
-                        ))}
+                        );
+                      })}
 
-                      {/* Total Gold */}
-                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
-                        <div>Total Gold Value</div>
+                      {/* SubTotal (All Materials) */}
+                      <div className="grid grid-cols-4 gap-2 text-xs text-black pt-2 font-bold border-t mt-2">
+                        <div>SubTotal</div>
                         <div>-</div>
                         <div>-</div>
-                        <div>{formatPrice(totalGoldValue)}</div>
+                        <div>{formatPrice(totalMaterialValue)}</div>
+                      </div>
+
+                      {/* Making Charges */}
+                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
+                        <div>Making Charges</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>+{formatPrice(selectedVariant?.making_price || 0)}</div>
+                      </div>
+
+                      {/* Grand Total */}
+                      <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
+                        <div>Grand Total</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          {formatPrice(
+                            totalMaterialValue + (Number(selectedVariant?.making_price) || 0)
+                          )}
+                        </div>
                       </div>
                     </>
-                  )}
-
-                {/* DIAMOND Section */}
-                {selectedVariant?.material_details?.some(
-                  (m) => m.master_mat_name.toLowerCase() === "diamond"
-                ) && (
-                    <>
-                      <div className="text-xs text-gray-700 font-semibold mt-4 mb-1">
-                        DIAMOND
-                      </div>
-                      {selectedVariant.material_details
-                        .filter(
-                          (m) => m.master_mat_name.toLowerCase() === "diamond"
-                        )
-                        .map((material, index) => (
-                          <div
-                            key={`diamond-${index}`}
-                            className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
-                          >
-                            <div>{material.material_name}</div>
-                            <div>
-                              ₹{material.material_price} / {material.v_un_name}
-                            </div>
-                            <div>{material.weight}</div>
-                            <div>
-                              {formatPrice(calculateMaterialValue(material))}
-                            </div>
-                          </div>
-                        ))}
-
-                      {/* Total Diamond */}
-                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 border-t pt-2 mt-2 font-semibold">
-                        <div>Total Diamond Value</div>
-                        <div>-</div>
-                        <div>-</div>
-                        <div>{formatPrice(totalDiamondValue)}</div>
-                      </div>
-                    </>
-                  )}
-
-                {/* Making Charges (static display) */}
-
-                <div className="grid grid-cols-4 gap-2 text-xs text-black pt-2 font-bold border-t mt-2">
-                  <div>SubTotal</div>
-                  <div>-</div>
-                  <div>-</div>
-                  <div>{formatPrice(totalGoldValue + totalDiamondValue)}</div>
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-xs text-gray-800 pt-2 font-semibold">
-                  <div>Making Charges</div>
-                  <div>-</div>
-                  <div>-</div>
-                  <div>+{formatPrice(selectedVariant?.making_price)}</div>
-                </div>
-                {/* Final Subtotal */}
-                <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
-                  <div>GrandTotal</div>
-                  <div>-</div>
-                  <div>-</div>
-                  <div>
-                    {formatPrice(
-                      totalGoldValue + totalDiamondValue + selectedVariant?.making_price
-                    )}
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
             </div>
+
 
             {/* <div className="p-4 space-y-6 mb-10">
               <div>
