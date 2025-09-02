@@ -53,7 +53,7 @@ const NavigationBar = () => {
     {
       name: "Treasure Chest",
       description:
-        "Pay 9 instalments, and get the 10th FREE as a CaratLane Benefit!",
+        "Pay 9 instalments, and get the 10th FREE as a SonaSutra Benefit!",
       image:
         "https://cdn.caratlane.com/media/static/images/web/Treasure-Chest-1-26-may-25.png",
       icon: "🎁",

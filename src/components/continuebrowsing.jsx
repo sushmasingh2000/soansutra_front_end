@@ -30,7 +30,7 @@ const ContinueBrowsing = () => {
       ]
     },
     {
-      title: "CaratLane Offer: Flat 30% Off On Diamond...",
+      title: "SonaSutra Offer: Flat 30% Off On Diamond...",
       bgColor: "bg-blue-50",
       textColor: "text-gray-700",
       products: [
