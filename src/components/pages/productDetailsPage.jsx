@@ -972,7 +972,6 @@ const ProductDetailWebPage = () => {
                         {selectedVariant?.mak_price_type === "Flat" ?
                           <div>+{formatPrice(selectedVariant?.making_price || 0)}</div>
                           : <div>
-                            
                             <span className="text-xs font-extrabold ">+ {rupees}
                            {(Number(totalMaterialValue) * Number(selectedVariant?.making_price) / 100).toFixed(2)}</span>
                            {" "}
