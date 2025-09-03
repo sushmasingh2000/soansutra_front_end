@@ -33,6 +33,11 @@ import Permissions from "../components/superadmin/Permissions";
 import Role from "../components/superadmin/Role";
 import StoreManagement from "../components/superadmin/StoreMangement";
 import UserManagement from "../components/superadmin/UserManagement";
+import SonaSutraDigitalGoldHome from "../components/pages/egoldhome";
+import BuyGold from "../components/pages/buygold";
+import SellGold from "../components/pages/sellgold";
+import ExchangeRedeemComponent from "../components/pages/exchangeegold";
+import TreasureChestBanner from "../components/pages/treasurechest";
 
 export const routes = [
   {
@@ -279,6 +284,26 @@ export const routes = [
     {
     path: "/wish",
     element: <WishlistPage />,
+  },
+    {
+    path: "/e-gold",
+    element: <SonaSutraDigitalGoldHome/>,
+  },
+  {
+    path: "/buy-gold",
+    element: <BuyGold/>,
+  },
+  {
+    path: "/sell-gold",
+    element: <SellGold/>,
+  },
+  {
+    path: "/exchange-redeem",
+    element: <ExchangeRedeemComponent/>,
+  },
+    {
+    path: "/treasure-chest",
+    element: <TreasureChestBanner/>,
   },
 ];
 
