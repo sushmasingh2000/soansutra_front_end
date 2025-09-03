@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { addDays, format } from "date-fns";
 import {
@@ -27,6 +28,9 @@ import ShopByProducts from "../shopbyproduct";
 import SimilarProducts from "../similarproduct";
 import WarrantyFeatures from "../trustBadge";
 import { useLoginModal } from "../../context/Login";
+import DeliveryStoresUI from "../deliverystorestrails";
+import ScrollSpyNavigation from "../scrollspynavigation";
+import FeaturesComponent from "../featuregrid";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -519,17 +523,20 @@ const ProductDetailWebPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-      <Header />
-
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start">
+      <div className="fixed top-0 left-0 right-0 z-[9999] bg-white shadow-sm">
+        <Header />
+      </div>
+      <ScrollSpyNavigation />
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4 overflow-x-hidden sm:mt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
           <div className="space-y-3">
             {/* Mobile Image Slider */}
-            <div className="md:hidden relative -mx-2 sm:-mx-4">
+            {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
+            <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
               {/* Main Image Container */}
               <div className="relative bg-white overflow-hidden">
                 <div
-                  className="w-full h-96 overflow-hidden cursor-pointer"
+                  className="w-full h-120 overflow-hidden cursor-pointer"
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
@@ -537,7 +544,7 @@ const ProductDetailWebPage = () => {
                   <img
                     src={images[selectedImage]}
                     alt=""
-                    className="w-full h-full object-cover transition-transform duration-300"
+                    className="w-full h-full object-contain transition-transform duration-300"
                   />
                 </div>
                 <div className="absolute bottom-2 left-2 z-10">
@@ -660,7 +667,7 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
             )}
-            <div className="flex items-stretch w-fit bg-white border border-yellow-200 rounded-lg overflow-hidden mx-1 md:mx-0">
+            <div id="customise" className="flex items-stretch w-fit bg-white border border-yellow-200 rounded-lg overflow-hidden mx-1 md:mx-0">
               {groupedMaterials &&
                 Object.keys(groupedMaterials).map((groupName, index) => (
                   <button
@@ -811,18 +818,22 @@ const ProductDetailWebPage = () => {
                 </button>
               </div>
             </div>
-            <div className="self-start">
+            <div id="delivery-stores" className="w-full"><DeliveryStoresUI /></div>
+            <FeaturesComponent />
+            <div id="details" className="self-start w-full space-y-6">
               <ProductDetailsSection />
             </div>
           </div>
         </div>
       </div>
       <div className="w-full">
-        <WarrantyFeatures />
+
         <BannerSlidder />
         <YouMayLike />
         <SimilarProducts productData={productData} />
-        <CustomerReviewSection productId={productData.product_id} />
+        <div id="reviews">
+          <CustomerReviewSection productId={productData.product_id} />
+        </div>
         <RecentlyViewed />
         <ContinueBrowsing />
         <More18KProducts />
@@ -832,7 +843,8 @@ const ProductDetailWebPage = () => {
         <ShopByProducts />
         <Footer />
       </div>
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40">
+      {/* <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40"> */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-30">
         <div className="flex justify-end">
           <button
             onClick={handleAddToCart}
