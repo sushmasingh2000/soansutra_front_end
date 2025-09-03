@@ -66,8 +66,8 @@ const ProfileDashboard = () => {
       category: 'CREDITS',
       items: [
         { id: 'XCLUSIVE', label: 'XCLUSIVE', icon: Award },
-        { id: 'CARATLANE_EGOLD', label: 'CARATLANE eGold', icon: Gem },
-        { id: 'CARATLANE_TREASURE_CHEST', label: 'CARATLANE TREASURE CHEST', icon: Star }
+        { id: 'SonaSutra_EGOLD', label: 'SonaSutra eGold', icon: Gem },
+        { id: 'SonaSutra_TREASURE_CHEST', label: 'SonaSutra TREASURE CHEST', icon: Star }
       ]
     }
   ];

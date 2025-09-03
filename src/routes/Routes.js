@@ -13,6 +13,7 @@ import ProductDiscount from "../components/admin/ProductDiscount";
 import ProductInventory from "../components/admin/ProductInventory";
 import ProductTax from "../components/admin/ProductTax";
 import ProductVariant from "../components/admin/ProductVariant";
+import PurityMaterial from "../components/admin/PurityMaterial.js";
 import RequestDemo from "../components/admin/ReqDemo.js";
 import SubCategory from "../components/admin/SubCategories";
 import Tax from "../components/admin/Tax";
@@ -171,6 +172,14 @@ export const routes = [
     element: (
       <MainLayout>
         <ProductDiscount />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/purity",
+    element: (
+      <MainLayout>
+        <PurityMaterial />{" "}
       </MainLayout>
     ),
   },

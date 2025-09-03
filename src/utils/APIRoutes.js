@@ -1,5 +1,6 @@
 // export const domain = "http://192.168.18.214:2000";
 export const domain ="https://backend.sonasutra.in";
+export const rupees = "₹" ;
 
 export const endpoint = {
 
@@ -97,6 +98,13 @@ export const endpoint = {
   get_master_material: `${domain}/api/v1/get-master-materials`,
   update_master_material: `${domain}/api/v1/update-master-materials`,
   delete_master_material: `${domain}/api/v1/delete-master-materials`,
+
+  //purity
+  create_material_purity: `${domain}/api/v1/create-materials-purity`,
+  update_material_purity: `${domain}/api/v1/update-materials-purity`,
+  get_material_purity: `${domain}/api/v1/get-materials-purity`,
+
+  
 
 
   //get_demo call

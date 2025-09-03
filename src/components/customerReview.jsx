@@ -152,7 +152,7 @@ const CustomerReviewSection = () => {
           </div>
           
           <p className="text-sm text-gray-700 mb-3 leading-relaxed">
-            I bought them for my niece she loved it... I have been buying from caratlane 
+            I bought them for my niece she loved it... I have been buying from SonaSutra 
             since a long time ans i impressed with their customer service I love their 
             be... <span className="text-purple-500 cursor-pointer hover:text-purple-600">Read More</span>
           </p>
@@ -208,7 +208,7 @@ const CustomerReviewSection = () => {
           
           <p className="text-sm text-gray-700 mb-3 leading-relaxed">
             this earrings are very good ,not disappointing very satisfied with this earrings 
-            they are very beautiful and looks very unique thankyou Caratlane for this ... 
+            they are very beautiful and looks very unique thankyou SonaSutra for this ... 
             <span className="text-purple-500 cursor-pointer hover:text-purple-600">Read More</span>
           </p>
           

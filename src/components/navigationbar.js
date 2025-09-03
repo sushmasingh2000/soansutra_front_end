@@ -53,7 +53,7 @@ const NavigationBar = () => {
     {
       name: "Treasure Chest",
       description:
-        "Pay 9 instalments, and get the 10th FREE as a CaratLane Benefit!",
+        "Pay 9 instalments, and get the 10th FREE as a SonaSutra Benefit!",
       image:
         "https://cdn.caratlane.com/media/static/images/web/Treasure-Chest-1-26-may-25.png",
       icon: "🎁",
@@ -167,9 +167,9 @@ const NavigationBar = () => {
   const prevSlide = () =>
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
-    const { setShowLoginModal } = useLoginModal();
-  
-    const user =localStorage.getItem('token');
+  const { setShowLoginModal } = useLoginModal();
+
+  const user = localStorage.getItem('token');
 
 
   return (
@@ -257,7 +257,33 @@ const NavigationBar = () => {
                 <h3 className="text-sm font-bold  text-purple-700 mb-2">
                   By Price
                 </h3>
-                {sub_cate_product?.map((item) => {
+                <div className="space-y-2">
+                  {[...new Set(sub_cate_product.map(item => item.price_group))]
+                    .sort((a, b) => {
+                      const getSortValue = (label) => {
+                        const match = label.match(/(\d+)(?!.*\d)/); 
+                        return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
+                      };
+                      return getSortValue(a) - getSortValue(b);
+                    })
+                    .map((priceGroup, index) => {
+                      const item = sub_cate_product.find(p => p.price_group === priceGroup);
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => item && handleSubcategoryClick(item.product_subcategory_id)}
+                          className="text-sm text-gray-600 font-semibold cursor-pointer hover:bg-gray-100 rounded transition-all duration-150 "
+                        >
+                          ₹ {priceGroup}
+                        </div>
+                      );
+                    })}
+                </div>
+
+
+
+
+                {/* {sub_cate_product?.map((item) => {
                   return (
                     <>
                       <ul className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer">
@@ -267,7 +293,7 @@ const NavigationBar = () => {
                       </ul>
                     </>
                   );
-                })}
+                })} */}
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
@@ -362,41 +388,41 @@ const NavigationBar = () => {
                   {/* Right side - Account, Heart, and Cart icons */}
                   <div className="flex items-center ">
                     {/* Account */}
-                    {user ? 
-                    <>
-                     <Link
-                      to={"/myaccount/profile"}
-                      className="flex items-center p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <HeartIcon className="h-5 w-5" />
-                    </Link>
+                    {user ?
+                      <>
+                        <Link
+                          to={"/myaccount/profile"}
+                          className="flex items-center p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <HeartIcon className="h-5 w-5" />
+                        </Link>
 
-                    {/* Cart (icon only with badge) */}
-                    <Link
-                      to={"/shopping-cart"}
-                      className="flex items-center p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <ShoppingCartIcon className="h-5 w-5" />
-                      <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                        {cartItems?.length}
-                      </span>
-                    </Link>
-                    </> : 
+                        {/* Cart (icon only with badge) */}
+                        <Link
+                          to={"/shopping-cart"}
+                          className="flex items-center p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <ShoppingCartIcon className="h-5 w-5" />
+                          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            {cartItems?.length}
+                          </span>
+                        </Link>
+                      </> :
                       <Link
-                      // to={"/login"}
-                      className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
-                     onClick={() => {setShowLoginModal(true);  setIsMenuOpen(false)}}
-                    >
-                      <UserIcon className="h-5 w-5" />
-                      <span className="font-medium text-sm">Account</span>
-                    </Link>
-                     }
-                  
+                        // to={"/login"}
+                        className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                        onClick={() => { setShowLoginModal(true); setIsMenuOpen(false) }}
+                      >
+                        <UserIcon className="h-5 w-5" />
+                        <span className="font-medium text-sm">Account</span>
+                      </Link>
+                    }
+
 
                     {/* Wishlist (icon only) */}
-                   
+
                   </div>
 
 

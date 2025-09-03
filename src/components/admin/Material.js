@@ -15,8 +15,8 @@ const ProductMaterial = () => {
     const [formData, setFormData] = useState({
         ma_material_id: "",
         material_name: "",
-        unit: "",
-        material_price: ""
+        unit:0,
+        material_price: 0
     });
 
     const fetchMasterMaterials = async () => {
@@ -65,17 +65,17 @@ const ProductMaterial = () => {
         setFormData({
             ma_material_id:"",
             material_name: "",
-            unit: "",
-            material_price: ""
+            unit: 0,
+            material_price: 0
         });
         setSelectedMaterial(null);
     };
 
     const handleSubmit = async () => {
-        const { ma_material_id ,material_name, unit, material_price } = formData;
+        const { ma_material_id ,material_name } = formData;
 
-        if ( !ma_material_id || !material_name || !unit || !material_price) {
-            toast.error("Name & Unit  & Price are required.");
+        if ( !ma_material_id || !material_name) {
+            toast.error("Name are required.");
             return;
         }
 
@@ -109,8 +109,8 @@ const ProductMaterial = () => {
         setFormData({
             ma_material_id: material.master_mat_id  || "",
             material_name: material.material_name || "",
-            unit: material.un_id || "",
-            material_price: material.material_price || "",
+            unit: 0 || "",
+            material_price: 0 || "",
 
         });
         setModalOpen(true);
@@ -145,8 +145,8 @@ const ProductMaterial = () => {
                             <th className="px-4 py-3 text-left">S.No</th>
                             <th className="px-4 py-3 text-left">Master Material</th>
                             <th className="px-4 py-3 text-left">Name</th>
-                            <th className="px-4 py-3 text-left">Unit</th>
-                            <th className="px-4 py-3 text-left">Price</th>
+                            {/* <th className="px-4 py-3 text-left">Unit</th> */}
+                            {/* <th className="px-4 py-3 text-left">Price</th> */}
                             <th className="px-4 py-3 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -156,8 +156,8 @@ const ProductMaterial = () => {
                                 <td className="px-4 py-2">{index + 1}</td>
                                 <td className="px-4 py-2">{material.ma_material_name || "--"}</td>
                                 <td className="px-4 py-2">{material.material_name || "--"}</td>
-                                <td className="px-4 py-2">{material.un_name || "--"}</td>
-                                <td className="px-4 py-2">{material.material_price || "--"}</td>
+                                {/* <td className="px-4 py-2">{material.un_name || "--"}</td> */}
+                                {/* <td className="px-4 py-2">{material.material_price || "--"}</td> */}
                                 <td className="px-4 py-2 space-x-2">
                                     <button
                                         onClick={() => handleEdit(material)}

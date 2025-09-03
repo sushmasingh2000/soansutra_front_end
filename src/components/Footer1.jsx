@@ -40,13 +40,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* CaratLane Advantage */}
+          {/* SonaSutra Advantage */}
           <div className="lg:col-span-1 border-b md:border-b-0 border-gray-200 pb-4 md:pb-0">
             <div 
               className="flex justify-between items-center cursor-pointer md:cursor-default"
               onClick={() => toggleSection('caratLaneAdvantage')}
             >
-              <h3 className="text-base font-semibold" style={{color: sectionTitleColor}}>CaratLane Advantage</h3>
+              <h3 className="text-base font-semibold" style={{color: sectionTitleColor}}>SonaSutra Advantage</h3>
               <div className="md:hidden">
                 <i className={`fas ${openSections.caratLaneAdvantage ? 'fa-minus' : 'fa-plus'}`} style={{color: iconColor}}></i>
               </div>
@@ -159,7 +159,7 @@ const Footer = () => {
         <div className="rounded-xl p-6 mb-5  lg:max-w-md" style={{background:"linear-gradient(303.1deg, rgb(223, 198, 255) 24.89%, rgb(248, 243, 255) 88.2%)"}}>
           <div className="flex flex-col">
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-800 mb-1">Download the CaratLane App</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-1">Download the SonaSutra App</h3>
               <p className="text-gray-600 text-sm">Shop & Save more on app by redeeming xCLusive points</p>
             </div>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">

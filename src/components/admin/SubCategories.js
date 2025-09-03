@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { DeleteForever, Edit } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
@@ -280,26 +281,26 @@ const SubCategory = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       <div className="flex space-x-2">
-                        <button
+                        {/* <button
                           onClick={() => handleViewCategory(subcategory)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 hover:text-blue-800 text-sm"
                           title="View"
                         >
-                          👁️
-                        </button>
+                         <Eye/>
+                        </button> */}
                         <button
                           onClick={() => openEditModal(subcategory)}
                           className="text-green-600 hover:text-green-800"
                           title="Edit"
                         >
-                          ✏️
+                         <Edit/>
                         </button>
                         <button
                           onClick={() => deleteSubcategory(subcategory)}
                           className="text-red-600 hover:text-red-800"
                           title="Delete"
                         >
-                          🗑️
+                         <DeleteForever/>
                         </button>
                       </div>
                     </td>
@@ -352,7 +353,7 @@ const SubCategory = () => {
                     disabled={loading}
                     title="Edit"
                   >
-                    ✏️
+                   <Edit/>
                   </button>
                   <button
                     onClick={() => deleteSubcategory(subcategory)}
@@ -360,7 +361,7 @@ const SubCategory = () => {
                     disabled={loading}
                     title="Delete"
                   >
-                    🗑️
+                    <DeleteForever/>
                   </button>
                 </div>
               </div>

@@ -4,6 +4,8 @@ import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import ProductImageManager from "./ProductImage";
 import { useNavigate } from "react-router-dom";
+import { Edit, Eye, View } from "lucide-react";
+import { Delete } from "@mui/icons-material";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -19,7 +21,7 @@ const Products = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    price: "",
+    price: "1.0",
     product_category_id: "",
     product_subcategory_id: "",
     file: null,
@@ -93,7 +95,7 @@ const Products = () => {
     setFormData({
       name: "",
       description: "",
-      price: "",
+      price: "1.0",
       product_category_id: "",
       product_subcategory_id: "",
       file: null,
@@ -101,7 +103,7 @@ const Products = () => {
   };
 
   const isFormValid = () => {
-    return formData.name && formData.price && formData.product_category_id;
+    return formData.name && formData.product_category_id;
   };
 
   const createProduct = async () => {
@@ -146,7 +148,7 @@ const Products = () => {
         product_id: selectedProduct?.product_id,
         name: formData.name,
         description: formData.description,
-        price: formData.price,
+        price: 1.0,
         product_category_id: formData.product_category_id,
         product_tags: "example_tag", // placeholder
       };
@@ -193,12 +195,13 @@ const Products = () => {
 
 
 
-  const openEditModal = (product) => {
+  const openEditModal = async (product) => {
     setSelectedProduct(product);
+    await fetchSubcategories(product.product_category_id);
     setFormData({
       name: product.name || "",
       description: product.description || "",
-      price: product.price || "",
+      price: 0 || "",
       product_category_id: product.product_category_id || "",
       product_subcategory_id: product.product_subcategory_id || "",
       file: null,
@@ -237,9 +240,6 @@ const Products = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Product Name & Image
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Category
@@ -294,12 +294,12 @@ const Products = () => {
                         <img
                           src={firstImageUrl}
                           alt={product.name}
-                          className="w-12 h-12 object-cover rounded border"
-                        />
+                          className="w-12 h-12 object-cover rounded border cursor-pointer"
+                          onClick={() => openEditModal(product)} />
                       )}
                       <span>{product.name}</span>
                     </td>
-                    <td className="px-6 py-4">₹{product.price}</td>
+                    {/* <td className="px-6 py-4">₹{product.price}</td> */}
                     <td className="px-6 py-4">{categoryName}</td>
                     <td className="px-6 py-4">{subcategoryName}</td>
 
@@ -309,14 +309,14 @@ const Products = () => {
                         onClick={() => handleVariantClick(product)}
                         title="Manage Variant"
                       >
-                        👁️
+                        <Edit className="!text-green-500" />
                       </button>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex space-x-2">
-                        <button onClick={() => handleViewProduct(product)} title="View">👁️</button>
-                        <button onClick={() => openEditModal(product)} title="Edit">✏️</button>
-                        <button onClick={() => deleteProduct(product)} title="Delete">🗑️</button>
+                        <button onClick={() => handleViewProduct(product)} title="View"><Eye className="!text-green-500" /></button>
+                        <button onClick={() => openEditModal(product)} title="Edit"><Edit className="!text-blue-500" /></button>
+                        <button onClick={() => deleteProduct(product)} title="Delete"><Delete className="!text-red-500" /></button>
                       </div></td>
                   </tr>
                 );
@@ -330,90 +330,101 @@ const Products = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
-            {selectedProduct?.product_id && (
-              <>
-                <h3 className="text-lg font-semibold mb-2">Manage Images</h3>
-                <ProductImageManager productId={selectedProduct.product_id} />
-              </>
-            )}
 
             <div className="grid grid-cols-1 gap-4">
-              <select
-                name="product_category_id"
-                value={formData.product_category_id}
-                onChange={handleInputChange}
-                className="..."
-              >
-                <option value="">Select Category *</option>
-                {categories.map((cat) => (
-                  <option
-                    key={cat.product_category_id}
-                    value={cat.product_category_id}
-                  >
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="product_subcategory_id"
-                value={formData.product_subcategory_id}
-                onChange={handleInputChange}
-                className="..."
-              >
-                <option value="">Select Subcategory</option>
-                {subcategories.map((subcat) => (
-                  <option
-                    key={subcat.product_subcategory_id}
-                    value={subcat.product_subcategory_id}
-                  >
-                    {subcat.sub_cat_name}
-                  </option>
-                ))}
-              </select>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Select Category</label>
+                <select
+                  name="product_category_id"
+                  value={formData.product_category_id}
+                  onChange={handleInputChange}
+                  className="border border-gray-200 rounded p-2"
+                >
+                  <option value="">Select Category *</option>
+                  {categories.map((cat) => (
+                    <option
+                      key={cat.product_category_id}
+                      value={cat.product_category_id}
+                    >
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Select SubCategory</label>
+                <select
+                  name="product_subcategory_id"
+                  value={formData.product_subcategory_id}
+                  onChange={handleInputChange}
+                  className="border border-gray-200 rounded p-2"
+                >
+                  <option value="">Select Subcategory</option>
+                  {subcategories.map((subcat) => (
+                    <option
+                      key={subcat.product_subcategory_id}
+                      value={subcat.product_subcategory_id}
+                    >
+                      {subcat.sub_cat_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Product Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Product Name *"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Product Image</label>
+                <input
+                  type="file"
+                  name="file"
+                  onChange={handleInputChange}
+                  accept="image/*"
+                  className="w-full border border-gray-300 rounded-lg p-3"
+                />
+              </div>
+              {/* <div className="flex flex-col gap-1  justify-start">
+                <label>Product Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  placeholder="Price *"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div> */}
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Product Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Description *"
+                  rows="3"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
 
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Product Name *"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Description *"
-                rows="3"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleInputChange}
-                placeholder="Price *"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <input
-                type="text"
-                name="product_tags"
-                value={formData.product_tags}
-                onChange={handleInputChange}
-                placeholder="Tags (comma separated)"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <input
-                type="file"
-                name="file"
-                onChange={handleInputChange}
-                accept="image/*"
-                className="w-full border border-gray-300 rounded-lg p-3"
-              />
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Product Tags</label>
+                <input
+                  type="text"
+                  name="product_tags"
+                  value={formData.product_tags}
+                  onChange={handleInputChange}
+                  placeholder="Tags (comma separated)"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
             </div>
 
             <div className="flex justify-end gap-3 mt-6">
@@ -442,92 +453,108 @@ const Products = () => {
       {/* Edit Modal */}
       {editModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
             {selectedProduct?.product_id && (
               <>
-                <h3 className="text-lg font-semibold mb-2">Manage Images</h3>
+                <h3 className="text-lg font-semibold mb-2"> Multiple Images</h3>
                 <ProductImageManager productId={selectedProduct.product_id} />
               </>
             )}
 
             <div className="grid grid-cols-1 gap-4">
-              <select
-                name="product_category_id"
-                value={formData.product_category_id}
-                onChange={handleInputChange}
-                className="..."
-              >
-                <option value="">Select Category *</option>
-                {categories.map((cat) => (
-                  <option
-                    key={cat.product_category_id}
-                    value={cat.product_category_id}
-                  >
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="product_subcategory_id"
-                value={formData.product_subcategory_id}
-                onChange={handleInputChange}
-                className="..."
-              >
-                <option value="">Select Subcategory</option>
-                {subcategories.map((subcat) => (
-                  <option
-                    key={subcat.product_subcategory_id}
-                    value={subcat.product_subcategory_id}
-                  >
-                    {subcat.sub_cat_name}
-                  </option>
-                ))}
-              </select>
+              <div className="flex flex-col gap-1 mt-5 justify-start">
+                <label>Select Category</label>
+                <select
+                  name="product_category_id"
+                  value={formData.product_category_id}
+                  onChange={handleInputChange}
+                  className="border border-gray-200 rounded p-2"
+                >
+                  {categories.map((cat) => (
+                    <option
+                      key={cat.product_category_id}
+                      value={cat.product_category_id}
+                    >
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Select Subcategory</label>
+                <select
+                  name="product_subcategory_id"
+                  value={formData.product_subcategory_id}
+                  onChange={handleInputChange}
+                  className="border border-gray-200 rounded p-2"
+                >
+                  {subcategories.map((subcat) => (
+                    <option
+                      key={subcat.product_subcategory_id}
+                      value={subcat.product_subcategory_id}
+                    >
+                      {subcat.sub_cat_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Product Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Product Name *"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              {/* <div className="flex flex-col gap-1  justify-start">
+                <label> Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  placeholder="Price *"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div> */}
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Product Image</label>
+                <input
+                  type="file"
+                  name="file"
+                  onChange={handleInputChange}
+                  accept="image/*"
+                  className="w-full border border-gray-300 rounded-lg p-3"
+                />
+              </div>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Description *"
+                  rows="3"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
 
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Product Name *"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Tags</label>
+                <input
+                  type="text"
+                  name="product_tags"
+                  value={formData.product_tags}
+                  onChange={handleInputChange}
+                  placeholder="Tags (comma separated)"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
 
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Description *"
-                rows="3"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleInputChange}
-                placeholder="Price *"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <input
-                type="text"
-                name="product_tags"
-                value={formData.product_tags}
-                onChange={handleInputChange}
-                placeholder="Tags (comma separated)"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <input
-                type="file"
-                name="file"
-                onChange={handleInputChange}
-                accept="image/*"
-                className="w-full border border-gray-300 rounded-lg p-3"
-              />
             </div>
 
             <div className="flex justify-end gap-3 mt-6">
@@ -566,9 +593,9 @@ const Products = () => {
               <div>
                 <strong>Description:</strong> {viewData.description || "N/A"}
               </div>
-              <div>
+              {/* <div>
                 <strong>Price:</strong> ₹{viewData.price}
-              </div>
+              </div> */}
               <div>
                 <strong>Tags:</strong> {viewData.product_tags || "N/A"}
               </div>

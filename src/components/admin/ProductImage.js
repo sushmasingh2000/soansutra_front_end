@@ -63,13 +63,14 @@ const ProductImageManager = ({ productId }) => {
 
   return (
     <div className="space-y-4">
-      <div className="space-x-2">
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+      <div className="flex flex-col justify-start">
+        <label>Add Images</label>
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} className="border border-gray-400 lg:w-52 p-1  rounded" />
         <button
           onClick={updateId ? handleUpdate : handleUpload}
-          className="btn-blue"
+          className="btn-blue bg-blue-700 text-white mt-2 rounded p-1 lg:w-44"
         >
-          {updateId ? "Update Image" : "Upload"}
+          {updateId ? "Update Image" : "Submit"}
         </button>
         {updateId && (
           <button
@@ -83,7 +84,7 @@ const ProductImageManager = ({ productId }) => {
           </button>
         )}
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid lg:grid-cols-4 grid-cols-2  gap-4">
         {images?.map((img) => (
           <div key={img.p_img_id} className="border p-2 relative">
             <img

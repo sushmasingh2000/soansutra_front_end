@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import CryptoJS from 'crypto-js';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { apiConnectorGet, apiConnectorPost } from '../../utils/ApiConnector';
 import { endpoint } from '../../utils/APIRoutes';
-import toast from 'react-hot-toast';
 import { enCryptData } from '../../utils/Secret';
 
 const Role = () => {

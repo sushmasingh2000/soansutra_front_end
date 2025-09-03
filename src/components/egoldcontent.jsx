@@ -14,7 +14,7 @@ const EGoldContent = () => {
 
   return (
     <div className="p-3 md:p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">CaratLane eGold</h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">SonaSutra eGold</h2>
       
       {/* Balance Card */}
       <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-4 text-white mb-4">
