@@ -508,8 +508,9 @@ export default function Header() {
             <div className="relative w-full bg-white h-full shadow-xl overflow-y-auto flex flex-col">
               {showSubcategory ? (
                 <SubcategoryView
-                  category={selectedCategory} // Pass category object here
-                  onBack={() => setShowSubcategory(false)} // Optional: pass a back function
+                  category={selectedCategory} 
+                  onBack={() => setShowSubcategory(false)} 
+                  onCloseDrawer={() => setIsMobileMenuOpen(false)}
                 />
               ) : (
                 <>

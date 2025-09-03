@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { apiConnectorGet } from "../utils/ApiConnector";
 
-const SubcategoryView = ({ category, onBack }) => {
+const SubcategoryView = ({ category, onBack, onCloseDrawer }) => {
   const [subcategories, setSubcategories] = useState([]);
   const navigate = useNavigate();
   const fetchSubcategories = async () => {
@@ -25,8 +25,18 @@ const SubcategoryView = ({ category, onBack }) => {
   }, []);
 
   const handleSubcategoryClick = (subcategoryId) => {
+  if (onCloseDrawer) {
+    onCloseDrawer(); // Close the drawer
+  }
+
+  setTimeout(() => {
     navigate(`/products_web/${subcategoryId}`);
-  };
+  }, 300); // Add slight delay for smooth UX (adjust if needed)
+};
+
+  // const handleSubcategoryClick = (subcategoryId) => {
+  //   navigate(`/products_web/${subcategoryId}`);
+  // };
 
   const { data } = useQuery(
     ["sub_cate_product"],
