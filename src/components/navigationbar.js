@@ -76,7 +76,7 @@ const NavigationBar = () => {
     },
   ];
 
-  const { data: categoryData } = useQuery(
+  const { data: categoryData, catlaoding } = useQuery(
     ["get_product_category"],
     () => axios.get(endpoint?.get_categroy_user),
     usequeryBoolean
@@ -261,7 +261,7 @@ const NavigationBar = () => {
                   {[...new Set(sub_cate_product.map(item => item.price_group))]
                     .sort((a, b) => {
                       const getSortValue = (label) => {
-                        const match = label.match(/(\d+)(?!.*\d)/); 
+                        const match = label.match(/(\d+)(?!.*\d)/);
                         return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
                       };
                       return getSortValue(a) - getSortValue(b);
@@ -330,20 +330,33 @@ const NavigationBar = () => {
       <div className="lg:hidden bg-white shadow-md">
         <div className="px-4 py-2 relative">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
-            {categories.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleMobileJewelryClick(item)}
-                className="flex flex-col items-center w-24 flex-shrink-0"
-              >
-                <img
-                  src={item.cat_image}
-                  alt={item.name}
-                  className="w-20 h-20 rounded-xl object-cover mb-2"
-                />
-                <span className="text-xs text-gray-800">{item.name}</span>
-              </button>
-            ))}
+            {
+              catlaoding
+                ? Array.from({ length: 6 }).map((_, index) => (
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div key={index} className="w-full h-full flex-shrink-0 relative">
+                      <img
+                        className="w-20 h-20 rounded-xl object-cover mb-2"
+                      />
+                      <span className="text-xs text-gray-800" />
+
+                    </div>
+                  </div>
+                ))
+                : categories.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleMobileJewelryClick(item)}
+                    className="flex flex-col items-center w-24 flex-shrink-0"
+                  >
+                    <img
+                      src={item.cat_image}
+                      alt={item.name}
+                      className="w-20 h-20 rounded-xl object-cover mb-2"
+                    />
+                    <span className="text-xs text-gray-800">{item.name}</span>
+                  </button>
+                ))}
           </div>
         </div>
       </div>
@@ -357,7 +370,6 @@ const NavigationBar = () => {
 
           {/* Sidebar */}
           <div className="relative w-full bg-white h-full shadow-xl overflow-y-auto flex flex-col">
-            {/* Conditional rendering based on subcategory view */}
             {showSubcategory ? (
               <SubcategoryView
                 category={selectedCategory} // Pass category object here
@@ -452,24 +464,7 @@ const NavigationBar = () => {
                       </div>
                     ))}
 
-                    {/* {showMoreJewellery && moreJewelleryTypes.map((item, index) => (
-                      <div
-                        key={index + 4}
-                        className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer"
-                        onClick={() => handleJewelryClick(item.name)}
-                      >
-                        <div className="flex flex-col items-center text-center space-y-2">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-12 h-12 object-contain"
-                          />
-                          <span className="text-sm font-medium text-gray-800 leading-tight">
-                            {item.name}
-                          </span>
-                        </div>
-                      </div>
-                    ))} */}
+
                   </div>
                   <button
                     onClick={() => setShowMoreJewellery(!showMoreJewellery)}
@@ -611,125 +606,6 @@ const NavigationBar = () => {
           </div>
         </div>
       )}
-      {/* <div className="lg:hidden">
-        <div className="flex items-center justify-between px-4 h-14">
-          <button
-            onClick={handleHomeClick}
-            className="text-lg font-semibold hover:text-pink-200 transition-colors duration-200"
-          >
-            Sonasutra 
-          </button>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 rounded-md hover:bg-white/10 transition-colors duration-200"
-          >
-            <svg
-              className={`w-6 h-6 transition-transform duration-300 ${
-                isMenuOpen ? "rotate-90" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
-
-        <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="px-4 py-4 border-t border-white/20">
-            <div className="space-y-1">
-              {categories.map((item) => (
-                <div key={item.id} className="mb-2">
-                  <button
-                    onClick={() => fetchSubcategories(item.product_category_id)}
-                    className="block w-full text-left px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
-                  >
-                    {item.name}
-                  </button>
-
-                  {activeCategoryId === item.product_category_id &&
-                    subcategories.length > 0 && (
-                      <div className="pl-6 mt-1 space-y-1">
-                        {subcategories.map((sub) => (
-                          <button
-                            key={sub.product_subcategory_id}
-                            onClick={() =>
-                              handleSubcategoryClick(sub.product_subcategory_id)
-                            }
-                            className="block w-full text-left py-2 text-sm text-pink-200 hover:text-white transition-colors duration-200"
-                          >
-                            {sub.name}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 pt-4 border-t border-white/20">
-              <button
-                onClick={() => setIsServicesOpen(!isServicesOpen)}
-                className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium hover:bg-white/10 rounded-md transition-colors duration-200"
-              >
-                <span>Services</span>
-                <svg
-                  className={`w-4 h-4 transition-transform duration-200 ${
-                    isServicesOpen ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isServicesOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
-                }`}
-              >
-                <div className="pl-6 pr-3 py-2 space-y-1">
-                  {serviceLinks.map((service, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleServiceClick(service.slug)}
-                      className="block w-full text-left py-2 text-sm text-pink-200 hover:text-white transition-colors duration-200"
-                    >
-                      {service.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
     </nav>
   );
 };

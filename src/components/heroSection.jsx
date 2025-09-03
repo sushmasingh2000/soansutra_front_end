@@ -8,11 +8,11 @@ import { endpoint } from '../utils/APIRoutes';
 const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const { data } = useQuery(
+  const { data, loading } = useQuery(
     ["banner_data"],
     () =>
       apiConnectorGet(endpoint?.get_banner),
-  usequeryBoolean
+    usequeryBoolean
   );
 
   const slides = data?.data?.result || [];
@@ -48,17 +48,29 @@ const HeroBanner = () => {
               className="flex transition-transform duration-700 ease-in-out h-full"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {slides.map((slide, index) => (
-                <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
-                  <img
-                    src={slide.ban_image}
-                    alt={slide.alt}
-                    className="w-full h-auto object-contain object-center"
-                    style={{ minWidth: '100%', minHeight: '100%' }}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                </div>
-              ))}
+              {
+                loading
+                  ? Array.from({ length: 6 }).map((_, index) => (
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div key={index} className="w-full h-full flex-shrink-0 relative">
+                        <img
+                          className="w-full h-auto object-contain object-center"
+                          style={{ minWidth: '100%', minHeight: '100%' }}
+                        />
+                      </div>
+                    </div>
+                  ))
+                  : slides.map((slide, index) => (
+                    <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
+                      <img
+                        src={slide.ban_image}
+                        alt={slide.alt}
+                        className="w-full h-auto object-contain object-center"
+                        style={{ minWidth: '100%', minHeight: '100%' }}
+                        loading={index === 0 ? "eager" : "lazy"}
+                      />
+                    </div>
+                  ))}
             </div>
 
             {/* Navigation arrows */}
@@ -115,7 +127,7 @@ const HeroBanner = () => {
                   ? 'bg-purple-600 scale-125 shadow-lg'
                   : 'bg-gray-400 hover:bg-gray-600 hover:scale-110'
                   }`}
-                aria-label={`Go to slide ${index + 1}`}
+                // aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
