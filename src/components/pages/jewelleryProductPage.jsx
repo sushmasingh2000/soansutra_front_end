@@ -172,6 +172,18 @@ const DynamicSidebarFilters = ({
     </div>
   );
 };
+const ProductCardSkeleton = () => {
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-pulse">
+      <div className="aspect-square bg-gray-200"></div>
+      <div className="p-3 space-y-2">
+        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+        <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+      </div>
+    </div>
+  );
+};
 
 // Updated Product Card Component with navigation
 const ProductCard = ({ product, onWishlist }) => {
@@ -263,7 +275,7 @@ const ProductCard = ({ product, onWishlist }) => {
 
         <div className="flex items-center gap-2 mb-1">
           <span className="text-sm font-semibold text-gray-800">
-            ₹{Number(product.total_product_price).toFixed(0,2)}
+            ₹{Number(product.total_product_price).toFixed(0, 2)}
           </span>
         </div>
 
@@ -329,15 +341,15 @@ const DynamicProductListingPage = () => {
 
   const navigate = useNavigate();
 
-  const handleWishlist = async (productId , variantId) => {
+  const handleWishlist = async (productId, variantId) => {
     try {
       const response = await apiConnectorGet(
         `${endpoint?.create_wishlist}?product_id=${productId}&varient_id=${variantId}`
       );
-       if (response?.data?.message !== "Unauthorised User!") {
-              toast(response?.data?.message, { id: 1 })
-            }
-       if (response?.data?.message === "Unauthorised User!") {
+      if (response?.data?.message !== "Unauthorised User!") {
+        toast(response?.data?.message, { id: 1 })
+      }
+      if (response?.data?.message === "Unauthorised User!") {
         setShowLoginModal(true);
       }
     } catch (error) {
@@ -558,7 +570,7 @@ const DynamicProductListingPage = () => {
   const filterData = filter_product?.[0] || {};
 
   const dynamicFilters = {
-     size: {
+    size: {
       label: "Size",
       options: filterData.sizes?.map((s) => ({
         value: s.size,
@@ -566,7 +578,7 @@ const DynamicProductListingPage = () => {
         // count: 0,
       })) || [],
     },
-     price: {
+    price: {
       label: "Price Range",
       options:
         (filterData.price_groups || [])
@@ -683,8 +695,13 @@ const DynamicProductListingPage = () => {
               </div>
               <SortDropdown sortBy={sortBy} onSortChange={setSortBy} />
             </div>
-
-            {products.length > 0 ? (
+            {isLoading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : products.length > 0 ? (
               <ProductList products={products} onWishlist={handleWishlist} />
             ) : (
               <div className="flex flex-col items-center justify-center py-16">
@@ -718,6 +735,7 @@ const DynamicProductListingPage = () => {
                 </button>
               </div>
             )}
+
           </div>
         </div>
       </div>
