@@ -2,6 +2,7 @@
 
 import React, { Suspense, lazy } from 'react';
 
+// Lazy-loaded components
 const Header = lazy(() => import('../Header1'));
 const NavigationBar = lazy(() => import('../navigationbar'));
 const HeroBanner = lazy(() => import('../heroSection'));
@@ -16,6 +17,7 @@ const CaratLaneSignup = lazy(() => import('../emailSubscription.jsx'));
 const Footer = lazy(() => import('../Footer1'));
 const FloatingSupportMenu = lazy(() => import('./ClientDemo/Support.js'));
 
+// Optional: Create a simple loader (you can replace this with a spinner or skeleton loader)
 const Loader = () => <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
 
 const HomePage = () => {

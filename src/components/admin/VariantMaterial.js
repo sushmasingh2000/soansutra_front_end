@@ -162,8 +162,8 @@ const VariantMaterialModal = ({ variant, units, onClose }) => {
         >
           <option value="">Select Purity  Material</option>
           {purity
-            .filter(mat => String(mat.master_mat_id) === String(formData.pur_id))
-            .map((mat) => (
+            ?.filter(mat => String(mat.ma_material_id) === String(formData.master_mat_id))
+            ?.map((mat) => (
               <option key={mat.pur_id} value={mat.pur_id}>
                 {mat.pur_stamp_name}
               </option>

@@ -7,12 +7,14 @@ import { endpoint } from "../utils/APIRoutes";
 import { apiConnectorGet, usequeryBoolean } from "../utils/ApiConnector";
 import SubcategoryView from "./SubcategoryView";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { ChevronLeftIcon, ChevronRightIcon, HeartIcon, ShoppingCartIcon, UserIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, HeartIcon, Loader, ShoppingCartIcon, UserIcon } from "lucide-react";
 import { useLoginModal } from "../context/Login";
+import { Skeleton } from "@mui/material";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
   const [subcategories, setSubcategories] = useState([]);
+  const [loader, setLoader] = useState(false);
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -76,7 +78,7 @@ const NavigationBar = () => {
     },
   ];
 
-  const { data: categoryData, catlaoding } = useQuery(
+  const { data: categoryData, isLoading } = useQuery(
     ["get_product_category"],
     () => axios.get(endpoint?.get_categroy_user),
     usequeryBoolean
@@ -91,6 +93,7 @@ const NavigationBar = () => {
       return;
     }
     try {
+      setLoader(true)
       setActiveCategoryId(categoryId);
       setActivecategoryId(categoryId);
       const response = await axios.get(
@@ -100,6 +103,9 @@ const NavigationBar = () => {
       setIsDrawerOpen(true);
     } catch (err) {
       toast.error("Failed to fetch subcategories.");
+    }
+    finally {
+      setLoader(false)
     }
   };
 
@@ -177,21 +183,26 @@ const NavigationBar = () => {
       <div className=" px-4 lg:block hidden">
         <div className="relative">
           <div className="flex space-x-10 py-3">
-            {categories.map((cat) => (
-              <div
-                key={cat.id}
-                className="group"
-                onMouseEnter={() => fetchSubcategories(cat.product_category_id)}
-              // onMouseLeave={() => {
-              //   setActiveCategoryId(null);
-              //   setSubcategories([]);
-              // }}
-              >
-                <button className="text-sm font-semibold hover:text-pink-300  hover:font-bold">
-                  {cat.name}
-                </button>
-              </div>
-            ))}
+            {isLoading ?
+              Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton variant="rectangular" className="w-16 h-10" />
+              ))
+              :
+              categories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className="group"
+                  onMouseEnter={() => fetchSubcategories(cat.product_category_id)}
+                // onMouseLeave={() => {
+                //   setActiveCategoryId(null);
+                //   setSubcategories([]);
+                // }}
+                >
+                  <button className="text-sm font-semibold hover:text-pink-300  hover:font-bold">
+                    {cat.name}
+                  </button>
+                </div>
+              ))}
           </div>
 
           {activeCategoryId && subcategories.length > 0 && (
@@ -212,18 +223,22 @@ const NavigationBar = () => {
                   By Style
                 </h3>
                 <ul className="space-y-1 text-sm text-gray-500 font-semibold">
-                  {subcategories.map((sub) => (
-                    <li key={sub.product_subcategory_id}>
-                      <button
-                        className="text-sm hover:text-pink-600 transition"
-                        onClick={() =>
-                          handleSubcategoryClick(sub.product_subcategory_id)
-                        }
-                      >
-                        {sub.name}
-                      </button>
-                    </li>
-                  ))}
+                  {loader ?
+                    Array.from({ length: 4 }).map((_, index) => (
+                      <Skeleton variant="rectangular" className="!w-16 !h-4 !rounded-lg" />
+                    ))
+                    : subcategories.map((sub) => (
+                      <li key={sub.product_subcategory_id}>
+                        <button
+                          className="text-sm hover:text-pink-600 transition"
+                          onClick={() =>
+                            handleSubcategoryClick(sub.product_subcategory_id)
+                          }
+                        >
+                          {sub.name}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               </div>
 
@@ -231,7 +246,11 @@ const NavigationBar = () => {
                 <h3 className="text-sm font-bold  text-purple-700 mb-2">
                   By Metal & Stone
                 </h3>
-                {(() => {
+                {loader ?
+                    Array.from({ length: 3 }).map((_, index) => (
+                      <Skeleton variant="rectangular" className="!w-16 !h-4 !my-1 !rounded-lg" />
+                    ))
+                    : (() => {
                   const seen = new Set();
                   return sub_cate_product?.map((item, index) => {
                     if (seen.has(item?.master_mat_name)) return null; // Skip duplicates
@@ -258,7 +277,11 @@ const NavigationBar = () => {
                   By Price
                 </h3>
                 <div className="space-y-2">
-                  {[...new Set(sub_cate_product.map(item => item.price_group))]
+                  {loader ?
+                    Array.from({ length: 3 }).map((_, index) => (
+                      <Skeleton variant="rectangular" className="!w-16 !h-4 !rounded-lg" />
+                    ))
+                    : ([...new Set(sub_cate_product.map(item => item.price_group))]
                     .sort((a, b) => {
                       const getSortValue = (label) => {
                         const match = label.match(/(\d+)(?!.*\d)/);
@@ -277,27 +300,16 @@ const NavigationBar = () => {
                           ₹ {priceGroup}
                         </div>
                       );
-                    })}
+                    }))}
                 </div>
-
-
-
-
-                {/* {sub_cate_product?.map((item) => {
-                  return (
-                    <>
-                      <ul className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer">
-                        <li onClick={() =>
-                          handleSubcategoryClick(item.product_subcategory_id)
-                        } >₹ {item?.price_group}</li>
-                      </ul>
-                    </>
-                  );
-                })} */}
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
-                {subcategories[0]?.subcat_image ? (
+               {loader ?
+                    Array.from({ length: 1 }).map((_, index) => (
+                      <Skeleton variant="rectangular" className="!w-48 !h-48 !rounded" />
+                    ))
+                    : subcategories[0]?.subcat_image ? (
                   <img
                     src={subcategories[0].subcat_image}
                     alt="Preview"
@@ -311,7 +323,11 @@ const NavigationBar = () => {
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
-                {subcategories[1]?.subcat_image ? (
+                {loader ?
+                    Array.from({ length: 1 }).map((_, index) => (
+                      <Skeleton variant="rectangular" className="!w-48 !h-48  !rounded" />
+                    ))
+                    : subcategories[1]?.subcat_image ? (
                   <img
                     src={subcategories[1].subcat_image}
                     alt="Preview"
@@ -331,15 +347,14 @@ const NavigationBar = () => {
         <div className="px-4 py-2 relative">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {
-              catlaoding
-                ? Array.from({ length: 6 }).map((_, index) => (
+              isLoading
+                ? Array.from({ length: 2 }).map((_, index) => (
                   <div className="bg-gray-50 rounded-lg p-4">
                     <div key={index} className="w-full h-full flex-shrink-0 relative">
                       <img
                         className="w-20 h-20 rounded-xl object-cover mb-2"
                       />
                       <span className="text-xs text-gray-800" />
-
                     </div>
                   </div>
                 ))

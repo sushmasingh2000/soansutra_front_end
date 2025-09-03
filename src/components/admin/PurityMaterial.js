@@ -7,14 +7,14 @@ import {
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit } from "@mui/icons-material";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 const PurityMaterial = () => {
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
-
+  const client = useQueryClient();
   const [formData, setFormData] = useState({
     pur_master_mat_id: "",
     pur_stamp_name: "",
@@ -76,6 +76,7 @@ const PurityMaterial = () => {
       const res = await apiConnectorPost(endpointUrl, payload);
       toast.success(res?.data?.message || "Operation successful.");
       if (res?.data?.success) {
+        client.refetchQueries("purity_materail")
         setModalOpen(false);
         resetForm();
         // refetch purity list

@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
+import { Skeleton } from '@mui/material';
 
 // Hero Banner Component with Dynamic Content
 const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const { data, loading } = useQuery(
+  const { data, isLoading } = useQuery(
     ["banner_data"],
     () =>
       apiConnectorGet(endpoint?.get_banner),
@@ -37,6 +38,7 @@ const HeroBanner = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
+  
   return (
     <div className="w-full px-2 py-2 sm:py-3 md:py-4">
       <div className="relative w-full max-w-full mx-auto">
@@ -49,16 +51,10 @@ const HeroBanner = () => {
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {
-                loading
+                isLoading
                   ? Array.from({ length: 6 }).map((_, index) => (
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div key={index} className="w-full h-full flex-shrink-0 relative">
-                        <img
-                          className="w-full h-auto object-contain object-center"
-                          style={{ minWidth: '100%', minHeight: '100%' }}
-                        />
-                      </div>
-                    </div>
+                        <Skeleton variant="rectangular" height={500} className='!w-screen' />
+
                   ))
                   : slides.map((slide, index) => (
                     <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
