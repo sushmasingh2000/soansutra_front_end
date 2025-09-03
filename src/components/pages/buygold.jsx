@@ -4,12 +4,13 @@ import Header from '../Header1';
 import { Navigation } from 'lucide-react';
 import NavigationBar from '../navigationbar';
 import Footer from '../Footer1';
+import FAQBuyGold from '../faqbuygold';
 
 const BuyGold = () => {
   const [amount, setAmount] = useState('');
   const [grams, setGrams] = useState('');
-  const [buyRate, setBuyRate] = useState(10670.19); // Price per gram including GST
-  const [timeLeft, setTimeLeft] = useState(4 * 60 + 46); // 4 minutes 46 seconds in seconds
+  const [buyRate, setBuyRate] = useState(11311.47); // Price per gram including GST
+  const [timeLeft, setTimeLeft] = useState(4 * 60 + 54); // 4 minutes 54 seconds in seconds
 
   // Update timer countdown
   useEffect(() => {
@@ -80,130 +81,136 @@ const BuyGold = () => {
       <Header />
       <NavigationBar />
       <EgoldHeader />
-      <div className="w-full bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full bg-white-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-7xl">
 
           {/* Desktop View */}
-          <div className="w-full hidden md:flex flex-col md:flex-row justify-between items-start">
-            <div className="w-full md:w-2/3 p-4">
-              <h2 className="text-2xl font-bold mb-4">Buy Gold</h2>
-              <div className="flex flex-col md:flex-row items-center mb-4">
-                <div className="w-full md:w-1/2 mb-4 md:mb-0">
-                  <label className="block text-sm font-medium mb-2">Buy Gold by Amount</label>
-                  <div className="flex items-center border rounded-lg p-2">
+          <div className="w-full hidden md:flex flex-col">
+            <h2 className="text-3xl font-bold mb-4 text-purple-900">Buy Gold</h2>
+            <div className="flex flex-row space-x-4">
+              <div className="bg-white rounded-lg p-6 shadow w-3/5">
+                <div className="flex flex-row justify-between mb-2 text-gray-600 text-sm">
+                  <span>Buy Gold by Amount</span>
+                 
+                </div>
+                <div className="flex flex-row items-center mb-2">
+                  <div className="border border-purple-300 rounded p-2 mr-2 flex items-center">
                     <span className="text-lg mr-2">₹</span>
                     <input 
                       type="text" 
-                      className="w-full outline-none" 
-                      placeholder="Enter amount"
+                      className="w-32 outline-none" 
                       value={amount}
                       onChange={handleAmountChange}
                     />
                   </div>
-                </div>
-                <div className="w-full md:w-1/2 md:ml-4">
-                  <label className="block text-sm font-medium mb-2">or Buy in Grams</label>
-                  <div className="flex items-center border rounded-lg p-2">
+                  <span className="mx-2">=</span>
+                  <div className="border border-purple-300 rounded p-2 mr-2 flex items-center">
                     <input 
                       type="text" 
-                      className="w-full outline-none" 
-                      placeholder="gms"
+                      className="w-32 outline-none" 
                       value={grams}
                       onChange={handleGramsChange}
                     />
                   </div>
+                  <span className="text-sm text-gray-600 ml-2">gms</span>
+                  <button 
+                    className="bg-gradient-to-r from-[#de57e5] to-[#8863fb] text-white py-2 px-4 rounded ml-2"
+                    onClick={handleProceedToBuy}
+                  >
+                    Proceed to Buy
+                  </button>
                 </div>
+                <p className="text-xs text-gray-500 ml-2">Inclusive of 3% GST</p>
               </div>
-              <p className="text-xs text-gray-500 mb-4">Inclusive of 3% GST</p>
-              <button 
-                className="w-full bg-gradient-to-r from-[#de57e5] to-[#8863fb] text-white py-2 rounded-lg mb-4"
-                onClick={handleProceedToBuy}
-              >
-                Proceed to Buy
-              </button>
-              <div className="flex items-center text-yellow-500 bg-yellow-100 p-2 rounded-lg">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
-                </svg>
-                <span>The minimum buy amount to purchase CaratLane eGold is ₹10</span>
-              </div>
-            </div>
-            <div className="w-full md:w-1/3 p-4">
-              <div className="mb-4">
+              <div className="bg-white rounded-lg p-4 shadow w-1/5">
                 <h3 className="text-lg font-semibold mb-2">Buy Rate</h3>
                 <p className="text-red-500">₹{buyRate.toFixed(2)}/gram</p>
                 <p className="text-xs text-gray-500">(₹{(buyRate / 1.03).toFixed(2)} + 3% GST)</p>
                 <p className="text-xs text-gray-500">Price valid for {formatTime(timeLeft)} min</p>
                 <p className="text-xs text-gray-500">24K 99.99% Purity</p>
               </div>
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">Gold Balance</h3>
+              <div className="bg-white rounded-lg p-4 shadow w-1/5">
+                <div className="vault-icon w-12 h-12 bg-[url('https://assets.cltstatic.com/images/responsive/spriteImage1.png?v2.0')] bg-no-repeat bg-[position:-343px_-1273px] bg-[size:832px_auto] cursor-default mb-2 mx-auto"></div>
+                <h3 className="text-lg font-semibold mb-2 text-purple-600">Gold Balance</h3>
                 <p className="text-lg">0.00 gms</p>
-                <button className="text-[#de57e5] text-sm mt-2">Redeem Gold &gt;</button>
-                <button className="text-[#de57e5] text-sm mt-2 ml-4">Check Buy History &gt;</button>
               </div>
-              <div className="vault-icon w-12 h-12 bg-[url('https://assets.cltstatic.com/images/responsive/spriteImage1.png?v2.0')] bg-no-repeat bg-[position:-343px_-1273px] bg-[size:832px_auto] cursor-default mb-3"></div>
+            </div>
+            <div className="flex flex-row justify-between mt-4">
+              <div className="flex items-center bg-purple-100 rounded p-2 text-purple-800 w-3/5">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
+                </svg>
+                <span>The minimum buy amount to purchase CaratLane eGold is ₹10</span>
+              </div>
+              <div className="w-1/5 text-right pr-6">
+                <button className="text-purple-500 text-sm">Check Buy History →</button>
+              </div>
+              <div className="w-1/5 text-right">
+                <button className="text-purple-500 text-sm">Redeem Gold →</button>
+              </div>
             </div>
           </div>
 
           {/* Mobile View */}
           <div className="md:hidden flex flex-col">
-            <h2 className="text-2xl font-bold mb-4">Buy Gold</h2>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Buy Gold by Amount</label>
-              <div className="flex items-center border rounded-lg p-2">
-                <span className="text-lg mr-2">₹</span>
-                <input 
-                  type="text" 
-                  className="w-full outline-none" 
-                  placeholder="Enter amount"
-                  value={amount}
-                  onChange={handleAmountChange}
-                />
+            <h2 className="text-2xl font-bold mb-4 text-purple-900">Buy Gold</h2>
+            <div className="bg-white rounded-lg p-4 shadow">
+              <div className="flex flex-col mb-2 text-gray-600 text-sm">
+                <span>Buy Gold by Amount</span>
               </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">or Buy in Grams</label>
-              <div className="flex items-center border rounded-lg p-2">
-                <input 
-                  type="text" 
-                  className="w-full outline-none" 
-                  placeholder="gms"
-                  value={grams}
-                  onChange={handleGramsChange}
-                />
+              <div className="flex flex-row items-center mb-2">
+                <div className="border border-purple-300 rounded p-2 mr-2 flex items-center">
+                  <span className="text-lg mr-2">₹</span>
+                  <input 
+                    type="text" 
+                    className="w-full outline-none" 
+                    value={amount}
+                    onChange={handleAmountChange}
+                  />
+                </div>
+                <span className="mx-2">=</span>
+                <div className="border border-purple-300 rounded p-2 mr-2 flex items-center">
+                  <input 
+                    type="text" 
+                    className="w-full outline-none" 
+                    value={grams}
+                    onChange={handleGramsChange}
+                  />
+                </div>
+                <span className="text-sm text-gray-600 ml-2">gms</span>
               </div>
+              <button 
+                className="bg-gradient-to-r from-[#de57e5] to-[#8863fb] text-white py-2 px-4 rounded w-full mb-2"
+                onClick={handleProceedToBuy}
+              >
+                Proceed to Buy
+              </button>
+              <p className="text-xs text-gray-500 mb-2">Inclusive of 3% GST</p>
             </div>
-            <p className="text-xs text-gray-500 mb-4">Inclusive of 3% GST</p>
-            <button 
-              className="w-full bg-gradient-to-r from-[#de57e5] to-[#8863fb] text-white py-2 rounded-lg mb-4"
-              onClick={handleProceedToBuy}
-            >
-              Proceed to Buy
-            </button>
-            <div className="flex items-center text-yellow-500 bg-yellow-100 p-2 rounded-lg mb-4">
+            <div className="flex items-center bg-purple-100 rounded p-2 text-purple-800 mt-4 mb-4">
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
               </svg>
               <span>The minimum buy amount to purchase CaratLane eGold is ₹10</span>
             </div>
-            <div className="mb-4">
+            <div className="bg-white rounded-lg p-4 shadow mb-4">
               <h3 className="text-lg font-semibold mb-2">Buy Rate</h3>
               <p className="text-red-500">₹{buyRate.toFixed(2)}/gram</p>
               <p className="text-xs text-gray-500">(₹{(buyRate / 1.03).toFixed(2)} + 3% GST)</p>
               <p className="text-xs text-gray-500">Price valid for {formatTime(timeLeft)} min</p>
               <p className="text-xs text-gray-500">24K 99.99% Purity</p>
             </div>
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">Gold Balance</h3>
+            <div className="bg-white rounded-lg p-4 shadow mb-4">
+              <div className="vault-icon w-12 h-12 bg-[url('https://assets.cltstatic.com/images/responsive/spriteImage1.png?v2.0')] bg-no-repeat bg-[position:-343px_-1273px] bg-[size:832px_auto] cursor-default mb-2 mx-auto"></div>
+              <h3 className="text-lg font-semibold mb-2 text-purple-600">Gold Balance</h3>
               <p className="text-lg">0.00 gms</p>
-              <button className="text-[#de57e5] text-sm mt-2">Redeem Gold &gt;</button>
-              <button className="text-[#de57e5] text-sm mt-2 ml-4">Check Buy History &gt;</button>
+              <button className="text-purple-500 text-sm mt-2">Redeem Gold →</button>
+              <button className="text-purple-500 text-sm mt-2 ml-4">Check Buy History →</button>
             </div>
-            <div className="vault-icon w-12 h-12 bg-[url('https://assets.cltstatic.com/images/responsive/spriteImage1.png?v2.0')] bg-no-repeat bg-[position:-343px_-1273px] bg-[size:832px_auto] cursor-default mb-3"></div>
           </div>
         </div>
       </div>
+      <FAQBuyGold/>
       <Footer/>
     </>
   );
