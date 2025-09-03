@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { addDays, format } from "date-fns";
 import {
@@ -27,6 +28,9 @@ import ShopByProducts from "../shopbyproduct";
 import SimilarProducts from "../similarproduct";
 import WarrantyFeatures from "../trustBadge";
 import { useLoginModal } from "../../context/Login";
+import DeliveryStoresUI from "../deliverystorestrails";
+import ScrollSpyNavigation from "../scrollspynavigation";
+import FeaturesComponent from "../featuregrid";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -535,17 +539,20 @@ const ProductDetailWebPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-      <Header />
-
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start">
+      <div className="fixed top-0 left-0 right-0 z-[9999] bg-white shadow-sm">
+        <Header />
+      </div>
+      <ScrollSpyNavigation />
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4 overflow-x-hidden sm:mt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
           <div className="space-y-3">
             {/* Mobile Image Slider */}
-            <div className="md:hidden relative -mx-2 sm:-mx-4">
+            {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
+            <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
               {/* Main Image Container */}
               <div className="relative bg-white overflow-hidden">
                 <div
-                  className="w-full h-96 overflow-hidden cursor-pointer"
+                  className="w-full h-120 overflow-hidden cursor-pointer"
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
@@ -553,7 +560,7 @@ const ProductDetailWebPage = () => {
                   <img
                     src={images[selectedImage]}
                     alt=""
-                    className="w-full h-full object-cover transition-transform duration-300"
+                    className="w-full h-full object-contain transition-transform duration-300"
                   />
                 </div>
                 <div className="absolute bottom-2 left-2 z-10">
@@ -648,27 +655,60 @@ const ProductDetailWebPage = () => {
                 </button>
               </div>
             </div>
-            <div className="space-y-1 px-1 md:px-0">
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold text-gray-900">
-                  {formatPrice(
-                    selectedVariant?.varient_price || productData.price
-                  )}
-                </span>
-                {originalPrice && originalPriceNum > priceNum && (
-                  <span className="text-sm text-gray-500 line-through">
-                    {formatPrice(originalPrice)}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-gray-600">
-                (MRP Inclusive of all taxes)
-              </p>
-            </div>
+
             <div className="px-1 md:px-0">
-              <h1 className="text-lg lg:text-xl font-medium text-gray-900 mb-2">
-                {productData.name || "Unnamed Product"}
-              </h1>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <span className="text-lg font-bold text-gray-900">
+                      {formatPrice(
+                        selectedVariant?.varient_price || productData.price
+                      )}
+                    </span>
+                    {originalPrice && originalPriceNum > priceNum && (
+                      <span className="text-xs text-gray-500 line-through">
+                        {formatPrice(originalPrice)}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-600 mb-2">
+                    (MRP Inclusive of all taxes)
+                  </p>
+                  <h1 className="text-base font-medium text-gray-900">
+                    {productData.name || "Unnamed Product"}
+                  </h1>
+                </div>
+                <div className="flex-shrink-0">
+                   <div className="w-[80px] h-[12px] bg-gradient-to-r from-[#FD8B64] to-[#FF5B6C] rounded-t-[8px] text-white uppercase font-[InterSemiBold] text-[8px] leading-[12px] text-center mx-auto">
+                        BUY FOR LESS
+                      </div>
+                  <div className="bg-gradient-to-b from-purple-50 to-purple-100 rounded-lg p-3 min-w-[120px] border border-purple-200">
+                    <div className="text-center">
+                     
+                      <div className="bg-purple-100 p-2 rounded-lg w-fit">
+                        <div className="text-purple-700 font-semibold text-xs flex items-center justify-center">
+                          9+1 SAVINGS
+                          <svg
+                            className="w-2.5 h-2.5 ml-1"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+
+                      <div className="text-xs text-gray-600 leading-tight">
+                        Pay for 9 months,<br />100% off on the 10th
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             {discount && (
               <div className="-mx-1 md:mx-0 md:rounded-lg">
@@ -679,7 +719,7 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
             )}
-            <div className="flex items-stretch w-fit bg-white border border-yellow-200 rounded-lg overflow-hidden mx-1 md:mx-0">
+            <div id="customise" className="flex items-stretch w-fit bg-white border border-yellow-200 rounded-lg overflow-hidden mx-1 md:mx-0">
               {groupedMaterials &&
                 Object.keys(groupedMaterials).map((groupName, index) => (
                   <button
@@ -830,18 +870,22 @@ const ProductDetailWebPage = () => {
                 </button>
               </div>
             </div>
-            <div className="self-start">
+            <div id="delivery-stores" className="w-full"><DeliveryStoresUI /></div>
+            <FeaturesComponent />
+            <div id="details" className="self-start w-full space-y-6">
               <ProductDetailsSection />
             </div>
           </div>
         </div>
       </div>
       <div className="w-full">
-        <WarrantyFeatures />
+
         <BannerSlidder />
         <YouMayLike />
         <SimilarProducts productData={productData} />
-        <CustomerReviewSection productId={productData.product_id} />
+        <div id="reviews">
+          <CustomerReviewSection productId={productData.product_id} />
+        </div>
         <RecentlyViewed />
         <ContinueBrowsing />
         <More18KProducts />
@@ -851,7 +895,8 @@ const ProductDetailWebPage = () => {
         <ShopByProducts />
         <Footer />
       </div>
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40">
+      {/* <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40"> */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-30">
         <div className="flex justify-end">
           <button
             onClick={handleAddToCart}
