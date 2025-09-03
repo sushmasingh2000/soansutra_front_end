@@ -368,7 +368,7 @@ const ProductDetailWebPage = () => {
         </div>
       </div>
       {showToast && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-[10000]">
           <div className="flex items-center">
             <svg
               className="w-4 h-4 mr-2"
@@ -861,7 +861,7 @@ const ProductDetailWebPage = () => {
       </div>
       {showPriceBreakupModal && (
         <div
-          className="fixed inset-0 backdrop-blur-sm bg-[#77778870] bg-opacity-10 z-50 flex items-end md:items-stretch md:justify-end overflow-hidden"
+          className="fixed inset-0 backdrop-blur-sm bg-[#77778870] bg-opacity-10 z-[10000] flex items-end md:items-stretch md:justify-end overflow-hidden"
           onClick={handleBackdropClick}
         >
           <div
@@ -1038,7 +1038,7 @@ const ProductDetailWebPage = () => {
       )}
       {showCustomizationModal && (
         <div
-          className="fixed inset-0 backdrop-blur-sm bg-[#77778870] bg-opacity-10 z-50 flex items-end md:items-stretch md:justify-end overflow-hidden"
+          className="fixed inset-0 backdrop-blur-sm bg-[#77778870] bg-opacity-10 z-[10000] flex items-end md:items-stretch md:justify-end overflow-hidden"
           onClick={handleBackdropClick}
         >
           <div
