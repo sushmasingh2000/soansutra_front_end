@@ -508,8 +508,9 @@ export default function Header() {
             <div className="relative w-full bg-white h-full shadow-xl overflow-y-auto flex flex-col">
               {showSubcategory ? (
                 <SubcategoryView
-                  category={selectedCategory} // Pass category object here
-                  onBack={() => setShowSubcategory(false)} // Optional: pass a back function
+                  category={selectedCategory}
+                  onBack={() => setShowSubcategory(false)}
+                  onCloseDrawer={() => setIsMobileMenuOpen(false)}
                 />
               ) : (
                 <>
@@ -553,7 +554,7 @@ export default function Header() {
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <HeartIcon className="h-5 w-5" />
-                          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                          <span className="absolute top-2 right-10 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                             {wishlistitems?.length}
                           </span>
                         </Link>
@@ -631,27 +632,36 @@ export default function Header() {
                   )}
                   <div className="px-4 py-2">
                     <div className="grid grid-cols-2 gap-4">
-                      {categories.map((item, index) => (
-                        <div
-                          key={index}
-                          className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer"
-                          onClick={() => {
-                            setSelectedCategory(item); // Set selected category
-                            setShowSubcategory(true); // Show the SubcategoryView
-                          }}
-                        >
-                          <div className="flex flex-col items-center text-center space-y-2">
-                            <img
-                              src={item.cat_image}
-                              alt={item.name}
-                              className="w-12 h-12 object-contain"
-                            />
-                            <span className="text-sm font-medium text-gray-800 leading-tight">
-                              {item.name}
-                            </span>
+                      {loading
+                        ? Array.from({ length: 6 }).map((_, index) => (
+                          <div className="bg-gray-50 rounded-lg p-4">
+                            <div className="flex flex-col items-center text-center space-y-2">
+                              <div className="w-12 h-12 bg-gray-200 rounded-md animate-pulse" />
+                              <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                        : categories.map((item, index) => (
+                          <div
+                            key={index}
+                            className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer"
+                            onClick={() => {
+                              setSelectedCategory(item); // Set selected category
+                              setShowSubcategory(true); // Show the SubcategoryView
+                            }}
+                          >
+                            <div className="flex flex-col items-center text-center space-y-2">
+                              <img
+                                src={item.cat_image}
+                                alt={item.name}
+                                className="w-12 h-12 object-contain"
+                              />
+                              <span className="text-sm font-medium text-gray-800 leading-tight">
+                                {item.name}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
                     </div>
 
                     {/* More Jewellery Button */}

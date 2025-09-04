@@ -15,8 +15,8 @@ const ProductMaterial = () => {
     const [formData, setFormData] = useState({
         ma_material_id: "",
         material_name: "",
-        unit:0,
-        material_price: 0
+        unit: 0,
+        material_price: 1
     });
 
     const fetchMasterMaterials = async () => {
@@ -63,25 +63,25 @@ const ProductMaterial = () => {
 
     const resetForm = () => {
         setFormData({
-            ma_material_id:"",
+            ma_material_id: "",
             material_name: "",
             unit: 0,
-            material_price: 0
+            material_price: 1
         });
         setSelectedMaterial(null);
     };
 
     const handleSubmit = async () => {
-        const { ma_material_id ,material_name } = formData;
+        const { ma_material_id, material_name } = formData;
 
-        if ( !ma_material_id || !material_name) {
+        if (!ma_material_id || !material_name) {
             toast.error("Name are required.");
             return;
         }
 
         setLoading(true);
         const payload = selectedMaterial
-            ? { ma_material_id: selectedMaterial.ma_material_id, ...formData }
+            ? { material_id: selectedMaterial.material_id, ma_material_id: selectedMaterial.ma_material_id, ...formData }
             : { ...formData };
 
         const endpointUrl = selectedMaterial
@@ -107,15 +107,15 @@ const ProductMaterial = () => {
     const handleEdit = (material) => {
         setSelectedMaterial(material);
         setFormData({
-            ma_material_id: material.master_mat_id  || "",
+            material_id: material.material_id,
+            ma_material_id: material.master_mat_id || "",
             material_name: material.material_name || "",
-            unit: 0 || "",
-            material_price: 0 || "",
+            unit: 0 ,
+            material_price: 1,
 
         });
         setModalOpen(true);
     };
-
     const handleDelete = async (material_id) => {
         try {
             const res = await apiConnectorGet(`${endpoint.delete_material}?material_id=${material_id}`);
@@ -192,7 +192,7 @@ const ProductMaterial = () => {
                         <h2 className="text-xl font-semibold">
                             {selectedMaterial ? "Edit Material" : "Add Material"}
                         </h2>
-                      <select
+                        <select
                             name="ma_material_id"
                             value={formData.ma_material_id}
                             onChange={(e) => setFormData({ ...formData, ma_material_id: e.target.value })}
@@ -213,7 +213,7 @@ const ProductMaterial = () => {
                             onChange={(e) => setFormData({ ...formData, material_name: e.target.value })}
                             className="w-full border p-2 rounded"
                         />
-                        <select
+                        {/* <select
                             name="unit"
                             value={formData.unit}
                             onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
@@ -225,16 +225,16 @@ const ProductMaterial = () => {
                                     {unit.un_name}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
 
-                        <input
+                        {/* <input
                             type="text"
                             name="material_price"
                             placeholder="Material Price"
                             value={formData.material_price}
                             onChange={(e) => setFormData({ ...formData, material_price: e.target.value })}
                             className="w-full border p-2 rounded"
-                        />
+                        /> */}
                         <div className="flex justify-end space-x-2">
                             <button
                                 onClick={() => {

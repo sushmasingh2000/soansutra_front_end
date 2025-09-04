@@ -12,9 +12,9 @@ const MasterMaterial = () => {
 
   const [formData, setFormData] = useState({
     ma_material_name: "",
-    ma_price: "",
+    ma_price: 0,
     ma_unit: "cr",
-    ma_value: "",
+    ma_value: 0,
   });
 
   const fetchMaterials = async () => {
@@ -79,7 +79,7 @@ const MasterMaterial = () => {
     setSelectedMaterial(material);
     setFormData({
       ma_material_name: material.ma_material_name || "",
-      ma_price: material.ma_price || "",
+      ma_price: Number(material.ma_price) || "",
       ma_unit: material.ma_unit || "ct",
       ma_value: material.ma_value || "",
     });
@@ -106,7 +106,7 @@ const MasterMaterial = () => {
           onClick={() => setModalOpen(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          + Add Material
+          + Add Master Material
         </button>
       </div>
 

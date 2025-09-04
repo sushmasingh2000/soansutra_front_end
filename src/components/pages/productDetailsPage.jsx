@@ -89,6 +89,8 @@ const ProductDetailWebPage = () => {
     }
   }, [productData?.product_id]);
 
+  console.log(selectedVariant?.tax_details)
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
@@ -392,69 +394,49 @@ const ProductDetailWebPage = () => {
           {productData.description || "No description available."}
         </p>
       </div>
-      {productData.specifications && (
-        <>
-          <div className="bg-orange-50 rounded-lg p-3 mb-3 border border-orange-100">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 bg-orange-200 rounded-full flex items-center justify-center">
-                <GoldIcon />
-              </div>
-              <span className="font-medium text-gray-800 text-sm">GOLD</span>
+      {selectedVariant?.material_details?.map((material, index) => (
+        <div
+          key={index}
+          className="bg-orange-50 rounded-lg mb-3 border mx-2 border-orange-100"
+        >
+          {/* Material Header */}
+          <div className="flex items-center gap-2 rounded-tr-lg rounded-tl-lg p-2 mb-2 bg-orange-100">
+            <div className="w-5 h-5 bg-orange-200 rounded-full flex items-center justify-center">
+              <GoldIcon />
             </div>
-            <div className="grid grid-cols-3 gap-3 text-xs">
-              <div>
-                <p className="text-gray-600 mb-1">Dimensions</p>
-                <p className="text-gray-800">
-                  {productData.specifications.dimensions ||
-                    "Width: N/A, Height: N/A"}
+            <span className="font-medium text-[#45289b] text-sm">
+              {material.master_mat_name} ({material.material_name})
+            </span>
+          </div>
+
+          {/* Data Grid */}
+          <div className="grid grid-cols-3 text-xs p-3">
+            {/* Headings */}
+            <div className=" mb-3  border-r font-semibold text-[#45289b] border-orange-200  ">Dimensions</div>
+            <div className=" mb-3 font-semibold border-r text-[#45289b] border-orange-200 text-center">Weight</div>
+            <div className=" mb-3 font-semibold text-[#45289b] text-center">Purity</div>
+
+            {/* Values */}
+            <div className="text-gray-800 border-r border-orange-200 ">
+              {selectedVariant?.attributes?.map((attr, i) => (
+                <p  key={i}>
+                  {attr?.attribute_name} : {attr?.value}
                 </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Weight</p>
-                <p className="text-gray-800">
-                  {selectedVariant?.varient_weight ||
-                    productData.weight ||
-                    "N/A"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Purity</p>
-                <p className="text-gray-800">
-                  {productData.specifications.purity || "N/A"}
-                </p>
-              </div>
+              ))}
+            </div>
+
+            <div className="text-gray-800 border-r border-orange-200 ">
+              <p className="text-center">{material?.weight}</p>
+            </div>
+
+            <div className="text-gray-800">
+              <p className="text-center">{material?.pur_stamp_name}</p>
             </div>
           </div>
-          <div className="bg-blue-50 rounded-lg p-3 mb-3 border border-blue-100">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center text-blue-800">
-                <DiamondIcon />
-              </div>
-              <span className="font-medium text-gray-800 text-sm">DIAMOND</span>
-            </div>
-            <div className="grid grid-cols-3 gap-3 text-xs">
-              <div>
-                <p className="text-gray-600 mb-1">Type</p>
-                <p className="text-gray-800">
-                  {productData.specifications.diamondType || "N/A"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Setting</p>
-                <p className="text-gray-800">
-                  {productData.specifications.setting || "N/A"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Total Weight</p>
-                <p className="text-gray-800">
-                  {productData.specifications.diamondWeight || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+        </div>
+      ))}
+
+
       {!showLess && (
         <>
           <div className="px-3 py-2 border-t border-gray-100">
@@ -927,9 +909,9 @@ const ProductDetailWebPage = () => {
                 </button>
               </div>
             </div>
-            <div className="p-4 space-y-6 mb-10">
+            <div className="p-4 space-y-6 mb-1">
               <div>
-                <h3 className="text-sm font-semibold text-gray-800 mb-4">
+                <h3 className="text-sm mt-10 font-semibold text-gray-800 mb-4">
                   PRICE BREAKUP
                 </h3>
 
@@ -972,7 +954,7 @@ const ProductDetailWebPage = () => {
                             </div>
 
                             {/* Material Rows */}
-                            {materials.map((material, index) => (
+                            {materials?.map((material, index) => (
                               <div
                                 key={`mat-${i}-${index}`}
                                 className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
@@ -981,10 +963,10 @@ const ProductDetailWebPage = () => {
                                   {material?.pur_stamp_name} {material?.material_name}
                                 </div>
                                 <div>
-                                  ₹{material?.ma_price_per_unit} / {material?.ma_unit}
+                                  ₹{material?.final_mat_price_per_unit} / {material?.ma_unit}
                                 </div>
-                                <div>{material?.weight} / {material?.ma_unit}</div>
-                                <div>{material?.sub_total_price}</div>
+                                <div>{Number(material?.weight)?.toFixed(0, 3)} / {material?.ma_unit}</div>
+                                <div>{Number(material?.sub_total_price)?.toFixed(0, 2)}</div>
                               </div>
                             ))}
 
@@ -1004,7 +986,7 @@ const ProductDetailWebPage = () => {
                         <div>SubTotal</div>
                         <div>-</div>
                         <div>-</div>
-                        <div>{rupees}{totalMaterialValue}</div>
+                        <div>{rupees}{Number(totalMaterialValue)?.toFixed(2)}</div>
                       </div>
 
                       {/* Making Charges */}
@@ -1021,10 +1003,9 @@ const ProductDetailWebPage = () => {
                             ({Number(selectedVariant?.making_price)?.toFixed(0, 2) || 0}%)
                           </div>}
                       </div>
-
-                      {/* Grand Total */}
-                      <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
-                        <div>Grand Total</div>
+                      {/* {total} */}
+                      <div className="grid grid-cols-4 gap-2 text-xs pt-2 text-gray-800 font-bold border-t mt-2">
+                        <div> Total</div>
                         <div>-</div>
                         <div>-</div>
                         <div>
@@ -1036,34 +1017,136 @@ const ProductDetailWebPage = () => {
                           )}
                         </div>
                       </div>
+
+
+                      {/* {tax} */}
+                      <p className="text-left font-bold mt-2">Tax</p>
+                      {selectedVariant?.tax_details?.map((items) => {
+                        return <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                          <div>{items?.tax_name}</div>
+                          <div>-</div>
+                          <div>-</div>
+                          <div>{items?.tax_percentage}% </div>
+                        </div>
+                      })}
+                      <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                        <div>Total Tax</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          + {
+                            (() => {
+                              const makingCharge = selectedVariant?.mak_price_type === "Percent"
+                                ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
+                                : Number(selectedVariant?.making_price || 0);
+
+                              const total = totalMaterialValue + makingCharge;
+
+                              const totalTaxPercentage = selectedVariant?.tax_details
+                                ?.reduce((acc, item) => acc + Number(item?.tax_percentage || 0), 0) || 0;
+
+                              const taxAmount = (total * totalTaxPercentage) / 100;
+
+                              return taxAmount.toFixed(2); // Optional: format to 2 decimal places
+                            })()
+                          }
+
+                        </div>
+
+                      </div>
+                      {/* Discount */}
+                      <p className="text-left font-bold mt-2">Discount</p>
+                      {selectedVariant?.discount_details?.map((items) => {
+                        return <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                          <div>{items?.discount_name}</div>
+                          <div>-</div>
+                          <div>-</div>
+                          <div>{items?.discount_type === "Flat" && rupees}{items?.discount_value}{items?.discount_type === "Percentage" && '%'}</div>
+                        </div>
+                      })}
+                      <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                        <div>Total Discount</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          - {
+                            (() => {
+                              const makingCharge = selectedVariant?.mak_price_type === "Percent"
+                                ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
+                                : Number(selectedVariant?.making_price || 0);
+
+                              const total = totalMaterialValue + makingCharge;
+
+                              const totalDiscountPercentage =
+                                (total *
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Percentage")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  )) / 100;
+
+                              const totalDiscountFlat =
+                                (
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Flat")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  ));
+
+
+                              return (totalDiscountPercentage + totalDiscountFlat).toFixed(2);
+                            })()
+                          }
+                        </div>
+
+                      </div>
+                      {/* Grand Total */}
+                      <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
+                        <div>Grand Total</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          {
+                            (() => {
+                              const makingCharge = selectedVariant?.mak_price_type === "Percent"
+                                ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
+                                : Number(selectedVariant?.making_price || 0);
+
+                              const total = totalMaterialValue + makingCharge;
+
+                              const totalDiscountPercentage =
+                                (total *
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Percentage")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  )) / 100;
+
+                              const totalDiscountFlat =
+                                (
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Flat")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  ));
+
+                              const totalDiscount = totalDiscountPercentage + totalDiscountFlat;
+
+                              const totalTaxPercentage = selectedVariant?.tax_details
+                                ?.reduce((acc, item) => acc + Number(item?.tax_percentage || 0), 0) || 0;
+
+                              const taxAmount = (total * totalTaxPercentage) / 100;
+
+                              return (total + taxAmount - totalDiscount).toFixed(2);
+                            })()
+                          }
+                        </div>
+                      </div>
                     </>
                   );
                 })()}
               </div>
             </div>
-
-
-            {/* <div className="p-4 space-y-6 mb-10">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-800 mb-4">
-                  PRICE BREAKUP
-                </h3>
-                <div className="grid grid-cols-4 gap-2 mb-3 text-xs font-medium text-purple-600">
-                  <div>COMPONENT</div>
-                  <div>RATE</div>
-                  <div>WEIGHT</div>
-                  <div>VALUE</div>
-                </div>
-                {selectedVariant?.material_details?.map((material, index) => (
-                  <div key={index} className="grid grid-cols-4 gap-2 text-xs text-gray-800">
-                    <div>{material.material_name}</div>
-                    <div>₹{material.material_price}</div>
-                    <div>{material.weight} {material.v_un_name}</div>
-                    <div>{formatPrice(calculateMaterialValue(material))}</div>
-                  </div>
-                ))}
-              </div>
-            </div> */}
           </div>
         </div>
       )}
