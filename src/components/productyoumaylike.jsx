@@ -9,13 +9,11 @@ const YouMayLike = () => {
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
- const { data } = useQuery(
-  ["frequent_product"],
-  () => apiConnectorGet(endpoint.get_most_frequent),
-  usequeryBoolean,
-);
-
-
+  const { data } = useQuery(
+    ["frequent_product"],
+    () => apiConnectorGet(endpoint.get_most_frequent),
+    usequeryBoolean,
+  );
   const rawProducts = data?.data?.result || [];
 
   // Transform product data into UI-friendly structure
