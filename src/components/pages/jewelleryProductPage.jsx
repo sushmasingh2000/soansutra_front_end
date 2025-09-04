@@ -275,7 +275,7 @@ const ProductCard = ({ product, onWishlist }) => {
 
         <div className="flex items-center gap-2 mb-1">
           <span className="text-sm font-semibold text-gray-800">
-            ₹{Number(product.total_product_price).toFixed(2)}
+            ₹{Number(product.final_varient_price).toFixed(2)}
           </span>
         </div>
 

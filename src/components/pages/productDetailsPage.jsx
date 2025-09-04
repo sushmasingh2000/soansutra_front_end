@@ -89,7 +89,6 @@ const ProductDetailWebPage = () => {
     }
   }, [productData?.product_id]);
 
-  console.log(selectedVariant?.tax_details)
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -628,10 +627,7 @@ const ProductDetailWebPage = () => {
                     <span className="text-xl font-bold text-gray-900">
                       ₹{" "}
                       {Number(
-                        selectedVariant?.material_details?.reduce(
-                          (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
-                          0
-                        ) || 0
+                        selectedVariant?.final_varient_price
                       ).toFixed(2)
                       }
                     </span>
@@ -1011,20 +1007,14 @@ const ProductDetailWebPage = () => {
                         <div>-</div>
                         <div>-</div>
                         <div>
-                          {/* {formatPrice(
-                            totalMaterialValue +
-                            (selectedVariant?.mak_price_type === "Percent"
-                              ? (Number(selectedVariant?.making_price || 0) / 100 * totalMaterialValue)
-                              : Number(selectedVariant?.making_price || 0))
-                          )} */}
-                          {formatPrice(
+                          {rupees} {
                             (
                               totalMaterialValue +
                               (selectedVariant?.mak_price_type === "Percent"
                                 ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
                                 : Number(selectedVariant?.making_price || 0))
                             ).toFixed(2) // Ensures the final number has 2 decimal places
-                          )}
+                          }
 
                         </div>
                       </div>
@@ -1117,7 +1107,8 @@ const ProductDetailWebPage = () => {
                         <div>-</div>
                         <div>-</div>
                         <div>
-                          {rupees}  {
+                          {rupees}  {Math.round(Number(selectedVariant?.final_varient_price))?.toFixed(2)}
+                          {/* {
                             (() => {
                               const makingCharge = selectedVariant?.mak_price_type === "Percent"
                                 ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
@@ -1147,10 +1138,10 @@ const ProductDetailWebPage = () => {
                                 ?.reduce((acc, item) => acc + Number(item?.tax_percentage || 0), 0) || 0;
 
                               const taxAmount = (total * totalTaxPercentage) / 100;
-
-                              return (total + taxAmount - totalDiscount).toFixed(2);
+                              const grand = total + taxAmount - totalDiscount
+                              return Math.round(grand)
                             })()
-                          }
+                          } */}
                         </div>
                       </div>
                     </>

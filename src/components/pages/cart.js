@@ -47,11 +47,7 @@ export default function ResponsiveCart() {
   }
   // Calculate subtotal by summing variant price * quantity
   const subtotal = cartItems.reduce((sum, item) => {
-    const materialTotal = item.varient_details?.material_details?.reduce(
-      (acc, mat) => acc + Number(mat?.sub_total_price || 0),
-      0
-    );
-
+    const materialTotal = item?.final_varient_price
     return sum + (materialTotal * item.quantity);
   }, 0);
 
@@ -140,10 +136,7 @@ export default function ResponsiveCart() {
                         {/* ₹{varient_details.varient_price.toLocaleString()} */}
                         ₹{" "}
                         {Number(
-                          varient_details?.material_details?.reduce(
-                            (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
-                            0
-                          ) || 0
+                       item?.final_varient_price
                         ).toFixed(2)
                         }
                       </div>
@@ -281,10 +274,7 @@ export default function ResponsiveCart() {
                       <div className="text-base font-bold text-gray-900 mb-1">
                         ₹{" "}
                         {Number(
-                          varient_details?.material_details?.reduce(
-                            (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
-                            0
-                          ) || 0
+                          item?.final_varient_price
                         ).toFixed(2)
                         }
                       </div>
@@ -336,7 +326,7 @@ export default function ResponsiveCart() {
             <div className="border-t pt-2 mb-2">
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 text-sm">Total Cost</span>
-                <span className="text-base font-bold text-gray-900">{rupees} {Number(totalCost)?.toFixed(2)}</span>
+                <span className="text-base font-bold text-gray-900">{rupees} {Math.round(totalCost)}</span>
               </div>
             </div>
 

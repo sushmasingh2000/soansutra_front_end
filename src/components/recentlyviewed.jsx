@@ -66,7 +66,7 @@ const RecentlyViewed = () => {
               </div>
               <div className="text-center">
                 <span className="text-lg font-semibold text-gray-800">
-                  ₹{parseFloat(product.price).toLocaleString()}
+                     ₹{Number(product.final_varient_price).toFixed(2)}
                 </span>
                 <p className="text-sm text-gray-600 mt-1">{product.name}</p>
               </div>
@@ -109,7 +109,7 @@ const RecentlyViewed = () => {
               </div>
               <div className="text-left">
                 <span className="text-sm font-semibold text-gray-800">
-                  ₹{parseFloat(product.price).toLocaleString()}
+                      ₹{Number(product.final_varient_price).toFixed(2)}
                 </span>
                 <p className="text-xs text-gray-600 line-clamp-2">
                   {product.name}

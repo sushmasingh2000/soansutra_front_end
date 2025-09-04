@@ -30,7 +30,7 @@ const YouMayLike = () => {
       console.warn("Failed to parse product_images", err);
     }
 
-    const price = parseFloat(product.price);
+    const price = parseFloat(product.final_varient_price);
     const originalPrice = price * 1.2; // fake original price with 20% markup
     const discount = `Save ${Math.round(((originalPrice - price) / originalPrice) * 100)}%`;
 
