@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import WarrantyFeatures from '../trustBadge';
 import CartHeader from '../shoppingCartHeader';
 import { apiConnectorGet } from '../../utils/ApiConnector';
-import { endpoint } from '../../utils/APIRoutes';
+import { endpoint, rupees } from '../../utils/APIRoutes';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -33,23 +33,27 @@ export default function ResponsiveCart() {
     navigate(-1);
   };
 
-  const removeItem = async(id)=>{
-      try{
-        const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`)
-        toast(response?.data?.message)
-        if(response?.data?.success){
-          getCart()
-        }
+  const removeItem = async (id) => {
+    try {
+      const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`)
+      toast(response?.data?.message)
+      if (response?.data?.success) {
+        getCart()
       }
-      catch(e){
-        console.log("somthing went wrong")
-      }
+    }
+    catch (e) {
+      console.log("somthing went wrong")
+    }
   }
   // Calculate subtotal by summing variant price * quantity
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + (item.varient_details.varient_price * item.quantity),
-    0
-  );
+  const subtotal = cartItems.reduce((sum, item) => {
+    const materialTotal = item.varient_details?.material_details?.reduce(
+      (acc, mat) => acc + Number(mat?.sub_total_price || 0),
+      0
+    );
+
+    return sum + (materialTotal * item.quantity);
+  }, 0);
 
   // Calculate total savings if you want (assuming discount is percentage on price)
   const totalSavings = cartItems.reduce((sum, item) => {
@@ -133,7 +137,15 @@ export default function ResponsiveCart() {
 
                       {/* Price */}
                       <div className="text-base font-bold text-gray-900 mb-1">
-                        ₹{varient_details.varient_price.toLocaleString()}
+                        {/* ₹{varient_details.varient_price.toLocaleString()} */}
+                        ₹{" "}
+                        {Number(
+                          varient_details?.material_details?.reduce(
+                            (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
+                            0
+                          ) || 0
+                        ).toFixed(2)
+                        }
                       </div>
 
                       {/* Quantity */}
@@ -267,7 +279,14 @@ export default function ResponsiveCart() {
 
                       {/* Price */}
                       <div className="text-base font-bold text-gray-900 mb-1">
-                        ₹{varient_details.varient_price.toLocaleString()}
+                        ₹{" "}
+                        {Number(
+                          varient_details?.material_details?.reduce(
+                            (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
+                            0
+                          ) || 0
+                        ).toFixed(2)
+                        }
                       </div>
 
                       {/* Quantity */}
@@ -302,7 +321,7 @@ export default function ResponsiveCart() {
             <div className="space-y-2 mb-3">
               <div className="flex justify-between text-xs">
                 <span className="text-gray-700">Subtotal</span>
-                <span className="font-medium">{formatPrice(subtotal)}</span>
+                <span className="font-medium">{rupees} {Number(subtotal)?.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-gray-700">You Saved</span>
@@ -317,7 +336,7 @@ export default function ResponsiveCart() {
             <div className="border-t pt-2 mb-2">
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 text-sm">Total Cost</span>
-                <span className="text-base font-bold text-gray-900">{formatPrice(totalCost)}</span>
+                <span className="text-base font-bold text-gray-900">{rupees} {Number(totalCost)?.toFixed(2)}</span>
               </div>
             </div>
 
