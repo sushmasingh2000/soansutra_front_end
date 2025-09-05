@@ -16,6 +16,7 @@ const Products = () => {
   const [editModal, setEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [viewModal, setViewModal] = useState(false);
+  const [isCollection, setisCollection] = useState(false);
   const [viewData, setViewData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showCollectionField, setShowCollectionField] = useState(false);
@@ -34,7 +35,7 @@ const Products = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await apiConnectorGet(endpoint.get_product_all);
+      const response = await apiConnectorGet(endpoint.get_product_all, { isCollection: isCollection });
       setProducts(response?.data?.result?.data || []);
     } catch (err) {
       toast.error("Failed to fetch products.");
@@ -226,7 +227,7 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [isCollection]);
 
 
   const { data } = useQuery(
@@ -243,6 +244,7 @@ const Products = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Products</h1>
+
         <button
           onClick={() => setCreateModal(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
@@ -251,7 +253,23 @@ const Products = () => {
           <span>Add New Product</span>
         </button>
       </div>
-
+      <div className="flex justify-start gap-5 mb-2">
+        <button
+          onClick={() => setisCollection(false)}
+          className={`
+            ${isCollection ? "bg-gray-300 text-black" : "bg-blue-600 text-white"}  px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2
+            `}
+        >
+          <span>Product</span>
+        </button>
+        <button
+          onClick={() => setisCollection(true)}
+          className={`
+            ${!isCollection ? "bg-gray-300 text-black" : "bg-blue-600 text-white"}  px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2
+            `}        >
+          <span>Collection</span>
+        </button>
+      </div>
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -358,7 +376,7 @@ const Products = () => {
                 onClick={() => setShowCollectionField(true)}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-fit"
               >
-               Add Collection
+                Add Collection
               </button>
             </div>
             <div className="grid grid-cols-1 gap-4">
