@@ -40,6 +40,8 @@ import ExchangeRedeemComponent from "../components/pages/exchangeegold";
 import TreasureChestBanner from "../components/pages/treasurechest";
 import InsiderEmail from "../components/admin/InsiderEmail.js";
 import Collection from "../components/admin/Collection.js";
+import Termscondition from "../components/pages/termscondition.jsx"
+import Video from "../components/admin/Video.js";
 
 export const routes = [
   {
@@ -255,6 +257,14 @@ export const routes = [
     ),
   },
   {
+    path: "/video",
+    element: (
+      <MainLayout>
+        <Video />{" "}
+      </MainLayout>
+    ),
+  },
+  {
     path: "/customer",
     element: (
       <MainLayout>
@@ -321,6 +331,10 @@ export const routes = [
     {
     path: "/treasure-chest",
     element: <TreasureChestBanner/>,
+  },
+   {
+    path: "/terms-and-conditions",
+    element: <Termscondition/>,
   },
 ];
 

@@ -173,6 +173,12 @@ const fullMenuItems = [
     path: "/banner",
   },
   {
+    id: "Video",
+    label: "Video",
+    icon: <Image />,
+    path: "/video",
+  },
+  {
     id: "demo",
     label: "Request Call",
     icon: <Call />,

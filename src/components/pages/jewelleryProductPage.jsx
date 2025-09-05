@@ -483,9 +483,9 @@ const DynamicProductListingPage = () => {
 
     setProducts(filteredProducts);
   }, [activeTab, filters, sortBy, allProducts]);
-
+  const isCollection = !!collectionId;
   const applyBackendFilters = async (newFilters) => {
-    const payload = {};
+    const payload = {isCollection};
 
     if (newFilters.price) payload.price_group = newFilters.price;
     if (newFilters.tags) payload.product_tags = newFilters.tags;

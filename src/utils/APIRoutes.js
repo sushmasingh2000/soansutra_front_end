@@ -3,7 +3,13 @@ export const domain ="https://backend.sonasutra.in";
 export const rupees = "₹" ;
 
 export const endpoint = {
-
+  review_customer:`${domain}/api/v1/create-product-review`,
+  get_customer_review:`${domain}/api/v1/get-product-review`,
+  get_customer_single_review:`${domain}/api/v1/get-single-product-review`,
+  get_continue_browsing:`${domain}/api/v1/u-get-continue-browing-items`,
+  
+  
+  
   email_insider: `${domain}/api/v1/insert-external-leads`,
   login: `${domain}/api/v1/login-user`,
   //admin
@@ -84,6 +90,12 @@ export const endpoint = {
    get_collection:`${domain}/api/v1/get-collections`,
    update_collection: `${domain}/api/v1/update-collections`,
    delete_collection: `${domain}/api/v1/delete-collections`,
+
+   //bnanner
+  create_video: `${domain}/api/v1/create-videos`,
+  get_video: `${domain}/api/v1/get-videos`,
+  update_video: `${domain}/api/v1/update-videos`,
+  delete_video: `${domain}/api/v1/delete-videos`,
    
 
   // attribute
