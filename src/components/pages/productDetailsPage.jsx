@@ -477,13 +477,13 @@ const ProductDetailWebPage = () => {
           </div>
           <div className="flex flex-col items-center text-center flex-1">
             <img
-              src="https://cdn.caratlane.com/media/static/images/web/Tata-Certified-1.png"
+              src="https://sonasutra.in/static/media/desklogo.6f320541be826154d86f.png"
               alt="Tata Certified"
               className="h-6 object-contain mb-1"
             />
             <div className="text-xs text-gray-700">
-              <div className="font-medium text-xs">Trust of TATA</div>
-              <div className="text-xs">Spirit of CaratLane</div>
+              <div className="font-medium text-xs">Trust of Sonasutra</div>
+              <div className="text-xs">Spirit of Sonasutra</div>
             </div>
           </div>
           <div className="flex flex-col items-center text-center flex-1">
@@ -494,7 +494,7 @@ const ProductDetailWebPage = () => {
             />
             <div className="text-xs text-gray-700">
               <div className="font-medium text-xs">100% Certified</div>
-              <div className="text-xs">by CaratLane</div>
+              <div className="text-xs">by Sonasutra</div>
             </div>
           </div>
         </div>

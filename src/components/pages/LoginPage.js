@@ -84,7 +84,7 @@ const LoginModal = ({ isOpen, onClose }) => {
         </div>
 
         <p className="mt-4 text-center text-[10px] text-gray-400">
-          By continuing, you agree to our <a href="#" className="text-purple-500">terms</a> & <a href="#" className="text-purple-500">privacy policy</a>.
+          By continuing, you agree to our <a href="/terms-and-conditions" className="text-purple-500">terms</a> & <a href="terms-and-conditions" className="text-purple-500">privacy policy</a>.
         </p>
       </div>
     </div>
