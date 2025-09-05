@@ -38,6 +38,7 @@ import BuyGold from "../components/pages/buygold";
 import SellGold from "../components/pages/sellgold";
 import ExchangeRedeemComponent from "../components/pages/exchangeegold";
 import TreasureChestBanner from "../components/pages/treasurechest";
+import Termscondition from "../components/pages/termscondition.jsx"
 
 export const routes = [
   {
@@ -304,6 +305,10 @@ export const routes = [
     {
     path: "/treasure-chest",
     element: <TreasureChestBanner/>,
+  },
+   {
+    path: "/terms-and-conditions",
+    element: <Termscondition/>,
   },
 ];
 
