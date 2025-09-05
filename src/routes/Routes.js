@@ -38,6 +38,8 @@ import BuyGold from "../components/pages/buygold";
 import SellGold from "../components/pages/sellgold";
 import ExchangeRedeemComponent from "../components/pages/exchangeegold";
 import TreasureChestBanner from "../components/pages/treasurechest";
+import InsiderEmail from "../components/admin/InsiderEmail.js";
+import Collection from "../components/admin/Collection.js";
 
 export const routes = [
   {
@@ -70,6 +72,14 @@ export const routes = [
     element: (
       <MainLayout>
         <Role />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/leads",
+    element: (
+      <MainLayout>
+        <InsiderEmail />{" "}
       </MainLayout>
     ),
   },
@@ -146,7 +156,14 @@ export const routes = [
       </MainLayout>
     ),
   },
- 
+   {
+    path: "/collection",
+    element: (
+      <MainLayout>
+        <Collection />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/inventory",
     element: (
@@ -246,7 +263,7 @@ export const routes = [
     ),
   },
   {
-    path: "/products_web/:id",
+    path: "/products_web",
     element: <DynamicProductListingPage />,
   },
   {

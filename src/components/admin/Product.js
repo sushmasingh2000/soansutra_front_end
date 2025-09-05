@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import ProductImageManager from "./ProductImage";
 import { useNavigate } from "react-router-dom";
 import { Edit, Eye, View } from "lucide-react";
 import { Delete } from "@mui/icons-material";
+import { useQuery } from "react-query";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -17,6 +18,8 @@ const Products = () => {
   const [viewModal, setViewModal] = useState(false);
   const [viewData, setViewData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showCollectionField, setShowCollectionField] = useState(false);
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +27,7 @@ const Products = () => {
     price: "1.0",
     product_category_id: "",
     product_subcategory_id: "",
+    product_coll_id: "",
     file: null,
   });
 
@@ -98,6 +102,7 @@ const Products = () => {
       price: "1.0",
       product_category_id: "",
       product_subcategory_id: "",
+      product_coll_id: "",
       file: null,
     });
   };
@@ -150,6 +155,7 @@ const Products = () => {
         description: formData.description,
         price: 1.0,
         product_category_id: formData.product_category_id,
+        product_coll_id: formData.product_coll_id,
         product_tags: "example_tag", // placeholder
       };
 
@@ -204,6 +210,7 @@ const Products = () => {
       price: 0 || "",
       product_category_id: product.product_category_id || "",
       product_subcategory_id: product.product_subcategory_id || "",
+      product_coll_id: product.product_coll_id || "",
       file: null,
     });
     setEditModal(true);
@@ -220,6 +227,17 @@ const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+
+  const { data } = useQuery(
+    ["collection_get"],
+    () => apiConnectorGet(endpoint.get_collection),
+    usequeryBoolean
+  );
+
+  const collections = data?.data?.result || [];
+
+
 
   return (
     <div className="p-6">
@@ -246,6 +264,9 @@ const Products = () => {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Subcategory
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Collection
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Variant
@@ -300,8 +321,9 @@ const Products = () => {
                       <span>{product.name}</span>
                     </td>
                     {/* <td className="px-6 py-4">₹{product.price}</td> */}
-                    <td className="px-6 py-4">{categoryName}</td>
-                    <td className="px-6 py-4">{subcategoryName}</td>
+                    <td className="px-6 py-4">{categoryName || "--"}</td>
+                    <td className="px-6 py-4">{subcategoryName || "--"}</td>
+                    <td className="px-6 py-4">{product?.collection_details?.coll_name || "---"}</td>
 
 
                     <td className="px-6 py-4">
@@ -330,8 +352,17 @@ const Products = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
-
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowCollectionField(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-fit"
+              >
+               Add Collection
+              </button>
+            </div>
             <div className="grid grid-cols-1 gap-4">
+
               <div className="flex flex-col gap-1  justify-start">
                 <label>Select Category</label>
                 <select
@@ -363,13 +394,31 @@ const Products = () => {
                   {subcategories.map((subcat) => (
                     <option
                       key={subcat.product_subcategory_id}
-                      value={subcat.product_subcategory_id}
-                    >
+                      value={subcat.product_subcategory_id} >
                       {subcat.sub_cat_name}
                     </option>
                   ))}
                 </select>
               </div>
+              {showCollectionField && (
+                <div className="flex flex-col gap-1 justify-start">
+                  <label>Select Collection</label>
+                  <select
+                    name="product_coll_id"
+                    value={formData.product_coll_id}
+                    onChange={handleInputChange}
+                    className="border border-gray-200 rounded p-2"
+                  >
+                    <option value="">Select Collection</option>
+                    {collections.map((item) => (
+                      <option key={item.coll_id} value={item.coll_id}>
+                        {item.coll_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div className="flex flex-col gap-1  justify-start">
                 <label>Product Name</label>
                 <input
@@ -378,8 +427,8 @@ const Products = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Product Name *"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
+                  className="w-full p-3 border border-gray-300 rounded-lg 
+                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
               </div>
               <div className="flex flex-col gap-1  justify-start">
                 <label>Product Image</label>
@@ -495,6 +544,25 @@ const Products = () => {
                       value={subcat.product_subcategory_id}
                     >
                       {subcat.sub_cat_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1  justify-start">
+                <label>Select Collection</label>
+                <select
+                  name="product_coll_id"
+                  value={formData.product_coll_id}
+                  onChange={handleInputChange}
+                  className="border border-gray-200 rounded p-2"
+                >
+                  <option value="">Select Collection </option>
+                  {collections.map((item) => (
+                    <option
+                      key={item.coll_id}
+                      value={item.coll_id}
+                    >
+                      {item.coll_name}
                     </option>
                   ))}
                 </select>

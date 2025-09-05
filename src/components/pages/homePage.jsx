@@ -38,7 +38,7 @@ const HomePage = () => {
                 <ServiceShowcase />
                 <SonasutraCollections />
                 <BannerSlidder />
-                <ExclusiveDealsSection />
+                {/* <ExclusiveDealsSection /> */}
                 <CaratLaneSignup />
             </Suspense>
 

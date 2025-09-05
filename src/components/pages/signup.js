@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 import { endpoint } from '../../utils/APIRoutes';
 import { BrandLogo } from '../brand-logo';
 import Footer from "../Footer1";
+import { useLoginModal } from '../../context/Login';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -58,7 +60,7 @@ const SignUpPage = () => {
 
     return errors;
   };
-
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
@@ -83,9 +85,11 @@ const SignUpPage = () => {
       });
 
       const data = response.data;
-       toast(data?.message);
+      toast(data?.message);
       if (data?.success) {
-        window.location.href = '/login';
+        window.location.reload();
+        navigate('/')
+        setShowLoginModal(true)
       } else {
         setError(data?.message || 'Signup failed. Please try again.');
       }
@@ -96,7 +100,7 @@ const SignUpPage = () => {
       setLoading(false);
     }
   };
-
+  const { setShowLoginModal } = useLoginModal();
   if (success) {
     return (
       <>
@@ -297,9 +301,9 @@ const SignUpPage = () => {
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-xs text-gray-600 text-center leading-relaxed">
                   By continuing you acknowledge that you are at least 18 years old and have read and agree to SonaSutra's{' '}
-                  <a href="#" className="text-purple-500 hover:text-purple-600 underline">terms and conditions</a>
+                  <p className="text-purple-500 hover:text-purple-600 underline">terms and conditions</p>
                   {' '}&{' '}
-                  <a href="#" className="text-purple-500 hover:text-purple-600 underline">privacy policy</a>.
+                  <p className="text-purple-500 hover:text-purple-600 underline">privacy policy</p>.
                 </p>
               </div>
 
@@ -326,12 +330,14 @@ const SignUpPage = () => {
               {/* Login Link */}
               <div className="flex justify-center items-center pt-3 border-t border-gray-100">
                 <span className="text-gray-600 text-xs">Already have an account? </span>
-                <a
-                  href="/login"
+                <p
                   className="text-purple-500 text-xs font-medium hover:text-purple-600 transition-colors duration-200 ml-1"
-                >
+                  onClick={() => {
+                    navigate('/');
+                    setShowLoginModal(true)
+                  }} >
                   Login
-                </a>
+                </p>
               </div>
             </div>
           </div>

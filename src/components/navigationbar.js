@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
@@ -85,33 +85,67 @@ const NavigationBar = () => {
   );
 
   const categories = categoryData?.data?.result || [];
+  const subcategoryCache = useRef({});
 
   const fetchSubcategories = async (categoryId) => {
-    if (activeCategoryId === categoryId && isDrawerOpen) {
-      setIsDrawerOpen(false);
-      setSubcategories([]);
-      return;
-    }
-    try {
-      setLoader(true)
+    // If subcategories are cached, use them
+    if (subcategoryCache.current[categoryId]) {
+      setSubcategories(subcategoryCache.current[categoryId]);
       setActiveCategoryId(categoryId);
       setActivecategoryId(categoryId);
+      setIsDrawerOpen(true);
+      return;
+    }
+
+    try {
+      setLoader(true);
+      setActiveCategoryId(categoryId);
+      setActivecategoryId(categoryId);
+
       const response = await axios.get(
         `${endpoint.get_sub_categroy_user}?category_id=${categoryId}`
       );
-      setSubcategories(response?.data?.result || []);
+
+      const fetchedSubcategories = response?.data?.result || [];
+
+      // Cache the result
+      subcategoryCache.current[categoryId] = fetchedSubcategories;
+
+      setSubcategories(fetchedSubcategories);
       setIsDrawerOpen(true);
     } catch (err) {
       toast.error("Failed to fetch subcategories.");
-    }
-    finally {
-      setLoader(false)
+    } finally {
+      setLoader(false);
     }
   };
 
+  // const fetchSubcategories = async (categoryId) => {
+  //   if (activeCategoryId === categoryId && isDrawerOpen) {
+  //     setIsDrawerOpen(false);
+  //     setSubcategories([]);
+  //     return;
+  //   }
+  //   try {
+  //     setLoader(true)
+  //     setActiveCategoryId(categoryId);
+  //     setActivecategoryId(categoryId);
+  //     const response = await axios.get(
+  //       `${endpoint.get_sub_categroy_user}?category_id=${categoryId}`
+  //     );
+  //     setSubcategories(response?.data?.result || []);
+  //     setIsDrawerOpen(true);
+  //   } catch (err) {
+  //     toast.error("Failed to fetch subcategories.");
+  //   }
+  //   finally {
+  //     setLoader(false)
+  //   }
+  // };
+
   const handleSubcategoryClick = (subcategoryId) => {
     setIsDrawerOpen(false);
-    navigate(`/products_web/${subcategoryId}`);
+    navigate(`/products_web?subcategory=${subcategoryId}`);
   };
   const handleMobileJewelryClick = (item) => {
     setIsMenuOpen(true);
@@ -129,8 +163,11 @@ const NavigationBar = () => {
     {
       ...usequeryBoolean,
       enabled: !!activecategoryId,
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 10,
     }
   );
+
 
   const sub_cate_product = data?.data?.result || [];
 
@@ -247,29 +284,29 @@ const NavigationBar = () => {
                   By Metal & Stone
                 </h3>
                 {loader ?
-                    Array.from({ length: 3 }).map((_, index) => (
-                      <Skeleton variant="rectangular" className="!w-16 !h-4 !my-1 !rounded-lg" />
-                    ))
-                    : (() => {
-                  const seen = new Set();
-                  return sub_cate_product?.map((item, index) => {
-                    if (seen.has(item?.master_mat_name)) return null; // Skip duplicates
-                    seen.add(item?.master_mat_name);
-                    return (
-                      <ul
-                        key={index}
-                        className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer"
-                      >
-                        <li onClick={() =>
-                          handleSubcategoryClick(item.product_subcategory_id)
-                        } >{item?.master_mat_name}</li>
-                        <li onClick={() =>
-                          handleSubcategoryClick(item.product_subcategory_id)
-                        } >{item?.material_name}</li>
-                      </ul>
-                    );
-                  });
-                })()}
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <Skeleton variant="rectangular" className="!w-16 !h-4 !my-1 !rounded-lg" />
+                  ))
+                  : (() => {
+                    const seen = new Set();
+                    return sub_cate_product?.map((item, index) => {
+                      if (seen.has(item?.master_mat_name)) return null; // Skip duplicates
+                      seen.add(item?.master_mat_name);
+                      return (
+                        <ul
+                          key={index}
+                          className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer"
+                        >
+                          <li onClick={() =>
+                            handleSubcategoryClick(item.product_subcategory_id)
+                          } >{item?.master_mat_name}</li>
+                          <li onClick={() =>
+                            handleSubcategoryClick(item.product_subcategory_id)
+                          } >{item?.material_name}</li>
+                        </ul>
+                      );
+                    });
+                  })()}
               </div>
 
               <div>
@@ -282,62 +319,62 @@ const NavigationBar = () => {
                       <Skeleton variant="rectangular" className="!w-16 !h-4 !rounded-lg" />
                     ))
                     : ([...new Set(sub_cate_product.map(item => item.price_group))]
-                    .sort((a, b) => {
-                      const getSortValue = (label) => {
-                        const match = label.match(/(\d+)(?!.*\d)/);
-                        return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
-                      };
-                      return getSortValue(a) - getSortValue(b);
-                    })
-                    .map((priceGroup, index) => {
-                      const item = sub_cate_product.find(p => p.price_group === priceGroup);
-                      return (
-                        <div
-                          key={index}
-                          onClick={() => item && handleSubcategoryClick(item.product_subcategory_id)}
-                          className="text-sm text-gray-600 font-semibold cursor-pointer hover:bg-gray-100 rounded transition-all duration-150 "
-                        >
-                          ₹ {priceGroup}
-                        </div>
-                      );
-                    }))}
+                      .sort((a, b) => {
+                        const getSortValue = (label) => {
+                          const match = label.match(/(\d+)(?!.*\d)/);
+                          return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
+                        };
+                        return getSortValue(a) - getSortValue(b);
+                      })
+                      .map((priceGroup, index) => {
+                        const item = sub_cate_product.find(p => p.price_group === priceGroup);
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => item && handleSubcategoryClick(item.product_subcategory_id)}
+                            className="text-sm text-gray-600 font-semibold cursor-pointer hover:bg-gray-100 rounded transition-all duration-150 "
+                          >
+                            ₹ {priceGroup}
+                          </div>
+                        );
+                      }))}
                 </div>
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
-               {loader ?
-                    Array.from({ length: 1 }).map((_, index) => (
-                      <Skeleton variant="rectangular" className="!w-48 !h-48 !rounded" />
-                    ))
-                    : subcategories[0]?.subcat_image ? (
-                  <img
-                    src={subcategories[0].subcat_image}
-                    alt="Preview"
-                    className="w-48 h-48 rounded shadow"
-                  />
-                ) : (
-                  <div className="text-sm text-gray-400">
-                    No image available
-                  </div>
-                )}
+                {loader ?
+                  Array.from({ length: 1 }).map((_, index) => (
+                    <Skeleton variant="rectangular" className="!w-48 !h-48 !rounded" />
+                  ))
+                  : subcategories[0]?.subcat_image ? (
+                    <img
+                      src={subcategories[0].subcat_image}
+                      alt="Preview"
+                      className="w-48 h-48 rounded shadow"
+                    />
+                  ) : (
+                    <div className="text-sm text-gray-400">
+                      No image available
+                    </div>
+                  )}
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
                 {loader ?
-                    Array.from({ length: 1 }).map((_, index) => (
-                      <Skeleton variant="rectangular" className="!w-48 !h-48  !rounded" />
-                    ))
-                    : subcategories[1]?.subcat_image ? (
-                  <img
-                    src={subcategories[1].subcat_image}
-                    alt="Preview"
-                    className="w-48 h-48 rounded shadow"
-                  />
-                ) : (
-                  <div className="text-sm text-gray-400">
-                    No image available
-                  </div>
-                )}
+                  Array.from({ length: 1 }).map((_, index) => (
+                    <Skeleton variant="rectangular" className="!w-48 !h-48  !rounded" />
+                  ))
+                  : subcategories[1]?.subcat_image ? (
+                    <img
+                      src={subcategories[1].subcat_image}
+                      alt="Preview"
+                      className="w-48 h-48 rounded shadow"
+                    />
+                  ) : (
+                    <div className="text-sm text-gray-400">
+                      No image available
+                    </div>
+                  )}
               </div>
             </div>
           )}
@@ -438,7 +475,6 @@ const NavigationBar = () => {
                         </Link>
                       </> :
                       <Link
-                        // to={"/login"}
                         className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
                         onClick={() => { setShowLoginModal(true); setIsMenuOpen(false) }}
                       >

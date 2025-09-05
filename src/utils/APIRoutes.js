@@ -1,9 +1,10 @@
-// export const domain = "http://192.168.18.214:2000";
-export const domain ="https://backend.sonasutra.in";
+export const domain = "http://192.168.18.214:2000";
+// export const domain ="https://backend.sonasutra.in";
 export const rupees = "₹" ;
 
 export const endpoint = {
 
+  email_insider: `${domain}/api/v1/insert-external-leads`,
   login: `${domain}/api/v1/login-user`,
   //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
@@ -79,6 +80,11 @@ export const endpoint = {
   status_banner: `${domain}/api/v1/change-banner-status`,
 
   //pending
+   create_collection: `${domain}/api/v1/create-collections`,
+   get_collection:`${domain}/api/v1/get-collections`,
+   update_collection: `${domain}/api/v1/update-collections`,
+   delete_collection: `${domain}/api/v1/delete-collections`,
+   
 
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
@@ -104,8 +110,12 @@ export const endpoint = {
   update_material_purity: `${domain}/api/v1/update-materials-purity`,
   get_material_purity: `${domain}/api/v1/get-materials-purity`,
 
-  
 
+  //insider email
+  get_external_leads: `${domain}/api/v1/get-external-leads`,
+
+  // collection
+  create_collection : `${domain}/api/v1/create-collections`,
 
   //get_demo call
   req_demo_call: `${domain}/api/v1/u-req-demo-call`,

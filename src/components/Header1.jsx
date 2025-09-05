@@ -283,7 +283,7 @@ export default function Header() {
                       <div
                         key={`${item.product_id}-${index}`}
                         onMouseDown={() => {
-                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
                         className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
@@ -384,7 +384,7 @@ export default function Header() {
                       <div
                         key={`${item.product_id}-${index}`}
                         onMouseDown={() => {
-                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
                         className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"

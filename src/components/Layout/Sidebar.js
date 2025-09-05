@@ -6,6 +6,7 @@ import {
   Call,
   DashboardCustomizeOutlined,
   GroupAdd,
+  ImageAspectRatio,
   Logout,
   ManageAccountsRounded,
   PaymentSharp,
@@ -21,6 +22,7 @@ import {
   Disc2Icon,
   Eye,
   Image,
+  LucideAmpersands,
   MarsStroke,
   Minimize2Icon,
   User2Icon
@@ -68,6 +70,12 @@ const fullMenuItems = [
     label: "Permissions",
     icon: <PermScanWifi />,
     path: "/permissions",
+  },
+   {
+    id: "Collection",
+    label: "Collection ",
+    icon: <ImageAspectRatio />,
+    path: "/collection",
   },
   {
     id: "categories",
@@ -138,6 +146,14 @@ const fullMenuItems = [
       },
     ],
   },
+  
+    {
+    id: "Leads",
+    label: "External Leads",
+    icon: <LucideAmpersands />,
+    path: "/leads",
+  },
+   
   {
     id: "custom",
     label: "Custom Order",
