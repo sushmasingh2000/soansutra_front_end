@@ -1,5 +1,5 @@
-export const domain = "http://192.168.18.214:2000";
-// export const domain ="https://backend.sonasutra.in";
+// export const domain = "http://192.168.18.214:2000";
+export const domain ="https://backend.sonasutra.in";
 export const rupees = "₹" ;
 
 export const endpoint = {
@@ -79,7 +79,7 @@ export const endpoint = {
   delete_banner: `${domain}/api/v1/delete-banner`,
   status_banner: `${domain}/api/v1/change-banner-status`,
 
-  //pending
+  //collection
    create_collection: `${domain}/api/v1/create-collections`,
    get_collection:`${domain}/api/v1/get-collections`,
    update_collection: `${domain}/api/v1/update-collections`,
@@ -115,7 +115,6 @@ export const endpoint = {
   get_external_leads: `${domain}/api/v1/get-external-leads`,
 
   // collection
-  create_collection : `${domain}/api/v1/create-collections`,
 
   //get_demo call
   req_demo_call: `${domain}/api/v1/u-req-demo-call`,

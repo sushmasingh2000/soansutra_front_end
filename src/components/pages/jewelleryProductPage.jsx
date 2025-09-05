@@ -392,16 +392,6 @@ const DynamicProductListingPage = () => {
   }
   );
 
-  
-
-  // const { data, isLoading } = useQuery(
-  //   ["get_product", id],
-  //   () => axios.get(`${endpoint?.get_product_user}?product_sub_cat_id=${id}`),
-  //   {
-  //     keepPreviousData: true,
-  //     enabled: !!id, // only fetch if id exists
-  //   }
-  // );
   const product = data?.data?.result || [];
   const cat_id = product?.[0]?.product_category_id;
 
@@ -438,7 +428,7 @@ const DynamicProductListingPage = () => {
     }));
     setAllProducts(enhancedProducts);
     setProducts(enhancedProducts);
-  }, [product, { categoryId, subcategoryId }]); // <-- Add `id` here
+  }, [product]); // <-- Add `id` here
 
 
   // Filter and sort products
