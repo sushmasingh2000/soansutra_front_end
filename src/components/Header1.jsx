@@ -8,6 +8,7 @@ import {
   ShoppingCartIcon,
   UserIcon,
   XMarkIcon,
+  ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,11 +22,13 @@ import {
 } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import { Lock } from "lucide-react";
-import toast from "react-hot-toast";
+import toast, {Toaster} from "react-hot-toast";
 import SubcategoryView from "./SubcategoryView";
 import { useQuery } from "react-query";
 import { debounce } from "lodash";
 import LoginModal from "./pages/LoginPage";
+
+
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -104,6 +107,15 @@ export default function Header() {
     setSearchQuery(e.target.value);
     debouncedSetSearchQuery(e.target.value);
   };
+
+  
+  const referralCode = "ABC123"; 
+   const handleCopy = () => {
+    navigator.clipboard.writeText(referralCode);
+    toast.success("Referral code copied!");
+  };
+
+  
 
   const { data, isLoading, error } = useQuery(
     ["search_product", debouncedSearchQuery],
@@ -219,6 +231,9 @@ export default function Header() {
   );
 
   const wishlistitems = wish?.data?.result || [];
+
+ 
+
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 relative">
@@ -451,6 +466,14 @@ export default function Header() {
                       <div className="mt-3 space-y-2">
                         <Link to="/myaccount/profile" className="block text-sm text-left text-gray-700 hover:bg-gray-100 px-3 py-2 rounded">My Account</Link>
                         <button
+                          onClick={handleCopy}
+                          className="flex items-center justify-between w-full text-left text-sm text-gray-700 hover:bg-gray-100 px-3 py-2 rounded"
+                        >
+                          <span>Referral Code</span>
+                          <ClipboardDocumentIcon className="w-5 h-5 text-gray-500" />
+                        </button>
+                        <Toaster position="top-right" reverseOrder={false} />
+                        <button
                           onClick={() => {
                             localStorage.clear();
                             window.location.reload();
@@ -609,12 +632,15 @@ export default function Header() {
                   {/* Login Button */}
                   {user ? (
                     <div className="px-4 py-3">
-                      <button
-                        className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                        onClick={() => navigate('/myaccount/profile')}
-                      >
-                        <UserIcon className="h-5 w-5" />
-                      </button>
+                     
+                       <button
+                          onClick={handleCopy}
+                          className="flex items-center justify-between w-full text-left px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                        >
+                          <span>Referral Code</span>
+                          <ClipboardDocumentIcon className="w-5 h-5 text-gray-500" />
+                        </button>
+                        <Toaster position="top-right" reverseOrder={false} />
                     </div>
                   ) : (
                     <div className="px-4 py-3">
