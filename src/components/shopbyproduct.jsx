@@ -9,12 +9,13 @@ const ShopByProducts = () => {
   
   const navigate = useNavigate();
   const { data } = useQuery(
-    ["category_user"],
+    ["category_user_shop_by_products"],
     () => apiConnectorGet(endpoint.get_categroy_user),
     usequeryBoolean
   );
 
   const products = data?.data?.result || [];
+  console.log(products, "jygyj")
   return (
     <div className="w-full bg-pink-50 py-4 px-8 mb-10">
       <div className="max-w-7xl mx-auto">

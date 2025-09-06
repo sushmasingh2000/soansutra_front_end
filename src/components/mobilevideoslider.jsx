@@ -3,95 +3,96 @@ import React, { useState } from 'react';
 import { Play, ChevronRight } from 'lucide-react';
 import { useQuery } from 'react-query';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
-import { endpoint } from '../utils/APIRoutes';
+import { domain, endpoint } from '../utils/APIRoutes';
 
 const MobileVideoSlider = () => {
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
   const [showMore, setShowMore] = useState(false);
 
   // Extended video data - 10 videos
-  const videos = [
-    {
-      id: 1,
-      thumbnail: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
-      title: "Relaxing Moments",
-      description: "A peaceful evening scene"
-    },
-    {
-      id: 2,
-      thumbnail: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/J/R/JR09742-8YP900_16_video.mp4",
-      title: "Fashion Story",
-      description: "Modern style inspiration"
-    },
-    {
-      id: 3,
-      thumbnail: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/S/R/SR02480-WGP900_16_video.mp4",
-      title: "Urban Life",
-      description: "City adventures await"
-    },
-    {
-      id: 4,
-      thumbnail: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
-      title: "Professional Look",
-      description: "Business attire inspiration"
-    },
-    {
-      id: 5,
-      thumbnail: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/J/R/JR09742-8YP900_16_video.mp4",
-      title: "Elegant Style",
-      description: "Sophisticated fashion"
-    },
-    {
-      id: 6,
-      thumbnail: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/S/R/SR02480-WGP900_16_video.mp4",
-      title: "Casual Vibes",
-      description: "Everyday comfort"
-    },
-    {
-      id: 7,
-      thumbnail: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
-      title: "Glamorous Night",
-      description: "Evening elegance"
-    },
-    {
-      id: 8,
-      thumbnail: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/J/R/JR09742-8YP900_16_video.mp4",
-      title: "Summer Collection",
-      description: "Bright and breezy"
-    },
-    {
-      id: 9,
-      thumbnail: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/S/R/SR02480-WGP900_16_video.mp4",
-      title: "Minimalist Chic",
-      description: "Less is more"
-    },
-    {
-      id: 10,
-      thumbnail: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=600&fit=crop&crop=center",
-      videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
-      title: "Vintage Appeal",
-      description: "Timeless beauty"
-    }
-  ];
-  // const { data } = useQuery(
-  //   ["category_user"],
-  //   () => apiConnectorGet(endpoint.get_video),
-  //   usequeryBoolean
-  // );
+  // const videos = [
+  //   {
+  //     id: 1,
+  //     thumbnail: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
+  //     title: "Relaxing Moments",
+  //     description: "A peaceful evening scene"
+  //   },
+  //   {
+  //     id: 2,
+  //     thumbnail: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/J/R/JR09742-8YP900_16_video.mp4",
+  //     title: "Fashion Story",
+  //     description: "Modern style inspiration"
+  //   },
+  //   {
+  //     id: 3,
+  //     thumbnail: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/S/R/SR02480-WGP900_16_video.mp4",
+  //     title: "Urban Life",
+  //     description: "City adventures await"
+  //   },
+  //   {
+  //     id: 4,
+  //     thumbnail: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
+  //     title: "Professional Look",
+  //     description: "Business attire inspiration"
+  //   },
+  //   {
+  //     id: 5,
+  //     thumbnail: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/J/R/JR09742-8YP900_16_video.mp4",
+  //     title: "Elegant Style",
+  //     description: "Sophisticated fashion"
+  //   },
+  //   {
+  //     id: 6,
+  //     thumbnail: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/S/R/SR02480-WGP900_16_video.mp4",
+  //     title: "Casual Vibes",
+  //     description: "Everyday comfort"
+  //   },
+  //   {
+  //     id: 7,
+  //     thumbnail: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
+  //     title: "Glamorous Night",
+  //     description: "Evening elegance"
+  //   },
+  //   {
+  //     id: 8,
+  //     thumbnail: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/J/R/JR09742-8YP900_16_video.mp4",
+  //     title: "Summer Collection",
+  //     description: "Bright and breezy"
+  //   },
+  //   {
+  //     id: 9,
+  //     thumbnail: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/S/R/SR02480-WGP900_16_video.mp4",
+  //     title: "Minimalist Chic",
+  //     description: "Less is more"
+  //   },
+  //   {
+  //     id: 10,
+  //     thumbnail: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=600&fit=crop&crop=center",
+  //     videoUrl: "https://cdn.caratlane.com/media/catalog/product/U/T/UT01087-1Y0000_16_video.mp4",
+  //     title: "Vintage Appeal",
+  //     description: "Timeless beauty"
+  //   }
+  // ];
+  const { data } = useQuery(
+    ["category_user"],
+    () => apiConnectorGet(endpoint.get_video),
+    usequeryBoolean
+  );
 
-  // const videos = data?.data?.result || [];
+  const videos = data?.data?.result || [];
 
   // Handle video click for fullscreen
   const handleVideoClick = (video) => {
+    console.log(domain+video?.vid_url)
     setFullscreenVideo(video);
   };
 
@@ -100,6 +101,7 @@ const MobileVideoSlider = () => {
     setFullscreenVideo(null);
   };
 
+  console.log(fullscreenVideo)
   // Card for mobile slider
   const MobileVideoCard = ({ video }) => (
     <div
@@ -238,7 +240,7 @@ const MobileVideoSlider = () => {
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
           <div className="relative w-full h-full">
             <video
-              src={fullscreenVideo.videoUrl}
+              src={domain + fullscreenVideo.vid_url}
               controls
               autoPlay
               className="w-full h-full object-contain"
