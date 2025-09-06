@@ -980,15 +980,15 @@ export default function Header() {
   };
 
   
-  const referralCode = "ABC123"; 
+  const referralCode = profile_user?.cust_unique_id; 
    const handleCopy = () => {
     navigator.clipboard.writeText(referralCode);
-    toast.success("Referral code copied!");
+    toast("Referral code copied!" , {id:1});
   };
 
   
 
-  const { data, isLoading, error } = useQuery(
+  const { data} = useQuery(
     ["search_product", debouncedSearchQuery],
     () =>
       apiConnectorPost(endpoint.get_search_product, {
