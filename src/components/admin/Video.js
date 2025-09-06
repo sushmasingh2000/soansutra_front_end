@@ -77,7 +77,7 @@ const Video = () => {
   const handleEdit = (video) => {
     setSelectedVideo(video);
     setFormData({
-      v_id: video.v_id,
+      v_id: video.vid_id,
       video_name: video.video_name,
       video_file: "", // file input must be re-selected
       video_status: video.video_status,
@@ -133,7 +133,7 @@ const Video = () => {
           </thead>
           <tbody>
             {videos.map((video, index) => (
-              <tr key={video.v_id} className="border-t hover:bg-gray-50">
+              <tr key={video.vid_id} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2">{index + 1}</td>
                 <td className="px-4 py-2">{video.video_name}</td>
                 <td className="px-4 py-2">
@@ -144,7 +144,7 @@ const Video = () => {
                   />
                 </td>
                 <td className="px-4 py-2">
-                  <button onClick={() => toggleStatus(video.v_id)}>
+                  <button onClick={() => toggleStatus(video.vid_id)}>
                     {video.video_status ? <ToggleOn /> : <ToggleOff />}
                   </button>
                 </td>
@@ -156,7 +156,7 @@ const Video = () => {
                     <Edit />
                   </button>
                   <button
-                    onClick={() => handleDelete(video.v_id)}
+                    onClick={() => handleDelete(video.vid_id)}
                     className="text-red-600 hover:underline"
                   >
                     <DeleteForever />
