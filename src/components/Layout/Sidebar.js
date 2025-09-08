@@ -129,6 +129,12 @@ const fullMenuItems = [
             icon: <ManageAccountsRounded />,
             path: "/product-material",
           },
+           {
+            id: "backup-material",
+            label: "Backup  Material",
+            icon: <ManageAccountsRounded />,
+            path: "/backup_materials",
+          },
           
         ],
       },

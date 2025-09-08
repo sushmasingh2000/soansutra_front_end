@@ -42,6 +42,7 @@ import InsiderEmail from "../components/admin/InsiderEmail.js";
 import Collection from "../components/admin/Collection.js";
 import Termscondition from "../components/pages/termscondition.jsx"
 import Video from "../components/admin/Video.js";
+import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
 
 export const routes = [
   {
@@ -239,7 +240,14 @@ export const routes = [
       </MainLayout>
     ),
   },
-  
+  {
+    path: "/backup_materials",
+    element: (
+      <MainLayout>
+        <MasterMaterialBackup />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/payment",
     element: (

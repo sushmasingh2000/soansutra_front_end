@@ -1,15 +1,15 @@
-// export const domain = "http://192.168.18.214:2000";
-export const domain ="https://backend.sonasutra.in";
-export const rupees = "₹" ;
+export const domain = "http://192.168.18.214:2000";
+// export const domain = "https://backend.sonasutra.in";
+export const rupees = "₹";
 
 export const endpoint = {
-  review_customer:`${domain}/api/v1/create-product-review`,
-  get_customer_review:`${domain}/api/v1/get-product-review`,
-  get_customer_single_review:`${domain}/api/v1/get-single-product-review`,
-  get_continue_browsing:`${domain}/api/v1/u-get-continue-browing-items`,
-  
-  
-  
+  review_customer: `${domain}/api/v1/create-product-review`,
+  get_customer_review: `${domain}/api/v1/get-product-review`,
+  get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
+  get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
+
+
+
   email_insider: `${domain}/api/v1/insert-external-leads`,
   login: `${domain}/api/v1/login-user`,
   //admin
@@ -86,17 +86,17 @@ export const endpoint = {
   status_banner: `${domain}/api/v1/change-banner-status`,
 
   //collection
-   create_collection: `${domain}/api/v1/create-collections`,
-   get_collection:`${domain}/api/v1/get-collections`,
-   update_collection: `${domain}/api/v1/update-collections`,
-   delete_collection: `${domain}/api/v1/delete-collections`,
+  create_collection: `${domain}/api/v1/create-collections`,
+  get_collection: `${domain}/api/v1/get-collections`,
+  update_collection: `${domain}/api/v1/update-collections`,
+  delete_collection: `${domain}/api/v1/delete-collections`,
 
-   //bnanner
+  //bnanner
   create_video: `${domain}/api/v1/create-videos`,
   get_video: `${domain}/api/v1/get-videos`,
   update_video: `${domain}/api/v1/update-videos`,
   delete_video: `${domain}/api/v1/delete-videos`,
-   
+
 
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
@@ -116,6 +116,9 @@ export const endpoint = {
   get_master_material: `${domain}/api/v1/get-master-materials`,
   update_master_material: `${domain}/api/v1/update-master-materials`,
   delete_master_material: `${domain}/api/v1/delete-master-materials`,
+
+  //backup material 
+  get_master_material_backup: `${domain}/api/v1/get-master-material-backup`,
 
   //purity
   create_material_purity: `${domain}/api/v1/create-materials-purity`,
