@@ -186,7 +186,7 @@ const ProductCardSkeleton = () => {
 };
 
 // Updated Product Card Component with navigation
-const ProductCard = ({ product, onWishlist }) => {
+const ProductCard = ({ product, onWishlist,collectionId }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
 
@@ -211,7 +211,12 @@ const ProductCard = ({ product, onWishlist }) => {
   };
   const handleImageClick = (product) => {
     navigate("/productdetails", {
-      state: { product },
+      state: { product : {
+        product_id:product?.product_id,
+        selected_variant_id:product?.selected_variant_id,
+        collectionId:collectionId
+
+      }},
     });
   };
 
@@ -288,12 +293,13 @@ const ProductCard = ({ product, onWishlist }) => {
 };
 
 // Product List Component
-const ProductList = ({ products, onWishlist }) => {
+const ProductList = ({ products, onWishlist ,collectionId}) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
 
       {products ?.map((product) => (
         <ProductCard
+        collectionId={collectionId}
           key={product.product_id}
           product={product}
           onWishlist={onWishlist}
@@ -704,7 +710,7 @@ const DynamicProductListingPage = () => {
                 ))}
               </div>
             ) : products.length > 0 ? (
-              <ProductList products={products} onWishlist={handleWishlist} />
+              <ProductList products={products} onWishlist={handleWishlist} collectionId={collectionId}/>
             ) : (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="text-gray-400 mb-4">

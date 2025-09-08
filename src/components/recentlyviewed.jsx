@@ -37,8 +37,16 @@ const RecentlyViewed = () => {
   };
 
   const handleClick = (product) => {
+    if(!product?.selected_variant_id){
+      return
+    }
     window.scrollTo(0, 0); 
-    navigate("/productdetails", { state: { product } });
+    navigate("/productdetails", {
+      state: { product : {
+        product_id:product?.product_id,
+        selected_variant_id:product?.selected_variant_id
+      }},
+    });
   };
   
 

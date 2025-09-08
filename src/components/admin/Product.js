@@ -191,6 +191,7 @@ const Products = () => {
 
 
   const handleVariantClick = (product) => {
+    console.log(product)
     if (!product || !product.product_id) {
       toast.error("Product is missing.");
       return;

@@ -420,8 +420,6 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
         throw new Error('Password must be at least 8 characters long');
       }
 
-      // Simulate API call
-      console.log('Creating user:', formData);
       
       // Success
       onSuccess && onSuccess(formData);

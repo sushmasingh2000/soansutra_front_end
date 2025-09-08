@@ -92,7 +92,6 @@ const MobileVideoSlider = () => {
 
   // Handle video click for fullscreen
   const handleVideoClick = (video) => {
-    console.log(domain+video?.vid_url)
     setFullscreenVideo(video);
   };
 
@@ -101,7 +100,6 @@ const MobileVideoSlider = () => {
     setFullscreenVideo(null);
   };
 
-  console.log(fullscreenVideo)
   // Card for mobile slider
   const MobileVideoCard = ({ video }) => (
     <div

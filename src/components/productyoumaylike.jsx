@@ -4,6 +4,7 @@ import { apiConnectorGet, usequeryBoolean } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const YouMayLike = () => {
   const [showMore, setShowMore] = useState(false);
@@ -45,10 +46,18 @@ const YouMayLike = () => {
     };
   });
 
-  const handleClick = (product) => {
-    navigate("/productdetails", { state: { product } });
+   const handleClick = (product) => {
+    if(!product?.selected_variant_id){
+      return
+    }
+    window.scrollTo(0, 0); 
+    navigate("/productdetails", {
+      state: { product : {
+        product_id:product?.product_id,
+        selected_variant_id:product?.selected_variant_id
+      }},
+    });
   };
-
   const displayedProducts = showMore ? products : products.slice(0, 3);
 
   return (

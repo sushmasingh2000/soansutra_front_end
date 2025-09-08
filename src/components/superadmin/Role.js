@@ -108,8 +108,6 @@ const Role = () => {
     fetchRoles();
   }, []);
 
-  // Debug info
-  console.log('Current roles state:', roles, 'Type:', typeof roles, 'Is Array:', Array.isArray(roles));
 
   return (
     <div className="p-6">

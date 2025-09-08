@@ -15,7 +15,6 @@ const ShopByProducts = () => {
   );
 
   const products = data?.data?.result || [];
-  console.log(products, "jygyj")
   return (
     <div className="w-full bg-pink-50 py-4 px-8 mb-10">
       <div className="max-w-7xl mx-auto">

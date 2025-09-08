@@ -2,15 +2,16 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import CustomToPagination from "../../Shared/Pagination";
-import { apiConnectorPost } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint, rupees } from "../../utils/APIRoutes";
+import moment from "moment";
 
 const MasterMaterialBackup = () => {
   const [page, setPage] = useState(1)
   const client = useQueryClient();
   const initialValues = {
     search: '',
-    page:"",
+    page: "",
     pageSize: 10,
     start_date: '',
     end_date: '',
@@ -24,7 +25,7 @@ const MasterMaterialBackup = () => {
   const { data } = useQuery(
     ['material_backup', fk.values.search, fk.values.start_date, fk.values.end_date, page],
     () =>
-      apiConnectorPost(endpoint?.get_master_material_backup, {
+      apiConnectorGet(endpoint?.get_master_material_backup, {
         search: fk.values.search,
         start_date: fk.values.start_date,
         end_date: fk.values.end_date,
@@ -40,7 +41,7 @@ const MasterMaterialBackup = () => {
     }
   );
 
-  const allData = data?.data?.data || [];
+  const allData = data?.data?.result || [];
 
 
 
@@ -105,35 +106,81 @@ const MasterMaterialBackup = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Name</th>
-              <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Value</th>
-              <th className="px-4 py-3 text-left">Actions</th>
+              <th className="px-4 py-3 text-left">Old Name</th>
+              <th className="px-4 py-3 text-left">New Name</th>
+              <th className="px-4 py-3 text-left">Old Price</th>
+              <th className="px-4 py-3 text-left">New Price</th>
+              <th className="px-4 py-3 text-left">Old Price Per Unit</th>
+              <th className="px-4 py-3 text-left">New Price Per Unit</th>
+              <th className="px-4 py-3 text-left">Old Unit</th>
+              <th className="px-4 py-3 text-left">New Unit</th>
+              <th className="px-4 py-3 text-left">Old Value</th>
+              <th className="px-4 py-3 text-left">New Value</th>
+              <th className="px-4 py-3 text-left">Old Date</th>
+              <th className="px-4 py-3 text-left">New Date</th>
             </tr>
           </thead>
           <tbody>
-            {allData?.map((material, index) => (
+            {allData?.data?.map((material, index) => (
               <tr
                 key={material.ma_material_id}
                 className="border-t hover:bg-gray-50"
               >
                 <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2">
-                  {material.ma_material_name || "--"}
+                <td className={`px-4 py-2 ${material.ma_material_name_old !== material.ma_material_name_new && "bg-yellow-500"}`}>
+                  {material.ma_material_name_old || "--"}
                 </td>
-                <td className="px-4 py-2">{material.ma_price || "--"} {rupees}</td>
-                <td className="px-4 py-2">{material.ma_value || "--"}  {material.ma_unit || "--"}</td>
+                <td className={`px-4 py-2 ${material.ma_material_name_old !== material.ma_material_name_new && "bg-yellow-500"}`}>
+                  {material.ma_material_name_new || "--"}
+                </td>
 
+                <td className={`px-4 py-2 ${material.ma_price_old !== material.ma_price_new && "bg-yellow-500"}`}>
+                  {Number(material.ma_price_old).toFixed(2)}
+                </td>
+                <td className={`px-4 py-2 ${material.ma_price_old !== material.ma_price_new && "bg-yellow-500"}`}>
+                  {Number(material.ma_price_new).toFixed(2)}
+                </td>
+
+                <td className={`px-4 py-2 ${material.ma_price_per_unit_old !== material.ma_price_per_unit_new && "bg-yellow-500"}`}>
+                  {Number(material.ma_price_per_unit_old).toFixed(2)}
+                </td>
+                <td className={`px-4 py-2 ${material.ma_price_per_unit_old !== material.ma_price_per_unit_new && "bg-yellow-500"}`}>
+                  {Number(material.ma_price_per_unit_new).toFixed(2)}
+                </td>
+
+                <td className={`px-4 py-2 ${material.ma_unit_old !== material.ma_unit_new && "bg-yellow-500"}`}>
+
+                  {material.ma_unit_old || "--"}</td>
+                <td className={`px-4 py-2 ${material.ma_unit_old !== material.ma_unit_new && "bg-yellow-500"}`}>
+
+                  {material.ma_unit_new || "--"}</td>
+
+                <td className={`px-4 py-2 ${material.ma_value_old !== material.ma_value_new && "bg-yellow-500"}`}>
+
+                  {Number(material.ma_value_old).toFixed(2)}
+                </td>
+                <td className={`px-4 py-2 ${material.ma_value_old !== material.ma_value_new && "bg-yellow-500"}`}>
+
+                  {Number(material.ma_value_new).toFixed(2)}
+                </td>
+
+                <td className="px-4 py-2">
+                  {material.created_at_old ? moment(material.created_at_old).format("DD-MM-YYYY") : "--"}
+                </td>
+                <td className="px-4 py-2">
+                  {material.created_at_new ? moment(material.created_at_new).format("DD-MM-YYYY") : "--"}
+                </td>
               </tr>
             ))}
-            {allData.length === 0 && (
+            {allData?.data?.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-4 text-center text-gray-500">
+                <td colSpan={13} className="py-4 text-center text-gray-500">
                   No materials found.
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
       <CustomToPagination data={allData} setPage={setPage} page={page} />
