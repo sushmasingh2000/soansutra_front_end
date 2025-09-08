@@ -29,6 +29,7 @@ import ProfileContent from '../profilecontent';
 import TreasureChestContent from '../treasurechestcontent';
 import TryAtHomeContent from '../tryathomecontent';
 import XclusiveContent from '../xclusivecontent';
+import Distributer from '../distributer';
 
 const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState('PROFILE');
@@ -39,9 +40,15 @@ const ProfileDashboard = () => {
     {
       category: 'ORDERS',
       items: [
-        { id: 'ORDERS_RETURNS', label: 'ORDERS AND RETURNS', icon: Package },
+        { id: 'ORDERS_EXCHANGE', label: 'ORDERS AND EXCHANGE', icon: Package },
         { id: 'PAYMENT', label: 'PAYMENT', icon: CreditCard },
         { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw }
+      ]
+    },
+     {
+      category: 'DISTRIBUTER',
+      items: [
+        { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home }
       ]
     },
     {
@@ -93,12 +100,14 @@ const ProfileDashboard = () => {
     switch (activeTab) {
       case 'PROFILE':
         return <ProfileContent />;
-      case 'ORDERS_RETURNS':
+      case 'ORDERS_EXCHANGE':
         return <OrdersContent/>;
       case 'PAYMENT':
         return <PaymentContent />;
       case 'MANAGE_REFUNDS':
         return <ManageRefundsContent />;
+         case 'DISTRIBUTER':
+        return <Distributer/>;
       case 'TRY_AT_HOME':
         return <TryAtHomeContent />;
       case 'COUPONS':

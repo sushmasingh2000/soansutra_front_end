@@ -559,7 +559,7 @@ const ProductDetailWebPage = () => {
             </div>
             <div className="hidden md:block">
               <div className="grid grid-cols-2 gap-3">
-                {(() => {
+                   {(() => {
                   const displayImages = [...images];
                   while (displayImages.length < 8) {
                     displayImages.push(...images);
@@ -597,6 +597,8 @@ const ProductDetailWebPage = () => {
                     </div>
                   ));
                 })()}
+                  
+               
               </div>
             </div>
           </div>
@@ -695,7 +697,7 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
             )}
-            <div id="customise" className="flex items-stretch w-fit bg-white border border-yellow-200 rounded-lg overflow-hidden px-1 md:px-0">
+            <div id="customise" className="flex items-stretch w-full bg-white border border-yellow-200 rounded-lg overflow-hidden  md:px-0">
               {groupedMaterials &&
                 Object.keys(groupedMaterials).map((groupName, index) => (
                   <button
@@ -705,7 +707,8 @@ const ProductDetailWebPage = () => {
                       setSelectedMaterialGroup(group);
                       setShowCustomizationModal(true);
                     }}
-                    className="px-4 py-2 border-l border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
+                     className=" w-full px-4 py-4 flex-1 border-r  border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
+                    
                   >
                     {groupName}
                   </button>
