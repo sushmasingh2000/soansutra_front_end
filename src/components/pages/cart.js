@@ -143,11 +143,12 @@ const handleApplyCoupon = async () => {
   }
 };
 
-  const removeCoupon = () => {
+  const removeCoupon = (bool) => {
     setAppliedCoupon(null);
     setCouponDiscount(0);
     setCouponCode('');
-    toast.success('Coupon removed');
+    
+    bool && toast.success('Coupon removed');
   };
 
   const subtotal = cartItems.reduce((sum, item) => {
@@ -182,6 +183,7 @@ const handleApplyCoupon = async () => {
     setCartItems(cartItems.map(item =>
       item.cart_item_id === cart_item_id ? { ...item, quantity: newQuantity } : item
     ));
+   couponDiscount&& removeCoupon(false)
   };
 
   const formatPrice = (price) => `₹${price.toLocaleString()}`;
@@ -237,9 +239,10 @@ const handleApplyCoupon = async () => {
 
                   return (
                     <div key={item.cart_item_id} className="bg-white rounded-lg shadow-sm p-3 m-4"
-                      onClick={() => handleClick(item)}>
+                     >
                       <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden"
+                         onClick={() => handleClick(item)}>
                           <img
                             src={product.product_image.p_image_url}
                             alt={product.product_name}
@@ -313,7 +316,7 @@ const handleApplyCoupon = async () => {
                 {appliedCoupon && (
                   <div className="mt-2 flex justify-between items-center text-xs">
                     <span className="text-green-600">Coupon Applied!</span>
-                    <button onClick={removeCoupon} className="text-red-600">Remove</button>
+                    <button onClick={()=>removeCoupon(true)} className="text-red-600">Remove</button>
                   </div>
                 )}
               </div>
