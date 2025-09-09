@@ -22,7 +22,7 @@ import AdminLayout from "../components/layout";
 import Dashboard from "../components/Layout/Dashboard";
 import MainLayout from "../components/Layout/MainLayout";
 import ShoppingCart from "../components/pages/cart";
-import CheckoutHeader from "../components/pages/checkout";
+import CheckoutPage from "../components/pages/checkoutpage.jsx";
 import DynamicProductListingPage from "../components/pages/jewelleryProductPage";
 import LoginPage from "../components/pages/LoginPage";
 import ProductPage from "../components/pages/productDetailsPage";
@@ -316,7 +316,7 @@ export const routes = [
   },
   {
     path: "/checkout",
-    element: <CheckoutHeader />,
+    element: <CheckoutPage/>,
   },
   {
     path: "/admin",
