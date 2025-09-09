@@ -1,5 +1,5 @@
-// export const domain = "http://192.168.18.214:2000";
-export const domain = "https://backend.sonasutra.in";
+export const domain = "http://192.168.18.214:2000";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
@@ -245,5 +245,8 @@ export const endpoint = {
   get_most_frequent: `${domain}/api/v1/u-get-most-frequent-search-items`,
   get_categroy_filtered_item: `${domain}/api/v1/u-get-home-filtered-items`,
   get_search_product: `${domain}/api/v1/u-get-search-product`,
+
+  //user coupon
+  get_coupon_varient: `${domain}/api/v1/u-get-coupon-on-varient`,
 
 };
