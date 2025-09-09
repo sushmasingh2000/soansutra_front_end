@@ -43,6 +43,8 @@ import Collection from "../components/admin/Collection.js";
 import Termscondition from "../components/pages/termscondition.jsx"
 import Video from "../components/admin/Video.js";
 import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
+import Coupon from "../components/admin/Coupon.js";
+import CouponPriceRange from "../components/admin/CouponPriceRange..js";
 
 export const routes = [
   {
@@ -159,11 +161,27 @@ export const routes = [
       </MainLayout>
     ),
   },
-   {
-    path: "/collection",
+    {
+    path: "/coupon",
     element: (
       <MainLayout>
-        <Collection />{" "}
+        <Coupon />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/coupon",
+    element: (
+      <MainLayout>
+        <Coupon />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/price_range",
+    element: (
+      <MainLayout>
+        <CouponPriceRange />{" "}
       </MainLayout>
     ),
   },

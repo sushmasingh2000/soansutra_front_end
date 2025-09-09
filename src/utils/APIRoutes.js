@@ -181,6 +181,16 @@ export const endpoint = {
   get_custom_order: `${domain}/api/v1/get-custom-orders`,
   create_custom_order: `${domain}/api/v1/u-create-custom-order`,
 
+//coupon 
+  create_coupon: `${domain}/api/v1/create-coupon`,
+  get_coupon: `${domain}/api/v1/get-coupon`,
+  update_coupon: `${domain}/api/v1/update-coupon`,
+  update_coupon_status: `${domain}/api/v1/update-coupon-status`,
+
+  //range 
+  create_coupon_range: `${domain}/api/v1/create-coupon-range`,
+  get_coupon_range: `${domain}/api/v1/get-coupon-range`,
+  update_coupon_range: `${domain}/api/v1/update-coupon-range`,
 
   //payment
   create_payment_method: `${domain}/api/v1/create-payment-method`,

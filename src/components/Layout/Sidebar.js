@@ -9,6 +9,7 @@ import {
   ImageAspectRatio,
   Logout,
   ManageAccountsRounded,
+  Money,
   PaymentSharp,
   PermScanWifi,
   Person,
@@ -19,6 +20,7 @@ import {
   TaxiAlert,
 } from "@mui/icons-material";
 import {
+  CornerUpLeftIcon,
   Disc2Icon,
   Eye,
   Image,
@@ -138,6 +140,12 @@ const fullMenuItems = [
           
         ],
       },
+        {
+        id: "Coupon",
+        label: "Coupon",
+        icon: <CornerUpLeftIcon />,
+        path: "/coupon",
+      },
       {
         id: "discount",
         label: "Discount",
@@ -150,6 +158,13 @@ const fullMenuItems = [
         icon: <TaxiAlert />,
         path: "/tax",
       },
+      {
+        id: "price_range",
+        label: "Coupon Price Range",
+        icon: <Money />,
+        path: "/price_range",
+      },
+      
     ],
   },
   
