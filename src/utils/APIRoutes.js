@@ -249,4 +249,12 @@ export const endpoint = {
   //user coupon
   get_coupon_varient: `${domain}/api/v1/u-get-coupon-on-varient`,
 
+  //mlm api 
+  get_distributor_name: `${domain}/api/v1/get-distributor-name`,
+  distributor_registration: `${domain}/api/v1/distributor-registration`,
+  get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
+  
+  
+  
+
 };
