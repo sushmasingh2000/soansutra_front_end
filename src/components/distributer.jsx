@@ -4,70 +4,66 @@ import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../utils/Api
 import { endpoint } from "../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
+import Loader from "../Shared/Loader";
 
 const Distributor = () => {
   const [open, setOpen] = useState(false);
-const [name , setName] = useState(false);
-const [customer , setCustomer] = useState("");
-const [loading , setLoading] = useState(false);
+  const [name, setName] = useState(false);
+  const [customer, setCustomer] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
     setName("")
     setCustomer("")
   };
-  // Random values for demonstration
-  const level = "Level 1(3%)";
-  const distributorId = "DIST-12345";
-  const myDirect = 15;
-  const totalTeam = 150;
-  const selfBusiness = 5000;
-  const teamBusiness = 25000;
-  const totalDirectTeamBusiness = 30000;
-  const totalTeamBusiness = 100000;
+
   const todaySelfBusiness = 200;
   const todayTeamBusiness = 1500;
 
-  const getDistributorfn =async()=>{
-    try{
+  const getDistributorfn = async () => {
+    try {
       setLoading(true);
       const res = await apiConnectorPost(endpoint?.get_distributor_name, {
-        customer_id  : customer
+        customer_id: customer
       })
       setLoading(false);
       setName(res?.data?.result?.[0]?.name)
     }
-    catch(e){
+    catch (e) {
       console.log("something went wrong")
     }
     setLoading(false);
   }
 
 
- const RegistrationFn = async ()=>{
-  try{
-    const response = await apiConnectorPost(endpoint?.distributor_registration,{
-      cust_id:customer
-    })
-    toast(response?.data?.message)
-  }
-    catch(e){
-    console.log("something went wrong")
+  const RegistrationFn = async () => {
+    try {
+      if (!customer) {
+        return toast("Please Enter User ID")
+      }
+      const response = await apiConnectorPost(endpoint?.distributor_registration, {
+        cust_id: customer
+      })
+      toast(response?.data?.message)
     }
- }
+    catch (e) {
+      console.log("something went wrong")
+    }
+  }
 
- const { data } = useQuery(
-  ["profile_distributor"],
-  () => apiConnectorGet(endpoint.get_profile_distributor),
-  usequeryBoolean
-);
+  const { data, isLoading: profile } = useQuery(
+    ["profile_distributor"],
+    () => apiConnectorGet(endpoint.get_profile_distributor),
+    usequeryBoolean
+  );
 
-const distri_pro = data?.data?.result?.[0] || [];
-console.log(distri_pro) 
+  const distri_pro = data?.data?.result?.[0] || [];
+
 
   return (
     <>
-   
+      <Loader isLoading={loading || profile} />
       <div className="bg-white text-black p-4 rounded-lg shadow-lg w-full  mx-auto text-sm">
         {/* Level and Distributor ID */}
 
@@ -75,13 +71,13 @@ console.log(distri_pro)
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-xl font-semibold text-gray-900">Distributer</h2>
           <button className="bg-white border-yellow-300 text-black px-4 py-2 rounded-lg text-sm font-medium">
-            Shiv Ji Maurya
+            {distri_pro?.name}
           </button>
         </div>
         <div className="flex justify-between mb-4">
           <div className="">
-            <h2 className="text-lg font-bold mb-1"> Level: {distri_pro?.mlm_curr_level}</h2>
-            <p className="text-base"> ID: {distri_pro?.mlm_unique_id}</p>
+            <h2 className="text-lg font-bold mb-1"> Level: {distri_pro?.mlm_curr_level || 0}</h2>
+            <p className="text-base"> ID: {distri_pro?.mlm_unique_id || "--"}</p>
           </div>
           <div className="">
             <p
@@ -113,7 +109,7 @@ console.log(distri_pro)
                 htmlFor="userId"
                 className="text-sm font-medium text-gray-700"
               >
-                Enter User ID
+                User ID
               </label>
 
               <div className="flex gap-2">
@@ -121,28 +117,28 @@ console.log(distri_pro)
                   type="text"
                   id="userId"
                   name="userId"
-                  placeholder="e.g. 12345"
+                  placeholder="Enter User ID"
                   value={customer}
-                  onChange={(e)=>setCustomer(e.target.value)}
+                  onChange={(e) => setCustomer(e.target.value)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#dbb855]"
                 />
 
                 <button className="bg-[#dbb855] text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
-                onClick={getDistributorfn}>
+                  onClick={getDistributorfn}>
                   Search
                 </button>
               </div>
               <input
-                  type="text"
-                  id="userId"
-                  name="userId"
-                  value={name}
-                  readOnly
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#dbb855]"
-                />
+                type="text"
+                id="userId"
+                name="userId"
+                value={name || 0}
+                readOnly
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#dbb855]"
+              />
             </div>
-            <div className="flex justify-end ">
-            <button className="bg-yellow-950 text-white p-1 my-5 rounded" onClick={RegistrationFn}>Submit</button>
+            <div className="flex justify-end  ">
+              <button className="bg-yellow-950 w-full text-white p-1 my-5 rounded" onClick={RegistrationFn}>Submit</button>
             </div>
           </div>
         </Dialog>
@@ -151,19 +147,19 @@ console.log(distri_pro)
         <div className="bg-white border border-yellow-400 rounded-lg p-3 mb-4">
           <div className="flex justify-between mb-1">
             <span className="font-semibold">My Direct</span>
-            <span>{myDirect}</span>
+            <span>{distri_pro?.mlm_direct_mem}</span>
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Total Team</span>
-            <span>{totalTeam}</span>
+            <span>{distri_pro?.mlm_team_mem}</span>
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Self Business</span>
-            <span>${selfBusiness}</span>
+            <span>${distri_pro?.l_self_invest}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Team Business</span>
-            <span>${teamBusiness}</span>
+            <span>${distri_pro?.mlm_team_buss}</span>
           </div>
         </div>
 
@@ -171,20 +167,20 @@ console.log(distri_pro)
         <div className="bg-white border border-yellow-400 rounded-lg p-3">
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Total Direct Team Business</span>
-            <span>${totalDirectTeamBusiness}</span>
+            <span>${distri_pro?.mlm_direct_buss}</span>
           </div>
           <div className="flex justify-between mb-3">
             <span className="font-semibold">Total Team Business</span>
-            <span>${totalTeamBusiness}</span>
+            <span>${distri_pro?.mlm_team_buss + distri_pro?.mlm_direct_buss}</span>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-2 rounded-lg text-center">
               <span className="font-semibold block">Today Self Business</span>
-              <span>${todaySelfBusiness}</span>
+              <span>${distri_pro?.self_team_buss}</span>
             </div>
             <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-2 rounded-lg text-center">
               <span className="font-semibold block">Today Team Business</span>
-              <span>${todayTeamBusiness}</span>
+              <span>${distri_pro?.today_team_buss}</span>
             </div>
           </div>
         </div>
