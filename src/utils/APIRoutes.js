@@ -232,6 +232,7 @@ export const endpoint = {
   change_password: `${domain}/api/v1/change-customer-password`,
   disable_customer_account: `${domain}/api/v1/dissable-customer-account`,
 
+  create_order: `${domain}/api/v1/create-order`,
   get_order: `${domain}/api/v1/get-order-details`,
   get_order_detail_by: `${domain}/api/v1/get-order-details-by-order-id`,
 
