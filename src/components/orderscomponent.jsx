@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Package, Calendar, MapPin, CreditCard, X, Truck, CheckCircle, Star, RotateCcw, Repeat2, Wrench, Mail, Printer, Award, ImagePlus } from 'lucide-react';
 import { useQuery } from 'react-query';
 import { endpoint } from '../utils/APIRoutes';
-import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../utils/ApiConnector';
+import toast from 'react-hot-toast';
 
 const OrdersContent = () => {
   const [activeTab, setActiveTab] = useState('myOrders');
@@ -325,11 +326,70 @@ const OrdersContent = () => {
       }
     };
 
-    const handleSubmit = () => {
-      // TODO: Add backend API call if needed
-      onClose();
+    const handleSubmit = async () => {
+      if (!rating || !selectedOrder.products?.[0]) {
+        toast.error("Please complete the review form.");
+        return;
+      }
+    
+      const tagMap = {
+        'Design': 'disign',
+        'Size/Fit': 'size_fit',
+        'Quality': 'quality',
+        'Delivery': 'delivery',
+        'Packaging': 'packaging',
+        'Customer Service': 'customer_service',
+        'Overall Experience': 'overall_exp',
+        'Others': 'other',
+      };
+    
+      const reviewData = {
+        product_id: selectedOrder.products[0].id || '15', // fallback
+        rating,
+        review_text: feedback,
+      };
+    
+      // Add all possible review fields and set them to 0 by default
+      Object.values(tagMap).forEach(key => {
+        reviewData[`rev_${key}`] = 0;
+        reviewData[`rev_${key}_impr`] = 0;
+      });
+    
+      // Set 1 for selected positive tags
+      impressSelected.forEach(tag => {
+        const key = tagMap[tag];
+        if (key) reviewData[`rev_${key}`] = 1;
+      });
+    
+      // Set 1 for selected negative tags
+      improveSelected.forEach(tag => {
+        const key = tagMap[tag];
+        if (key) reviewData[`rev_${key}_impr`] = 1;
+      });
+    
+      const formData = new FormData();
+    
+      // Append structured review fields
+      Object.entries(reviewData).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+    
+      // Append optional file
+      if (media) {
+        formData.append("file", media);
+      }
+    
+      try {
+        const response = await apiConnectorPost(endpoint.review_customer, formData);
+        toast.success(response?.data?.msg || "Review submitted successfully!");
+        onClose();
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to submit review. Try again.");
+      }
     };
-
+    
+    
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 z-50">
         <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto text-sm">

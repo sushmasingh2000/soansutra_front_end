@@ -36,7 +36,7 @@ const SubcategoryView = ({ category, onBack, onCloseDrawer }) => {
     }
 
     setTimeout(() => {
-      navigate(`/products_web/${subcategoryId}`);
+      navigate(`/products_web?subcategory=${subcategoryId}`);
     }, 300); // Add slight delay for smooth UX (adjust if needed)
   };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Heart, ChevronLeft, ChevronRight, Filter, X } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Footer from "../Footer1";
 import Header from "../Header1";
 import { useQuery } from "react-query";
@@ -186,7 +186,7 @@ const ProductCardSkeleton = () => {
 };
 
 // Updated Product Card Component with navigation
-const ProductCard = ({ product, onWishlist }) => {
+const ProductCard = ({ product, onWishlist,collectionId }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
 
@@ -211,7 +211,12 @@ const ProductCard = ({ product, onWishlist }) => {
   };
   const handleImageClick = (product) => {
     navigate("/productdetails", {
-      state: { product },
+      state: { product : {
+        product_id:product?.product_id,
+        selected_variant_id:product?.selected_variant_id,
+        collectionId:collectionId
+
+      }},
     });
   };
 
@@ -263,11 +268,11 @@ const ProductCard = ({ product, onWishlist }) => {
           <Heart className="w-4 h-4 text-pink-500" />
         </button>
 
-        {product.isNew && (
+        {/* {product.isNew && (
           <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
             NEW
           </span>
-        )}
+        )} */}
       </div>
 
       <div className="p-3">
@@ -288,11 +293,13 @@ const ProductCard = ({ product, onWishlist }) => {
 };
 
 // Product List Component
-const ProductList = ({ products, onWishlist }) => {
+const ProductList = ({ products, onWishlist ,collectionId}) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
-      {products.map((product) => (
+
+      {products ?.map((product) => (
         <ProductCard
+        collectionId={collectionId}
           key={product.product_id}
           product={product}
           onWishlist={onWishlist}
@@ -324,7 +331,12 @@ const SortDropdown = ({ sortBy, onSortChange }) => {
 
 
 const DynamicProductListingPage = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const categoryId = searchParams.get("category");
+  const subcategoryId = searchParams.get("subcategory");
+  const collectionId = searchParams.get("collection");
+
   const [currentCategory, setCurrentCategory] = useState("rings");
   const [subcategories, setSubcategories] = useState([]);
   const [activeCategoryId, setActiveCategoryId] = useState(null);
@@ -337,8 +349,6 @@ const DynamicProductListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { setShowLoginModal } = useLoginModal();
-
-
   const navigate = useNavigate();
 
   const handleWishlist = async (productId, variantId) => {
@@ -357,7 +367,6 @@ const DynamicProductListingPage = () => {
     }
   };
 
-  // Initialize filters and products when category changes
   useEffect(() => {
     const initialFilters = {};
     Object.keys(categoryConfig.filters).forEach((filterKey) => {
@@ -368,14 +377,27 @@ const DynamicProductListingPage = () => {
     setLoading(false);
   }, [currentCategory]);
 
-  const { data, isLoading } = useQuery(
-    ["get_product", id],
-    () => axios.get(`${endpoint?.get_product_user}?product_sub_cat_id=${id}`),
-    {
-      keepPreviousData: true,
-      enabled: !!id, // only fetch if id exists
+  const fetchProducts = async () => {
+    if (subcategoryId) {
+      return axios.get(`${endpoint.get_product_user}?product_sub_cat_id=${subcategoryId}`);
     }
+    else if (categoryId) {
+      return axios.get(`${endpoint.get_product_user}?product_cat_id=${categoryId}`);
+    }
+    else if (collectionId) {
+      return axios.get(`${endpoint.get_product_user}?product_coll_id=${collectionId}`);
+    }
+    return { data: { result: [] } }; // fallback
+  };
+
+  const { data, isLoading } = useQuery(
+    ["get_product", subcategoryId, categoryId],
+    fetchProducts,
+    {
+    enabled: !!subcategoryId || !!categoryId || !!collectionId,
+  }
   );
+
   const product = data?.data?.result || [];
   const cat_id = product?.[0]?.product_category_id;
 
@@ -412,7 +434,7 @@ const DynamicProductListingPage = () => {
     }));
     setAllProducts(enhancedProducts);
     setProducts(enhancedProducts);
-  }, [product, id]); // <-- Add `id` here
+  }, [product]); // <-- Add `id` here
 
 
   // Filter and sort products
@@ -467,23 +489,9 @@ const DynamicProductListingPage = () => {
 
     setProducts(filteredProducts);
   }, [activeTab, filters, sortBy, allProducts]);
-
-  // const handleFilterChange = (filterKey, value, isChecked) => {
-  //   setFilters((prev) => {
-  //     const newFilters = { ...prev };
-  //     if (isChecked) {
-  //       newFilters[filterKey] = [...(newFilters[filterKey] || []), value];
-  //     } else {
-  //       newFilters[filterKey] = (newFilters[filterKey] || []).filter(
-  //         (v) => v !== value
-  //       );
-  //     }
-  //     return newFilters;
-  //   });
-  // };
-
+  const isCollection = !!collectionId;
   const applyBackendFilters = async (newFilters) => {
-    const payload = {};
+    const payload = {isCollection};
 
     if (newFilters.price) payload.price_group = newFilters.price;
     if (newFilters.tags) payload.product_tags = newFilters.tags;
@@ -645,7 +653,7 @@ const DynamicProductListingPage = () => {
                 {subcategories.map((subcat) => (
                   <button
                     key={subcat.product_subcategory_id}
-                    onClick={() => navigate(`/products_web/${subcat.product_subcategory_id}`)}
+                    onClick={() => navigate(`/products_web?subcategory=${subcat.product_subcategory_id}`)}
                     className="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-medium hover:bg-purple-200 whitespace-nowrap"
                   >
                     {subcat.name}
@@ -702,7 +710,7 @@ const DynamicProductListingPage = () => {
                 ))}
               </div>
             ) : products.length > 0 ? (
-              <ProductList products={products} onWishlist={handleWishlist} />
+              <ProductList products={products} onWishlist={handleWishlist} collectionId={collectionId}/>
             ) : (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="text-gray-400 mb-4">

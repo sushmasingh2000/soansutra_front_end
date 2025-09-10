@@ -6,8 +6,10 @@ import {
   Call,
   DashboardCustomizeOutlined,
   GroupAdd,
+  ImageAspectRatio,
   Logout,
   ManageAccountsRounded,
+  Money,
   PaymentSharp,
   PermScanWifi,
   Person,
@@ -18,9 +20,11 @@ import {
   TaxiAlert,
 } from "@mui/icons-material";
 import {
+  CornerUpLeftIcon,
   Disc2Icon,
   Eye,
   Image,
+  LucideAmpersands,
   MarsStroke,
   Minimize2Icon,
   User2Icon
@@ -68,6 +72,12 @@ const fullMenuItems = [
     label: "Permissions",
     icon: <PermScanWifi />,
     path: "/permissions",
+  },
+   {
+    id: "Collection",
+    label: "Collection ",
+    icon: <ImageAspectRatio />,
+    path: "/collection",
   },
   {
     id: "categories",
@@ -121,8 +131,20 @@ const fullMenuItems = [
             icon: <ManageAccountsRounded />,
             path: "/product-material",
           },
+           {
+            id: "backup-material",
+            label: "Backup  Material",
+            icon: <ManageAccountsRounded />,
+            path: "/backup_materials",
+          },
           
         ],
+      },
+        {
+        id: "Coupon",
+        label: "Coupon",
+        icon: <CornerUpLeftIcon />,
+        path: "/coupon",
       },
       {
         id: "discount",
@@ -136,8 +158,23 @@ const fullMenuItems = [
         icon: <TaxiAlert />,
         path: "/tax",
       },
+      {
+        id: "price_range",
+        label: "Coupon Price Range",
+        icon: <Money />,
+        path: "/price_range",
+      },
+      
     ],
   },
+  
+    {
+    id: "Leads",
+    label: "External Leads",
+    icon: <LucideAmpersands />,
+    path: "/leads",
+  },
+   
   {
     id: "custom",
     label: "Custom Order",
@@ -155,6 +192,12 @@ const fullMenuItems = [
     label: "Banner",
     icon: <Image />,
     path: "/banner",
+  },
+  {
+    id: "Video",
+    label: "Video",
+    icon: <Image />,
+    path: "/video",
   },
   {
     id: "demo",

@@ -1848,15 +1848,15 @@ export default function Header() {
   };
 
   
-  const referralCode = "ABC123"; 
+  const referralCode = profile_user?.cust_unique_id; 
    const handleCopy = () => {
     navigator.clipboard.writeText(referralCode);
-    toast.success("Referral code copied!");
+    toast("Referral code copied!" , {id:1});
   };
 
   
 
-  const { data, isLoading, error } = useQuery(
+  const { data} = useQuery(
     ["search_product", debouncedSearchQuery],
     () =>
       apiConnectorPost(endpoint.get_search_product, {
@@ -2035,7 +2035,7 @@ export default function Header() {
                       <div
                         key={`${item.product_id}-${index}`}
                         onMouseDown={() => {
-                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
                         className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-gray-200 cursor-pointer transition-colors"
@@ -2136,7 +2136,7 @@ export default function Header() {
                       <div
                         key={`${item.product_id}-${index}`}
                         onMouseDown={() => {
-                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
                         className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-gray-200 cursor-pointer transition-colors"

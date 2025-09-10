@@ -46,7 +46,8 @@ const DiamondIcon = () => (
 
 const ProductDetailWebPage = () => {
   const location = useLocation();
-  const productData = location.state?.product;
+  const product_id_and_variant_id_only = location.state?.product;
+  console.log(product_id_and_variant_id_only, "mhgdrjh")
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [variants, setVariants] = useState([]);
@@ -68,7 +69,7 @@ const ProductDetailWebPage = () => {
     const fetchVariants = async () => {
       try {
         const response = await axios.get(
-          `${endpoint?.u_get_variant}?product_id=${productData.product_id}&varient_id=${productData.selected_variant_id}`
+          `${endpoint?.u_get_variant}?product_id=${product_id_and_variant_id_only.product_id}&varient_id=${product_id_and_variant_id_only.selected_variant_id}`
         );
         if (response.data.success) {
           setVariants(response.data.result);
@@ -84,10 +85,10 @@ const ProductDetailWebPage = () => {
       }
     };
 
-    if (productData?.product_id) {
+    if (product_id_and_variant_id_only?.product_id) {
       fetchVariants();
     }
-  }, [productData?.product_id]);
+  }, [product_id_and_variant_id_only?.product_id]);
 
 
   useEffect(() => {
@@ -108,7 +109,7 @@ const ProductDetailWebPage = () => {
     };
   }, [showCustomizationModal, showPriceBreakupModal]);
 
-  if (!productData) {
+  if (!selectedVariant) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-700">
         No product data found.
@@ -116,35 +117,21 @@ const ProductDetailWebPage = () => {
     );
   }
 
-  const image =
-    (typeof productData.product_images === "string"
-      ? JSON.parse(productData.product_images)
-      : productData.product_images) || [];
+const image =
+  (typeof selectedVariant?.product_details?.product_images === "string"
+    ? JSON.parse(selectedVariant?.product_details?.product_images)
+    : selectedVariant?.product_details?.product_images) || [];
+
 
   const images = image
     .filter((img) => img?.p_image_url)
     .map((img) => img.p_image_url);
-
-  // let images = [];
-
-  // try {
-  //   const parsed = JSON.parse(productData?.product_images || "[]");
-  //   images = parsed
-  //     .filter((img) => img?.p_image_url)
-  //     .map((img) => img?.p_image_url);
-  // } catch (e) {
-  //   console.error("Failed to parse product images", e);
-  //   images = [];
-  // }
 
   const formatPrice = (price) => {
     const num = Number(price);
     if (isNaN(num)) return "₹0";
     return `₹${num.toLocaleString()}`;
   };
-
-  const discount = productData.discount || null;
-  const priceNum = Number(productData.price);
 
   const StaticSize = [
     { size: "5", value: "44.8 mm", status: "Made to Order" },
@@ -270,13 +257,13 @@ const ProductDetailWebPage = () => {
   };
 
   const handleAddToCart = async () => {
-    if (!productData || !selectedVariant) {
+    if (!product_id_and_variant_id_only || !selectedVariant) {
       toast.error("Product or variant not selected");
       return;
     }
 
     const payload = {
-      product_id: productData.product_id,
+      product_id: product_id_and_variant_id_only.product_id,
       varient_id: selectedVariant.varient_id,
       quantity: quantity,
     };
@@ -296,11 +283,11 @@ const ProductDetailWebPage = () => {
   };
 
   const handleWishlist = async () => {
-    if (!productData || !selectedVariant) {
+    if (!product_id_and_variant_id_only || !selectedVariant) {
       toast.error("Product or variant not selected");
       return;
     }
-    const { product_id } = productData;
+    const { product_id } = product_id_and_variant_id_only;
     const { varient_id } = selectedVariant;
     try {
       const response = await apiConnectorGet(
@@ -390,7 +377,7 @@ const ProductDetailWebPage = () => {
       )}
       <div className="px-3 py-2 border-b border-gray-100">
         <p className="text-xs text-gray-700">
-          {productData.description || "No description available."}
+          {selectedVariant?.product_details?.product_description || "No description available."}
         </p>
       </div>
       {selectedVariant?.material_details?.map((material, index) => (
@@ -441,13 +428,10 @@ const ProductDetailWebPage = () => {
           <div className="px-3 py-2 border-t border-gray-100">
             <p className="text-gray-600 text-xs mb-1">Manufactured by</p>
             <p className="text-gray-800 text-xs font-medium">
-              {productData.manufacturer || "N/A"}
+             N/A
             </p>
           </div>
-          <div className="px-3 py-2 border-t border-gray-100">
-            <p className="text-gray-600 text-xs mb-1">Quantity</p>
-            <p className="text-gray-800 text-xs">1N</p>
-          </div>
+         
           <div className="px-3 py-2 border-t border-gray-100">
             <p className="text-gray-600 text-xs mb-1">Country of Origin</p>
             <p className="text-gray-800 text-xs">India</p>
@@ -576,7 +560,7 @@ const ProductDetailWebPage = () => {
                       <div className="w-full h-100 overflow-hidden">
                         <img
                           src={image}
-                          alt={`${productData.name} ${index + 1}`}
+                          alt={""}
                           className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
                         />
                       </div>
@@ -636,7 +620,7 @@ const ProductDetailWebPage = () => {
                   </div>
                   <p className="text-sm text-gray-600">(MRP Inclusive of all taxes)</p>
                   <h1 className="text-lg lg:text-xl font-medium text-gray-900">
-                    {productData.name || "Unnamed Product"}
+                    {selectedVariant?.product_details?.product_name || "Unnamed Product"}
                   </h1>
                 </div>
                 <div className="flex-shrink-0">
@@ -688,11 +672,11 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
             </div>
-            {discount && (
+            {variants?.discount_details && (
               <div className="px-1 md:px-0">
                 <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
                   <span className="text-sm font-medium text-red-800">
-                    Flat {discount}% off on Diamond Prices
+                    Flat {variants?.discount_details?.discount_value}% off on Diamond Prices
                   </span>
                 </div>
               </div>
@@ -784,9 +768,9 @@ const ProductDetailWebPage = () => {
                     {
                       varient_id: "default",
                       varient_sku: "Default",
-                      varient_price: productData.price,
-                      varient_weight: productData.weight || "",
-                      unit_name: productData.unit_name || "",
+                      varient_price: selectedVariant?.price,
+                      varient_weight: selectedVariant.weight || "",
+                      unit_name: selectedVariant.unit_name || "",
                     },
                   ].map((variant) => (
                     <button
@@ -841,16 +825,14 @@ const ProductDetailWebPage = () => {
 
         <BannerSlidder />
         <YouMayLike />
-        <SimilarProducts productData={productData} />
+        <SimilarProducts productData={product_id_and_variant_id_only} />
         <div id="reviews">
-          <CustomerReviewSection productId={productData.product_id} />
+          <CustomerReviewSection productId={product_id_and_variant_id_only.product_id} />
         </div>
         <RecentlyViewed />
         <ContinueBrowsing />
-        <More18KProducts />
         <CaratLaneSignup />
         <MobileVideoSlider />
-        <RelatedCategories productData={productData} />
         <ShopByProducts />
         <div className="mb-10">
           <Footer />
@@ -887,7 +869,7 @@ const ProductDetailWebPage = () => {
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-purple-800">
-                  {productData.name || "Product"}
+                  {selectedVariant?.product_name || "Product"}
                 </h2>
 
                 <button

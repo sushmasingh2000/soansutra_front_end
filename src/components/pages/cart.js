@@ -1,19 +1,18 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { X, MapPin, Tag, Truck } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import WarrantyFeatures from '../trustBadge';
-import CartHeader from '../shoppingCartHeader';
-import { apiConnectorGet } from '../../utils/ApiConnector';
-import { endpoint, rupees } from '../../utils/APIRoutes';
-import axios from 'axios';
+import { useFormik } from 'formik';
+import { MapPin, Tag, Truck, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../../utils/ApiConnector';
+import { endpoint, rupees } from '../../utils/APIRoutes';
 import AssurityComponent from '../assuritycomponent';
+import CartHeader from '../shoppingCartHeader';
 
 export default function ResponsiveCart() {
   const navigate = useNavigate();
   const orderSummaryRef = useRef(null);
-
   const [cartItems, setCartItems] = useState([]);
   const [pincode, setPincode] = useState('222137');
   const [showPincodeModal, setShowPincodeModal] = useState(false);
@@ -23,6 +22,7 @@ export default function ResponsiveCart() {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
+  const [coupon , setCoupon] = useState([])
 
   // Placeholder images for modal carousel
   const placeholderImages = [
@@ -30,45 +30,6 @@ export default function ResponsiveCart() {
     'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop',
     'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=200&fit=crop',
     'https://images.unsplash.com/photo-1586796676849-bc85c38e8b25?w=300&h=200&fit=crop'
-  ];
-
-  // Available coupons data
-  const availableCoupons = [
-    {
-      code: 'PERFECT15',
-      discount: '15% OFF',
-      description: '15% off on Solitaire value(single/multiple diamonds)',
-      validTill: 'Valid till October 31 2025',
-      applicable: false
-    },
-    {
-      code: 'PERFECT12',
-      discount: '12% OFF',
-      description: '12% off on Solitaire value(single/multiple diamonds)',
-      validTill: 'Valid till October 31 2025',
-      applicable: false
-    },
-    {
-      code: 'PERFECT10',
-      discount: '10% OFF',
-      description: '10% off on Solitaire value(single/multiple diamonds)',
-      validTill: 'Valid till October 31 2025',
-      applicable: false
-    },
-    {
-      code: 'MOUNTS',
-      discount: '5% OFF',
-      description: 'Flat 5% Off on Solitaire Mount SKU',
-      validTill: 'Valid till October 31 2025',
-      applicable: false
-    },
-    {
-      code: 'SPECIAL10',
-      discount: '10% OFF',
-      description: 'Get Flat 10% Off on MRP of all studded designs',
-      validTill: 'Valid till September 09 2025',
-      applicable: false
-    }
   ];
 
   const getCart = async () => {
@@ -137,8 +98,11 @@ export default function ResponsiveCart() {
   };
 
   const openCouponModal = () => {
+    handleApplyCoupon();
     setShowCouponModal(true);
   };
+
+
 
   const closeCouponModal = () => {
     setShowCouponModal(false);
@@ -149,53 +113,42 @@ export default function ResponsiveCart() {
     setCouponCode(couponCode);
     handleApplyCoupon(couponCode);
     setShowCouponModal(false);
-  };
+  }; 
 
-  const handleApplyCoupon = async (code = couponCode) => {
-    if (!code.trim()) {
-      toast.error('Please enter a coupon code');
+const handleApplyCoupon = async () => {
+  // if (!code.trim()) {
+  //   toast.error('Please enter a coupon code');
+  //   return;
+  // }
+
+  const variantIds = cartItems.map(item => item.varient_id); 
+  const productAmount = subtotal;
+
+  try {
+    const response = await apiConnectorPost(endpoint.get_coupon_varient, {
+      v_id: JSON.stringify(variantIds || []),
+      product_amount: productAmount,
+    });
+
+    if (!response?.data?.success) {
+      toast.error(response?.data?.message || 'Failed to apply coupon');
       return;
     }
+    setCoupon(response?.data?.result || [])
+    // setAppliedCoupon(coupon_details);
+    // setCouponDiscount(discount_amount);
+  } catch (error) {
+    console.error('Error applying coupon:', error);
+    toast.error('Something went wrong while applying the coupon');
+  }
+};
 
-    const validCoupons = {
-      'SAVE10': { type: 'percentage', value: 10, minOrder: 1000 },
-      'FLAT50': { type: 'fixed', value: 50, minOrder: 500 },
-      'WELCOME20': { type: 'percentage', value: 20, minOrder: 2000 },
-      'PERFECT15': { type: 'percentage', value: 15, minOrder: 1000 },
-      'PERFECT12': { type: 'percentage', value: 12, minOrder: 1000 },
-      'PERFECT10': { type: 'percentage', value: 10, minOrder: 1000 }
-    };
-
-    const coupon = validCoupons[code.toUpperCase()];
-
-    if (!coupon) {
-      toast.error('Invalid coupon code');
-      return;
-    }
-
-    if (subtotal < coupon.minOrder) {
-      toast.error(`Minimum order value should be ₹${coupon.minOrder}`);
-      return;
-    }
-
-    let discount = 0;
-    if (coupon.type === 'percentage') {
-      discount = (subtotal * coupon.value) / 100;
-    } else {
-      discount = coupon.value;
-    }
-
-    setAppliedCoupon(coupon);
-    setCouponDiscount(discount);
-    setCouponCode(code);
-    toast.success('Coupon applied successfully!');
-  };
-
-  const removeCoupon = () => {
+  const removeCoupon = (bool) => {
     setAppliedCoupon(null);
     setCouponDiscount(0);
     setCouponCode('');
-    toast.success('Coupon removed');
+    
+    bool && toast.success('Coupon removed');
   };
 
   const subtotal = cartItems.reduce((sum, item) => {
@@ -206,22 +159,31 @@ export default function ResponsiveCart() {
   const totalSavings = cartItems.reduce((sum, item) => {
     const discounts = item.varient_details.discount_details || [];
     const activeDiscounts = discounts.filter(d => d.discount_is_active === 'Active');
-
     if (activeDiscounts.length === 0) return sum;
-
     const totalDiscountPercent = activeDiscounts.reduce((acc, d) => acc + d.discount_value, 0);
     const discountAmount = (item.varient_details.varient_price * totalDiscountPercent / 100) * item.quantity;
-
     return sum + discountAmount;
   }, 0);
 
-  const totalCost = subtotal - totalSavings - couponDiscount;
+  const totalCost = subtotal - totalSavings;
+
+  const handleClick = (product) => {
+    navigate("/productdetails", {
+      state: {
+        product: {
+          product_id: product?.product_id,
+          selected_variant_id: product?.varient_id
+        }
+      },
+    });
+  };
 
   const updateQuantity = (cart_item_id, newQuantity) => {
     if (newQuantity < 1) return;
     setCartItems(cartItems.map(item =>
       item.cart_item_id === cart_item_id ? { ...item, quantity: newQuantity } : item
     ));
+   couponDiscount&& removeCoupon(false)
   };
 
   const formatPrice = (price) => `₹${price.toLocaleString()}`;
@@ -276,9 +238,11 @@ export default function ResponsiveCart() {
                   const product = varient_details.product_details;
 
                   return (
-                    <div key={item.cart_item_id} className="bg-white rounded-lg shadow-sm p-3 m-4">
+                    <div key={item.cart_item_id} className="bg-white rounded-lg shadow-sm p-3 m-4"
+                     >
                       <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden"
+                         onClick={() => handleClick(item)}>
                           <img
                             src={product.product_image.p_image_url}
                             alt={product.product_name}
@@ -339,10 +303,11 @@ export default function ResponsiveCart() {
               <div
                 className="rounded-lg p-3 cursor-pointer"
                 style={{ background: "#E8E1FF" }}
-                onClick={openCouponModal}
               >
                 <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2"            
+                       onClick={openCouponModal}
+>
                     <Tag size={16} />
                     <span>Apply Coupon</span>
                   </div>
@@ -351,7 +316,7 @@ export default function ResponsiveCart() {
                 {appliedCoupon && (
                   <div className="mt-2 flex justify-between items-center text-xs">
                     <span className="text-green-600">Coupon Applied!</span>
-                    <button onClick={removeCoupon} className="text-red-600">Remove</button>
+                    <button onClick={()=>removeCoupon(true)} className="text-red-600">Remove</button>
                   </div>
                 )}
               </div>
@@ -374,10 +339,7 @@ export default function ResponsiveCart() {
                     <span className="text-gray-700 text-sm">Subtotal</span>
                     <span className="font-medium text-sm">{formatPrice(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-700 text-sm">You Saved</span>
-                    <span className="font-medium text-green-600 text-sm">{formatPrice(totalSavings)}</span>
-                  </div>
+
                   <div className="flex justify-between">
                     <span className="text-gray-700 text-sm">Coupon Discount</span>
                     <span className="font-medium text-green-600 text-sm">{formatPrice(couponDiscount)}</span>
@@ -514,10 +476,11 @@ export default function ResponsiveCart() {
                 <div
                   className="rounded-lg p-3 mb-3 cursor-pointer"
                   style={{ background: "#E8E1FF" }}
-                  onClick={openCouponModal}
+                  
                 >
-                  <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm mb-2">
-                    <div className="flex items-center gap-2">
+                  <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm mb-2"
+                  onClick={openCouponModal}>
+                    <div className="flex items-center gap-2" >
                       <Tag size={16} />
                       <span>Apply Coupon</span>
                     </div>
@@ -540,10 +503,7 @@ export default function ResponsiveCart() {
                       <span className="text-gray-700">Subtotal</span>
                       <span className="font-medium">{rupees}{Number(subtotal)?.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-gray-700">You Saved</span>
-                      <span className="font-medium text-green-600">{formatPrice(totalSavings)}</span>
-                    </div>
+
                     <div className="flex justify-between text-xs">
                       <span className="text-gray-700">Coupon Discount</span>
                       <span className="font-medium text-green-600">{formatPrice(couponDiscount)}</span>
@@ -556,7 +516,7 @@ export default function ResponsiveCart() {
                   <div className="border-t pt-2 mb-2">
                     <div className="flex justify-between items-center">
                       <span className="font-medium text-gray-900 text-sm">Total Cost</span>
-                      <span className="text-base font-bold text-gray-900">{rupees}{Math.round(totalCost)}</span>
+                      <span className="text-base font-bold text-gray-900">{rupees}{Math.round(subtotal-couponDiscount)}</span>
                     </div>
                   </div>
                 </div>
@@ -620,12 +580,15 @@ export default function ResponsiveCart() {
                 <input
                   type="text"
                   placeholder="Enter coupon code"
-                  value={couponCode}
+                  value={coupon?.applicableCoupon?.coupon_data?.coupon_code}
                   onChange={(e) => setCouponCode(e.target.value)}
                   className="flex-1 px-3 py-2 border rounded-md text-sm"
                 />
                 <button
-                  onClick={() => handleApplyCoupon()}
+                  onClick={() => {setCouponDiscount(Number(coupon?.applicableCoupon?.coupon_data?.deductable_coupon_amount || 0)?.toFixed(2));
+                     setShowCouponModal(false); 
+                      setAppliedCoupon(true);
+                  }}
                   className="px-4 py-2 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700"
                 >
                   APPLY
@@ -635,24 +598,25 @@ export default function ResponsiveCart() {
             <div className="p-4">
               <h3 className="text-sm font-medium text-gray-900 mb-3">Other Offers at CaratLane</h3>
               <div className="space-y-3">
-                {availableCoupons.map((coupon, index) => (
+                {coupon?.allCoupon?.map((coupon, index) => (
                   <div
                     key={index}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 ${!coupon.applicable ? 'opacity-60' : ''}`}
-                    onClick={() => coupon.applicable && applyCouponFromModal(coupon.code)}
+                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 ${!coupon.isApplicable ? 'opacity-60' : ''}`}
+                    onClick={() => coupon.isApplicable && applyCouponFromModal(coupon.code)}
                   >
                     <div className="flex-shrink-0 bg-gray-100 text-gray-600 text-xs font-bold px-2 py-4 rounded text-center min-w-[50px] flex items-center justify-center">
-                      {coupon.discount}
+                     {coupon?.coupon_discount_type === "Percentage" ?" % ": ""} {Number(coupon.coupon_value)?.toFixed(2)}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium text-sm text-gray-900">{coupon.code}</span>
-                        {!coupon.applicable && (
-                          <span className="text-xs text-gray-400">Not Applicable</span>
-                        )}
+                        <span className="font-medium text-sm text-gray-900">{coupon.coupon_code}</span>
+                        {!coupon.isApplicable ? 
+                          <span className="text-xs text-gray-400">Not Applicable</span> : 
+                           <span className="text-xs text-green-400"> Applicable</span>
+                        } 
                       </div>
-                      <p className="text-xs text-gray-600 mb-1">{coupon.validTill}</p>
-                      <p className="text-xs text-gray-700">{coupon.description}</p>
+                      <p className="text-xs text-gray-600 mb-1">{coupon.coupon_end_date}</p>
+                      <p className="text-xs text-gray-700">{coupon.applied_name}</p>
                     </div>
                   </div>
                 ))}
@@ -725,3 +689,5 @@ export default function ResponsiveCart() {
     </div>
   );
 }
+
+// isme varinat isd jyegi jb apply coupon pr click krenge to api variant id multiple bhi jaskti array me jyega or subtotal amount jyega 

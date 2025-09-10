@@ -38,7 +38,13 @@ import BuyGold from "../components/pages/buygold";
 import SellGold from "../components/pages/sellgold";
 import ExchangeRedeemComponent from "../components/pages/exchangeegold";
 import TreasureChestBanner from "../components/pages/treasurechest";
+import InsiderEmail from "../components/admin/InsiderEmail.js";
+import Collection from "../components/admin/Collection.js";
 import Termscondition from "../components/pages/termscondition.jsx"
+import Video from "../components/admin/Video.js";
+import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
+import Coupon from "../components/admin/Coupon.js";
+import CouponPriceRange from "../components/admin/CouponPriceRange..js";
 
 export const routes = [
   {
@@ -71,6 +77,14 @@ export const routes = [
     element: (
       <MainLayout>
         <Role />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/leads",
+    element: (
+      <MainLayout>
+        <InsiderEmail />{" "}
       </MainLayout>
     ),
   },
@@ -147,7 +161,30 @@ export const routes = [
       </MainLayout>
     ),
   },
- 
+    {
+    path: "/coupon",
+    element: (
+      <MainLayout>
+        <Coupon />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/coupon",
+    element: (
+      <MainLayout>
+        <Coupon />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/price_range",
+    element: (
+      <MainLayout>
+        <CouponPriceRange />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/inventory",
     element: (
@@ -221,7 +258,14 @@ export const routes = [
       </MainLayout>
     ),
   },
-  
+  {
+    path: "/backup_materials",
+    element: (
+      <MainLayout>
+        <MasterMaterialBackup />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/payment",
     element: (
@@ -239,6 +283,14 @@ export const routes = [
     ),
   },
   {
+    path: "/video",
+    element: (
+      <MainLayout>
+        <Video />{" "}
+      </MainLayout>
+    ),
+  },
+  {
     path: "/customer",
     element: (
       <MainLayout>
@@ -247,7 +299,7 @@ export const routes = [
     ),
   },
   {
-    path: "/products_web/:id",
+    path: "/products_web",
     element: <DynamicProductListingPage />,
   },
   {

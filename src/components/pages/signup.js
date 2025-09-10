@@ -704,6 +704,7 @@ import Footer from "../Footer1";
 import Header from '../Header1';
 import LoginModal from '../pages/LoginPage';
 import logo from '../../assets/desklogo.png';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -757,7 +758,7 @@ const SignUpPage = () => {
 
     return errors;
   };
-
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();

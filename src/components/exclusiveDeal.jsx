@@ -16,7 +16,7 @@ export default function JewelryPromoCard() {
   const discount_high = data?.data?.result || [];
 
   const handleClick = (subcategoryId) => {
-    navigate(`/products_web/${subcategoryId}`);
+    navigate(`/products_web?subcategory=${subcategoryId}`);
   };
 
   return (
