@@ -97,6 +97,13 @@ export const endpoint = {
   update_video: `${domain}/api/v1/update-videos`,
   delete_video: `${domain}/api/v1/delete-videos`,
 
+  
+// address shipping
+  add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
+  get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
+  set_shipping_Address: `${domain}/api/v1/set-shipping-address-as-default`,
+
+
 
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
