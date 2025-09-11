@@ -8,8 +8,9 @@ import {
   Video, 
   Check, 
   Clock,
-  Calendar
+  Calendar,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import VideoCallModal from './pages/ClientDemo/VideoCall';
 
 const DeliveryStoresUI = () => {
@@ -31,7 +32,7 @@ const DeliveryStoresUI = () => {
       </h1>
       
       {/* Location Input */}
-      <div className="flex items-center justify-between bg-gray-50 rounded-lg p-3 border border-purple-600">
+      <div className="flex items-center justify-between bg-gray-50 rounded-lg p-3 border border-yellow-600">
         <div className="flex items-center space-x-2">
           <MapPin className="w-4 h-4 text-gray-600" />
           {isEditingPin ? (
@@ -39,7 +40,7 @@ const DeliveryStoresUI = () => {
               type="text"
               value={tempPinCode}
               onChange={(e) => setTempPinCode(e.target.value)}
-              className="text-gray-800 text-sm font-medium w-24 border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-100"
+              className="text-gray-800 text-sm font-medium w-24 border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-100"
               placeholder="Enter PIN"
               maxLength={6}
             />
@@ -55,7 +56,7 @@ const DeliveryStoresUI = () => {
               setIsEditingPin(true);
             }
           }}
-          className="text-purple-600 text-sm font-semibold hover:text-purple-700 transition-colors"
+          className="text-yellow-600 text-sm font-semibold hover:text-yellow-700 transition-colors"
         >
           {isEditingPin ? 'SUBMIT' : 'CHANGE'}
         </button>
@@ -77,7 +78,7 @@ const DeliveryStoresUI = () => {
                 <Clock className="w-3 h-3" />
                 <span className="font-medium">3 Hrs 24 Mins</span>
               </div>
-              <span className="text-red-500 font-medium">T&C</span>
+              <Link to={"/terms-and-conditions"} className="text-red-500 font-medium">T&C</Link>
             </div>
           </div>
         </div>
@@ -100,7 +101,7 @@ const DeliveryStoresUI = () => {
               </div>
             </div>
             <p className="text-xs text-gray-600">
-              Also Available in <span className="text-purple-600 font-medium">6 other stores</span>
+              Also Available in <span className="text-yellow-600 font-medium">6 other stores</span>
             </p>
           </div>
         </div>

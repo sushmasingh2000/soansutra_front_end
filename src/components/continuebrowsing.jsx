@@ -40,7 +40,7 @@ const ContinueBrowsing = () => {
           return (
             <div
               key={index}
-              className="flex-1 bg-gray-50 rounded-2xl p-4 relative"
+              className="flex-1 bg-red-50 rounded-2xl p-4 relative"
                     onClick={() => navigate(`/products_web?category=${category.category_id}`)}
                      >
               {/* Category Title */}
@@ -82,7 +82,7 @@ const ContinueBrowsing = () => {
           return (
             <div
               key={index}
-              className="bg-gray-50 rounded-2xl p-4"
+              className="bg-red-50 rounded-2xl p-4"
               onClick={() => navigate(`/products_web?category=${category.category_id}`)}
               >
               {/* Category Title */}

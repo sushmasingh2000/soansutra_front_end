@@ -22,7 +22,7 @@ export default function ResponsiveCart() {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
-  const [coupon , setCoupon] = useState([])
+  const [coupon, setCoupon] = useState([])
 
   // Placeholder images for modal carousel
   const placeholderImages = [
@@ -113,41 +113,41 @@ export default function ResponsiveCart() {
     setCouponCode(couponCode);
     handleApplyCoupon(couponCode);
     setShowCouponModal(false);
-  }; 
+  };
 
-const handleApplyCoupon = async () => {
-  // if (!code.trim()) {
-  //   toast.error('Please enter a coupon code');
-  //   return;
-  // }
+  const handleApplyCoupon = async () => {
+    // if (!code.trim()) {
+    //   toast.error('Please enter a coupon code');
+    //   return;
+    // }
 
-  const variantIds = cartItems.map(item => item.varient_id); 
-  const productAmount = subtotal;
+    const variantIds = cartItems.map(item => item.varient_id);
+    const productAmount = subtotal;
 
-  try {
-    const response = await apiConnectorPost(endpoint.get_coupon_varient, {
-      v_id: JSON.stringify(variantIds || []),
-      product_amount: productAmount,
-    });
+    try {
+      const response = await apiConnectorPost(endpoint.get_coupon_varient, {
+        v_id: JSON.stringify(variantIds || []),
+        product_amount: productAmount,
+      });
 
-    if (!response?.data?.success) {
-      toast.error(response?.data?.message || 'Failed to apply coupon');
-      return;
+      if (!response?.data?.success) {
+        toast.error(response?.data?.message || 'Failed to apply coupon');
+        return;
+      }
+      setCoupon(response?.data?.result || [])
+      // setAppliedCoupon(coupon_details);
+      // setCouponDiscount(discount_amount);
+    } catch (error) {
+      console.error('Error applying coupon:', error);
+      toast.error('Something went wrong while applying the coupon');
     }
-    setCoupon(response?.data?.result || [])
-    // setAppliedCoupon(coupon_details);
-    // setCouponDiscount(discount_amount);
-  } catch (error) {
-    console.error('Error applying coupon:', error);
-    toast.error('Something went wrong while applying the coupon');
-  }
-};
+  };
 
   const removeCoupon = (bool) => {
     setAppliedCoupon(null);
     setCouponDiscount(0);
     setCouponCode('');
-    
+
     bool && toast.success('Coupon removed');
   };
 
@@ -183,7 +183,7 @@ const handleApplyCoupon = async () => {
     setCartItems(cartItems.map(item =>
       item.cart_item_id === cart_item_id ? { ...item, quantity: newQuantity } : item
     ));
-   couponDiscount&& removeCoupon(false)
+    couponDiscount && removeCoupon(false)
   };
 
   const formatPrice = (price) => `₹${price.toLocaleString()}`;
@@ -225,9 +225,9 @@ const handleApplyCoupon = async () => {
                     Looks like you haven't added any items to your cart yet. Start shopping now to find your perfect items!
                   </p>
                   <button
-                    onClick={() => navigate('/shop')}
-                    className="text-white py-2 px-6 rounded-lg font-medium text-sm"
-                    style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
+                    onClick={() => navigate('/')}
+                    className="text-black py-2 px-6 rounded-lg font-medium text-sm bg-gradient-to-r from-yellow-400 to-yellow-600"
+
                   >
                     Start Shopping
                   </button>
@@ -239,10 +239,10 @@ const handleApplyCoupon = async () => {
 
                   return (
                     <div key={item.cart_item_id} className="bg-white rounded-lg shadow-sm p-3 m-4"
-                     >
+                    >
                       <div className="flex items-start gap-3">
                         <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden"
-                         onClick={() => handleClick(item)}>
+                          onClick={() => handleClick(item)}>
                           <img
                             src={product.product_image.p_image_url}
                             alt={product.product_name}
@@ -301,13 +301,13 @@ const handleApplyCoupon = async () => {
           {cartItems.length > 0 && (
             <div className="w-80 space-y-3">
               <div
-                className="rounded-lg p-3 cursor-pointer"
-                style={{ background: "#E8E1FF" }}
+                className="rounded-lg p-3 cursor-pointer bg-yellow-50"
+
               >
-                <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm">
-                  <div className="flex items-center gap-2"            
-                       onClick={openCouponModal}
->
+                <div className="w-full flex items-center justify-between text-yellow-700 font-medium text-sm">
+                  <div className="flex items-center gap-2"
+                    onClick={openCouponModal}
+                  >
                     <Tag size={16} />
                     <span>Apply Coupon</span>
                   </div>
@@ -316,7 +316,7 @@ const handleApplyCoupon = async () => {
                 {appliedCoupon && (
                   <div className="mt-2 flex justify-between items-center text-xs">
                     <span className="text-green-600">Coupon Applied!</span>
-                    <button onClick={()=>removeCoupon(true)} className="text-red-600">Remove</button>
+                    <button onClick={() => removeCoupon(true)} className="text-red-600">Remove</button>
                   </div>
                 )}
               </div>
@@ -328,7 +328,7 @@ const handleApplyCoupon = async () => {
                   <span className="font-medium text-sm">{pincode}</span>
                   <button
                     onClick={openPincodeModal}
-                    className="text-purple-600 text-xs ml-auto"
+                    className="text-yellow-700 text-xs ml-auto"
                   >
                     Change Pincode
                   </button>
@@ -361,8 +361,8 @@ const handleApplyCoupon = async () => {
                 </div>
 
                 <button
-                  className="w-full text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors text-sm"
-                  style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
+                  className="w-full text-black py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg font-medium hover:bg-yellow-700 transition-colors text-sm"
+
                 >
                   PLACE ORDER
                 </button>
@@ -397,9 +397,9 @@ const handleApplyCoupon = async () => {
                       Looks like you haven't added any items to your cart yet. Start shopping now to find your perfect items!
                     </p>
                     <button
-                      onClick={() => navigate('/shop')}
-                      className="text-white py-2 px-6 rounded-lg font-medium text-sm"
-                      style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
+                      onClick={() => navigate('/')}
+                      className="text-black py-2 px-6 rounded-lg font-medium text-sm bg-gradient-to-r from-yellow-400 to-yellow-600"
+
                     >
                       Start Shopping
                     </button>
@@ -474,12 +474,12 @@ const handleApplyCoupon = async () => {
                   Sonasutra Offers
                 </div>
                 <div
-                  className="rounded-lg p-3 mb-3 cursor-pointer"
-                  style={{ background: "#E8E1FF" }}
-                  
+                  className="rounded-lg p-3 mb-3 cursor-pointer bg-yellow-50"
+
+
                 >
-                  <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm mb-2"
-                  onClick={openCouponModal}>
+                  <div className="w-full flex items-center justify-between text-yellow-700 font-medium text-sm mb-2"
+                    onClick={openCouponModal}>
                     <div className="flex items-center gap-2" >
                       <Tag size={16} />
                       <span>Apply Coupon</span>
@@ -516,7 +516,7 @@ const handleApplyCoupon = async () => {
                   <div className="border-t pt-2 mb-2">
                     <div className="flex justify-between items-center">
                       <span className="font-medium text-gray-900 text-sm">Total Cost</span>
-                      <span className="text-base font-bold text-gray-900">{rupees}{Math.round(subtotal-couponDiscount)}</span>
+                      <span className="text-base font-bold text-gray-900">{rupees}{Math.round(subtotal - couponDiscount)}</span>
                     </div>
                   </div>
                 </div>
@@ -530,7 +530,7 @@ const handleApplyCoupon = async () => {
                     </div>
                     <button
                       onClick={openPincodeModal}
-                      className="text-purple-600 text-sm font-medium"
+                      className="text-yellow-600 text-sm font-medium"
                     >
                       Change Pincode
                     </button>
@@ -543,14 +543,14 @@ const handleApplyCoupon = async () => {
                       <span className="text-lg font-bold text-gray-900">{rupees}{Math.round(totalCost)}</span>
                       <button
                         onClick={scrollToOrderSummary}
-                        className="text-purple-600 text-xs underline text-left"
+                        className="text-yellow-600 text-xs underline text-left"
                       >
                         View Order Summary
                       </button>
                     </div>
                     <button
-                      className="text-white py-3 px-6 rounded-lg font-medium text-sm"
-                      style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
+                      className="text-black py-3 px-6 rounded-lg font-medium text-sm bg-gradient-to-r from-yellow-400 to-yellow-600"
+
                     >
                       PLACE ORDER
                     </button>
@@ -566,54 +566,56 @@ const handleApplyCoupon = async () => {
       {showCouponModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-4 border-b">
+            <div className="flex items-center justify-between p-4 border-b border-b-yellow-300">
               <h2 className="text-lg font-semibold text-gray-900">Apply Coupon</h2>
               <button
                 onClick={closeCouponModal}
                 className="text-gray-400 hover:text-gray-600"
               >
-                <X size={20} />
+                <X size={20} className='text-red-800' />
               </button>
             </div>
-            <div className="p-4 border-b">
+            <div className="p-4 border-b border-b-yellow-300">
               <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="Enter coupon code"
                   value={coupon?.applicableCoupon?.coupon_data?.coupon_code}
                   onChange={(e) => setCouponCode(e.target.value)}
-                  className="flex-1 px-3 py-2 border rounded-md text-sm"
+                  className="flex-1 px-3 py-2 border border-yellow-300 rounded-md text-sm"
                 />
                 <button
-                  onClick={() => {setCouponDiscount(Number(coupon?.applicableCoupon?.coupon_data?.deductable_coupon_amount || 0)?.toFixed(2));
-                     setShowCouponModal(false); 
-                      setAppliedCoupon(true);
+                  onClick={() => {
+                    setCouponDiscount(Number(coupon?.applicableCoupon?.coupon_data?.deductable_coupon_amount || 0)?.toFixed(2));
+                    setShowCouponModal(false);
+                    setAppliedCoupon(true);
                   }}
-                  className="px-4 py-2 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700"
+                  className="px-4 py-2 bg-yellow-600 text-black text-sm rounded-md hover:bg-yellow-700"
                 >
                   APPLY
                 </button>
               </div>
             </div>
+
             <div className="p-4">
               <h3 className="text-sm font-medium text-gray-900 mb-3">Other Offers at CaratLane</h3>
               <div className="space-y-3">
                 {coupon?.allCoupon?.map((coupon, index) => (
                   <div
                     key={index}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 ${!coupon.isApplicable ? 'opacity-60' : ''}`}
+                    className={`flex items-center gap-3 p-3 rounded-lg border border-yellow-300 cursor-pointer hover:bg-gray-50 ${!coupon.isApplicable ? 'opacity-60' : ''}`}
                     onClick={() => coupon.isApplicable && applyCouponFromModal(coupon.code)}
                   >
                     <div className="flex-shrink-0 bg-gray-100 text-gray-600 text-xs font-bold px-2 py-4 rounded text-center min-w-[50px] flex items-center justify-center">
-                     {coupon?.coupon_discount_type === "Percentage" ?" % ": ""} {Number(coupon.coupon_value)?.toFixed(2)}
+                      {coupon?.coupon_discount_type === "Percentage" ? " % " : ""} {Number(coupon.coupon_value)?.toFixed(2)}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-sm text-gray-900">{coupon.coupon_code}</span>
-                        {!coupon.isApplicable ? 
-                          <span className="text-xs text-gray-400">Not Applicable</span> : 
-                           <span className="text-xs text-green-400"> Applicable</span>
-                        } 
+                        {!coupon.isApplicable ?
+                          <span className="text-xs text-gray-400">Not Applicable</span> :
+                          <span className="text-xs text-green-400">Applicable</span>
+                        }
                       </div>
                       <p className="text-xs text-gray-600 mb-1">{coupon.coupon_end_date}</p>
                       <p className="text-xs text-gray-700">{coupon.applied_name}</p>
@@ -634,7 +636,7 @@ const handleApplyCoupon = async () => {
               onClick={closePincodeModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
             >
-              <X size={20} />
+              <X size={20} className='text-red-700'/>
             </button>
             <div className="p-6 text-center">
               <h2 className="text-lg font-semibold text-gray-900 mb-2">
@@ -653,7 +655,7 @@ const handleApplyCoupon = async () => {
               </div>
               <p className="text-blue-400 text-sm mb-6">In-Store Design</p>
               <div className="relative mb-4">
-                <div className="flex items-center border rounded-lg p-3 bg-gray-50">
+                <div className="flex items-center border border-yellow-300 rounded-lg p-3 bg-gray-50">
                   <MapPin size={16} className="text-gray-600 mr-2" />
                   <input
                     type="text"
@@ -665,7 +667,7 @@ const handleApplyCoupon = async () => {
                   />
                   <button
                     onClick={handlePincodeChange}
-                    className="text-purple-600 font-medium text-sm"
+                    className="text-red-600 font-medium text-sm"
                   >
                     CHANGE
                   </button>

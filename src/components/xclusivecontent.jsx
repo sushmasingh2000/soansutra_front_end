@@ -20,7 +20,7 @@ const XclusiveContent = () => {
       <h2 className="text-xl font-semibold text-gray-900 mb-4">Xclusive Rewards</h2>
       
       {/* Points Summary */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-lg p-4 text-white mb-4">
+      <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg p-4 text-black mb-4">
         <div className="flex justify-between items-center mb-2">
           <h3 className="text-lg font-semibold">Your Points</h3>
           <Award className="w-6 h-6" />
@@ -30,18 +30,18 @@ const XclusiveContent = () => {
       </div>
 
       {/* Progress to Next Tier */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
+      <div className="bg-white rounded-lg border border-yellow-200 p-4 mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">Progress to {xclusiveData.nextTier}</span>
           <span className="text-sm text-gray-500">{xclusiveData.pointsToNext} points needed</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div className="bg-purple-600 h-2 rounded-full" style={{width: '82%'}}></div>
+          <div className="bg-yellow-600 h-2 rounded-full" style={{width: '82%'}}></div>
         </div>
       </div>
 
       {/* Benefits */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-white rounded-lg border border-yellow-200 p-4">
         <h4 className="font-medium text-gray-900 mb-3">Your Benefits</h4>
         <div className="space-y-2">
           {xclusiveData.benefits.map((benefit, index) => (

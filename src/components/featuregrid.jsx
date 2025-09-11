@@ -1,5 +1,6 @@
 import React from 'react';
 import { Settings, Clock, RefreshCw, Calendar, Coins } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const FeaturesComponent = () => {
   return (
@@ -79,9 +80,9 @@ const FeaturesComponent = () => {
       <div className="text-center">
         <span className="text-xs text-gray-600">
           Learn more on about our{' '}
-          <span className="text-purple-500 font-medium cursor-pointer hover:text-purple-600 transition-colors">
+          <Link to={"/terms-and-conditions"} className="text-yellow-500 font-medium cursor-pointer hover:text-yellow-600 transition-colors">
             TERMS & POLICIES
-          </span>
+          </Link>
         </span>
       </div>
     </div>

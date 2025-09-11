@@ -115,21 +115,21 @@ const OrdersContent = () => {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 z-50">
         <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto text-sm">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between p-4 border-b border-yellow-200">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Order Details</h2>
               <p className="text-xs text-gray-600">Order #{order.id}</p>
             </div>
             <button
               onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-1 hover:bg-yellow-100 rounded-full transition-colors"
             >
               <X className="w-4 h-4 text-gray-500" />
             </button>
           </div>
 
           {/* Order Status */}
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-yellow-200">
             <div className="flex items-center gap-3 mb-3">
               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                 {order.status}
@@ -180,7 +180,7 @@ const OrdersContent = () => {
           </div>
 
           {/* Products */}
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-yellow-200">
             <h3 className="font-semibold text-gray-900 mb-3 text-sm">Items in this order</h3>
             <div className="space-y-3">
               {products.map((product, index) => (
@@ -201,7 +201,7 @@ const OrdersContent = () => {
               ))}
             </div>
 
-            <div className="border-t border-gray-200 mt-3 pt-3">
+            <div className="border-t border-yellow-200 mt-3 pt-3">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-900 text-sm">Total</span>
                 <span className="font-bold text-md text-gray-900">${order.total}</span>
@@ -246,48 +246,48 @@ const OrdersContent = () => {
             {order.orderNotes && (
               <div className="mt-4">
                 <h3 className="font-semibold text-gray-900 mb-2 text-sm">Order Notes</h3>
-                <p className="text-xs text-gray-600 bg-gray-50 rounded-lg p-2">{order.orderNotes}</p>
+                <p className="text-xs text-gray-600 bg-yellow-50 rounded-lg p-2">{order.orderNotes}</p>
               </div>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-yellow-200">
             {order.status === 'Delivered' ? (
               <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                 <button className="flex flex-col items-center gap-1">
-                  <div className="p-1 bg-purple-100 rounded-full">
-                    <RotateCcw className="w-4 h-4 text-purple-600" />
+                  <div className="p-1 bg-yellow-100 rounded-full">
+                    <RotateCcw className="w-4 h-4 text-yellow-600" />
                   </div>
                   <span className="text-xs">Replace Item</span>
                 </button>
                 <button className="flex flex-col items-center gap-1">
-                  <div className="p-1 bg-purple-100 rounded-full">
-                    <Repeat2 className="w-4 h-4 text-purple-600" />
+                  <div className="p-1 bg-yellow-100 rounded-full">
+                    <Repeat2 className="w-4 h-4 text-yellow-600" />
                   </div>
                   <span className="text-xs">Exchange Item</span>
                 </button>
                 <button className="flex flex-col items-center gap-1">
-                  <div className="p-1 bg-purple-100 rounded-full">
-                    <Wrench className="w-4 h-4 text-purple-600" />
+                  <div className="p-1 bg-yellow-100 rounded-full">
+                    <Wrench className="w-4 h-4 text-yellow-600" />
                   </div>
                   <span className="text-xs">Request Repair</span>
                 </button>
                 <button className="flex flex-col items-center gap-1">
-                  <div className="p-1 bg-purple-100 rounded-full">
-                    <Mail className="w-4 h-4 text-purple-600" />
+                  <div className="p-1 bg-yellow-100 rounded-full">
+                    <Mail className="w-4 h-4 text-yellow-600" />
                   </div>
                   <span className="text-xs">Email Invoice</span>
                 </button>
                 <button className="flex flex-col items-center gap-1">
-                  <div className="p-1 bg-purple-100 rounded-full">
-                    <Printer className="w-4 h-4 text-purple-600" />
+                  <div className="p-1 bg-yellow-100 rounded-full">
+                    <Printer className="w-4 h-4 text-yellow-600" />
                   </div>
                   <span className="text-xs">Print Invoice</span>
                 </button>
                 <button className="flex flex-col items-center gap-1">
-                  <div className="p-1 bg-purple-100 rounded-full">
-                    <Award className="w-4 h-4 text-purple-600" />
+                  <div className="p-1 bg-yellow-100 rounded-full">
+                    <Award className="w-4 h-4 text-yellow-600" />
                   </div>
                   <span className="text-xs">E-Certificate</span>
                 </button>
@@ -295,11 +295,11 @@ const OrdersContent = () => {
             ) : (
               <div className="flex flex-col sm:flex-row gap-2">
                 {order.trackingNumber && (
-                  <button className="flex-1 bg-purple-600 text-white px-3 py-1 rounded-lg font-medium hover:bg-purple-700 transition-colors text-sm">
+                  <button className="flex-1 bg-yellow-600 text-white px-3 py-1 rounded-lg font-medium hover:bg-yellow-700 transition-colors text-sm">
                     Track Package
                   </button>
                 )}
-                <button className="flex-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm">
+                <button className="flex-1 bg-yellow-100 text-gray-700 px-3 py-1 rounded-lg font-medium hover:bg-yellow-200 transition-colors text-sm">
                   Contact Support
                 </button>
               </div>
@@ -421,7 +421,7 @@ const OrdersContent = () => {
                   {options.map(opt => (
                     <button 
                       key={opt}
-                      className={`py-1 px-2 border rounded text-xs ${improveSelected.includes(opt) ? 'bg-purple-100 text-purple-800' : 'text-gray-600'}`}
+                      className={`py-1 px-2 border rounded text-xs ${improveSelected.includes(opt) ? 'bg-yellow-100 text-yellow-800' : 'text-gray-600'}`}
                       onClick={() => toggleOption(setImproveSelected, improveSelected, opt)}
                     >
                       {opt}
@@ -436,7 +436,7 @@ const OrdersContent = () => {
               {options.map(opt => (
                 <button 
                   key={opt}
-                  className={`py-1 px-2 border rounded text-xs ${impressSelected.includes(opt) ? 'bg-purple-100 text-purple-800' : 'text-gray-600'}`}
+                  className={`py-1 px-2 border rounded text-xs ${impressSelected.includes(opt) ? 'bg-yellow-100 text-yellow-800' : 'text-gray-600'}`}
                   onClick={() => toggleOption(setImpressSelected, impressSelected, opt)}
                 >
                   {opt}
@@ -444,26 +444,26 @@ const OrdersContent = () => {
               ))}
             </div>
             <div className="mt-3">
-              <label htmlFor="media-upload" className="w-full border border-gray-200 rounded flex justify-center items-center py-4 cursor-pointer">
-                <div className="bg-purple-50 rounded p-3">
-                  <ImagePlus className="w-6 h-6 text-purple-600" />
+              <label htmlFor="media-upload" className="w-full border border-yellow-200 rounded flex justify-center items-center py-4 cursor-pointer">
+                <div className="bg-yellow-50 rounded p-3">
+                  <ImagePlus className="w-6 h-6 text-yellow-600" />
                 </div>
                 <input id="media-upload" type="file" accept="image/*,video/*" className="hidden" onChange={(e) => setMedia(e.target.files[0])} />
               </label>
               {media && <p className="text-xs text-gray-600 mt-1">{media.name}</p>}
             </div>
-            <div className="mt-4">
+            <div className="mt-4 ">
               <textarea 
-                className="w-full border rounded p-2 text-xs"
+                className="w-full border rounded p-2 text-xs" 
                 rows={4}
                 maxLength={500}
                 value={feedback}
                 onChange={e => setFeedback(e.target.value)}
                 placeholder="Our designers would love to hear your feedback"
               />
-              <p className="text-right text-xs text-gray-500">{500 - feedback.length}</p>
+              <p className=" text-right text-xs text-gray-500">{500 - feedback.length}</p>
             </div>
-            <button className="w-full bg-purple-600 text-white py-2 rounded mt-3 font-medium text-sm" onClick={handleSubmit}>
+            <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 rounded mt-3 font-medium text-sm" onClick={handleSubmit}>
               Submit Review
             </button>
           </div>
@@ -475,11 +475,11 @@ const OrdersContent = () => {
   const EmptyState = ({ type }) => (
     <div className="flex flex-col items-center justify-center py-12 md:py-20">
       <div className="relative mb-6">
-        <div className="w-24 h-24 md:w-32 md:h-32 border-2 border-dashed border-purple-300 rounded-full flex items-center justify-center">
-          <Package className="w-8 h-8 md:w-12 md:h-12 text-purple-400" strokeWidth={1.5} />
+        <div className="w-24 h-24 md:w-32 md:h-32 border-2 border-dashed border-yellow-300 rounded-full flex items-center justify-center">
+          <Package className="w-8 h-8 md:w-12 md:h-12 text-yellow-400" strokeWidth={1.5} />
         </div>
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-purple-200 rounded-full flex items-center justify-center">
-          <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+        <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center">
+          <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
         </div>
       </div>
       <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
@@ -490,14 +490,14 @@ const OrdersContent = () => {
           ? "You haven't cancelled any orders yet."
           : "You don't have any orders at the moment."}
       </p>
-      <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 md:px-8 md:py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-colors">
+      <button className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 md:px-8 md:py-3 rounded-lg font-medium hover:from-yellow-600 hover:to-yellow-600 transition-colors">
         Continue Shopping
       </button>
     </div>
   );
 
   const OrderCard = ({ order }) => (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-lg border border-yellow-200 p-4 md:p-6 hover:shadow-md transition-shadow">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
           <img
@@ -538,11 +538,11 @@ const OrdersContent = () => {
         <div className="flex flex-col md:flex-row gap-2 md:ml-4">
           <button
             onClick={() => handleViewDetails(order)}
-            className="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-yellow-600 bg-red-50 rounded-lg hover:bg-yellow-100 transition-colors"
           >
             View Details
           </button>
-          <button className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+          <button className="px-4 py-2 text-sm font-medium text-yellow-600 bg-red-50 rounded-lg hover:bg-yellow-100 transition-colors">
             Track Order
           </button>
         </div>
@@ -553,7 +553,7 @@ const OrdersContent = () => {
   const currentOrders = activeTab === 'myOrders' ? [mockCompletedOrder, ...order_api] : cancelledOrders;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-white-50 p-4 md:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6 md:mb-8">
@@ -567,13 +567,13 @@ const OrdersContent = () => {
             <button
               onClick={() => setActiveTab('myOrders')}
               className={`flex-1 px-4 md:px-6 py-4 text-sm md:text-base font-medium rounded-l-lg transition-colors ${activeTab === 'myOrders'
-                ? 'bg-gray-50 text-gray-900 border-b-2 border-purple-500'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'bg-yellow-50 text-gray-900 border-b-2 border-red-500'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-yellow-50'
                 }`}
             >
               MY ORDERS
               {currentOrders.length > 0 && (
-                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-purple-500 rounded-full">
+                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-yellow-500 rounded-full">
                   {currentOrders.length}
                 </span>
               )}
@@ -581,8 +581,8 @@ const OrdersContent = () => {
             <button
               onClick={() => setActiveTab('cancelledOrders')}
               className={`flex-1 px-4 md:px-6 py-4 text-sm md:text-base font-medium rounded-r-lg transition-colors ${activeTab === 'cancelledOrders'
-                ? 'bg-gray-50 text-gray-900 border-b-2 border-purple-500'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'bg-yellow-50 text-gray-900 border-b-2 border-red-500'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-yellow-50'
                 }`}
             >
               CANCELLED ORDERS
@@ -613,16 +613,16 @@ const OrdersContent = () => {
         {currentOrders.length > 0 && (
           <div className="flex justify-center mt-6">
             <div className="flex items-center space-x-2">
-              <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-yellow-300 rounded-md hover:bg-yellow-50">
                 Previous
               </button>
-              <button className="px-3 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md">
+              <button className="px-3 py-2 text-sm font-medium text-white bg-yellow-600 border border-transparent rounded-md">
                 1
               </button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-yellow-300 rounded-md hover:bg-yellow-50">
                 2
               </button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-yellow-300 rounded-md hover:bg-yellow-50">
                 Next
               </button>
             </div>

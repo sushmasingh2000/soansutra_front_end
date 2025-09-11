@@ -29,8 +29,8 @@ export default function CaratLaneSignup() {
   ];
   return (
     <div className="w-full px-4 sm:px-6 md:px-8 py-6">
-      <div className="w-full px-6 sm:px-8 md:px-10 py-6 sm:py-8 rounded-2xl"
-        style={{ background: 'linear-gradient(135deg, rgb(0, 0, 0), rgb(116, 67, 191))', minHeight: '200px' }}>
+      <div className="w-full px-6 sm:px-8 md:px-10 py-6 sm:py-8 rounded-2xl bg-yellow-700 "
+        >
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
           {/* Left Content */}
           <div className="flex items-center gap-2 text-left">
@@ -63,7 +63,7 @@ export default function CaratLaneSignup() {
               <button
                 onClick={handleSubmit}
                 className='w-full text-white font-medium py-2.5 rounded-lg transition-all duration-200 text-sm'
-                style={{ background: "#DE57E5" }}
+                style={{ background: "linear-gradient(to left, #facc15, #ca8a04)" }}
               >
                 Submit
               </button>
@@ -78,7 +78,7 @@ export default function CaratLaneSignup() {
                     aria-label={`Select gender ${label}`}
                   >
                     <div className={`w-4 h-4 rounded-full border-2 border-white flex items-center justify-center ${gender === value ? 'bg-white' : 'bg-transparent'}`}>
-                      {gender === value && <div className="w-2 h-2 rounded-full bg-purple-600"></div>}
+                      {gender === value && <div className="w-2 h-2 rounded-full bg-yellow-600"></div>}
                     </div>
                     <span className="ml-2 text-white text-sm">{label}</span>
                   </div>

@@ -129,8 +129,8 @@ const BannerSlidder = () => {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 ${index === currentSlide
-                      ? 'bg-purple-600 scale-125 shadow-lg'
-                      : 'bg-gray-400 hover:bg-gray-600 hover:scale-110'
+                      ? 'bg-yellow-600 scale-125 shadow-lg'
+                      : 'bg-yellow-400 hover:bg-yellow-600 hover:scale-110'
                     }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -153,8 +153,8 @@ const BannerSlidder = () => {
                     key={index}
                     onClick={() => goToSlide(index)}
                     className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentSlide
-                        ? 'bg-purple-600 scale-125 shadow-lg'
-                        : 'bg-gray-400 hover:bg-gray-600 hover:scale-110'
+                        ? 'bg-yellow-600 scale-125 shadow-lg'
+                        : 'bg-yellow-400 hover:bg-gray-600 hover:scale-110'
                       }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />

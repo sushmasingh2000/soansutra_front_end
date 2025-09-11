@@ -48,7 +48,7 @@ const NavigationBar = () => {
       name: "Collections",
       image:
         "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/bestsellers/collections_t.png",
-      bgColor: "bg-gradient-to-r from-purple-100 to-purple-50",
+      bgColor: "bg-gradient-to-r from-yellow-100 to-yellow-50",
     },
   ];
   const productsServices = [
@@ -216,7 +216,7 @@ const NavigationBar = () => {
 
 
   return (
-    <nav className="bg-purple-700 text-white ">
+    <nav className="bg-yellow-700 text-white ">
       <div className=" px-4 lg:block hidden">
         <div className="relative">
           <div className="flex space-x-10 py-3">
@@ -235,7 +235,7 @@ const NavigationBar = () => {
                 //   setSubcategories([]);
                 // }}
                 >
-                  <button className="text-sm font-semibold hover:text-pink-300  hover:font-bold">
+                  <button className="text-sm font-semibold hover:text-yellow-300  hover:font-bold">
                     {cat.name}
                   </button>
                 </div>
@@ -245,7 +245,7 @@ const NavigationBar = () => {
           {activeCategoryId && subcategories.length > 0 && (
             <div className="absolute left-0 top-full !w-screen bg-white text-black shadow-lg z-50 p-6 grid grid-cols-6 gap-4">
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                <h3 className="text-sm font-bold  text-yellow-700 mb-2">
                   Featured
                 </h3>
                 <ul className="space-y-1 text-sm text-gray-500 font-semibold">
@@ -256,7 +256,7 @@ const NavigationBar = () => {
                 </ul>
               </div>
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                <h3 className="text-sm font-bold  text-yellow-700 mb-2">
                   By Style
                 </h3>
                 <ul className="space-y-1 text-sm text-gray-500 font-semibold">
@@ -280,7 +280,7 @@ const NavigationBar = () => {
               </div>
 
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                <h3 className="text-sm font-bold  text-yellow-700 mb-2">
                   By Metal & Stone
                 </h3>
                 {loader ?
@@ -310,7 +310,7 @@ const NavigationBar = () => {
               </div>
 
               <div>
-                <h3 className="text-sm font-bold  text-purple-700 mb-2">
+                <h3 className="text-sm font-bold  text-yellow-700 mb-2">
                   By Price
                 </h3>
                 <div className="space-y-2">
@@ -341,7 +341,7 @@ const NavigationBar = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
+                <h3 className="text-sm font-bold  text-yellow-700">Preview</h3>
                 {loader ?
                   Array.from({ length: 1 }).map((_, index) => (
                     <Skeleton variant="rectangular" className="!w-48 !h-48 !rounded" />
@@ -359,7 +359,7 @@ const NavigationBar = () => {
                   )}
               </div>
               <div>
-                <h3 className="text-sm font-bold  text-purple-700">Preview</h3>
+                <h3 className="text-sm font-bold  text-yellow-700">Preview</h3>
                 {loader ?
                   Array.from({ length: 1 }).map((_, index) => (
                     <Skeleton variant="rectangular" className="!w-48 !h-48  !rounded" />
@@ -456,7 +456,7 @@ const NavigationBar = () => {
                       <>
                         <Link
                           to={"/myaccount/profile"}
-                          className="flex items-center p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                          className="flex items-center p-1.5 text-gray-700 hover:text-yellow-600 transition-colors"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <HeartIcon className="h-5 w-5" />
@@ -465,7 +465,7 @@ const NavigationBar = () => {
                         {/* Cart (icon only with badge) */}
                         <Link
                           to={"/shopping-cart"}
-                          className="flex items-center p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
+                          className="flex items-center p-1.5 text-gray-700 hover:text-yellow-600 transition-colors relative mr-3"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <ShoppingCartIcon className="h-5 w-5" />
@@ -475,7 +475,7 @@ const NavigationBar = () => {
                         </Link>
                       </> :
                       <Link
-                        className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                        className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-yellow-600 transition-colors"
                         onClick={() => { setShowLoginModal(true); setIsMenuOpen(false) }}
                       >
                         <UserIcon className="h-5 w-5" />
@@ -519,7 +519,7 @@ const NavigationBar = () => {
                   </div>
                   <button
                     onClick={() => setShowMoreJewellery(!showMoreJewellery)}
-                    className="flex items-center justify-center space-x-2 w-full mt-4 py-3 text-purple-600 font-medium text-sm hover:bg-purple-50 rounded-lg transition-colors"
+                    className="flex items-center justify-center space-x-2 w-full mt-4 py-3 text-yellow-600 font-medium text-sm hover:bg-yellow-50 rounded-lg transition-colors"
                   >
                     <span>{showMoreJewellery ? 'Less Jewellery' : 'More Jewellery'}</span>
                     <ChevronRightIcon className={`h-4 w-4 transition-transform ${showMoreJewellery ? 'rotate-90' : ''}`} />
@@ -599,9 +599,9 @@ const NavigationBar = () => {
                 <div className="px-4 py-2">
                   <div className="text-center mb-3">
                     <div className="flex items-center justify-center space-x-2 mb-1">
-                      <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
-                      <span className="text-sm font-semibold text-purple-700 px-2">Products & Services</span>
-                      <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+                      <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
+                      <span className="text-sm font-semibold text-yellow-700 px-2">Products & Services</span>
+                      <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
                     </div>
                   </div>
 
@@ -635,14 +635,14 @@ const NavigationBar = () => {
 
                 {/* Mobile User Profile Section at Bottom */}
                 <div className="px-4 py-3 border-t border-gray-200 mt-auto">
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
+                  <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-purple-700 mb-1"> {profile?.name}</h3>
+                        <h3 className="text-sm font-semibold text-yellow-700 mb-1"> {profile?.name}</h3>
                         <p className="text-gray-600 text-xs"> {profile?.cl_email}</p>
                       </div>
-                      <button className="bg-white text-purple-700 px-4 py-2 rounded-lg text-sm font-medium
-                       hover:bg-purple-50 transition-colors"
+                      <button className="bg-white text-yellow-700 px-4 py-2 rounded-lg text-sm font-medium
+                       hover:bg-yellow-50 transition-colors"
                         onClick={() => {
                           localStorage.clear();
                           window.location.reload();

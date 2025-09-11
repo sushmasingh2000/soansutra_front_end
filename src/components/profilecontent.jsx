@@ -282,7 +282,7 @@ const ProfileContent = () => {
                   name="old_password"
                   value={formik.values.old_password}
                   onChange={formik.handleChange}
-                  className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
               </div>
 
@@ -296,7 +296,7 @@ const ProfileContent = () => {
                   name="new_password"
                   value={formik.values.new_password}
                   onChange={formik.handleChange}
-                  className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
               </div>
 
@@ -306,13 +306,13 @@ const ProfileContent = () => {
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
               <button
                 onClick={formik.handleSubmit}
-                className="flex-1 py-3 bg-gray-300 text-gray-600 font-medium rounded-lg text-sm transition-colors hover:bg-gray-400"
+                className="flex-1 py-3 bg-red-600 text-white font-medium rounded-lg text-sm transition-colors hover:bg-red-400"
               >
                 Change Password
               </button>
               <button
                 onClick={() => setShowChangePassword(false)}
-                className="flex-1 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg text-sm transition-colors hover:bg-gray-50"
+                className="flex-1 py-3 border border-yellow-300 text-gray-700 font-medium rounded-lg text-sm transition-colors hover:bg-gray-50"
               >
                 Cancel
               </button>
@@ -350,10 +350,10 @@ const ProfileContent = () => {
 
         <div className="w-full max-w-6xl mx-auto space-y-4">
           {/* Personal Details Section */}
-          <div className="bg-white rounded-lg border border-gray-200">
+          <div className="bg-white rounded-lg border border-yellow-200">
             <button
               onClick={() => setPersonalExpanded(!personalExpanded)}
-              className="w-full px-4 py-3 bg-purple-100 rounded-t-lg flex justify-between items-center hover:bg-purple-150"
+              className="w-full px-4 py-3 bg-red-100 rounded-t-lg flex justify-between items-center hover:bg-purple-150"
             >
               <h2 className="font-medium text-gray-900">Personal Details</h2>
               <svg
@@ -374,7 +374,7 @@ const ProfileContent = () => {
 
             {personalExpanded && (
               <div className="p-4 md:p-6 space-y-6">
-                <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-lg p-4 text-white flex items-center justify-between">
+                <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg p-4 text-black flex items-center justify-between">
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm md:text-base">
                       Earn 250 xCLusive points.{" "}
@@ -406,7 +406,7 @@ const ProfileContent = () => {
                             name="name"
                             value={fk?.values?.name}
                             onChange={fk.handleChange}
-                            className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                           />
                         </div>
                       </div>
@@ -417,7 +417,7 @@ const ProfileContent = () => {
                         Enter your mobile number*
                       </h3>
                       <div className="flex">
-                        <select className="px-3 py-3 bg-gray-50 border border-gray-200 rounded-l-lg text-gray-700 text-sm border-r-0">
+                        <select className="px-3 py-3 bg-white border border-yellow-200 rounded-l-lg text-gray-700 text-sm border-r-0">
                           <option>IN +91</option>
                         </select>
                         <input
@@ -427,7 +427,7 @@ const ProfileContent = () => {
                           name="mobile"
                           value={fk?.values?.mobile}
                           onChange={fk.handleChange}
-                          className="flex-1 px-3 py-3 bg-gray-50 border border-gray-200 rounded-r-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          className="flex-1 px-3 py-3 bg-white border border-yellow-200 rounded-r-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                         />
                       </div>
                     </div>
@@ -445,7 +445,7 @@ const ProfileContent = () => {
                         name="date_of_birth"
                         value={fk?.values?.date_of_birth}
                         onChange={fk.handleChange}
-                        className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                       />
                     </div>
 
@@ -459,7 +459,7 @@ const ProfileContent = () => {
                         name="occupation"
                         value={fk?.values?.occupation}
                         onChange={fk.handleChange}
-                        className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                       >
                         <option value="">Occupation (Optional)</option>
                         <option value="Software Engineer">
@@ -535,10 +535,10 @@ const ProfileContent = () => {
                             name="pincode"
                             value={fk?.values?.pincode}
                             onChange={fk.handleChange}
-                            className="w-full pl-10 pr-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full pl-10 pr-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                           />
                         </div>
-                        <button className="px-4 py-3 text-purple-600 font-medium text-sm whitespace-nowrap hover:text-purple-700">
+                        <button className="px-4 py-3 text-red-600 font-medium text-sm whitespace-nowrap hover:text-red-700">
                           Locate Me
                         </button>
                       </div>
@@ -559,10 +559,10 @@ const ProfileContent = () => {
                             name="email"
                             value={fk?.values?.email}
                             onChange={fk.handleChange}
-                            className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                           />
                         </div>
-                        <button className="px-4 py-3 text-purple-600 font-medium text-sm whitespace-nowrap hover:text-purple-700 mt-6">
+                        <button className="px-4 py-3 text-red-600 font-medium text-sm whitespace-nowrap hover:text-red-700 mt-6">
                           Verify
                         </button>
                       </div>
@@ -581,7 +581,7 @@ const ProfileContent = () => {
                         name="anniversary"
                         value={fk?.values?.anniversary}
                         onChange={fk.handleChange}
-                        className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                       />
                     </div>
 
@@ -598,7 +598,7 @@ const ProfileContent = () => {
                         name="spouse_birthday"
                         value={fk?.values?.spouse_birthday}
                         onChange={fk.handleChange}
-                        className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                       />
                     </div>
                   </div>
@@ -607,7 +607,7 @@ const ProfileContent = () => {
                 <div className="pt-4">
                   <button
                     onClick={fk.handleSubmit}
-                    className="w-full md:w-auto md:min-w-[200px] py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg text-sm transition-colors"
+                    className="w-full md:w-auto md:min-w-[200px] py-4 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:bg-yellow-900 text-black font-semibold rounded-lg text-sm transition-colors"
                   >
                     SAVE & EARN
                   </button>
@@ -617,10 +617,10 @@ const ProfileContent = () => {
           </div>
 
           {/* Occasion Details Section */}
-          <div className="bg-white rounded-lg border border-gray-200">
+          <div className="bg-white rounded-lg border border-yellow-200">
             <button
               onClick={() => setOccasionExpanded(!occasionExpanded)}
-              className="w-full px-4 py-3 bg-purple-100 rounded-t-lg flex justify-between items-center hover:bg-purple-150"
+              className="w-full px-4 py-3 bg-red-100 rounded-t-lg flex justify-between items-center hover:bg-red-150"
             >
               <h2 className="font-medium text-gray-900">Occasion Details</h2>
               <svg
@@ -642,7 +642,7 @@ const ProfileContent = () => {
             {occasionExpanded && (
               <div className="p-4 md:p-6 space-y-6">
                 {/* Personalized Offers Banner */}
-                <div className="bg-gradient-to-r from-pink-500 to-orange-400 rounded-lg p-4 text-white flex items-center justify-between">
+                <div className="bg-gradient-to-r from-pink-500 to-orange-400 rounded-lg p-4 text-black flex items-center justify-between">
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm md:text-base mb-1">
                       Personalised offers for your occasions!
@@ -670,7 +670,7 @@ const ProfileContent = () => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 ">
                     {[
                       "Self",
                       "Wife",
@@ -690,8 +690,8 @@ const ProfileContent = () => {
                         key={person}
                         onClick={() => handleGiftPreferenceToggle(person)}
                         className={`px-3 py-2 text-sm font-medium rounded-lg border transition-colors ${occasionData.giftPreferences.includes(person)
-                          ? "bg-purple-100 text-purple-700 border-purple-300"
-                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                          ? "bg-yellow-100 text-yellow-700 border-red-300"
+                          : "bg-white text-gray-700 border-yellow-300 hover:bg-yellow-50"
                           }`}
                       >
                         {person}
@@ -721,7 +721,7 @@ const ProfileContent = () => {
                           occasionDate: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                       placeholder="Date of Occasion"
                     />
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
@@ -764,8 +764,8 @@ const ProfileContent = () => {
                         key={celebration}
                         onClick={() => handleCelebrationToggle(celebration)}
                         className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${occasionData.celebrationType.includes(celebration)
-                          ? "bg-purple-100 text-purple-700 border-purple-300"
-                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                          ? "bg-yellow-100 text-red-700 border-red-300"
+                          : "bg-white text-gray-700 border-yellow-300 hover:bg-gray-50"
                           }`}
                       >
                         {celebration}
@@ -777,7 +777,7 @@ const ProfileContent = () => {
                 <div className="pt-4">
                   <button
                     onClick={handleSaveOccasions}
-                    className="w-full py-3 bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-lg text-sm transition-colors"
+                    className="w-full py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-lg text-sm transition-colors"
                   >
                     SAVE OCCASIONS DETAILS
                   </button>
@@ -787,10 +787,10 @@ const ProfileContent = () => {
           </div>
 
           {/* Govt. ID Section */}
-          <div className="bg-white rounded-lg border border-gray-200">
+          <div className="bg-white rounded-lg border border-yellow-200">
             <button
               onClick={() => setGovtIdExpanded(!govtIdExpanded)}
-              className="w-full px-4 py-3 bg-purple-100 rounded-t-lg flex justify-between items-center hover:bg-purple-150"
+              className="w-full px-4 py-3 bg-red-100 rounded-t-lg flex justify-between items-center hover:bg-red-150"
             >
               <h2 className="font-medium text-gray-900">Govt. ID</h2>
               <svg
@@ -813,7 +813,7 @@ const ProfileContent = () => {
               <div className="p-4 space-y-4">
                 <div>
                   <select
-                    className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                     value={selectedDocument}
                     onChange={(e) => setSelectedDocument(e.target.value)}
                   >
@@ -824,7 +824,7 @@ const ProfileContent = () => {
                     <option value="voter-id">Voter ID</option>
                     <option value="pan">PAN Card</option>
                   </select>
-                  <p className="text-xs text-blue-500 mt-2">
+                  <p className="text-xs text-red-500 mt-2">
                     This field is mandatory in case order value exceeds Rs. 2
                     lacs
                   </p>
@@ -839,7 +839,7 @@ const ProfileContent = () => {
                       placeholder={getPlaceholder()}
                       value={fk.values.govt_no}
                       onChange={fk.handleChange}
-                      className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
 
                     <input
@@ -853,8 +853,8 @@ const ProfileContent = () => {
                     <div className="relative">
                       <button
                         onClick={handleUploadClick}
-                        className="w-full py-3 text-purple-600 font-medium rounded-lg flex items-center justify-center text-sm hover:bg-purple-50 transition-colors"
-                        style={{ backgroundColor: "#eae3ff" }}
+                        className="w-full py-3 text-black bg-gradient-to-r from-yellow-400 to-yellow-600 font-medium rounded-lg flex items-center justify-center text-sm hover:bg-yellow-50 transition-colors"
+                        
                       >
                         <svg
                           className="w-4 h-4 mr-2"
@@ -873,7 +873,7 @@ const ProfileContent = () => {
                       </button>
 
                       {showUploadOptions && (
-                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-yellow-200 rounded-lg shadow-lg z-10">
                           <button
                             onClick={handleFileSelect}
                             className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg flex items-center"
@@ -988,7 +988,7 @@ const ProfileContent = () => {
               fk.handleSubmit()
               setShowUploadOptions(false)
             }}
-            className="w-full py-4 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg text-sm transition-colors"
+            className="w-full py-4 bg-red-800 hover:bg-red-600 text-white font-medium rounded-lg text-sm transition-colors"
           >
             SAVE DETAILS
           </button>
