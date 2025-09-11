@@ -115,6 +115,44 @@ export default function ResponsiveCart() {
     setShowCouponModal(false);
   }; 
 
+  const handlePlaceOrder = async () => {
+    try {
+      const orderItems = cartItems.map(item => ({
+        varient_id: item.varient_id,
+        quantity: item.quantity
+      }));
+  
+      const totalAmount = Math.round(subtotal - couponDiscount); // assuming no shipping charges
+  
+      const payload = {
+        status: "Pending",
+        payment_method: 1, // default method
+        payment_status: "Unpaid",
+        notes: "N/A",
+        items: orderItems,
+        payment: {
+          method: 1,
+          status: "Unpaid",
+          amount: totalAmount
+        },
+        isCoupon: Boolean(appliedCoupon)
+      };
+  
+      const response = await apiConnectorPost(endpoint?.create_order, payload);
+  
+      if (response?.data?.success) {
+        toast.success("Order placed successfully!");
+        navigate("/order-confirmation", { state: response?.data?.order });
+      } else {
+        toast.error(response?.data?.message || "Failed to place order.");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+  
+
 const handleApplyCoupon = async () => {
   // if (!code.trim()) {
   //   toast.error('Please enter a coupon code');
@@ -363,7 +401,7 @@ const handleApplyCoupon = async () => {
                 <button
                   className="w-full text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors text-sm"
                   style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
-                >
+                  onClick={handlePlaceOrder} >
                   PLACE ORDER
                 </button>
               </div>
@@ -551,7 +589,7 @@ const handleApplyCoupon = async () => {
                     <button
                       className="text-white py-3 px-6 rounded-lg font-medium text-sm"
                       style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
-                    >
+                      onClick={handlePlaceOrder}>
                       PLACE ORDER
                     </button>
                   </div>

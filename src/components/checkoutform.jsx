@@ -265,16 +265,18 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
       <div className="w-full max-w-xl bg-white p-6">
         <div className="flex justify-center space-x-2 mb-4">
           <button
-            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'home' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'
-              }`}
+            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${
+              deliveryType === 'home' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
+            }`}
             onClick={() => handleDeliveryTypeChange('home')}
           >
             <FontAwesomeIcon icon={faHome} className="mr-1" />
             HOME DELIVERY
           </button>
           <button
-            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'store' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'
-              }`}
+            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${
+              deliveryType === 'store' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
+            }`}
             onClick={() => handleDeliveryTypeChange('store')}
           >
             <FontAwesomeIcon icon={faStore} className="mr-1" />
@@ -284,7 +286,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
 
         {deliveryType === 'home' && (
           <div>
-            <div className="bg-purple-50 p-4 rounded-lg mb-6">
+            <div className="bg-[#FFF8E7] p-4 rounded-lg mb-6">
               <h3 className="font-semibold mb-2">Shipping Address</h3>
               {hasAddress ? (
                 <>
@@ -303,14 +305,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                 </>
               ) : null}
               <button
-                className="w-full bg-gray-200 py-2 rounded-lg mt-2 text-gray-800"
+                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 py-2 rounded-lg mt-2 text-gray-800"
                 onClick={handleAddressButtonClick}
               >
                 {addressButtonText}
               </button>
             </div>
 
-            <div className="bg-purple-50 p-4 rounded-lg mb-6">
+            <div className="bg-[#FFF8E7] p-4 rounded-lg mb-6">
               <h3 className="font-semibold mb-2">Billing Address</h3>
               <label className="flex items-center mb-2">
                 <input type="radio" checked={!useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-purple-600" />
@@ -410,7 +412,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
 
         {deliveryType === 'store' && (
           <div>
-            <div className="bg-purple-50 p-4 rounded-lg mb-6">
+            <div className="bg-[#FFF8E7] p-4 rounded-lg mb-6">
               <h3 className="font-semibold mb-2">Find the nearest store for pick up</h3>
               <input
                 className="w-full p-2 border rounded-lg mb-2"
@@ -418,17 +420,17 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
               />
               <p className="text-sm text-gray-600">
                 Pickup Available by 17th Sep{' '}
-                <span className="text-purple-600 cursor-pointer">GET DIRECTIONS</span>
+                <span className="text-yellow-600 cursor-pointer">GET DIRECTIONS</span>
               </p>
               <p className="font-medium">Gaur City Mall</p>
               <p className="text-sm">GF/05, Gaur City Mall, Sector 4</p>
               <p className="text-sm">Mobile: 7290018877</p>
-              <button className="w-full bg-gray-200 py-2 rounded-lg mt-2 text-gray-800">
+              <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 py-2 rounded-lg mt-2 text-gray-800">
                 CHANGE PICKUP POINT
               </button>
             </div>
 
-            <div className="bg-purple-50 p-4 rounded-lg mb-6">
+            <div className="bg-[#FFF8E7] p-4 rounded-lg mb-6">
               <h3 className="font-semibold mb-2">Billing Address</h3>
               <div className="mt-4 space-y-2">
                 <div className="flex space-x-2">
@@ -473,7 +475,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
         )}
 
         <button
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-lg font-semibold"
+          className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white p-3 rounded-lg font-semibold"
           onClick={handleSaveContinue}
         >
           SAVE & CONTINUE
