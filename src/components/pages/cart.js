@@ -142,7 +142,7 @@ export default function ResponsiveCart() {
   
       if (response?.data?.success) {
         toast.success("Order placed successfully!");
-        navigate("/order-confirmation", { state: response?.data?.order });
+        navigate("/checkout", { state: response?.data?.order });
       } else {
         toast.error(response?.data?.message || "Failed to place order.");
       }

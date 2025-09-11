@@ -229,10 +229,10 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
 
   const handleSaveContinue = () => {
     // Basic validation
-    if (deliveryType === 'home' && (!currentAddress.address_line2 || !currentAddress.address_line1 || !currentAddress.phone_number)) {
-      alert('Please fill in all required shipping address fields.');
-      return;
-    }
+    // if (deliveryType === 'home' && (!currentAddress.address_line2 || !currentAddress.address_line1 || !currentAddress.phone_number)) {
+    //   alert('Please fill in all required shipping address fields.');
+    //   return;
+    // }
     if (deliveryType === 'store' && !document.querySelector('input[placeholder="201308"]').value) {
       alert('Please enter a valid pincode for store pickup.');
       return;
@@ -297,10 +297,10 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                     </span>
                   </p>
                   <p className="font-medium">
-                  Mobile: +91 {currentAddress.phone_number} </p>
+                  Mobile: +91 {currentAddress?.phone_number} </p>
                   <p className="text-sm">
-                    {currentAddress.address_line1}, {currentAddress.city}, {currentAddress.state},{' '}
-                    {currentAddress.postal_code}, {currentAddress.country}
+                    {currentAddress?.address_line1}, {currentAddress?.city}, {currentAddress?.state},{' '}
+                    {currentAddress?.postal_code}, {currentAddress?.country}
                   </p>
                 </>
               ) : null}
