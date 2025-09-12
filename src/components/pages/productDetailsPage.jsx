@@ -67,7 +67,7 @@ const ProductDetailWebPage = () => {
 
   useEffect(() => {
     const fetchVariants = async () => {
-      setIsLoading(true);
+      
       try {
         setIsLoading(true);
         const response = await axios.get(
@@ -112,13 +112,13 @@ const ProductDetailWebPage = () => {
     };
   }, [showCustomizationModal, showPriceBreakupModal]);
 
-  // if (!selectedVariant) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center text-gray-700">
-  //       No product data found.
-  //     </div>
-  //   );
-  // }
+  if (!isLoading && !selectedVariant) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-700">
+        No product data found.
+      </div>
+    );
+  }
 
   const image =
     (typeof selectedVariant?.product_details?.product_images === "string"
