@@ -128,11 +128,11 @@ export default function ResponsiveCart() {
         quantity: item.quantity
       }));
 
-      const totalAmount = Math.round(subtotal - couponDiscount); // assuming no shipping charges
+      const totalAmount = Math.round(subtotal - couponDiscount); 
 
       const payload = {
         status: "Pending",
-        payment_method: 1, // default method
+        payment_method: 1, 
         payment_status: "Unpaid",
         notes: "N/A",
         items: orderItems,
@@ -181,9 +181,8 @@ export default function ResponsiveCart() {
         return;
       }
       setCoupon(response?.data?.result || [])
-      // setAppliedCoupon(coupon_details);
-      // setCouponDiscount(discount_amount);
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error applying coupon:', error);
       toast.error('Something went wrong while applying the coupon');
     }
