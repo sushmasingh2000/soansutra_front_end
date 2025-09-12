@@ -28,15 +28,20 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
     mobile: '',
   });
   const [addresses, setAddresses] = useState([]);
+
   const addres_fn = async () => {
     try {
-      const response = await apiConnectorGet(endpoint?.get_shipping_Address)
-      setAddresses(response?.data?.result || [])
+      const response = await apiConnectorGet(endpoint?.get_shipping_Address);
+      const addressList = response?.data?.result || [];
+      setAddresses(addressList);
+      const defaultAddress = addressList.find(addr => addr.is_default === "Active");
+      if (defaultAddress) {
+        setSelectedAddress(defaultAddress.address_id);
+      }
+    } catch (e) {
+      console.log("something");
     }
-    catch (e) {
-      console.log("something")
-    }
-  }
+  };
 
   useEffect(() => {
     addres_fn()
@@ -229,10 +234,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
 
   const handleSaveContinue = () => {
     // Basic validation
-    // if (deliveryType === 'home' && (!currentAddress.address_line2 || !currentAddress.address_line1 || !currentAddress.phone_number)) {
-    //   alert('Please fill in all required shipping address fields.');
-    //   return;
-    // }
+    if (
+      deliveryType === 'home' &&
+      (!currentAddress?.address_line1 || !currentAddress?.phone_number || !currentAddress?.city || !currentAddress?.state || !currentAddress?.postal_code)
+    ) {
+      alert('Please fill in all required shipping address fields.');
+      return;
+    }
+
     if (deliveryType === 'store' && !document.querySelector('input[placeholder="201308"]').value) {
       alert('Please enter a valid pincode for store pickup.');
       return;
@@ -265,18 +274,16 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
       <div className="w-full max-w-xl bg-white p-6">
         <div className="flex justify-center space-x-2 mb-4">
           <button
-            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${
-              deliveryType === 'home' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
-            }`}
+            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'home' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
+              }`}
             onClick={() => handleDeliveryTypeChange('home')}
           >
             <FontAwesomeIcon icon={faHome} className="mr-1" />
             HOME DELIVERY
           </button>
           <button
-            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${
-              deliveryType === 'store' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
-            }`}
+            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'store' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
+              }`}
             onClick={() => handleDeliveryTypeChange('store')}
           >
             <FontAwesomeIcon icon={faStore} className="mr-1" />
@@ -297,7 +304,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                     </span>
                   </p>
                   <p className="font-medium">
-                  Mobile: +91 {currentAddress?.phone_number} </p>
+                    Mobile: +91 {currentAddress?.phone_number} </p>
                   <p className="text-sm">
                     {currentAddress?.address_line1}, {currentAddress?.city}, {currentAddress?.state},{' '}
                     {currentAddress?.postal_code}, {currentAddress?.country}
@@ -517,7 +524,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   <p className="text-sm">
                     {addr.address_line1}, {addr.city}, {addr.state}, {addr.postal_code}, {addr.country}
                   </p>
-                  
+
                   <div className="flex justify-end space-x-2 mt-2">
                     <button
                       className="bg-purple-100 text-purple-600 px-3 py-1 rounded-lg"

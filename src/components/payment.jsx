@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { apiConnectorGet } from '../utils/ApiConnector';
+import { endpoint } from '../utils/APIRoutes';
 
 const Payment = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(true);
-  
+
   // Current address data
   const [currentAddress, setCurrentAddress] = useState({
     firstName: 'abhishek',
@@ -59,6 +61,23 @@ const Payment = () => {
     setCurrentAddress({ ...newAddress });
     setShowEditModal(false);
   };
+  const [defaultAddress, setDefaultAddress] = useState(null);
+
+   const addres_fn = async () => {
+    try {
+      const response = await apiConnectorGet(endpoint?.get_shipping_Address);
+      const addressList = response?.data?.result || [];
+      const activeAddress = addressList.find(addr => addr.is_default === "Active");
+      if (activeAddress) {
+        setDefaultAddress(activeAddress);
+      }
+    } catch (e) {
+      console.log("Error fetching address:", e);
+    }
+  };
+  useEffect(() => {
+    addres_fn()
+  }, [])
 
   return (
     <>
@@ -66,16 +85,16 @@ const Payment = () => {
         {/* Preferred Payment Options */}
         <div className="mb-8">
           <h2 className="text-lg font-medium text-gray-800 mb-4">Preferred Payment Options</h2>
-          
+
           {/* Gift Cards Section */}
           <div className="mb-6">
             <h3 className="text-base font-medium text-gray-700 mb-3">Gift Cards</h3>
-            
+
             <div className="bg-purple-50 border border-purple-100 rounded-lg p-4 flex items-center justify-between">
               <div className="flex items-center">
                 <div className="bg-purple-100 rounded-lg p-2 mr-3">
                   <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
+                    <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" />
                   </svg>
                 </div>
                 <div>
@@ -88,16 +107,16 @@ const Payment = () => {
               </button>
             </div>
           </div>
-          
+
           {/* Payment Options */}
           <div className="mb-6">
             <h3 className="text-base font-medium text-gray-700 mb-3">Payment Options</h3>
-            
+
             <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-4 flex items-center justify-between">
               <div className="flex items-center">
                 <div className="bg-purple-100 rounded-lg p-2 mr-3">
                   <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
                   </svg>
                 </div>
                 <div>
@@ -107,49 +126,47 @@ const Payment = () => {
               </div>
               <div className="bg-purple-500 rounded-full p-1">
                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                 </svg>
               </div>
             </div>
           </div>
-          
+
           {/* Pay Now Button */}
           <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium py-4 rounded-lg text-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-lg">
             PAY NOW
           </button>
         </div>
-        
+
         {/* Delivery Details */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
-              <p className="font-medium text-gray-800 mb-1">
-                {currentAddress.firstName} {currentAddress.lastName}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">{currentAddress.address}</p>
-              {currentAddress.landmark && (
-                <p className="text-sm text-gray-600 mb-1">{currentAddress.landmark}</p>
+              <p className="text-sm text-gray-600 mb-1">{defaultAddress?.address_line1}</p>
+             {defaultAddress?.address_line2 && (
+                <p className="text-sm text-gray-600 mb-1">{defaultAddress.address_line2}</p>
               )}
               <p className="text-sm text-gray-600 mb-1">
-                {currentAddress.city}, {currentAddress.state}, {currentAddress.pincode}
+                {defaultAddress?.city}, {defaultAddress?.state}, {defaultAddress?.postal_code}
               </p>
-              <p className="text-sm text-gray-600 mb-3">{currentAddress.country}</p>
+              <p className="text-sm text-gray-600 mb-3">{defaultAddress?.country}</p>
               <p className="text-sm text-gray-700">
-                <span className="font-medium">Phone:</span> +91 {currentAddress.mobile}
+                <span className="font-medium">Phone:</span> +91 {defaultAddress?.phone_number}
               </p>
               <p className="text-sm text-gray-700">
-                <span className="font-medium">Address Type:</span> <span className="text-blue-600">{currentAddress.type}</span>
+                <span className="font-medium">Address Type:</span>{" "}
+                <span className="text-blue-600">{defaultAddress?.type || "Default"}</span>
               </p>
             </div>
-            <button 
+            {/* <button 
               onClick={openEditModal}
               className="text-purple-500 font-medium text-sm hover:text-purple-600"
             >
               Edit
-            </button>
+            </button> */}
           </div>
         </div>
-        
+
         {/* Gift Options */}
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex justify-between items-center mb-2">
@@ -262,17 +279,15 @@ const Payment = () => {
               <h3 className="font-semibold">Address Type</h3>
               <div className="flex space-x-2">
                 <button
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    newAddress.type === 'Home' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                  }`}
+                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Home' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                    }`}
                   onClick={() => handleAddressTypeChange('Home')}
                 >
                   Home (7am-10pm)
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    newAddress.type === 'Office' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                  }`}
+                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Office' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                    }`}
                   onClick={() => handleAddressTypeChange('Office')}
                 >
                   Office (10am-7pm)

@@ -22,7 +22,9 @@ export default function ResponsiveCart() {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
-  const [coupon , setCoupon] = useState([])
+  const [coupon, setCoupon] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
+
 
   // Placeholder images for modal carousel
   const placeholderImages = [
@@ -34,16 +36,20 @@ export default function ResponsiveCart() {
 
   const getCart = async () => {
     try {
+      setIsLoading(true); // Start loading
       const response = await apiConnectorGet(endpoint?.get_cart);
       if (response?.data?.success) {
-        setCartItems(response.data.result);
+        setCartItems(response.data.result || []);
       } else {
         console.error('Failed to fetch cart:', response?.data?.message);
       }
     } catch (e) {
-      console.log("something went wrong", e);
+      console.log("Something went wrong", e);
+    } finally {
+      setIsLoading(false); // Done loading
     }
   };
+
 
   // Auto scroll images in modal
   useEffect(() => {
@@ -113,7 +119,7 @@ export default function ResponsiveCart() {
     setCouponCode(couponCode);
     handleApplyCoupon(couponCode);
     setShowCouponModal(false);
-  }; 
+  };
 
   const handlePlaceOrder = async () => {
     try {
@@ -121,9 +127,9 @@ export default function ResponsiveCart() {
         varient_id: item.varient_id,
         quantity: item.quantity
       }));
-  
+
       const totalAmount = Math.round(subtotal - couponDiscount); // assuming no shipping charges
-  
+
       const payload = {
         status: "Pending",
         payment_method: 1, // default method
@@ -137,12 +143,14 @@ export default function ResponsiveCart() {
         },
         isCoupon: Boolean(appliedCoupon)
       };
-  
+
       const response = await apiConnectorPost(endpoint?.create_order, payload);
-  
+      if (!response?.data?.message === "Order placed successfully.") {
+        toast(response?.data?.message);
+      };
       if (response?.data?.success) {
-        toast.success("Order placed successfully!");
-        navigate("/checkout", { state: response?.data?.order });
+        toast.success("Order Verified !  Confirm Your Address");
+        navigate("/checkout", { state: { orderId: response?.data?.result?.orderId } });
       } else {
         toast.error(response?.data?.message || "Failed to place order.");
       }
@@ -151,41 +159,41 @@ export default function ResponsiveCart() {
       toast.error("Something went wrong. Please try again.");
     }
   };
-  
 
-const handleApplyCoupon = async () => {
-  // if (!code.trim()) {
-  //   toast.error('Please enter a coupon code');
-  //   return;
-  // }
 
-  const variantIds = cartItems.map(item => item.varient_id); 
-  const productAmount = subtotal;
+  const handleApplyCoupon = async () => {
+    // if (!code.trim()) {
+    //   toast.error('Please enter a coupon code');
+    //   return;
+    // }
 
-  try {
-    const response = await apiConnectorPost(endpoint.get_coupon_varient, {
-      v_id: JSON.stringify(variantIds || []),
-      product_amount: productAmount,
-    });
+    const variantIds = cartItems.map(item => item.varient_id);
+    const productAmount = subtotal;
 
-    if (!response?.data?.success) {
-      toast.error(response?.data?.message || 'Failed to apply coupon');
-      return;
+    try {
+      const response = await apiConnectorPost(endpoint.get_coupon_varient, {
+        v_id: JSON.stringify(variantIds || []),
+        product_amount: productAmount,
+      });
+
+      if (!response?.data?.success) {
+        toast.error(response?.data?.message || 'Failed to apply coupon');
+        return;
+      }
+      setCoupon(response?.data?.result || [])
+      // setAppliedCoupon(coupon_details);
+      // setCouponDiscount(discount_amount);
+    } catch (error) {
+      console.error('Error applying coupon:', error);
+      toast.error('Something went wrong while applying the coupon');
     }
-    setCoupon(response?.data?.result || [])
-    // setAppliedCoupon(coupon_details);
-    // setCouponDiscount(discount_amount);
-  } catch (error) {
-    console.error('Error applying coupon:', error);
-    toast.error('Something went wrong while applying the coupon');
-  }
-};
+  };
 
   const removeCoupon = (bool) => {
     setAppliedCoupon(null);
     setCouponDiscount(0);
     setCouponCode('');
-    
+
     bool && toast.success('Coupon removed');
   };
 
@@ -221,7 +229,7 @@ const handleApplyCoupon = async () => {
     setCartItems(cartItems.map(item =>
       item.cart_item_id === cart_item_id ? { ...item, quantity: newQuantity } : item
     ));
-   couponDiscount&& removeCoupon(false)
+    couponDiscount && removeCoupon(false)
   };
 
   const formatPrice = (price) => `₹${price.toLocaleString()}`;
@@ -242,97 +250,93 @@ const handleApplyCoupon = async () => {
           {/* Cart Items - Desktop */}
           <div className="flex-1 space-y-2">
             <div className="max-h-[70vh] overflow-y-auto no-scrollbar">
-              {cartItems.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-lg shadow-sm m-4 text-center">
-                  <svg
-                    className="w-16 h-16 text-gray-400 mb-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Your Cart is Empty</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Looks like you haven't added any items to your cart yet. Start shopping now to find your perfect items!
-                  </p>
-                  <button
-                    onClick={() => navigate('/shop')}
-                    className="text-white py-2 px-6 rounded-lg font-medium text-sm"
-                    style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
-                  >
-                    Start Shopping
-                  </button>
-                </div>
-              ) : (
-                cartItems.map((item) => {
-                  const { varient_details } = item;
-                  const product = varient_details.product_details;
-
-                  return (
-                    <div key={item.cart_item_id} className="bg-white rounded-lg shadow-sm p-3 m-4"
-                     >
+              {
+                isLoading ? (
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="bg-white rounded-lg shadow-sm p-3 m-4 h-[120px] animate-pulse"
+                    >
                       <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden"
-                         onClick={() => handleClick(item)}>
-                          <img
-                            src={product.product_image.p_image_url}
-                            alt={product.product_name}
-                            className="w-full h-full object-cover"
-                          />
+                        <div className="w-12 h-12 bg-gray-200 rounded" />
+                        <div className="flex-1 space-y-2">
+                          <div className="w-3/4 h-4 bg-gray-200 rounded" />
+                          <div className="w-1/2 h-4 bg-gray-200 rounded" />
+                          <div className="w-1/3 h-4 bg-gray-200 rounded" />
                         </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start mb-1">
-                            <h3 className="text-sm font-medium text-gray-900 pr-2">
-                              {product.product_name}
-                            </h3>
-                            <button
-                              onClick={() => removeItem(item.cart_item_id)}
-                              className="text-gray-400 hover:text-gray-600 p-1"
-                            >
-                              <X size={14} />
-                            </button>
+                      </div>
+                    </div>
+                  ))
+                ) : cartItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-lg shadow-sm m-4 text-center">
+                    {/* Your empty cart SVG and message here */}
+                  </div>
+                ) : (
+                  cartItems.map((item) => {
+                    const { varient_details } = item;
+                    const product = varient_details.product_details;
+
+                    return (
+                      <div key={item.cart_item_id} className="bg-white rounded-lg shadow-sm p-3 m-4">
+                        <div className="flex items-start gap-3">
+                          <div
+                            className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden"
+                            onClick={() => handleClick(item)}
+                          >
+                            <img
+                              src={product.product_image.p_image_url}
+                              alt={product.product_name}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
-                          <div className="text-xs text-gray-600 mb-1">
-                            SKU: {varient_details.varient_sku}
-                          </div>
-                          <div className="text-xs text-gray-600 mb-1">
-                            Weight: {varient_details.varient_weight} {varient_details.unit_name}
-                          </div>
-                          <div className="text-base font-bold text-gray-900 mb-1">
-                            ₹{Number(item?.final_varient_price).toFixed(2)}
-                          </div>
-                          <div className="flex items-center gap-4 mb-1">
-                            <span className="text-xs text-gray-600">Quantity:</span>
-                            <div className="flex items-center gap-1">
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start mb-1">
+                              <h3 className="text-sm font-medium text-gray-900 pr-2">
+                                {product.product_name}
+                              </h3>
                               <button
-                                onClick={() => updateQuantity(item.cart_item_id, item.quantity - 1)}
-                                className="w-5 h-5 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50 text-xs"
+                                onClick={() => removeItem(item.cart_item_id)}
+                                className="text-gray-400 hover:text-gray-600 p-1"
                               >
-                                -
+                                <X size={14} />
                               </button>
-                              <span className="w-5 text-center text-xs font-medium">{item.quantity}</span>
-                              <button
-                                onClick={() => updateQuantity(item.cart_item_id, item.quantity + 1)}
-                                className="w-5 h-5 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50 text-xs"
-                              >
-                                +
-                              </button>
+                            </div>
+                            <div className="text-xs text-gray-600 mb-1">
+                              SKU: {varient_details.varient_sku}
+                            </div>
+                            <div className="text-xs text-gray-600 mb-1">
+                              Weight: {varient_details.varient_weight} {varient_details.unit_name}
+                            </div>
+                            <div className="text-base font-bold text-gray-900 mb-1">
+                              ₹{Number(item?.final_varient_price).toFixed(2)}
+                            </div>
+                            <div className="flex items-center gap-4 mb-1">
+                              <span className="text-xs text-gray-600">Quantity:</span>
+                              <div className="flex items-center gap-1">
+                                <button
+                                  onClick={() => updateQuantity(item.cart_item_id, item.quantity - 1)}
+                                  className="w-5 h-5 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50 text-xs"
+                                >
+                                  -
+                                </button>
+                                <span className="w-5 text-center text-xs font-medium">{item.quantity}</span>
+                                <button
+                                  onClick={() => updateQuantity(item.cart_item_id, item.quantity + 1)}
+                                  className="w-5 h-5 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50 text-xs"
+                                >
+                                  +
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })
-              )}
+                    );
+                  })
+                )
+              }
             </div>
+
           </div>
 
           {/* Order Summary - Desktop (only when cart is not empty) */}
@@ -343,9 +347,9 @@ const handleApplyCoupon = async () => {
                 style={{ background: "#E8E1FF" }}
               >
                 <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm">
-                  <div className="flex items-center gap-2"            
-                       onClick={openCouponModal}
->
+                  <div className="flex items-center gap-2"
+                    onClick={openCouponModal}
+                  >
                     <Tag size={16} />
                     <span>Apply Coupon</span>
                   </div>
@@ -354,7 +358,7 @@ const handleApplyCoupon = async () => {
                 {appliedCoupon && (
                   <div className="mt-2 flex justify-between items-center text-xs">
                     <span className="text-green-600">Coupon Applied!</span>
-                    <button onClick={()=>removeCoupon(true)} className="text-red-600">Remove</button>
+                    <button onClick={() => removeCoupon(true)} className="text-red-600">Remove</button>
                   </div>
                 )}
               </div>
@@ -514,10 +518,10 @@ const handleApplyCoupon = async () => {
                 <div
                   className="rounded-lg p-3 mb-3 cursor-pointer"
                   style={{ background: "#E8E1FF" }}
-                  
+
                 >
                   <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm mb-2"
-                  onClick={openCouponModal}>
+                    onClick={openCouponModal}>
                     <div className="flex items-center gap-2" >
                       <Tag size={16} />
                       <span>Apply Coupon</span>
@@ -554,7 +558,7 @@ const handleApplyCoupon = async () => {
                   <div className="border-t pt-2 mb-2">
                     <div className="flex justify-between items-center">
                       <span className="font-medium text-gray-900 text-sm">Total Cost</span>
-                      <span className="text-base font-bold text-gray-900">{rupees}{Math.round(subtotal-couponDiscount)}</span>
+                      <span className="text-base font-bold text-gray-900">{rupees}{Math.round(subtotal - couponDiscount)}</span>
                     </div>
                   </div>
                 </div>
@@ -623,9 +627,10 @@ const handleApplyCoupon = async () => {
                   className="flex-1 px-3 py-2 border rounded-md text-sm"
                 />
                 <button
-                  onClick={() => {setCouponDiscount(Number(coupon?.applicableCoupon?.coupon_data?.deductable_coupon_amount || 0)?.toFixed(2));
-                     setShowCouponModal(false); 
-                      setAppliedCoupon(true);
+                  onClick={() => {
+                    setCouponDiscount(Number(coupon?.applicableCoupon?.coupon_data?.deductable_coupon_amount || 0)?.toFixed(2));
+                    setShowCouponModal(false);
+                    setAppliedCoupon(true);
                   }}
                   className="px-4 py-2 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700"
                 >
@@ -643,15 +648,15 @@ const handleApplyCoupon = async () => {
                     onClick={() => coupon.isApplicable && applyCouponFromModal(coupon.code)}
                   >
                     <div className="flex-shrink-0 bg-gray-100 text-gray-600 text-xs font-bold px-2 py-4 rounded text-center min-w-[50px] flex items-center justify-center">
-                     {coupon?.coupon_discount_type === "Percentage" ?" % ": ""} {Number(coupon.coupon_value)?.toFixed(2)}
+                      {coupon?.coupon_discount_type === "Percentage" ? " % " : ""} {Number(coupon.coupon_value)?.toFixed(2)}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-sm text-gray-900">{coupon.coupon_code}</span>
-                        {!coupon.isApplicable ? 
-                          <span className="text-xs text-gray-400">Not Applicable</span> : 
-                           <span className="text-xs text-green-400"> Applicable</span>
-                        } 
+                        {!coupon.isApplicable ?
+                          <span className="text-xs text-gray-400">Not Applicable</span> :
+                          <span className="text-xs text-green-400"> Applicable</span>
+                        }
                       </div>
                       <p className="text-xs text-gray-600 mb-1">{coupon.coupon_end_date}</p>
                       <p className="text-xs text-gray-700">{coupon.applied_name}</p>

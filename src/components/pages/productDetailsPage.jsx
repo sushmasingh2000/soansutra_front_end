@@ -46,8 +46,8 @@ const DiamondIcon = () => (
 
 const ProductDetailWebPage = () => {
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
   const product_id_and_variant_id_only = location.state?.product;
-  console.log(product_id_and_variant_id_only, "mhgdrjh")
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [variants, setVariants] = useState([]);
@@ -67,7 +67,9 @@ const ProductDetailWebPage = () => {
 
   useEffect(() => {
     const fetchVariants = async () => {
+      setIsLoading(true);
       try {
+        setIsLoading(true);
         const response = await axios.get(
           `${endpoint?.u_get_variant}?product_id=${product_id_and_variant_id_only.product_id}&varient_id=${product_id_and_variant_id_only.selected_variant_id}`
         );
@@ -83,6 +85,7 @@ const ProductDetailWebPage = () => {
         console.error("Error fetching variants:", error);
         setVariants([]);
       }
+      setIsLoading(false);
     };
 
     if (product_id_and_variant_id_only?.product_id) {
@@ -109,18 +112,18 @@ const ProductDetailWebPage = () => {
     };
   }, [showCustomizationModal, showPriceBreakupModal]);
 
-  if (!selectedVariant) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-700">
-        No product data found.
-      </div>
-    );
-  }
+  // if (!selectedVariant) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center text-gray-700">
+  //       No product data found.
+  //     </div>
+  //   );
+  // }
 
-const image =
-  (typeof selectedVariant?.product_details?.product_images === "string"
-    ? JSON.parse(selectedVariant?.product_details?.product_images)
-    : selectedVariant?.product_details?.product_images) || [];
+  const image =
+    (typeof selectedVariant?.product_details?.product_images === "string"
+      ? JSON.parse(selectedVariant?.product_details?.product_images)
+      : selectedVariant?.product_details?.product_images) || [];
 
 
   const images = image
@@ -321,14 +324,6 @@ const image =
     });
   }
 
-  // selectedVariant?.material_details.forEach((mat) => {
-  //   const group = mat.master_mat_name;
-  //   if (!groupedMaterials[group]) {
-  //     groupedMaterials[group] = [];
-  //   }
-  //   groupedMaterials[group].push(mat);
-  // });
-
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
       <div className="bg-gradient-to-r from-purple-100 to-blue-100 px-3 py-2 flex justify-between items-center">
@@ -428,10 +423,10 @@ const image =
           <div className="px-3 py-2 border-t border-gray-100">
             <p className="text-gray-600 text-xs mb-1">Manufactured by</p>
             <p className="text-gray-800 text-xs font-medium">
-             N/A
+              N/A
             </p>
           </div>
-         
+
           <div className="px-3 py-2 border-t border-gray-100">
             <p className="text-gray-600 text-xs mb-1">Country of Origin</p>
             <p className="text-gray-800 text-xs">India</p>
@@ -493,333 +488,365 @@ const image =
       </div>
       <ScrollSpyNavigation />
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4 overflow-x-hidden sm:mt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
-          <div className="space-y-3">
-            {/* Mobile Image Slider */}
-            {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
-            <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
-              {/* Main Image Container */}
-              <div className="relative bg-white overflow-hidden">
-                <div
-                  className="w-full h-120 overflow-hidden cursor-pointer"
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  <img
-                    src={images[selectedImage]}
-                    alt=""
-                    className="w-full h-full object-contain transition-transform duration-300"
-                  />
-                </div>
-                <div className="absolute bottom-2 left-2 z-10">
-                  <span className="bg-yellow-400 text-black text-xs font-semibold px-1.5 py-0.5 rounded">
-                    BESTSELLER
-                  </span>
-                </div>
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
-                  <div className="flex space-x-1">
-                    {images.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleDotClick(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
-                          ? "bg-purple-500 shadow-lg"
-                          : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
-                          }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="absolute bottom-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm rounded px-1.5 py-0.5">
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                    <span className="text-xs font-medium text-gray-800">5</span>
-                    <span className="text-xs text-gray-600">|</span>
-                    <span className="text-xs text-gray-600">0</span>
-                  </div>
+        {
+          isLoading ? (
+            // 👉 Skeleton Layout While Loading
+            <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6">
+              {/* Image skeleton */}
+              <div className="space-y-4">
+                <div className="h-96 bg-gray-200 rounded animate-pulse w-full" />
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }).map((_, idx) => (
+                    <div key={idx} className="h-24 bg-gray-200 rounded animate-pulse" />
+                  ))}
                 </div>
               </div>
+
+              {/* Info skeleton */}
+              <div className="space-y-4">
+                <div className="h-6 bg-gray-200 rounded w-1/2 animate-pulse" />
+                <div className="h-5 bg-gray-100 rounded w-2/3 animate-pulse" />
+                <div className="h-8 bg-gray-200 rounded w-full animate-pulse" />
+                <div className="h-24 bg-gray-100 rounded animate-pulse" />
+                <div className="h-10 bg-gray-200 rounded w-full animate-pulse" />
+                <div className="flex gap-3">
+                  <div className="h-10 w-24 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
+                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
+                </div>
+                <div className="h-32 bg-gray-100 rounded animate-pulse" />
+                <div className="h-64 bg-gray-100 rounded animate-pulse" />
+              </div>
             </div>
-            <div className="hidden md:block">
-              <div className="grid grid-cols-2 gap-3">
-                   {(() => {
-                  const displayImages = [...images];
-                  while (displayImages.length < 8) {
-                    displayImages.push(...images);
-                  }
-                  return displayImages.slice(0, 8).map((image, index) => (
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
+              <div className="space-y-3">
+                {/* Mobile Image Slider */}
+                {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
+                <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
+                  {/* Main Image Container */}
+                  <div className="relative bg-white overflow-hidden">
                     <div
-                      key={index}
-                      onClick={() => setSelectedImage(index % images.length)}
-                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
-                        ? "border-purple-500 shadow-md"
-                        : "border-gray-200 hover:border-gray-300"
-                        }`}
+                      className="w-full h-120 overflow-hidden cursor-pointer"
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
                     >
-                      <div className="w-full h-100 overflow-hidden">
-                        <img
-                          src={image}
-                          alt={""}
-                          className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      {index === 0 && (
-                        <div className="absolute top-2 right-2">
+                      <img
+                        src={images[selectedImage]}
+                        alt=""
+                        className="w-full h-full object-contain transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="absolute bottom-2 left-2 z-10">
+                      <span className="bg-yellow-400 text-black text-xs font-semibold px-1.5 py-0.5 rounded">
+                        BESTSELLER
+                      </span>
+                    </div>
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
+                      <div className="flex space-x-1">
+                        {images.map((_, index) => (
                           <button
-                            onClick={handleWishlist}
-                            className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
-                              } hover:text-red-500 transition-colors`}
-                          >
-                            <Heart
-                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
-                                }`}
-                            />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ));
-                })()}
-                  
-               
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="md:hidden flex items-center justify-between px-1">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={handleWishlist}
-                  className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
-                >
-                  <Heart
-                    className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""}`}
-                  />
-                </button>
-                <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
-                  <Share2 className="w-4 h-4" />
-                </button>
-                <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
-                  <Copy className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            <div className="px-1 md:px-0">
-              <div className="flex items-center justify-between space-x-2">
-                <div className="space-y-0.5">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl font-bold text-gray-900">
-                      ₹{" "}
-                      {Number(
-                        selectedVariant?.final_varient_price
-                      ).toFixed(2)
-                      }
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600">(MRP Inclusive of all taxes)</p>
-                  <h1 className="text-lg lg:text-xl font-medium text-gray-900">
-                    {selectedVariant?.product_details?.product_name || "Unnamed Product"}
-                  </h1>
-                </div>
-                <div className="flex-shrink-0">
-                  <div
-                    className="text-white text-center font-semibold w-20 ml-2.5"
-                    style={{
-                      background: "linear-gradient(90deg, #FD8B64 0%, #FF5B6C 100%)",
-                      borderRadius: "8px 8px 0 0",
-                      textTransform: "uppercase",
-                      fontSize: "0.6rem",
-                      padding: "1px 0",
-                      lineHeight: "10px",
-                    }}
-                  >
-                    BUY FOR LESS
-                  </div>
-                  <div
-                    className="bg-[#F5F1FF] rounded-lg p-2 w-[100px] border border-purple-300"
-                  >
-                    <div className="text-center">
-
-                      <div className="text-purple-700 font-bold text-xs flex items-center justify-center mb-1"
-                        style={{
-                          background: "#E5DDFF",
-
-                          color: "#4F3267",
-                          padding: "8px 6px",
-                          marginbottom: "10px",
-                          borderRadius: "8px",
-                          fontSize: "11px",
-                          position: "relative",
-                          texttransform: "uppercase",
-                          height: "30px",
-                        }}>
-                        9+1 SAVINGS
-                        <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path
-                            fillRule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                            clipRule="evenodd"
+                            key={index}
+                            onClick={() => handleDotClick(index)}
+                            className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
+                              ? "bg-purple-500 shadow-lg"
+                              : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
+                              }`}
                           />
-                        </svg>
+                        ))}
                       </div>
-                      <div className="text-[10px] text-gray-600 leading-tight">
-                        Pay for 9 months, 100% off on the 10th
+                    </div>
+                    <div className="absolute bottom-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm rounded px-1.5 py-0.5">
+                      <div className="flex items-center space-x-1">
+                        <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                        <span className="text-xs font-medium text-gray-800">5</span>
+                        <span className="text-xs text-gray-600">|</span>
+                        <span className="text-xs text-gray-600">0</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            {variants?.discount_details && (
-              <div className="px-1 md:px-0">
-                <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
-                  <span className="text-sm font-medium text-red-800">
-                    Flat {variants?.discount_details?.discount_value}% off on Diamond Prices
-                  </span>
+                <div className="hidden md:block">
+                  <div className="grid grid-cols-2 gap-3">
+                    {(() => {
+                      const displayImages = [...images];
+                      while (displayImages.length < 8) {
+                        displayImages.push(...images);
+                      }
+                      return displayImages.slice(0, 8).map((image, index) => (
+                        <div
+                          key={index}
+                          onClick={() => setSelectedImage(index % images.length)}
+                          className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
+                            ? "border-purple-500 shadow-md"
+                            : "border-gray-200 hover:border-gray-300"
+                            }`}
+                        >
+                          <div className="w-full h-100 overflow-hidden">
+                            <img
+                              src={image}
+                              alt={""}
+                              className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          {index === 0 && (
+                            <div className="absolute top-2 right-2">
+                              <button
+                                onClick={handleWishlist}
+                                className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
+                                  } hover:text-red-500 transition-colors`}
+                              >
+                                <Heart
+                                  className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
+                                    }`}
+                                />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ));
+                    })()}
+
+
+                  </div>
                 </div>
               </div>
-            )}
-            <div id="customise" className="flex items-stretch w-full bg-white border border-yellow-200 rounded-lg overflow-hidden  md:px-0">
-              {groupedMaterials &&
-                Object.keys(groupedMaterials).map((groupName, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      const group = groupedMaterials[groupName] || [];
-                      setSelectedMaterialGroup(group);
-                      setShowCustomizationModal(true);
-                    }}
-                     className=" w-full px-4 py-4 flex-1 border-r  border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
-                    
-                  >
-                    {groupName}
-                  </button>
-                ))}
-              <button
-                onClick={() => {
-                  setSelectedMaterialGroup(selectedVariant?.material_details);
-                  setShowCustomizationModal(true);
-                }}
-                className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
-              >
-                <span className="text-sm font-bold text-black">CUSTOMISE</span>
-              </button>
-            </div>
-            <div className="flex justify-start gap-5 items-center px-1 md:px-0">
-              {selectedVariant?.inventory_details?.stock_status &&
-                selectedVariant?.inventory_details?.stock_status !== "OK" && (
-                  <div>
-                    <label className="text-gray-600 text-xs mb-1 font-semibold block">
-                      Stock
-                    </label>
-                    <span className="text-sm font-medium text-red-600">
-                      {selectedVariant?.inventory_details?.stock_status}
-                    </span>
+
+              <div className="space-y-4">
+                <div className="md:hidden flex items-center justify-between px-1">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleWishlist}
+                      className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""}`}
+                      />
+                    </button>
+                    <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                    <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
+                      <Copy className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="px-1 md:px-0">
+                  <div className="flex items-center justify-between space-x-2">
+                    <div className="space-y-0.5">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xl font-bold text-gray-900">
+                          ₹{" "}
+                          {Number(
+                            selectedVariant?.final_varient_price
+                          ).toFixed(2)
+                          }
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">(MRP Inclusive of all taxes)</p>
+                      <h1 className="text-lg lg:text-xl font-medium text-gray-900">
+                        {selectedVariant?.product_details?.product_name || "Unnamed Product"}
+                      </h1>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <div
+                        className="text-white text-center font-semibold w-20 ml-2.5"
+                        style={{
+                          background: "linear-gradient(90deg, #FD8B64 0%, #FF5B6C 100%)",
+                          borderRadius: "8px 8px 0 0",
+                          textTransform: "uppercase",
+                          fontSize: "0.6rem",
+                          padding: "1px 0",
+                          lineHeight: "10px",
+                        }}
+                      >
+                        BUY FOR LESS
+                      </div>
+                      <div
+                        className="bg-[#F5F1FF] rounded-lg p-2 w-[100px] border border-purple-300"
+                      >
+                        <div className="text-center">
+
+                          <div className="text-purple-700 font-bold text-xs flex items-center justify-center mb-1"
+                            style={{
+                              background: "#E5DDFF",
+
+                              color: "#4F3267",
+                              padding: "8px 6px",
+                              marginbottom: "10px",
+                              borderRadius: "8px",
+                              fontSize: "11px",
+                              position: "relative",
+                              texttransform: "uppercase",
+                              height: "30px",
+                            }}>
+                            9+1 SAVINGS
+                            <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                              <path
+                                fillRule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                          <div className="text-[10px] text-gray-600 leading-tight">
+                            Pay for 9 months, 100% off on the 10th
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {variants?.discount_details && (
+                  <div className="px-1 md:px-0">
+                    <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
+                      <span className="text-sm font-medium text-red-800">
+                        Flat {variants?.discount_details?.discount_value}% off on Diamond Prices
+                      </span>
+                    </div>
                   </div>
                 )}
-              <div className="px-3 py-2 border-t border-gray-100">
-                <label className="text-gray-600 text-xs mb-1 font-semibold block">
-                  Quantity
-                </label>
-                <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
+                <div id="customise" className="flex items-stretch w-full bg-white border border-yellow-200 rounded-lg overflow-hidden  md:px-0">
+                  {groupedMaterials &&
+                    Object.keys(groupedMaterials).map((groupName, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          const group = groupedMaterials[groupName] || [];
+                          setSelectedMaterialGroup(group);
+                          setShowCustomizationModal(true);
+                        }}
+                        className=" w-full px-4 py-4 flex-1 border-r  border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
+
+                      >
+                        {groupName}
+                      </button>
+                    ))}
                   <button
-                    onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
-                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
-                    aria-label="Decrease quantity"
+                    onClick={() => {
+                      setSelectedMaterialGroup(selectedVariant?.material_details);
+                      setShowCustomizationModal(true);
+                    }}
+                    className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
                   >
-                    -
+                    <span className="text-sm font-bold text-black">CUSTOMISE</span>
                   </button>
-                  <input
-                    type="text"
-                    readOnly
-                    value={quantity}
-                    className="w-10 text-center outline-none border-l border-r border-gray-300"
-                    aria-label="Quantity"
-                  />
-                  <button
-                    onClick={() => setQuantity((prev) => prev + 1)}
-                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
+                </div>
+                <div className="flex justify-start gap-5 items-center px-1 md:px-0">
+                  {selectedVariant?.inventory_details?.stock_status &&
+                    selectedVariant?.inventory_details?.stock_status !== "OK" && (
+                      <div>
+                        <label className="text-gray-600 text-xs mb-1 font-semibold block">
+                          Stock
+                        </label>
+                        <span className="text-sm font-medium text-red-600">
+                          {selectedVariant?.inventory_details?.stock_status}
+                        </span>
+                      </div>
+                    )}
+                  <div className="px-3 py-2 border-t border-gray-100">
+                    <label className="text-gray-600 text-xs mb-1 font-semibold block">
+                      Quantity
+                    </label>
+                    <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
+                      <button
+                        onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
+                        aria-label="Decrease quantity"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        readOnly
+                        value={quantity}
+                        className="w-10 text-center outline-none border-l border-r border-gray-300"
+                        aria-label="Quantity"
+                      />
+                      <button
+                        onClick={() => setQuantity((prev) => prev + 1)}
+                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 px-1 md:px-0">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-2">Available Variants</h2>
+                  <div className="flex flex-wrap gap-3">
+                    {variants.length
+                      ? variants.map((variant) => (
+                        <button
+                          key={variant.varient_id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                            }`}
+                        >
+                          SKU: {variant.varient_sku}
+                        </button>
+                      ))
+                      : [
+                        {
+                          varient_id: "default",
+                          varient_sku: "Default",
+                          varient_price: selectedVariant?.price,
+                          varient_weight: selectedVariant.weight || "",
+                          unit_name: selectedVariant.unit_name || "",
+                        },
+                      ].map((variant) => (
+                        <button
+                          key={variant.varient_id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                            }`}
+                        >
+                          SKU: {variant.varient_sku}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+                <div className="hidden md:block px-1 md:px-0">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={handleAddToCart}
+                      className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
+                      style={{
+                        background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
+                      }}
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>ADD TO CART</span>
+                    </button>
+                    <button
+                      onClick={handleWishlist}
+                      className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
+                    >
+                      <Heart
+                        className={`w-5 h-5 ${isWishlisted ? "text-red-500 fill-current" : "text-gray-600"}`}
+                      />
+                    </button>
+                    <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
+                      <Share2 className="w-5 h-5 text-gray-600" />
+                    </button>
+                  </div>
+                </div>
+                <div id="delivery-stores" className="w-full px-1 md:px-0">
+                  <DeliveryStoresUI />
+                </div>
+                <FeaturesComponent />
+                <div id="details" className="self-start w-full space-y-6 px-1 md:px-0">
+                  <ProductDetailsSection />
                 </div>
               </div>
             </div>
-            <div className="mt-6 px-1 md:px-0">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Available Variants</h2>
-              <div className="flex flex-wrap gap-3">
-                {variants.length
-                  ? variants.map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
-                        }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))
-                  : [
-                    {
-                      varient_id: "default",
-                      varient_sku: "Default",
-                      varient_price: selectedVariant?.price,
-                      varient_weight: selectedVariant.weight || "",
-                      unit_name: selectedVariant.unit_name || "",
-                    },
-                  ].map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
-                        }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))}
-              </div>
-            </div>
-            <div className="hidden md:block px-1 md:px-0">
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
-                  style={{
-                    background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
-                  }}
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>ADD TO CART</span>
-                </button>
-                <button
-                  onClick={handleWishlist}
-                  className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
-                >
-                  <Heart
-                    className={`w-5 h-5 ${isWishlisted ? "text-red-500 fill-current" : "text-gray-600"}`}
-                  />
-                </button>
-                <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
-                  <Share2 className="w-5 h-5 text-gray-600" />
-                </button>
-              </div>
-            </div>
-            <div id="delivery-stores" className="w-full px-1 md:px-0">
-              <DeliveryStoresUI />
-            </div>
-            <FeaturesComponent />
-            <div id="details" className="self-start w-full space-y-6 px-1 md:px-0">
-              <ProductDetailsSection />
-            </div>
-          </div>
-        </div>
+          )}
       </div>
       <div className="w-full">
 
