@@ -109,13 +109,13 @@ const TreasureChestFaqToggleComponent = () => {
   ];
 
   const renderFAQs = () => (
-    <div className="space-y-6">
+    <div className="space-y-6 border-yellow-200">
       {/* Cancellation/Refund Section */}
       <div>
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Cancellation/Refund</h3>
         <div className="space-y-2">
           {faqData.filter(item => item.category === 'Cancellation/Refund').map((item) => (
-            <div key={item.id} className="border border-gray-200 rounded-lg">
+            <div key={item.id} className="border border-yellow-200 rounded-lg">
               <button
                 onClick={() => toggleItem(item.id)}
                 className="w-full px-4 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200"
@@ -142,7 +142,7 @@ const TreasureChestFaqToggleComponent = () => {
         <h3 className="text-lg font-semibold text-gray-800 mb-4">CaratLane Treasure Chest Edge</h3>
         <div className="space-y-2">
           {faqData.filter(item => item.category === 'CaratLane Treasure Chest Edge').map((item) => (
-            <div key={item.id} className="border border-gray-200 rounded-lg">
+            <div key={item.id} className="border border-yellow-200 rounded-lg">
               <button
                 onClick={() => toggleItem(item.id)}
                 className="w-full px-4 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200"
@@ -204,7 +204,7 @@ const TreasureChestFaqToggleComponent = () => {
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
       {/* Toggle Buttons */}
-      <div className="flex bg-purple-100 rounded-lg p-1 mb-6 max-w-md mx-auto">
+      <div className="flex bg-yellow-100 rounded-lg p-1 mb-6 max-w-md mx-auto">
         <button
           onClick={() => setActiveTab('faqs')}
           className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ${
@@ -228,7 +228,7 @@ const TreasureChestFaqToggleComponent = () => {
       </div>
 
       {/* Content Area */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
+      <div className="bg-white rounded-lg border border-yellow-200 p-4 md:p-6">
         {activeTab === 'faqs' ? renderFAQs() : renderTerms()}
       </div>
     </div>

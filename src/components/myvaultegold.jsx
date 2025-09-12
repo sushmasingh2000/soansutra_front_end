@@ -4,11 +4,11 @@ export default function ViewMyVault() {
   return (
     <div className=" bg-gray-50 p-4">
       {/* Header */}
-      <div className="max-w-6xl mx-auto bg-white rounded-lg border border-purple-200 p-4 mb-8">
+      <div className="max-w-6xl mx-auto bg-white rounded-lg border border-yellow-200 p-4 mb-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
             <h1 className="text-base text-gray-800">Hi abhishek chaurasia</h1>
-            <div className="w-px h-6 bg-purple-300 hidden sm:block"></div>
+            <div className="w-px h-6 bg-yellow-300 hidden sm:block"></div>
             <div className="flex items-center justify-between sm:justify-start gap-2">
               <span className="text-gray-700 text-sm">Gold balance - 0.0000 gms</span>
               <div 
@@ -22,8 +22,8 @@ export default function ViewMyVault() {
             </div>
           </div>
           <button 
-            className="px-4 py-2 rounded-lg text-white text-sm"
-            style={{ background: 'linear-gradient(to right, #de57e5, #8863fb)' }}
+            className="px-4 py-2 rounded-lg text-black text-sm  bg-gradient-to-r from-yellow-400 to-yellow-600"
+            
           >
             View my Vault
           </button>
@@ -37,15 +37,15 @@ export default function ViewMyVault() {
           <div className="space-y-6 text-center lg:text-left">
             {/* Know More Section */}
             <div>
-              <p className="text-purple-500 text-sm mb-3">Know More</p>
+              <p className="text-yellow-500 text-sm mb-3">Know More</p>
               <h2 className="text-2xl lg:text-3xl text-gray-900 leading-tight mb-6">
                 Invest in a high-payoff digital gold. Buy, sell, or redeem your CaratLane eGold in exchange for beautiful jewellery.
               </h2>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button 
-                  className="px-6 py-2.5 rounded-lg text-white text-base"
-                  style={{ background: 'linear-gradient(to right, #de57e5, #8863fb)' }}
+                  className="px-6 py-2.5 rounded-lg text-black text-base bg-gradient-to-r from-yellow-400 to-yellow-600"
+                 
                 >
                   Buy eGold Now
                 </button>

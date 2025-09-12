@@ -25,7 +25,7 @@ const ExchangeRedeemComponent = () => {
             {/* Step 1 */}
             <div className="flex flex-col items-center text-center flex-1">
               <div className="relative mb-4">
-                <div className="w-24 h-24 rounded-full border-2 border-purple-200 bg-purple-50 flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full border-2 border-yellow-200 bg-yellow-50 flex items-center justify-center">
                   <div 
                     className="w-14 h-14"
                     style={{
@@ -46,7 +46,7 @@ const ExchangeRedeemComponent = () => {
             
             {/* Arrow 1 */}
             <div className="mx-8">
-              <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
@@ -73,7 +73,7 @@ const ExchangeRedeemComponent = () => {
             
             {/* Arrow 2 */}
             <div className="mx-8">
-              <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
@@ -104,17 +104,17 @@ const ExchangeRedeemComponent = () => {
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <div className="flex items-center gap-4 mb-6">
-              <button className="px-6 py-3 border border-purple-300 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors">
+              <button className="px-6 py-3 border border-yellow-300 text-yellow-600 rounded-lg hover:bg-yellow-50 transition-colors">
                 View Jewellery designs
               </button>
               <span className="text-gray-500 font-medium">OR</span>
-              <button className="px-6 py-3 border border-purple-300 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors">
+              <button className="px-6 py-3 border border-yellow-300 text-yellow-600 rounded-lg hover:bg-yellow-50 transition-colors">
                 View all Gold coins
               </button>
             </div>
             
-            <div className="bg-purple-50 rounded-lg p-4 flex items-start gap-3 max-w-lg">
-              <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="bg-yellow-50 rounded-lg p-4 flex items-start gap-3 max-w-lg">
+              <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-white text-sm font-bold">!</span>
               </div>
               <div className="flex-1">
@@ -123,7 +123,7 @@ const ExchangeRedeemComponent = () => {
                   caratlane & our Jewellery Partner
                 </p>
               </div>
-              <button className="text-purple-600 text-sm font-medium hover:text-purple-700 flex items-center gap-1 whitespace-nowrap">
+              <button className="text-yellow-600 text-sm font-medium hover:text-yellow-700 flex items-center gap-1 whitespace-nowrap">
                 Exchange History
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -169,7 +169,7 @@ const ExchangeRedeemComponent = () => {
             {/* Step 1 */}
             <div className="flex flex-col items-center text-center mb-8">
               <div className="relative mb-4">
-                <div className="w-20 h-20 rounded-full border-2 border-purple-200 bg-purple-50 flex items-center justify-center border-dashed">
+                <div className="w-20 h-20 rounded-full border-2 border-yellow-200 bg-yellow-50 flex items-center justify-center border-dashed">
                   <div 
                     className="w-12 h-12"
                     style={{
@@ -190,7 +190,7 @@ const ExchangeRedeemComponent = () => {
             
             {/* Arrow Down */}
             <div className="flex justify-center mb-8">
-              <svg className="w-6 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </div>
@@ -217,7 +217,7 @@ const ExchangeRedeemComponent = () => {
             
             {/* Arrow Down */}
             <div className="flex justify-center mb-8">
-              <svg className="w-6 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </div>
@@ -245,19 +245,19 @@ const ExchangeRedeemComponent = () => {
           
           {/* Mobile Buttons */}
           <div className="space-y-4 mb-6">
-            <button className="w-full py-3 px-4 border border-purple-300 text-purple-600 rounded-lg bg-white hover:bg-purple-50 transition-colors">
+            <button className="w-full py-3 px-4 border border-yellow-300 text-yellow-600 rounded-lg bg-white hover:bg-yellow-50 transition-colors">
               View Jewellery designs
             </button>
             <div className="text-center text-gray-500 font-medium">OR</div>
-            <button className="w-full py-3 px-4 border border-purple-300 text-purple-600 rounded-lg bg-white hover:bg-purple-50 transition-colors">
+            <button className="w-full py-3 px-4 border border-yellow-300 text-yellow-600 rounded-lg bg-white hover:bg-yellow-50 transition-colors">
               View all Gold coins
             </button>
           </div>
           
           {/* Mobile Info Box */}
-          <div className="bg-purple-50 rounded-lg p-4 mb-6">
+          <div className="bg-yellow-50 rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-white text-sm font-bold">!</span>
               </div>
               <div className="flex-1">
@@ -265,7 +265,7 @@ const ExchangeRedeemComponent = () => {
                   You can also Redeem your Gold Balance online as well as offline stores of 
                   caratlane & our Jewellery Partner
                 </p>
-                <button className="text-purple-600 text-sm font-medium hover:text-purple-700 flex items-center gap-1">
+                <button className="text-yellow-600 text-sm font-medium hover:text-yellow-700 flex items-center gap-1">
                   Exchange History
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -288,7 +288,7 @@ const ExchangeRedeemComponent = () => {
               Price is only valid for 5 mins
             </div>
             
-            <button className="w-full py-3 px-4 border border-purple-300 text-purple-600 rounded-lg bg-white hover:bg-purple-50 transition-colors">
+            <button className="w-full py-3 px-4 border border-yellow-300 text-yellow-600 rounded-lg bg-white hover:bg-yellow-50 transition-colors">
               Refresh Gold Rate
             </button>
           </div>

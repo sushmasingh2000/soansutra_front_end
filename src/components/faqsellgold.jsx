@@ -34,7 +34,7 @@ export default function FAQSellGold() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 bg-white">
+    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 bg-white">
       {faqSections.map((section, sectionIndex) => (
         <div key={sectionIndex} className="mb-12">
           {/* Section Header */}
@@ -43,7 +43,7 @@ export default function FAQSellGold() {
               {section.title}
             </h2>
             {section.hasLinks && (
-              <span className="text-blue-500 text-sm font-medium cursor-pointer hover:text-blue-600 transition-colors">
+              <span className="text-yellow-500 text-sm font-medium cursor-pointer hover:text-yellow-700 transition-colors">
                 FAQs
               </span>
             )}
@@ -52,7 +52,7 @@ export default function FAQSellGold() {
           {/* FAQ Items */}
           <div className="space-y-0">
             {section.items.map((item, index) => (
-              <div key={item.id} className="border-b border-gray-200 last:border-b-0">
+              <div key={item.id} className="border-b border-yellow-200 last:border-b-0">
                 <button
                   onClick={() => toggleItem(item.id)}
                   className="w-full flex items-center justify-between py-6 px-0 text-left hover:bg-gray-50 transition-colors group"
@@ -62,9 +62,9 @@ export default function FAQSellGold() {
                   </span>
                   <div className="flex-shrink-0 ml-auto">
                     {openItems[item.id] ? (
-                      <Minus className="w-5 h-5 text-gray-500 group-hover:text-gray-700 transition-colors" />
+                      <Minus className="w-5 h-5 text-yellow-500 group-hover:text-gray-700 transition-colors" />
                     ) : (
-                      <Plus className="w-5 h-5 text-gray-500 group-hover:text-gray-700 transition-colors" />
+                      <Plus className="w-5 h-5 text-yellow-500 group-hover:text-gray-700 transition-colors" />
                     )}
                   </div>
                 </button>
@@ -85,23 +85,7 @@ export default function FAQSellGold() {
       ))}
 
       {/* Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <button className="w-14 h-14 bg-purple-600 hover:bg-purple-700 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110">
-          <svg 
-            className="w-6 h-6 text-white" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" 
-            />
-          </svg>
-        </button>
-      </div>
+      
     </div>
   );
 }

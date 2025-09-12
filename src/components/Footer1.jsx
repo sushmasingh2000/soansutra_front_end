@@ -15,13 +15,13 @@ const Footer = () => {
   const iconColor = "#000000"; // Changed to black
 
   return (
-    <footer className="py-8 px-4 md:px-6 bg-[#fffefe] border-t-2" > {/* Changed to white */}
+    <footer className="py-8 px-4 md:px-6 bg-[#fffefe] border-t-2 border-yellow-100" > {/* Changed to white */}
       <div className="max-w-7xl mx-auto">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           
           {/* Know Your Jewellery */}
-          <div className="lg:col-span-1 border-b md:border-b-0 border-gray-200 pb-4 md:pb-0">
+          <div className="lg:col-span-1 border-b md:border-b-0 border-yellow-200 pb-4 md:pb-0">
             <div 
               className="flex justify-between items-center cursor-pointer md:cursor-default"
               onClick={() => toggleSection('knowYourJewellery')}

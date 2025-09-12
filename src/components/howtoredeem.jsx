@@ -7,7 +7,7 @@ const HowToRedeem = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-purple-500 text-xs md:text-sm mb-2">Redeem</h2>
+          <h2 className="text-yellow-500 text-xs md:text-sm mb-2">Redeem</h2>
           <h1 className="text-lg md:text-2xl text-gray-900">
             eGold to jewellery, in a blink!
           </h1>
@@ -19,7 +19,7 @@ const HowToRedeem = () => {
             {/* Step 1 */}
             <div className="flex-1 text-center">
               <div className="w-24 h-24 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-purple-300 border-dashed flex items-center justify-center bg-white">
+                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
                   <div 
                     className="w-8 h-8"
                     style={{
@@ -37,9 +37,9 @@ const HowToRedeem = () => {
 
             {/* Arrow 1 */}
             <div className="flex-shrink-0 mx-8">
-              <div className="w-12 h-0.5 bg-purple-400 relative">
+              <div className="w-12 h-0.5 bg-yellow-400 relative">
                 <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
-                  <div className="w-0 h-0 border-l-8 border-l-purple-400 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
+                  <div className="w-0 h-0 border-l-8 border-l-yellow-400 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
                 </div>
               </div>
             </div>
@@ -47,7 +47,7 @@ const HowToRedeem = () => {
             {/* Step 2 */}
             <div className="flex-1 text-center">
               <div className="w-24 h-24 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-purple-300 border-dashed flex items-center justify-center bg-white">
+                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
                   <div 
                     className="w-12 h-10"
                     style={{
@@ -59,8 +59,8 @@ const HowToRedeem = () => {
                 </div>
                 {/* Sparkle effects */}
                 <div className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full"></div>
-                <div className="absolute bottom-2 left-2 w-1 h-1 bg-purple-400 rounded-full"></div>
-                <div className="absolute top-1/2 -right-2 w-1 h-1 bg-purple-400 rounded-full"></div>
+                <div className="absolute bottom-2 left-2 w-1 h-1 bg-yellow-400 rounded-full"></div>
+                <div className="absolute top-1/2 -right-2 w-1 h-1 bg-yellow-400 rounded-full"></div>
               </div>
               <h3 className="text-sm text-gray-900 mb-2">Redeem your</h3>
               <h3 className="text-sm text-gray-900 mb-2">Caratlane eGold at</h3>
@@ -69,9 +69,9 @@ const HowToRedeem = () => {
 
             {/* Arrow 2 */}
             <div className="flex-shrink-0 mx-8">
-              <div className="w-12 h-0.5 bg-purple-400 relative">
+              <div className="w-12 h-0.5 bg-yellow-400 relative">
                 <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
-                  <div className="w-0 h-0 border-l-8 border-l-purple-400 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
+                  <div className="w-0 h-0 border-l-8 border-l-yellow-400 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@ const HowToRedeem = () => {
             {/* Step 3 */}
             <div className="flex-1 text-center">
               <div className="w-24 h-24 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-purple-300 border-dashed flex items-center justify-center bg-white">
+                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
                   <div 
                     className="w-12 h-8"
                     style={{
@@ -105,8 +105,8 @@ const HowToRedeem = () => {
           <div className="mt-16 flex items-start justify-between max-w-4xl mx-auto">
             <div className="flex-1">
               <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-purple-600 text-sm">!</span>
+                <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-yellow-600 text-sm">!</span>
                 </div>
                 <div>
                   <p className="text-gray-600 text-base leading-relaxed">
@@ -117,7 +117,7 @@ const HowToRedeem = () => {
             </div>
 
             <div className="flex-shrink-0 ml-16">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-yellow-100">
                 <div className="text-center mb-4">
                   <div 
                     className="w-12 h-12 mx-auto mb-3"
@@ -127,10 +127,10 @@ const HowToRedeem = () => {
                       backgroundPosition: '-100px -50px'
                     }}
                   />
-                  <h3 className="text-purple-500 text-base">Visit Vault</h3>
+                  <h3 className="text-yellow-500 text-base">Visit Vault</h3>
                   <p className="text-gray-600 text-sm">Check your gold Balance</p>
                 </div>
-                <button className="w-full bg-transparent border-none text-purple-500 flex items-center justify-center space-x-2 hover:text-purple-600 transition-colors">
+                <button className="w-full bg-transparent border-none text-yellow-500 flex items-center justify-center space-x-2 hover:text-yellow-600 transition-colors">
                   <span>Verify KYC</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -147,7 +147,7 @@ const HowToRedeem = () => {
             {/* Step 1 */}
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full border-2 border-purple-300 border-dashed flex items-center justify-center bg-white">
+                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
                   <div 
                     className="w-6 h-6"
                     style={{
@@ -165,9 +165,9 @@ const HowToRedeem = () => {
               
               {/* Arrow down */}
               <div className="flex justify-center my-6">
-                <div className="w-0.5 h-12 bg-purple-400 relative">
+                <div className="w-0.5 h-12 bg-yellow-400 relative">
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
-                    <div className="w-0 h-0 border-t-8 border-t-purple-400 border-l-4 border-l-transparent border-r-4 border-r-transparent"></div>
+                    <div className="w-0 h-0 border-t-8 border-t-yellow-400 border-l-4 border-l-transparent border-r-4 border-r-transparent"></div>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ const HowToRedeem = () => {
             {/* Step 2 */}
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-purple-300 border-dashed flex items-center justify-center bg-white">
+                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
                   <div 
                     className="w-10 h-8"
                     style={{
@@ -188,17 +188,17 @@ const HowToRedeem = () => {
                 </div>
                 {/* Sparkle effects */}
                 <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
-                <div className="absolute bottom-1 left-1 w-1 h-1 bg-purple-400 rounded-full"></div>
-                <div className="absolute top-1/2 -right-1 w-1 h-1 bg-purple-400 rounded-full"></div>
+                <div className="absolute bottom-1 left-1 w-1 h-1 bg-yellow-400 rounded-full"></div>
+                <div className="absolute top-1/2 -right-1 w-1 h-1 bg-yellow-400 rounded-full"></div>
               </div>
               <h3 className="text-base text-gray-900">Redeem your Caratlane</h3>
               <h3 className="text-base text-gray-900 mb-1">eGold at checkout</h3>
               
               {/* Arrow down */}
               <div className="flex justify-center my-6">
-                <div className="w-0.5 h-12 bg-purple-400 relative">
+                <div className="w-0.5 h-12 bg-yellow-400 relative">
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
-                    <div className="w-0 h-0 border-t-8 border-t-purple-400 border-l-4 border-l-transparent border-r-4 border-r-transparent"></div>
+                    <div className="w-0 h-0 border-t-8 border-t-yellow-400 border-l-4 border-l-transparent border-r-4 border-r-transparent"></div>
                   </div>
                 </div>
               </div>
@@ -207,7 +207,7 @@ const HowToRedeem = () => {
             {/* Step 3 */}
             <div className="text-center mb-8">
               <div className="w-20 h-20 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-purple-300 border-dashed flex items-center justify-center bg-white">
+                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
                   <div 
                     className="w-10 h-6"
                     style={{
@@ -232,8 +232,8 @@ const HowToRedeem = () => {
           {/* Info Section Mobile */}
           <div className="mt-12">
             <div className="flex items-start space-x-3 mb-6">
-              <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-purple-600 text-xs">!</span>
+              <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-yellow-600 text-xs">!</span>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">
                 You can redeem CaratLane eGold online or offline through one of our many jewellery stores across India.
@@ -252,11 +252,11 @@ const HowToRedeem = () => {
                   }}
                 />
                 <div className="flex-1">
-                  <h3 className="text-purple-500 text-sm">Visit Vault</h3>
+                  <h3 className="text-yellow-500 text-sm">Visit Vault</h3>
                   <p className="text-gray-600 text-sm">Check your gold Balance</p>
                 </div>
               </div>
-              <button className="w-full mt-3 bg-transparent border-none text-purple-500 flex items-center justify-center space-x-2 hover:text-purple-600 transition-colors">
+              <button className="w-full mt-3 bg-transparent border-none text-yellow-500 flex items-center justify-center space-x-2 hover:text-yellow-600 transition-colors">
                 <span>Verify KYC</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -267,7 +267,7 @@ const HowToRedeem = () => {
         </div>
 
         {/* Floating Action Button (Mobile) */}
-        <button className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-purple-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-purple-700 transition-colors">
+        <button className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-yellow-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-yellow-700 transition-colors">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h8m-4-4v8" />
           </svg>
