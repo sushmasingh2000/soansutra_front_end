@@ -120,10 +120,9 @@ export default function ResponsiveCart() {
     handleApplyCoupon(couponCode);
     setShowCouponModal(false);
   };
- const [orderloader , setOrderLoader] = useState(false)
+  
   const handlePlaceOrder = async () => {
     try {
-      setOrderLoader(true);
       const orderItems = cartItems.map(item => ({
         varient_id: item.varient_id,
         quantity: item.quantity
@@ -146,7 +145,6 @@ export default function ResponsiveCart() {
       };
 
       const response = await apiConnectorPost(endpoint?.create_order, payload);
-      setOrderLoader(false)
       if (!response?.data?.message === "Order placed successfully.") {
         toast(response?.data?.message);
       };
@@ -160,7 +158,6 @@ export default function ResponsiveCart() {
       console.error("Error placing order:", error);
       toast.error("Something went wrong. Please try again.");
     }
-    setOrderLoader(false)
   };
 
 

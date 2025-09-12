@@ -264,13 +264,11 @@ const ProductDetailWebPage = () => {
       toast.error("Product or variant not selected");
       return;
     }
-
     const payload = {
       product_id: product_id_and_variant_id_only.product_id,
       varient_id: selectedVariant.varient_id,
       quantity: quantity,
     };
-
     try {
       const response = await apiConnectorPost(endpoint.create_cart, payload);
       if (response?.data?.message !== "Unauthorised User!") {
