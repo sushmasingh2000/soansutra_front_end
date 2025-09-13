@@ -438,7 +438,7 @@ export default function ResponsiveCart() {
                       Looks like you haven't added any items to your cart yet. Start shopping now to find your perfect items!
                     </p>
                     <button
-                      onClick={() => navigate('/shop')}
+                      onClick={() => navigate('/')}
                       className="text-white py-2 px-6 rounded-lg font-medium text-sm"
                       style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
                     >

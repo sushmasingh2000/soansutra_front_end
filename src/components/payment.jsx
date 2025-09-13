@@ -103,7 +103,8 @@ const Payment = ({ selectedOrderId }) => {
 
   if (paymentlink) {
     return (
-      <QRScreen deposit_req_data={paymentlink} OrderData={OrderData} />
+      document.location.href=paymentlink
+      // <QRScreen deposit_req_data={paymentlink} OrderData={OrderData} />
     );
   }
   return (
