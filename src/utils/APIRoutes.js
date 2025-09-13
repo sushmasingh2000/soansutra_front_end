@@ -5,6 +5,8 @@ export const rupees = "₹";
 
 export const endpoint = {
   review_customer: `${domain}/api/v1/create-product-review`,
+  checkd_order_placed: `${domain}/api/v1/check-order-placed`,
+  
   get_customer_review: `${domain}/api/v1/get-product-review`,
   get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
   get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,

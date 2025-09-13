@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
 import {
-  Package, Calendar, MapPin, CreditCard, X, Truck, CheckCircle,
-  Star, RotateCcw, Repeat2, Wrench, Mail, Printer, Award, ImagePlus
+  Calendar,
+  CreditCard,
+  ImagePlus,
+  MapPin,
+  Package,
+  Star,
+  X
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { endpoint } from '../utils/APIRoutes';
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../utils/ApiConnector';
-import toast from 'react-hot-toast';
 
 const OrdersContent = () => {
   const [activeTab, setActiveTab] = useState('myOrders');
