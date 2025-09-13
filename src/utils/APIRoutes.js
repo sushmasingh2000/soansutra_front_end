@@ -1,4 +1,5 @@
 // export const domain = "http://192.168.18.214:2000";
+export const frontend = "https://sonasutra.in";
 export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
@@ -102,6 +103,9 @@ export const endpoint = {
   add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
   get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
   set_shipping_Address: `${domain}/api/v1/set-shipping-address-as-default`,
+
+//payment order 
+  create_order_payment: `${domain}/api/v1/creata-order-payment`,
 
 
 

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { apiConnectorGet } from '../utils/ApiConnector';
+import { apiConnectorGet, apiConnectorPost } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
+import toast from 'react-hot-toast';
+import QRScreen from './pages/QRScreen';
 
-const Payment = () => {
+const Payment = ({ selectedOrderId }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(true);
-
+  const [OrderData, setOrderData] = React.useState("");
+  const [paymentlink, setPaymentLink] = useState("")
   // Current address data
   const [currentAddress, setCurrentAddress] = useState({
     firstName: 'abhishek',
@@ -63,7 +66,7 @@ const Payment = () => {
   };
   const [defaultAddress, setDefaultAddress] = useState(null);
 
-   const addres_fn = async () => {
+  const addres_fn = async () => {
     try {
       const response = await apiConnectorGet(endpoint?.get_shipping_Address);
       const addressList = response?.data?.result || [];
@@ -79,8 +82,33 @@ const Payment = () => {
     addres_fn()
   }, [])
 
+  const order_paymentFn = async () => {
+    try {
+      const response = await apiConnectorPost(endpoint?.create_order_payment, {
+        order_id: selectedOrderId
+      });
+      toast(response?.data?.message , {id:1})
+      const qr_url = (response?.data?.result && response?.data?.result?.payment_url) || "";
+      const orderdata = response?.data?.result?.order_id || "";
+      if (qr_url) {
+        setPaymentLink(qr_url);
+        setOrderData(orderdata);
+      } else {
+        response?.data?.message ? toast(response?.data?.message) : toast("Something went wrong");
+      }
+    } catch (e) {
+      console.log("Error fetching address:", e);
+    }
+  };
+
+  if (paymentlink) {
+    return (
+      <QRScreen deposit_req_data={paymentlink} OrderData={OrderData} />
+    );
+  }
   return (
     <>
+
       <div className="max-w-md mx-auto bg-white p-6 min-h-screen">
         {/* Preferred Payment Options */}
         <div className="mb-8">
@@ -133,7 +161,9 @@ const Payment = () => {
           </div>
 
           {/* Pay Now Button */}
-          <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium py-4 rounded-lg text-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-lg">
+          <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white 
+          font-medium py-4 rounded-lg text-lg hover:from-purple-600 hover:to-purple-700 transition-all 
+          duration-200 shadow-lg" onClick={order_paymentFn}>
             PAY NOW
           </button>
         </div>
@@ -143,7 +173,7 @@ const Payment = () => {
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <p className="text-sm text-gray-600 mb-1">{defaultAddress?.address_line1}</p>
-             {defaultAddress?.address_line2 && (
+              {defaultAddress?.address_line2 && (
                 <p className="text-sm text-gray-600 mb-1">{defaultAddress.address_line2}</p>
               )}
               <p className="text-sm text-gray-600 mb-1">

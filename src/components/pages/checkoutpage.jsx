@@ -85,7 +85,7 @@ const CheckoutPage = () => {
           {currentStep === 0 ? (
             <CheckoutForm onSaveContinue={handleNextStep} />
           ) : currentStep === 1 ? (
-            <Payment onBack={handlePreviousStep} />
+            <Payment selectedOrderId={order_id} onBack={handlePreviousStep} />
           ) : null /* Add more steps here */}
         </div>
       </div>

@@ -30,9 +30,14 @@ import TreasureChestContent from '../treasurechestcontent';
 import TryAtHomeContent from '../tryathomecontent';
 import XclusiveContent from '../xclusivecontent';
 import Distributer from '../distributer';
+import { useLocation } from 'react-router-dom';
 
 const ProfileDashboard = () => {
-  const [activeTab, setActiveTab] = useState('PROFILE');
+ const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const hasTxnParams = searchParams.has('client_txn_id') && searchParams.has('txn_id');
+  const defaultTab = hasTxnParams ? 'ORDERS_EXCHANGE' : 'PROFILE';
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Sidebar navigation items
@@ -45,7 +50,7 @@ const ProfileDashboard = () => {
         { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw }
       ]
     },
-     {
+    {
       category: 'DISTRIBUTER',
       items: [
         { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home }
@@ -79,14 +84,14 @@ const ProfileDashboard = () => {
     }
   ];
 
-   const { data } = useQuery(
-      ['profile'],
-      () =>
-       apiConnectorGet(endpoint?.get_customer_profile),
-      usequeryBoolean
-    );
-  
-    const profileData = data?.data?.result || [];
+  const { data } = useQuery(
+    ['profile'],
+    () =>
+      apiConnectorGet(endpoint?.get_customer_profile),
+    usequeryBoolean
+  );
+
+  const profileData = data?.data?.result || [];
 
 
   // Handle navigation click for mobile
@@ -101,13 +106,13 @@ const ProfileDashboard = () => {
       case 'PROFILE':
         return <ProfileContent />;
       case 'ORDERS_EXCHANGE':
-        return <OrdersContent/>;
+        return <OrdersContent />;
       case 'PAYMENT':
         return <PaymentContent />;
       case 'MANAGE_REFUNDS':
         return <ManageRefundsContent />;
-         case 'DISTRIBUTER':
-        return <Distributer/>;
+      case 'DISTRIBUTER':
+        return <Distributer />;
       case 'TRY_AT_HOME':
         return <TryAtHomeContent />;
       case 'COUPONS':
@@ -138,7 +143,7 @@ const ProfileDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header Component */}
       <Header1 />
-      
+
       <div className="max-w-full mx-auto flex">
         {/* Sidebar - Always visible on desktop, toggleable on mobile */}
         <div className={`
@@ -161,7 +166,7 @@ const ProfileDashboard = () => {
           <div className="p-3 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900 text-base">{profileData.name}</h3>
             <p className="text-xs text-gray-500">{profileData.cl_email}</p>
-            
+
           </div>
 
           {/* Navigation */}
@@ -178,11 +183,10 @@ const ProfileDashboard = () => {
                       <button
                         key={item.id}
                         onClick={() => handleNavClick(item.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${
-                          activeTab === item.id
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${activeTab === item.id
                             ? 'bg-purple-50 text-purple-700 border-r-2 border-purple-700'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center">
                           <Icon className="w-3 h-3 mr-2" />
@@ -200,7 +204,7 @@ const ProfileDashboard = () => {
 
         {/* Backdrop for mobile */}
         {isMobileMenuOpen && (
-          <div 
+          <div
             className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
             onClick={() => setIsMobileMenuOpen(false)}
           />
@@ -223,7 +227,7 @@ const ProfileDashboard = () => {
                 .find(item => item.id === activeTab)?.label || 'Profile'}
             </h1>
           </div>
-          
+
           {renderContent()}
         </div>
       </div>
