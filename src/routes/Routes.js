@@ -45,6 +45,8 @@ import Video from "../components/admin/Video.js";
 import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
 import Coupon from "../components/admin/Coupon.js";
 import CouponPriceRange from "../components/admin/CouponPriceRange..js";
+import { elements } from "chart.js";
+import Order from "../components/admin/Order.js";
 
 export const routes = [
   {
@@ -104,6 +106,23 @@ export const routes = [
   {
     path: "/sign-up",
     element: <SignUpPage />,
+  },
+
+   {
+    path: "/Collection",
+    element: (
+      <MainLayout>
+        <Collection />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/order",
+    element: (
+      <MainLayout>
+        <Order />{" "}
+      </MainLayout>
+    ),
   },
   {
     path: "/categories",
@@ -362,6 +381,7 @@ export const routes = [
     path: "/terms-and-conditions",
     element: <Termscondition/>,
   },
+ 
 ];
 
 // const router = createBrowserRouter([

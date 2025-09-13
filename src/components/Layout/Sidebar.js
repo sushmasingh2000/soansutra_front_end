@@ -73,6 +73,18 @@ const fullMenuItems = [
     icon: <PermScanWifi />,
     path: "/permissions",
   },
+  {
+    id: "banner",
+    label: "Banner",
+    icon: <Image />,
+    path: "/banner",
+  },
+  {
+    id: "Video",
+    label: "Video",
+    icon: <Image />,
+    path: "/video",
+  },
    {
     id: "Collection",
     label: "Collection ",
@@ -167,14 +179,30 @@ const fullMenuItems = [
       
     ],
   },
-  
+  {
+    id: "customer",
+    label: "Customer",
+    icon: <Person />,
+    path: "/customer",
+  },
+  {
+    id: "order",
+    label: "Order",
+    icon: <Person />,
+    path: "/order",
+  },
     {
     id: "Leads",
     label: "External Leads",
     icon: <LucideAmpersands />,
     path: "/leads",
   },
-   
+    {
+    id: "demo",
+    label: "Request Call",
+    icon: <Call />,
+    path: "/demo-call",
+  },
   {
     id: "custom",
     label: "Custom Order",
@@ -186,30 +214,6 @@ const fullMenuItems = [
     label: "Payment",
     icon: <PaymentSharp />,
     path: "/payment",
-  },
-  {
-    id: "banner",
-    label: "Banner",
-    icon: <Image />,
-    path: "/banner",
-  },
-  {
-    id: "Video",
-    label: "Video",
-    icon: <Image />,
-    path: "/video",
-  },
-  {
-    id: "demo",
-    label: "Request Call",
-    icon: <Call />,
-    path: "/demo-call",
-  },
-  {
-    id: "customer",
-    label: "Customer",
-    icon: <Person />,
-    path: "/customer",
   },
   {
     id: "logout",

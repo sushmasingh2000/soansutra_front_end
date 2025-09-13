@@ -1,6 +1,6 @@
-// export const domain = "http://192.168.18.214:2000";
+export const domain = "http://192.168.18.214:2000";
 export const frontend = "https://sonasutra.in";
-export const domain = "https://backend.sonasutra.in";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
@@ -98,13 +98,13 @@ export const endpoint = {
   update_video: `${domain}/api/v1/update-videos`,
   delete_video: `${domain}/api/v1/delete-videos`,
 
-  
-// address shipping
+
+  // address shipping
   add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
   get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
   set_shipping_Address: `${domain}/api/v1/set-shipping-address-as-default`,
 
-//payment order 
+  //payment order 
   create_order_payment: `${domain}/api/v1/creata-order-payment`,
 
 
@@ -191,8 +191,9 @@ export const endpoint = {
   //
   get_custom_order: `${domain}/api/v1/get-custom-orders`,
   create_custom_order: `${domain}/api/v1/u-create-custom-order`,
+  get_order_status: `${domain}/api/v1/update-order-status`,
 
-//coupon 
+  //coupon 
   create_coupon: `${domain}/api/v1/create-coupon`,
   get_coupon: `${domain}/api/v1/get-coupon`,
   update_coupon: `${domain}/api/v1/update-coupon`,
@@ -265,8 +266,8 @@ export const endpoint = {
   get_distributor_name: `${domain}/api/v1/get-distributor-name`,
   distributor_registration: `${domain}/api/v1/distributor-registration`,
   get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
-  
-  
-  
+
+
+
 
 };
