@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { apiConnectorGet, apiConnectorPost } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
 import toast from 'react-hot-toast';
-import QRScreen from './pages/QRScreen';
 
 const Payment = ({ selectedOrderId }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(true);
-  const [OrderData, setOrderData] = React.useState("");
   const [paymentlink, setPaymentLink] = useState("")
   // Current address data
   const [currentAddress, setCurrentAddress] = useState({
@@ -92,7 +90,6 @@ const Payment = ({ selectedOrderId }) => {
       const orderdata = response?.data?.result?.order_id || "";
       if (qr_url) {
         setPaymentLink(qr_url);
-        setOrderData(orderdata);
       } else {
         response?.data?.message ? toast(response?.data?.message) : toast("Something went wrong");
       }
@@ -104,7 +101,6 @@ const Payment = ({ selectedOrderId }) => {
   if (paymentlink) {
     return (
       document.location.href=paymentlink
-      // <QRScreen deposit_req_data={paymentlink} OrderData={OrderData} />
     );
   }
   return (
