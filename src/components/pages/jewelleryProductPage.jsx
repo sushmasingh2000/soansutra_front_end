@@ -491,7 +491,13 @@ const DynamicProductListingPage = () => {
   }, [activeTab, filters, sortBy, allProducts]);
   const isCollection = !!collectionId;
   const applyBackendFilters = async (newFilters) => {
-    const payload = {isCollection};
+    // const payload = {isCollection};
+    const payload = {
+      isCollection,
+      product_sub_cat_id:Number(subcategoryId)
+      // cat_id 
+      
+    };
 
     if (newFilters.price) payload.price_group = newFilters.price;
     if (newFilters.tags) payload.product_tags = newFilters.tags;
@@ -632,6 +638,8 @@ const DynamicProductListingPage = () => {
   };
 
   const categoryConfig = CATEGORY_CONFIG[currentCategory];
+
+ 
 
   if (loading) {
     return (

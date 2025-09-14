@@ -40,6 +40,23 @@ const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const { data } = useQuery(
+    ['profile'],
+    () =>
+      apiConnectorGet(endpoint?.get_customer_profile),
+    usequeryBoolean
+  );
+
+  const profileData = data?.data?.result || [];
+
+  const { data:distri } = useQuery(
+    ["profile_distributor"],
+    () => apiConnectorGet(endpoint.get_profile_distributor),
+    usequeryBoolean
+  );
+
+  const distri_pro = distri?.data?.result?.[0] || [];
+
   // Sidebar navigation items
   const navigationItems = [
     {
@@ -50,12 +67,15 @@ const ProfileDashboard = () => {
         { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw }
       ]
     },
-    {
-      category: 'DISTRIBUTER',
-      items: [
-        { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home }
-      ]
-    },
+    ...(distri_pro?.mlm_is_distributor === 1
+      ? [{
+          category: 'DISTRIBUTER',
+          items: [
+            { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home }
+          ]
+        }]
+      : []),
+   
     {
       category: 'APPOINTMENTS',
       items: [
@@ -84,14 +104,7 @@ const ProfileDashboard = () => {
     }
   ];
 
-  const { data } = useQuery(
-    ['profile'],
-    () =>
-      apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
-  );
-
-  const profileData = data?.data?.result || [];
+  
 
 
   // Handle navigation click for mobile

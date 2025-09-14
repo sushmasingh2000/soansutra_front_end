@@ -233,7 +233,13 @@ export default function Header() {
 
   const wishlistitems = wish?.data?.result || [];
 
- 
+  const { data:distri } = useQuery(
+    ["profile_distributor"],
+    () => apiConnectorGet(endpoint.get_profile_distributor),
+    usequeryBoolean
+  );
+
+  const distri_pro = distri?.data?.result?.[0] || [];
 
 
   return (
@@ -464,6 +470,7 @@ export default function Header() {
                       <hr className="border-gray-200" />
                       <div className="mt-3 space-y-2">
                         <Link to="/myaccount/profile" className="block text-sm text-left text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors">My Account</Link>
+                      {distri_pro?.mlm_is_distributor === 1 && (
                         <button
                           onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
                           className="flex items-center justify-between w-full text-left text-sm text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors"
@@ -471,7 +478,9 @@ export default function Header() {
                           <span>Referral Code</span>
                           <ClipboardDocumentIcon className="w-5 h-5 text-yellow-600" />
                         </button>
-                        <Toaster position="top-right" reverseOrder={false} />
+                    )} 
+                        
+                        {/* <Toaster position="top-right" reverseOrder={false} /> */}
                         <button
                           onClick={() => {
                             localStorage.clear();
@@ -631,15 +640,17 @@ export default function Header() {
                   {/* Login Button */}
                   {user ? (
                     <div className="px-4 py-3">
-                     
-                       <button
+                     {distri_pro?.mlm_is_distributor === 1 && (
+                      <button
                            onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
                           className="flex items-center justify-between w-full text-left px-3 py-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 rounded-lg hover:from-[#B8922E] hover:to-[#E6E599] transition-colors"
                         >
                           <span className="text-black">Referral Code</span>
                           <ClipboardDocumentIcon className="w-5 h-5 text-yellow-800" />
                         </button>
-                        <Toaster position="top-right" reverseOrder={false} />
+                    )} 
+                       
+                        {/* <Toaster position="top-right" reverseOrder={false} /> */}
                     </div>
                   ) : (
                     <div className="px-4 py-3">
