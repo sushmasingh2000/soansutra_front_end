@@ -48,7 +48,6 @@ const DiamondIcon = () => (
 const ProductDetailWebPage = () => {
   const location = useLocation();
   const product_id_and_variant_id_only = location.state?.product;
-  console.log(product_id_and_variant_id_only, "mhgdrjh")
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [variants, setVariants] = useState([]);
@@ -65,10 +64,12 @@ const ProductDetailWebPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedMaterialGroup, setSelectedMaterialGroup] = useState([]);
   const { setShowLoginModal } = useLoginModal();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchVariants = async () => {
       try {
+          setIsLoading(true);
         const response = await axios.get(
           `${endpoint?.u_get_variant}?product_id=${product_id_and_variant_id_only.product_id}&varient_id=${product_id_and_variant_id_only.selected_variant_id}`
         );
@@ -84,6 +85,7 @@ const ProductDetailWebPage = () => {
         console.error("Error fetching variants:", error);
         setVariants([]);
       }
+      setIsLoading(false);
     };
 
     if (product_id_and_variant_id_only?.product_id) {
@@ -110,13 +112,14 @@ const ProductDetailWebPage = () => {
     };
   }, [showCustomizationModal, showPriceBreakupModal]);
 
-  if (!selectedVariant) {
+   if (!isLoading && !selectedVariant) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-700">
         No product data found.
       </div>
     );
   }
+
 
 const image =
   (typeof selectedVariant?.product_details?.product_images === "string"
@@ -494,6 +497,37 @@ const image =
       </div>
       <ScrollSpyNavigation />
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4 overflow-x-hidden sm:mt-20">
+        {
+          isLoading ? (
+            // 👉 Skeleton Layout While Loading
+            <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6">
+              {/* Image skeleton */}
+              <div className="space-y-4">
+                <div className="h-96 bg-gray-200 rounded animate-pulse w-full" />
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }).map((_, idx) => (
+                    <div key={idx} className="h-24 bg-gray-200 rounded animate-pulse" />
+                  ))}
+                </div>
+              </div>
+
+              {/* Info skeleton */}
+              <div className="space-y-4">
+                <div className="h-6 bg-gray-200 rounded w-1/2 animate-pulse" />
+                <div className="h-5 bg-gray-100 rounded w-2/3 animate-pulse" />
+                <div className="h-8 bg-gray-200 rounded w-full animate-pulse" />
+                <div className="h-24 bg-gray-100 rounded animate-pulse" />
+                <div className="h-10 bg-gray-200 rounded w-full animate-pulse" />
+                <div className="flex gap-3">
+                  <div className="h-10 w-24 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
+                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
+                </div>
+                <div className="h-32 bg-gray-100 rounded animate-pulse" />
+                <div className="h-64 bg-gray-100 rounded animate-pulse" />
+              </div>
+            </div>
+          ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
           <div className="space-y-3">
             {/* Mobile Image Slider */}
@@ -819,6 +853,7 @@ const image =
             </div>
           </div>
         </div>
+         )}
       </div>
       <div className="w-full">
 
