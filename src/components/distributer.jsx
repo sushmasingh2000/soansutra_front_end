@@ -189,7 +189,7 @@ const Distributor = () => {
             <span>{dashbooard_get?.total_cust || 0}</span>
           </div>
           <div className="flex justify-between mb-1">
-            <span className="font-semibold">MLM Income Wallet</span>
+            <span className="font-semibold"> Income Wallet</span>
             <span>${dashbooard_get?.u_mlm_income_wallet || 0}</span>
           </div>
         </div>
@@ -207,7 +207,7 @@ const Distributor = () => {
         </div>
 
         {/* Commission Info */}
-        <div className="bg-white border border-yellow-400 rounded-lg p-3 mb-4">
+        {/* <div className="bg-white border border-yellow-400 rounded-lg p-3 mb-4">
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Night Commission %</span>
             <span>{(dashbooard_get?.u_clossing_night_comm * 100 || 0).toFixed(2)}%</span>
@@ -216,7 +216,7 @@ const Distributor = () => {
             <span className="font-semibold">Instant Commission %</span>
             <span>{(dashbooard_get?.u_clossing_instent_comm * 100 || 0).toFixed(2)}%</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
