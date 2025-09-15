@@ -49,6 +49,8 @@ import { elements } from "chart.js";
 import Order from "../components/admin/Order.js";
 import OrderDetails from "../components/admin/OrderDetails.js";
 import Rank from "../components/admin/Rank.js";
+import Distributor from "../components/admin/Distributor.js";
+import Rankachiver from "../components/admin/RankAchiver.js";
 
 export const routes = [
   {
@@ -134,11 +136,28 @@ export const routes = [
       </MainLayout>
     ),
   },
+ 
    {
     path: "/rank",
     element: (
       <MainLayout>
         <Rank />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/distributor",
+    element: (
+      <MainLayout>
+        <Distributor />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/rankachiver",
+    element: (
+      <MainLayout>
+        <Rankachiver />{" "}
       </MainLayout>
     ),
   },

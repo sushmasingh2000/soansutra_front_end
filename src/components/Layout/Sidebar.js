@@ -5,6 +5,7 @@ import {
   AodOutlined,
   Call,
   DashboardCustomizeOutlined,
+  DirectionsTransit,
   GroupAdd,
   ImageAspectRatio,
   Logout,
@@ -111,11 +112,23 @@ const fullMenuItems = [
     icon: <MarsStroke />,
     path: "/products",
   },
+    {
+    id: "distributor",
+    label: "Distributor",
+    icon: <DirectionsTransit />,
+    path: "/distributor",
+  },
    {
     id: "rank",
-    label: "Rank",
+    label: "Master Rank",
     icon: <PermScanWifi />,
     path: "/rank",
+  },
+   {
+    id: "rank_achivers",
+    label: " Rank Achiver",
+    icon: <PermScanWifi />,
+    path: "/rankachiver",
   },
   {
     id: "utils",
