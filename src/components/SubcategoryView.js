@@ -5,13 +5,16 @@ import { endpoint } from "../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
-import { apiConnectorGet } from "../utils/ApiConnector";
+import { apiConnectorGet, usequeryBoolean } from "../utils/ApiConnector";
 
-const SubcategoryView = ({ category, onBack }) => {
+const SubcategoryView = ({ category, onBack, onCloseDrawer }) => {
   const [subcategories, setSubcategories] = useState([]);
+  const [isSubcatLoading, setIsSubcatLoading] = useState(false);
   const navigate = useNavigate();
+
   const fetchSubcategories = async () => {
     try {
+      setIsSubcatLoading(true);
       const response = await axios.get(
         `${endpoint.get_sub_categroy_user}?category_id=${category?.product_category_id}`
       );
@@ -19,16 +22,25 @@ const SubcategoryView = ({ category, onBack }) => {
     } catch (err) {
       toast.error("Failed to fetch subcategories.");
     }
+    finally {
+      setIsSubcatLoading(false);
+    }
   };
   useEffect(() => {
     fetchSubcategories();
   }, []);
 
   const handleSubcategoryClick = (subcategoryId) => {
-    navigate(`/products_web/${subcategoryId}`);
+    if (onCloseDrawer) {
+      onCloseDrawer(); // Close the drawer
+    }
+
+    setTimeout(() => {
+      navigate(`/products_web?subcategory=${subcategoryId}`);
+    }, 300); // Add slight delay for smooth UX (adjust if needed)
   };
 
-  const { data } = useQuery(
+  const { data, isLoading: isMaterialsLoading } = useQuery(
     ["sub_cate_product"],
     () =>
       apiConnectorGet(
@@ -40,6 +52,15 @@ const SubcategoryView = ({ category, onBack }) => {
     }
   );
   const sub_filtered = data?.data?.result || [];
+
+  const { data: banner , isLoading:isBannerLoading} = useQuery(
+    ["banner_data"],
+    () =>
+      apiConnectorGet(endpoint?.get_banner),
+    usequeryBoolean
+  );
+
+  const banner_data = banner?.data?.result || [];
 
   const jewelryData = {
     subcategories: {
@@ -453,21 +474,29 @@ const SubcategoryView = ({ category, onBack }) => {
         <FeaturedSection items={selectedCategoryMock.subcategories.featured} />
       )}
       {/* By Style Section */}
-      <StyleSection items={subcategories} onClick={handleSubcategoryClick} />
-
-      {/* By Metal & Stone Section */}
-      <MetalSection items={sub_filtered} onClick={handleSubcategoryClick} />
-
-      <PriceRangeSection
-        items={sub_filtered} onClick={handleSubcategoryClick}
+      <StyleSection
+        items={subcategories}
+        onClick={handleSubcategoryClick}
+        isLoading={isSubcatLoading}
       />
 
-      {selectedCategoryMock?.subcategories?.banners?.length > 0 && (
-        <BannerSection
-          banners={selectedCategoryMock.subcategories.banners}
-        // onBannerClick={(item) => console.log("Banner clicked:", item)}
-        />
-      )}
+      {/* By Metal & Stone Section */}
+      <MetalSection
+        items={sub_filtered}
+        onClick={handleSubcategoryClick}
+        isLoading={isMaterialsLoading}
+      />
+
+      <PriceRangeSection
+        items={sub_filtered}
+        onClick={handleSubcategoryClick}
+        isLoading={isMaterialsLoading}
+      />
+      <BannerSection
+        items={banner_data}
+        isLoading={isBannerLoading}
+      />
+
 
       <GenderCategoriesSection
       // onGenderClick={(item) => console.log("Gender clicked:", item)}
@@ -497,140 +526,177 @@ const FeaturedSection = ({ items }) => (
 );
 
 // Style Items Component
-const StyleSection = ({ items, onClick }) => (
-  <div className="px-4 py-3">
-    <h3 className="text-sm font-medium text-gray-700 mb-3">By Style</h3>
-    <div className="grid grid-cols-2 gap-4">
-      {items.map((item, index) => (
-        <button
-          key={index}
-          onClick={() => onClick(item?.product_subcategory_id)}
-          className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
-        >
-          <div className="flex flex-col items-center text-center space-y-2">
-            {item.subcat_image && (
-              <img
-                src={item.subcat_image}
-                alt={item.name}
-                className="w-10 h-10 object-contain"
-              />
-            )}
-            <span className="text-xs font-medium text-gray-800 leading-tight">
-              {item.name}
-            </span>
-          </div>
-        </button>
-      ))}
+const StyleSection = ({ items, onClick }) => {
+  const isLoading = items.length === 0;
+
+  return (
+    <div className="px-4 py-3">
+      <h3 className="text-sm font-medium text-gray-700 mb-3">By Style</h3>
+      <div className="grid grid-cols-2 gap-4">
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="bg-gray-50 rounded-lg p-3 animate-pulse">
+              <div className="flex flex-col items-center text-center space-y-2">
+                <div className="w-10 h-10 bg-gray-300 rounded" />
+                <div className="h-3 w-16 bg-gray-300 rounded" />
+              </div>
+            </div>
+          ))
+          : items.map((item, index) => (
+            <button
+              key={index}
+              onClick={() => onClick(item?.product_subcategory_id)}
+              className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+            >
+              <div className="flex flex-col items-center text-center space-y-2">
+                {item.subcat_image && (
+                  <img
+                    src={item.subcat_image}
+                    alt={item.name}
+                    className="w-10 h-10 object-contain"
+                  />
+                )}
+                <span className="text-xs font-medium text-gray-800 leading-tight">
+                  {item.name}
+                </span>
+              </div>
+            </button>
+          ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
 
 // Metal & Stone Component
-const MetalSection = ({ items, onClick }) => (
+const MetalSection = ({ items, onClick, isLoading }) => (
   <div className="px-4 py-3">
     <h3 className="text-sm font-medium text-gray-700 mb-3">By Metal & Stone</h3>
     <div className="grid grid-cols-2 gap-4">
-      {(() => {
-        const seenMasterNames = new Set();
+      {isLoading
+        ? Array.from({ length: 6 }).map((_, index) => (
+          <div
+            key={index}
+            className="bg-gray-100 rounded-lg p-3 animate-pulse h-[60px]"
+          >
+            <div className="flex flex-col items-center text-center space-y-2">
+              <span className="text-xs font-medium text-gray-800 leading-tight" />
+            </div>
+          </div>
+        ))
+        : (() => {
+          const seenMasterNames = new Set();
+          return items?.map((item, index) => {
+            const isMasterNameNew = !seenMasterNames.has(item.master_mat_name);
+            if (isMasterNameNew) seenMasterNames.add(item.master_mat_name);
 
-        return items?.map((item, index) => {
-          const isMasterNameNew = !seenMasterNames.has(item.master_mat_name);
-          if (isMasterNameNew) seenMasterNames.add(item.master_mat_name);
-
-          return (
-            <React.Fragment key={index}>
-              {isMasterNameNew && (
+            return (
+              <React.Fragment key={index}>
+                {isMasterNameNew && (
+                  <button
+                    onClick={() => onClick(item.product_subcategory_id)}
+                    className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex flex-col items-center text-center space-y-2">
+                      <span className="text-xs font-medium text-gray-800 leading-tight">
+                        {item.master_mat_name}
+                      </span>
+                    </div>
+                  </button>
+                )}
                 <button
                   onClick={() => onClick(item.product_subcategory_id)}
                   className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex flex-col items-center text-center space-y-2">
                     <span className="text-xs font-medium text-gray-800 leading-tight">
-                      {item.master_mat_name}
+                      {item.material_name}
                     </span>
                   </div>
                 </button>
-              )}
-
-              <button
-                onClick={() => onClick(item.product_subcategory_id)}
-                className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex flex-col items-center text-center space-y-2">
-                  <span className="text-xs font-medium text-gray-800 leading-tight">
-                    {item.material_name}
-                  </span>
-                </div>
-              </button>
-            </React.Fragment>
-          );
-        });
-      })()}
+              </React.Fragment>
+            );
+          });
+        })()}
     </div>
   </div>
 );
 
-// Price Range Component
-const PriceRangeSection = ({ items, onClick }) => {
 
+// Price Range Component
+const PriceRangeSection = ({ items, onClick, isLoading }) => {
   return (
     <div className="px-4 py-3">
       <h3 className="text-sm font-medium text-gray-700 mb-3">By Price</h3>
       <div className="grid grid-cols-2 gap-2">
-        {[...new Map(items.map(price => [price.price_group, price])).values()]
-          .sort((a, b) => {
-            const getSortValue = (item) => {
-              const match = item.price_group.match(/(\d+)(?!.*\d)/);
-              return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
-            };
-            return getSortValue(a) - getSortValue(b);
-          })
-          .map((price, index) => (
-            <button
+        {isLoading
+          ? Array.from({ length: 4 }).map((_, index) => (
+            <div
               key={index}
-              onClick={() => onClick(price.product_subcategory_id)}
-              className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 text-center hover:bg-purple-100 transition-colors"
-            >
-              <span className="text-xs font-medium text-purple-700">
-                {price?.price_group}
-              </span>
-            </button>
-          ))}
-
+              className="bg-gray-100 rounded-lg h-10 animate-pulse"
+            >  <span className="text-xs font-medium text-purple-700" /></div>
+          ))
+          : [...new Map(items.map(price => [price.price_group, price])).values()]
+            .sort((a, b) => {
+              const getSortValue = (item) => {
+                const match = item.price_group.match(/(\d+)(?!.*\d)/);
+                return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
+              };
+              return getSortValue(a) - getSortValue(b);
+            })
+            .map((price, index) => (
+              <button
+                key={index}
+                onClick={() => onClick(price.product_subcategory_id)}
+                className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 text-center hover:bg-purple-100 transition-colors"
+              >
+                <span className="text-xs font-medium text-purple-700">
+                  {price?.price_group}
+                </span>
+              </button>
+            ))}
       </div>
     </div>
   );
 };
 
+
 // Banner Component
-const BannerSection = ({ banners, onBannerClick }) => (
+const BannerSection = ({ items, isLoading }) => (
   <div className="px-4 py-3">
     <div className="grid grid-cols-2 gap-3">
-      {banners.map((banner, index) => (
-        <button
-          key={index}
-          // onClick={() => onBannerClick(banner)}
-          className="flex flex-col bg-white rounded-lg overflow-hidden hover:opacity-90 transition-opacity shadow-sm"
-        >
-          {banner.image && (
-            <div className="relative">
-              <img
-                src={banner.image}
-                alt={banner.name}
-                className="w-full h-24 object-cover"
-              />
-            </div>
-          )}
-          <div className="p-2 text-center">
-            <span className="text-xs font-medium text-gray-700 leading-tight">
-              {banner.name}
-            </span>
-          </div>
-        </button>
-      ))}
+      {isLoading
+        ? Array.from({ length: 2 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-28 bg-gray-100 rounded-lg animate-pulse"
+            ></div>
+          ))
+        : items.map((banner, index) => (
+            <button
+              key={index}
+              className="flex flex-col bg-white rounded-lg overflow-hidden hover:opacity-90 transition-opacity shadow-sm"
+            >
+              {banner.ban_image && (
+                <div className="relative">
+                  <img
+                    src={banner.ban_image}
+                    alt={banner.name}
+                    className="w-full h-24 object-cover"
+                  />
+                </div>
+              )}
+              <div className="p-2 text-center">
+                <span className="text-xs font-medium text-gray-700 leading-tight">
+                  {banner.name}
+                </span>
+              </div>
+            </button>
+          ))}
     </div>
   </div>
 );
+
 
 // Gender Categories Component
 const GenderCategoriesSection = () => {

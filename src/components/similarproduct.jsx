@@ -9,10 +9,14 @@ const SimilarProducts = ({ productData }) => {
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
+  const isCollection = !!productData?.collectionId;
+
   const { data } = useQuery(
     ['similar_items', productData.product_id],
     () =>
-      apiConnectorGet(`${endpoint.similar_items}?product_id=${productData.product_id}`),
+      apiConnectorGet(
+        `${endpoint.similar_items}?product_id=${productData.product_id}&isCollection=${isCollection}`
+      ),
     usequeryBoolean
   );
 
@@ -27,8 +31,19 @@ const SimilarProducts = ({ productData }) => {
   };
 
   const handleClick = (product) => {
+    console.log(product)
+    if (!product?.selected_variant_id) {
+      return
+    }
     window.scrollTo(0, 0);
-    navigate('/productdetails', { state: { product } });
+    navigate("/productdetails", {
+      state: {
+        product: {
+          product_id: product?.product_id,
+          selected_variant_id: product?.selected_variant_id
+        }
+      },
+    });
   };
 
   return (
@@ -59,14 +74,9 @@ const SimilarProducts = ({ productData }) => {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <span className="text-lg font-semibold text-gray-800">
-                    ₹{parseFloat(product.price).toLocaleString()}
+                    ₹{Number(product.final_varient_price).toFixed(2)}
                   </span>
-                  {/* If originalPrice exists and is different from price */}
-                  {product.originalPrice && product.originalPrice !== product.price && (
-                    <span className="text-sm text-gray-400 line-through">
-                      ₹{parseFloat(product.originalPrice).toLocaleString()}
-                    </span>
-                  )}
+
                 </div>
                 <p className="text-sm text-gray-600">{product.name}</p>
               </div>
@@ -113,13 +123,8 @@ const SimilarProducts = ({ productData }) => {
               <div className="text-left">
                 <div className="flex items-center gap-1 mb-1">
                   <span className="text-sm font-semibold text-gray-800">
-                    ₹{parseFloat(product.price).toLocaleString()}
+                    ₹{Number(product.final_varient_price).toFixed(2)}
                   </span>
-                  {product.originalPrice && product.originalPrice !== product.price && (
-                    <span className="text-xs text-gray-400 line-through">
-                      ₹{parseFloat(product.originalPrice).toLocaleString()}
-                    </span>
-                  )}
                 </div>
                 <p className="text-xs text-gray-600 line-clamp-2">{product.name}</p>
               </div>

@@ -6,8 +6,10 @@ import {
   Call,
   DashboardCustomizeOutlined,
   GroupAdd,
+  ImageAspectRatio,
   Logout,
   ManageAccountsRounded,
+  Money,
   PaymentSharp,
   PermScanWifi,
   Person,
@@ -18,9 +20,11 @@ import {
   TaxiAlert,
 } from "@mui/icons-material";
 import {
+  CornerUpLeftIcon,
   Disc2Icon,
   Eye,
   Image,
+  LucideAmpersands,
   MarsStroke,
   Minimize2Icon,
   User2Icon
@@ -68,6 +72,24 @@ const fullMenuItems = [
     label: "Permissions",
     icon: <PermScanWifi />,
     path: "/permissions",
+  },
+  {
+    id: "banner",
+    label: "Banner",
+    icon: <Image />,
+    path: "/banner",
+  },
+  {
+    id: "Video",
+    label: "Video",
+    icon: <Image />,
+    path: "/video",
+  },
+   {
+    id: "Collection",
+    label: "Collection ",
+    icon: <ImageAspectRatio />,
+    path: "/collection",
   },
   {
     id: "categories",
@@ -121,8 +143,20 @@ const fullMenuItems = [
             icon: <ManageAccountsRounded />,
             path: "/product-material",
           },
+           {
+            id: "backup-material",
+            label: "Backup  Material",
+            icon: <ManageAccountsRounded />,
+            path: "/backup_materials",
+          },
           
         ],
+      },
+        {
+        id: "Coupon",
+        label: "Coupon",
+        icon: <CornerUpLeftIcon />,
+        path: "/coupon",
       },
       {
         id: "discount",
@@ -136,7 +170,38 @@ const fullMenuItems = [
         icon: <TaxiAlert />,
         path: "/tax",
       },
+      {
+        id: "price_range",
+        label: "Coupon Price Range",
+        icon: <Money />,
+        path: "/price_range",
+      },
+      
     ],
+  },
+  {
+    id: "customer",
+    label: "Customer",
+    icon: <Person />,
+    path: "/customer",
+  },
+  {
+    id: "order",
+    label: "Order",
+    icon: <Person />,
+    path: "/order",
+  },
+    {
+    id: "Leads",
+    label: "External Leads",
+    icon: <LucideAmpersands />,
+    path: "/leads",
+  },
+    {
+    id: "demo",
+    label: "Request Call",
+    icon: <Call />,
+    path: "/demo-call",
   },
   {
     id: "custom",
@@ -149,24 +214,6 @@ const fullMenuItems = [
     label: "Payment",
     icon: <PaymentSharp />,
     path: "/payment",
-  },
-  {
-    id: "banner",
-    label: "Banner",
-    icon: <Image />,
-    path: "/banner",
-  },
-  {
-    id: "demo",
-    label: "Request Call",
-    icon: <Call />,
-    path: "/demo-call",
-  },
-  {
-    id: "customer",
-    label: "Customer",
-    icon: <Person />,
-    path: "/customer",
   },
   {
     id: "logout",

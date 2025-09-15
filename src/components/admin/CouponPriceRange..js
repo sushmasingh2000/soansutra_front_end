@@ -1,70 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
 import { endpoint, rupees } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit } from "@mui/icons-material";
+import { useQuery, useQueryClient } from "react-query";
+import moment from "moment";
 
-const MasterMaterial = () => {
-  const [materials, setMaterials] = useState([]);
+const CouponPriceRange = () => {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedMaterial, setSelectedMaterial] = useState(null);
-
+  const [SelectedRange , setSelectedRange ] = useState(null);
+ const client = useQueryClient();
   const [formData, setFormData] = useState({
-    ma_material_name: "",
-    ma_price: 0,
-    ma_unit: "cr",
-    ma_value: 0,
+    range_title: "",
+    range_initial_amnt : 0,
+    range_final_amnt : 0,
   });
 
-  const fetchMaterials = async () => {
-    try {
-      setLoading(true);
-      const res = await apiConnectorGet(endpoint.get_master_material);
-      setMaterials(res?.data?.result || []);
-    } catch {
-      toast.error("Failed to fetch materials.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchMaterials();
-  }, []);
+    const { data: price_range } = useQuery(
+         ["get_range"],
+         () => apiConnectorGet(endpoint.get_coupon_range),
+         usequeryBoolean
+     );
+     const price_range_data = price_range?.data?.result || [];
 
   const resetForm = () => {
     setFormData({
-      ma_material_name: "",
-      ma_price: "",
-      ma_unit: "ct",
-      ma_value: "",
+      range_title: "",
+      range_initial_amnt : "",
+      range_final_amnt : "",
     });
-    setSelectedMaterial(null);
+    setSelectedRange (null);
   };
 
   const handleSubmit = async () => {
-    const { ma_material_name, ma_price, ma_unit, ma_value } = formData;
+    const { range_title, range_initial_amnt , range_final_amnt  } = formData;
 
-    if (!ma_material_name || !ma_price || !ma_unit || !ma_value) {
+    if (!range_title || !range_initial_amnt  || !range_final_amnt ) {
       toast.error("All fields are required.");
       return;
     }
 
     setLoading(true);
-    const payload = selectedMaterial
-      ? { ma_material_id: selectedMaterial.ma_material_id, ...formData }
+    const payload = SelectedRange 
+      ? { range_id: SelectedRange .range_id, ...formData }
       : { ...formData };
 
-    const endpointUrl = selectedMaterial
-      ? endpoint.update_master_material
-      : endpoint.create_master_material;
+    const endpointUrl = SelectedRange 
+      ? endpoint.update_coupon_range
+      : endpoint.create_coupon_range;
 
     try {
       const res = await apiConnectorPost(endpointUrl, payload);
       toast(res?.data?.message);
       if (res?.data?.success) {
-        fetchMaterials();
+        client.refetchQueries("get_range")
         setModalOpen(false);
         resetForm();
       }
@@ -76,80 +66,65 @@ const MasterMaterial = () => {
   };
 
   const handleEdit = (material) => {
-    setSelectedMaterial(material);
+    setSelectedRange (material);
     setFormData({
-      ma_material_name: material.ma_material_name || "",
-      ma_price: Number(material.ma_price) || "",
-      ma_unit: material.ma_unit || "ct",
-      ma_value: material.ma_value || "",
+      range_title: material.range_title || "",
+      range_initial_amnt : material.range_initial_amnt  || "",
+      range_final_amnt : material.range_final_amnt  || "",
     });
     setModalOpen(true);
-  };
-
-  const handleDelete = async (ma_material_id) => {
-    try {
-      const res = await apiConnectorGet(
-        `${endpoint.delete_master_material}?ma_material_id=${ma_material_id}`
-      );
-      toast(res?.data?.message);
-      fetchMaterials();
-    } catch {
-      toast.error("Delete failed.");
-    }
   };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Materials</h1>
+        <h1 className="text-3xl font-bold">Coupon Price Range</h1>
         <button
           onClick={() => setModalOpen(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          + Add Master Material
+          + Add Coupon Price Range
         </button>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="bg-white shadow rounded-lg overflow-scroll">
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left">S.No</th>
               <th className="px-4 py-3 text-left">Name</th>
               <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Value</th>
+              <th className="px-4 py-3 text-left">Final Price</th>
+              <th className="px-4 py-3 text-left">Date</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {materials.map((material, index) => (
+            {price_range_data.map((item, index) => (
               <tr
-                key={material.ma_material_id}
+                key={item.range_id}
                 className="border-t hover:bg-gray-50"
               >
                 <td className="px-4 py-2">{index + 1}</td>
                 <td className="px-4 py-2">
-                  {material.ma_material_name || "--"}
+                  {item.range_title || "--"}
                 </td>
-                <td className="px-4 py-2">{material.ma_price || "--"} {rupees}</td>
-                <td className="px-4 py-2">{material.ma_value || "--"}  {material.ma_unit || "--"}</td>
+                <td className="px-4 py-2">{item.range_initial_amnt || "--"} </td>
+                <td className="px-4 py-2">{item.range_final_amnt || "--"} </td>
+                <td className="px-4 py-2">{item.range_created_at? moment(item?.range_created_at)?.format("DD-MM-YYYY") : "--"} </td>
+                
                 <td className="px-4 py-2 space-x-2">
                   <button
-                    onClick={() => handleEdit(material)}
+                    onClick={() => handleEdit(item)}
                     className="text-blue-600 hover:underline"
                   >
                     <Edit />
                   </button>
-                  <button
-                    onClick={() => handleDelete(material.ma_material_id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    <DeleteForever />
-                  </button>
+                
                 </td>
               </tr>
             ))}
-            {materials.length === 0 && (
+            {price_range_data.length === 0 && (
               <tr>
                 <td colSpan={4} className="py-4 text-center text-gray-500">
                   No materials found.
@@ -165,48 +140,38 @@ const MasterMaterial = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-lg space-y-4">
             <h2 className="text-xl font-semibold">
-              {selectedMaterial ? "Edit Material" : "Add Material"}
+              {SelectedRange  ? "Edit Price Range" : "Add Price Range"}
             </h2>
 
             <input
               type="text"
-              name="ma_material_name"
-              placeholder="Material Name"
-              value={formData.ma_material_name}
+              name="range_title"
+              placeholder="Price Range Title"
+              value={formData.range_title}
               onChange={(e) =>
-                setFormData({ ...formData, ma_material_name: e.target.value })
+                setFormData({ ...formData, range_title: e.target.value })
               }
               className="w-full border p-2 rounded"
             />
             <input
               type="number"
-              name="ma_price"
-              placeholder="Material Price"
-              value={formData.ma_price}
+              name="range_initial_amnt "
+              placeholder="Intial Price"
+              value={formData.range_initial_amnt }
               onChange={(e) =>
-                setFormData({ ...formData, ma_price: e.target.value })
+                setFormData({ ...formData, range_initial_amnt : e.target.value })
               }
               className="w-full border p-2 rounded"
             />
-            <select
-              name="ma_unit"
-              value={formData.ma_unit}
-              onChange={(e) =>
-                setFormData({ ...formData, ma_unit: e.target.value })
-              }
-              className="w-full border p-2 rounded"
-            >
-              <option value="ct">ct</option>
-              <option value="g">g</option>
-            </select>
+            
 
             <input
               type="number"
-              name="ma_value"
+              name="range_final_amnt "
               placeholder="Material Value"
-              value={formData.ma_value}
+              value={formData.range_final_amnt }
               onChange={(e) =>
-                setFormData({ ...formData, ma_value: e.target.value })
+                setFormData({ ...formData, range_final_amnt : e.target.value })
               }
               className="w-full border p-2 rounded"
             />
@@ -227,7 +192,7 @@ const MasterMaterial = () => {
                 disabled={loading}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
-                {loading ? "Saving..." : selectedMaterial ? "Update" : "Save"}
+                {loading ? "Saving..." : SelectedRange  ? "Update" : "Save"}
               </button>
             </div>
           </div>
@@ -237,4 +202,4 @@ const MasterMaterial = () => {
   );
 };
 
-export default MasterMaterial;
+export default CouponPriceRange;

@@ -1,3 +1,4 @@
+
 import {
   Bars3Icon,
   ChevronLeftIcon,
@@ -8,6 +9,7 @@ import {
   ShoppingCartIcon,
   UserIcon,
   XMarkIcon,
+  ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,13 +21,16 @@ import {
   apiConnectorPost,
   usequeryBoolean,
 } from "../utils/ApiConnector";
-import { endpoint } from "../utils/APIRoutes";
+import { endpoint, frontend } from "../utils/APIRoutes";
 import { Lock } from "lucide-react";
-import toast from "react-hot-toast";
+import toast, {Toaster} from "react-hot-toast";
 import SubcategoryView from "./SubcategoryView";
 import { useQuery } from "react-query";
 import { debounce } from "lodash";
 import LoginModal from "./pages/LoginPage";
+import copy from "copy-to-clipboard";
+
+
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -105,7 +110,15 @@ export default function Header() {
     debouncedSetSearchQuery(e.target.value);
   };
 
-  const { data, isLoading, error } = useQuery(
+  
+
+ const functionTOCopy = (value) => {
+    copy(value);
+    toast.success("Copied to clipboard!", { id: 1 });
+  };
+  
+
+  const { data} = useQuery(
     ["search_product", debouncedSearchQuery],
     () =>
       apiConnectorPost(endpoint.get_search_product, {
@@ -137,7 +150,7 @@ export default function Header() {
       name: "Best Sellers",
       image:
         "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/bestsellers/bestsellers_m.png",
-      bgColor: "bg-gradient-to-r from-blue-100 to-blue-50",
+      bgColor: "bg-gradient-to-r from-[#CDA035] to-[#FFF2A6]",
     },
     {
       name: "Latest",
@@ -149,13 +162,13 @@ export default function Header() {
       name: "Trending",
       image:
         "https://cdn.caratlane.com/media/static/images/V4/2025/CL/02-FEB/Banner/New_Website/Hamburger/02/trending_m.png",
-      bgColor: "bg-gradient-to-r from-yellow-100 to-yellow-50",
+      bgColor: "bg-gradient-to-r from-[#CDA035] to-[#FFF2A6]",
     },
     {
       name: "Collections",
       image:
         "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/bestsellers/collections_t.png",
-      bgColor: "bg-gradient-to-r from-purple-100 to-purple-50",
+      bgColor: "bg-gradient-to-r from-gray-100 to-gray-50",
     },
   ];
 
@@ -220,15 +233,24 @@ export default function Header() {
 
   const wishlistitems = wish?.data?.result || [];
 
+  const { data:distri } = useQuery(
+    ["profile_distributor"],
+    () => apiConnectorGet(endpoint.get_profile_distributor),
+    usequeryBoolean
+  );
+
+  const distri_pro = distri?.data?.result?.[0] || [];
+
+
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 relative">
+    <header className="bg-white shadow-lg border-b border-yellow-600 relative">
       <div className="w-full">
         {/* Mobile Header */}
-        <div className="lg:hidden flex items-center justify-between h-16 px-3">
+        <div className="lg:hidden flex items-center justify-between h-16 px-3 bg-white">
           {/* Sidebar Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 text-gray-700 hover:text-purple-600 transition-colors"
+            className="p-2 text-black hover:text-yellow-600 transition-colors"
           >
             {isMobileMenuOpen ? (
               <XMarkIcon className="h-6 w-6" />
@@ -253,16 +275,14 @@ export default function Header() {
                   handleSearchChange(e);
                   setShowDropdown(true); // show dropdown when typing
                 }}
-                className="w-full pl-4 pr-12 py-2.5 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm border-r-0 transition-all duration-500"
+                className="w-full pl-4 pr-12 py-2.5 border border-yellow-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm border-r-0 transition-all duration-500 bg-white text-black placeholder-gray-500"
                 style={{
                   animation: "placeholderSlide 0.5s ease-in-out",
                 }}
               />
               <button
-                className="absolute right-0 top-0 h-full px-4 hover:opacity-90 text-white border-0 transition-all overflow-hidden"
+                className="absolute right-0 top-0 h-full px-4 hover:opacity-90 text-black border-0 transition-all overflow-hidden bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-[#B8922E] hover:to-[#E6E599]"
                 style={{
-                  background:
-                    "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
                   border: "none",
@@ -278,18 +298,18 @@ export default function Header() {
               {debouncedSearchQuery &&
                 showDropdown &&
                 data?.data?.result?.length > 0 && (
-                  <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
+                  <div className="absolute z-50 bg-white shadow-xl w-full mt-1 rounded-md max-h-80 overflow-auto border border-gray-200">
                     {data.data.result.map((item, index) => (
                       <div
                         key={`${item.product_id}-${index}`}
                         onMouseDown={() => {
-                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
-                        className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
+                        className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-gray-200 cursor-pointer transition-colors"
                       >
-                        <div className="font-medium">{item.pro_name}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className="font-medium text-black">{item.pro_name}</div>
+                        <div className="text-xs text-gray-600">
                           {item.cat_name}
                         </div>
                       </div>
@@ -306,16 +326,16 @@ export default function Header() {
               <>
                 <Link
                   to={"/myaccount/profile"}
-                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors"
+                  className="p-2 text-black hover:text-yellow-600 transition-colors"
                 >
                   <UserIcon className="h-6 w-6" />
                 </Link>
                 <Link
                   to="/shopping-cart"
-                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
+                  className="p-2 text-black hover:text-yellow-600 transition-colors relative"
                 >
                   <ShoppingCartIcon className="h-6 w-6" />
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                     {cartItems?.length}
                   </span>
                 </Link>
@@ -324,17 +344,17 @@ export default function Header() {
               <>
                 <button
                   onClick={() => setShowLoginModal(true)}
-                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
+                  className="p-2 text-black hover:text-yellow-600 transition-colors relative"
                 >
                   <UserIcon className="h-6 w-6" />
 
                 </button>
                 <button
                   onClick={() => setShowLoginModal(true)}
-                  className="p-2 text-gray-700 hover:text-purple-600 transition-colors relative"
+                  className="p-2 text-black hover:text-yellow-600 transition-colors relative"
                 >
                   <ShoppingCartIcon className="h-6 w-6" />
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                     {cartItems?.length}
                   </span>
                 </button>
@@ -345,7 +365,7 @@ export default function Header() {
         </div>
 
         {/* Desktop Header */}
-        <div className="hidden lg:flex items-center justify-between px-4 h-20 w-full border-b border-gray-200 shadow-sm bg-white">
+        <div className="hidden lg:flex items-center justify-between px-4 h-20 w-full border-b border-yellow-600 shadow-lg bg-white">
           {/* Left - Logo */}
           <div className="flex items-center space-x-4 flex-shrink-0">
             <Link to="/" className="flex-shrink-0">
@@ -364,14 +384,14 @@ export default function Header() {
                   handleSearchChange(e);
                   setShowDropdown(true);
                 }}
-                className="w-full pl-4 pr-12 py-2.5 border border-purple-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm border-r-0"
+                className="w-full pl-4 pr-12 py-2.5 border border-yellow-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 text-sm border-r-0 bg-white text-black placeholder-gray-500"
               />
               <button
-                className="absolute top-0 right-0 h-full px-4 text-white"
+                className="absolute top-0 right-0 h-full px-4 text-black bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-[#B8922E] hover:to-[#E6E599] transition-all"
                 style={{
-                  background: "linear-gradient(to right, #de57e5 0%, #8863fb 100%)",
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
+                  marginRight:'-5px',
                 }}
               >
                 <MagnifyingGlassIcon className="h-5 w-5" />
@@ -379,18 +399,18 @@ export default function Header() {
               {debouncedSearchQuery &&
                 showDropdown &&
                 data?.data?.result?.length > 0 && (
-                  <div className="absolute z-50 bg-white shadow-lg w-full mt-1 rounded-md max-h-80 overflow-auto">
+                  <div className="absolute z-50 bg-white shadow-xl w-full mt-1 rounded-md max-h-80 overflow-auto border border-gray-200">
                     {data.data.result.map((item, index) => (
                       <div
                         key={`${item.product_id}-${index}`}
                         onMouseDown={() => {
-                          navigate(`/products_web/${item?.product_sub_cat_id}`);
+                          navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
-                        className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-800 border-b cursor-pointer"
+                        className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-gray-200 cursor-pointer transition-colors"
                       >
-                        <div className="font-medium">{item.pro_name}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className="font-medium text-black">{item.pro_name}</div>
+                        <div className="text-xs text-gray-600">
                           {item.cat_name}
                         </div>
                       </div>
@@ -403,20 +423,20 @@ export default function Header() {
           {/* Right - Icons & Actions */}
           <div className="flex items-center space-x-3">
             {/* Treasure Chest */}
-            <button className="flex items-center px-3 py-1.5 text-sm rounded-md bg-[#F8EBFB] border border-purple-500">
-              <TreasureChestIcon className="h-5 w-5 mr-1" />
-              Treasure Chest
-              <span className="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">NEW</span>
+            <button className="flex items-center px-3 py-1.5 text-sm rounded-md bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 text-black hover:from-[#B8922E] hover:to-[#E6E599] transition-colors">
+              <TreasureChestIcon className="h-5 w-5 mr-1 text-yellow-800" />
+              <span className="text-black">Treasure Chest</span>
+              <span className="ml-2 bg-yellow-800 text-white text-xs px-2 py-0.5 rounded-full">NEW</span>
             </button>
 
             {/* Store Locator */}
-            <button className="flex items-center px-3 py-1.5 text-sm rounded-md border border-red-600">
-              <MapPinIcon className="h-5 w-5 mr-1 text-red-600" />
-              Store Locator
+            <button className="flex items-center px-3 py-1.5 text-sm rounded-md border border-yellow-600 text-black hover:bg-yellow-50 transition-colors">
+              <MapPinIcon className="h-5 w-5 mr-1 text-yellow-600" />
+              <span className="text-black">Store Locator</span>
             </button>
 
             {/* e-Gold */}
-            <div className="px-3 py-1.5 bg-yellow-100 border border-yellow-500 rounded-md">
+            <div className="px-3 py-1.5 bg-white border border-yellow-500 rounded-md hover:from-[#B8922E] hover:to-[#E6E599] transition-colors cursor-pointer">
               <img
                 src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png"
                 alt="e-Gold"
@@ -428,7 +448,7 @@ export default function Header() {
             <img
               src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
               alt="India"
-              className="h-5 w-6 rounded-sm"
+              className="h-5 w-6 rounded-sm border border-gray-300"
             />
 
             {/* User */}
@@ -438,24 +458,35 @@ export default function Header() {
                 onMouseEnter={() => setShowUserDropdown(true)}
                 onMouseLeave={() => setShowUserDropdown(false)}
               >
-                <UserIcon className="h-6 w-6 text-gray-700 hover:text-purple-600 cursor-pointer" />
+                <UserIcon className="h-6 w-6 text-black hover:text-yellow-600 cursor-pointer transition-colors" />
                 {showUserDropdown && (
-                  <div className="absolute right-0  w-72 bg-white shadow-lg border rounded-md z-50">
+                  <div className="absolute right-0  w-72 bg-white shadow-xl border border-gray-200 rounded-md z-50">
                     {/* User Dropdown content here */}
                     <div className="p-4">
                       <div className="text-center mb-3">
-                        <h3 className="text-lg font-semibold">{profile?.name}</h3>
+                        <h3 className="text-lg font-semibold text-black">{profile?.name}</h3>
                         <p className="text-sm text-gray-600">{profile?.cl_email}</p>
                       </div>
-                      <hr />
+                      <hr className="border-gray-200" />
                       <div className="mt-3 space-y-2">
-                        <Link to="/myaccount/profile" className="block text-sm text-left text-gray-700 hover:bg-gray-100 px-3 py-2 rounded">My Account</Link>
+                        <Link to="/myaccount/profile" className="block text-sm text-left text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors">My Account</Link>
+                      {distri_pro?.mlm_is_distributor === 1 && (
+                        <button
+                          onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
+                          className="flex items-center justify-between w-full text-left text-sm text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors"
+                        >
+                          <span>Referral Code</span>
+                          <ClipboardDocumentIcon className="w-5 h-5 text-yellow-600" />
+                        </button>
+                    )} 
+                        
+                        {/* <Toaster position="top-right" reverseOrder={false} /> */}
                         <button
                           onClick={() => {
                             localStorage.clear();
                             window.location.reload();
                           }}
-                          className="block w-full text-left text-sm text-gray-700 hover:bg-gray-100 px-3 py-2 rounded"
+                          className="block w-full text-left text-sm text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors"
                         >
                           Logout
                         </button>
@@ -466,26 +497,26 @@ export default function Header() {
               </div>
             ) : (
               <button onClick={() => setShowLoginModal(true)}>
-                <UserIcon className="h-6 w-6 text-purple-600" />
+                <UserIcon className="h-6 w-6 text-yellow-600 hover:text-yellow-700 transition-colors" />
               </button>
             )}
             {/* Wishlist */}
             <button
               onClick={() => user ? navigate("/wish") : setShowLoginModal(true)}
-              className="relative text-gray-700 hover:text-purple-600"
+              className="relative text-black hover:text-yellow-600 transition-colors"
             >
               <HeartIcon className="h-6 w-6" />
-              <span className="absolute -top-3 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-3 -right-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                 {wishlistitems?.length}
               </span>
             </button>
             {/* Cart */}
             <button
               onClick={() => user ? navigate("/shopping-cart") : setShowLoginModal(true)}
-              className="relative text-gray-700 hover:text-purple-600"
+              className="relative text-black hover:text-yellow-600 transition-colors"
             >
               <ShoppingCartIcon className="h-6 w-6" />
-              <span className="absolute -top-3 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-3 -right-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                 {cartItems?.length}
               </span>
             </button>
@@ -508,19 +539,20 @@ export default function Header() {
             <div className="relative w-full bg-white h-full shadow-xl overflow-y-auto flex flex-col">
               {showSubcategory ? (
                 <SubcategoryView
-                  category={selectedCategory} // Pass category object here
-                  onBack={() => setShowSubcategory(false)} // Optional: pass a back function
+                  category={selectedCategory}
+                  onBack={() => setShowSubcategory(false)}
+                  onCloseDrawer={() => setIsMobileMenuOpen(false)}
                 />
               ) : (
                 <>
                   {/* Sidebar Header */}
                   {/* Left side - Close button and Flag */}
-                  <div className="flex items-center justify-between p-2 border-b">
+                  <div className="flex items-center justify-between p-2 border-b border-gray-200 bg-white">
                     {/* Left side - Close button and Flag */}
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="p-1 text-gray-600 hover:text-gray-800"
+                        className="p-1 text-black hover:text-yellow-600 transition-colors"
                       >
                         <XMarkIcon className="h-5 w-5" />
                       </button>
@@ -528,9 +560,9 @@ export default function Header() {
                         <img
                           src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
                           alt="Indian Flag"
-                          className="w-5 h-auto"
+                          className="w-5 h-auto border border-gray-300 rounded-sm"
                         />
-                        <span className="font-medium text-sm text-gray-800">INDIA</span>
+                        <span className="font-medium text-sm text-black">INDIA</span>
                       </div>
                     </div>
 
@@ -540,7 +572,7 @@ export default function Header() {
                       {user ? <>
                         <Link
                           to={"/myaccount/profile"}
-                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                          className="p-1.5 text-black hover:text-yellow-600 transition-colors"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <UserIcon className="h-5 w-5" />
@@ -549,11 +581,11 @@ export default function Header() {
                         {/* Wishlist */}
                         <Link
                           to={"/wish"}
-                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                          className="p-1.5 text-black hover:text-yellow-600 transition-colors"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <HeartIcon className="h-5 w-5" />
-                          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                          <span className="absolute top-2 right-10 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-4 w-4 flex items-center justify-center shadow-lg">
                             {wishlistitems?.length}
                           </span>
                         </Link>
@@ -561,11 +593,11 @@ export default function Header() {
                         {/* Cart */}
                         <Link
                           to={"/shopping-cart"}
-                          className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
+                          className="p-1.5 text-black hover:text-yellow-600 transition-colors relative mr-3"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <ShoppingCartIcon className="h-5 w-5" />
-                          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                          <span className="absolute -top-0.5 -right-0.5 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-4 w-4 flex items-center justify-center shadow-lg">
                             {cartItems?.length}
                           </span>
                         </Link>
@@ -574,28 +606,28 @@ export default function Header() {
                         :
                         <>
                           <Link
-                            className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                            className="flex items-center gap-1 p-1.5 text-black hover:text-yellow-600 transition-colors"
                             onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }}
                           >
                             <UserIcon className="h-5 w-5" />
                             <span className="font-medium text-sm">Account</span>
                           </Link>
                           <Link
-                            className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors"
+                            className="p-1.5 text-black hover:text-yellow-600 transition-colors"
                             onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }}
                           >
                             <HeartIcon className="h-5 w-5" />
-                            <span className="absolute top-1 right-10 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            <span className="absolute top-1 right-10 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-4 w-4 flex items-center justify-center shadow-lg">
                               {wishlistitems?.length}
                             </span>
                           </Link>
 
                           <Link
-                            className="p-1.5 text-gray-700 hover:text-purple-600 transition-colors relative mr-3"
+                            className="p-1.5 text-black hover:text-yellow-600 transition-colors relative mr-3"
                             onClick={() => { setShowLoginModal(true); setIsMobileMenuOpen(false) }}
                           >
                             <ShoppingCartIcon className="h-5 w-5" />
-                            <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            <span className="absolute -top-0.5 -right-0.5 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-4 w-4 flex items-center justify-center shadow-lg">
                               {cartItems?.length}
                             </span>
                           </Link>
@@ -608,56 +640,70 @@ export default function Header() {
                   {/* Login Button */}
                   {user ? (
                     <div className="px-4 py-3">
+                     {distri_pro?.mlm_is_distributor === 1 && (
                       <button
-                        className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                        onClick={() => navigate('/myaccount/profile')}
-                      >
-                        <UserIcon className="h-5 w-5" />
-                      </button>
+                           onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
+                          className="flex items-center justify-between w-full text-left px-3 py-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 rounded-lg hover:from-[#B8922E] hover:to-[#E6E599] transition-colors"
+                        >
+                          <span className="text-black">Referral Code</span>
+                          <ClipboardDocumentIcon className="w-5 h-5 text-yellow-800" />
+                        </button>
+                    )} 
+                       
+                        {/* <Toaster position="top-right" reverseOrder={false} /> */}
                     </div>
                   ) : (
                     <div className="px-4 py-3">
                       <button
-                        className="flex items-center space-x-2 w-full px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                        className="flex items-center space-x-2 w-full px-3 py-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 rounded-lg hover:from-[#B8922E] hover:to-[#E6E599] transition-colors"
                         onClick={() => {
                           setIsMobileMenuOpen(false);
                           setShowLoginModal(true)
                         }}
                       >
-                        <UserIcon className="h-5 w-5" />
-                        <span className="font-medium text-sm">LOGIN</span>
+                        <UserIcon className="h-5 w-5 text-yellow-800" />
+                        <span className="font-medium text-sm text-black">LOGIN</span>
                       </button>
                     </div>
                   )}
                   <div className="px-4 py-2">
                     <div className="grid grid-cols-2 gap-4">
-                      {categories.map((item, index) => (
-                        <div
-                          key={index}
-                          className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer"
-                          onClick={() => {
-                            setSelectedCategory(item); // Set selected category
-                            setShowSubcategory(true); // Show the SubcategoryView
-                          }}
-                        >
-                          <div className="flex flex-col items-center text-center space-y-2">
-                            <img
-                              src={item.cat_image}
-                              alt={item.name}
-                              className="w-12 h-12 object-contain"
-                            />
-                            <span className="text-sm font-medium text-gray-800 leading-tight">
-                              {item.name}
-                            </span>
+                      {loading
+                        ? Array.from({ length: 6 }).map((_, index) => (
+                          <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                            <div className="flex flex-col items-center text-center space-y-2">
+                              <div className="w-12 h-12 bg-gray-200 rounded-md animate-pulse" />
+                              <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                        : categories.map((item, index) => (
+                          <div
+                            key={index}
+                            className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-yellow-50 hover:border-yellow-500 transition-all cursor-pointer shadow-sm"
+                            onClick={() => {
+                              setSelectedCategory(item); // Set selected category
+                              setShowSubcategory(true); // Show the SubcategoryView
+                            }}
+                          >
+                            <div className="flex flex-col items-center text-center space-y-2">
+                              <img
+                                src={item.cat_image}
+                                alt={item.name}
+                                className="w-12 h-12 object-contain"
+                              />
+                              <span className="text-sm font-medium text-black leading-tight">
+                                {item.name}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
                     </div>
 
                     {/* More Jewellery Button */}
                     <button
                       onClick={() => setShowMoreJewellery(!showMoreJewellery)}
-                      className="flex items-center justify-center space-x-2 w-full mt-4 py-3 text-purple-600 font-medium text-sm hover:bg-purple-50 rounded-lg transition-colors"
+                      className="flex items-center justify-center space-x-2 w-full mt-4 py-3 text-yellow-600 font-medium text-sm hover:bg-yellow-50 rounded-lg transition-colors border border-yellow-500"
                     >
                       <span>
                         {showMoreJewellery
@@ -673,7 +719,7 @@ export default function Header() {
 
                   {/* Promotional Slides */}
                   <div className="px-4 py-2">
-                    <div className="relative rounded-lg overflow-hidden group">
+                    <div className="relative rounded-lg overflow-hidden group border border-gray-200">
                       <img
                         src={slides[currentSlide].image}
                         alt={slides[currentSlide].alt}
@@ -683,7 +729,7 @@ export default function Header() {
                       {/* Previous Arrow */}
                       <button
                         onClick={prevSlide}
-                        className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
+                        className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-yellow-600/70"
                       >
                         <ChevronLeftIcon className="w-3 h-3" />
                       </button>
@@ -691,7 +737,7 @@ export default function Header() {
                       {/* Next Arrow */}
                       <button
                         onClick={nextSlide}
-                        className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
+                        className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-yellow-600/70"
                       >
                         <ChevronRightIcon className="w-3 h-3" />
                       </button>
@@ -703,7 +749,7 @@ export default function Header() {
                             key={index}
                             onClick={() => setCurrentSlide(index)}
                             className={`w-1.5 h-1.5 rounded-full transition-colors ${index === currentSlide
-                              ? "bg-white"
+                              ? "bg-yellow-600"
                               : "bg-white/50"
                               }`}
                           />
@@ -713,7 +759,7 @@ export default function Header() {
 
                     {/* Slide Counter */}
                     <div className="flex justify-center mt-2">
-                      <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full">
+                      <span className="bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs px-2 py-0.5 rounded-full">
                         {currentSlide + 1}/{slides.length}
                       </span>
                     </div>
@@ -725,7 +771,7 @@ export default function Header() {
                       {categorySections.map((category, index) => (
                         <div
                           key={index}
-                          className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                          className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-all duration-300 border border-gray-200 hover:border-yellow-500 hover:shadow-md"
                         >
                           <img
                             src={category.image}
@@ -733,7 +779,7 @@ export default function Header() {
                             className="w-full h-16 object-cover"
                           />
                           <div className="absolute top-2 left-2">
-                            <span className="text-sm font-semibold text-gray-800 bg-white/80 px-2 py-1 rounded">
+                            <span className="text-sm font-semibold text-black bg-white/90 px-2 py-1 rounded border border-yellow-500">
                               {category.name}
                             </span>
                           </div>
@@ -746,11 +792,11 @@ export default function Header() {
                   <div className="px-4 py-2">
                     <div className="text-center mb-3">
                       <div className="flex items-center justify-center space-x-2 mb-1">
-                        <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
-                        <span className="text-sm font-semibold text-purple-700 px-2">
+                        <div className="h-px bg-gradient-to-r from-transparent via-yellow-600 to-transparent flex-1"></div>
+                        <span className="text-sm font-semibold text-yellow-600 px-2">
                           Products & Services
                         </span>
-                        <div className="h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+                        <div className="h-px bg-gradient-to-r from-transparent via-yellow-600 to-transparent flex-1"></div>
                       </div>
                     </div>
 
@@ -758,7 +804,7 @@ export default function Header() {
                       {productsServices.map((service, index) => (
                         <div
                           key={index}
-                          className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                          className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-lg hover:border-yellow-500 transition-all duration-300 cursor-pointer"
                         >
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0">
@@ -769,7 +815,7 @@ export default function Header() {
                               />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                              <h3 className="text-sm font-semibold text-black mb-1">
                                 {service.name}
                               </h3>
                               <p className="text-xs text-gray-600 leading-relaxed">
@@ -783,18 +829,18 @@ export default function Header() {
                   </div>
 
                   {/* Mobile User Profile Section at Bottom */}
-                  <div className="px-4 py-3 border-t border-gray-200 mt-auto">
-                    <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
+                  <div className="px-4 py-3 border-t border-gray-200 mt-auto bg-white">
+                    <div className="bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 rounded-lg p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <h3 className="text-sm font-semibold text-purple-700 mb-1">
+                          <h3 className="text-sm font-semibold text-black mb-1">
                             {profile?.name}
                           </h3>
-                          <p className="text-gray-600 text-xs">
+                          <p className="text-gray-700 text-xs">
                             {profile?.cl_email}
                           </p>
                         </div>
-                        <button className="bg-white text-purple-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 
+                        <button className="bg-white text-black border border-yellow-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-50 
                         transition-colors" onClick={() => {
                             localStorage.clear();
                             window.location.reload();

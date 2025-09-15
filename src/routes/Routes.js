@@ -22,7 +22,7 @@ import AdminLayout from "../components/layout";
 import Dashboard from "../components/Layout/Dashboard";
 import MainLayout from "../components/Layout/MainLayout";
 import ShoppingCart from "../components/pages/cart";
-import CheckoutHeader from "../components/pages/checkout";
+import CheckoutPage from "../components/pages/checkoutpage.jsx";
 import DynamicProductListingPage from "../components/pages/jewelleryProductPage";
 import LoginPage from "../components/pages/LoginPage";
 import ProductPage from "../components/pages/productDetailsPage";
@@ -33,6 +33,21 @@ import Permissions from "../components/superadmin/Permissions";
 import Role from "../components/superadmin/Role";
 import StoreManagement from "../components/superadmin/StoreMangement";
 import UserManagement from "../components/superadmin/UserManagement";
+import SonaSutraDigitalGoldHome from "../components/pages/egoldhome";
+import BuyGold from "../components/pages/buygold";
+import SellGold from "../components/pages/sellgold";
+import ExchangeRedeemComponent from "../components/pages/exchangeegold";
+import TreasureChestBanner from "../components/pages/treasurechest";
+import InsiderEmail from "../components/admin/InsiderEmail.js";
+import Collection from "../components/admin/Collection.js";
+import Termscondition from "../components/pages/termscondition.jsx"
+import Video from "../components/admin/Video.js";
+import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
+import Coupon from "../components/admin/Coupon.js";
+import CouponPriceRange from "../components/admin/CouponPriceRange..js";
+import { elements } from "chart.js";
+import Order from "../components/admin/Order.js";
+import OrderDetails from "../components/admin/OrderDetails.js";
 
 export const routes = [
   {
@@ -69,6 +84,14 @@ export const routes = [
     ),
   },
   {
+    path: "/leads",
+    element: (
+      <MainLayout>
+        <InsiderEmail />{" "}
+      </MainLayout>
+    ),
+  },
+  {
     path: "/permissions",
     element: (
       <MainLayout>
@@ -84,6 +107,31 @@ export const routes = [
   {
     path: "/sign-up",
     element: <SignUpPage />,
+  },
+
+   {
+    path: "/Collection",
+    element: (
+      <MainLayout>
+        <Collection />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/order",
+    element: (
+      <MainLayout>
+        <Order />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/order-details/:orderId",
+    element: (
+      <MainLayout>
+        <OrderDetails />{" "}
+      </MainLayout>
+    ),
   },
   {
     path: "/categories",
@@ -141,7 +189,30 @@ export const routes = [
       </MainLayout>
     ),
   },
- 
+    {
+    path: "/coupon",
+    element: (
+      <MainLayout>
+        <Coupon />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/coupon",
+    element: (
+      <MainLayout>
+        <Coupon />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/price_range",
+    element: (
+      <MainLayout>
+        <CouponPriceRange />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/inventory",
     element: (
@@ -215,7 +286,14 @@ export const routes = [
       </MainLayout>
     ),
   },
-  
+  {
+    path: "/backup_materials",
+    element: (
+      <MainLayout>
+        <MasterMaterialBackup />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/payment",
     element: (
@@ -233,6 +311,14 @@ export const routes = [
     ),
   },
   {
+    path: "/video",
+    element: (
+      <MainLayout>
+        <Video />{" "}
+      </MainLayout>
+    ),
+  },
+  {
     path: "/customer",
     element: (
       <MainLayout>
@@ -241,7 +327,7 @@ export const routes = [
     ),
   },
   {
-    path: "/products_web/:id",
+    path: "/products_web",
     element: <DynamicProductListingPage />,
   },
   {
@@ -258,7 +344,7 @@ export const routes = [
   },
   {
     path: "/checkout",
-    element: <CheckoutHeader />,
+    element: <CheckoutPage/>,
   },
   {
     path: "/admin",
@@ -280,6 +366,31 @@ export const routes = [
     path: "/wish",
     element: <WishlistPage />,
   },
+    {
+    path: "/e-gold",
+    element: <SonaSutraDigitalGoldHome/>,
+  },
+  {
+    path: "/buy-gold",
+    element: <BuyGold/>,
+  },
+  {
+    path: "/sell-gold",
+    element: <SellGold/>,
+  },
+  {
+    path: "/exchange-redeem",
+    element: <ExchangeRedeemComponent/>,
+  },
+    {
+    path: "/treasure-chest",
+    element: <TreasureChestBanner/>,
+  },
+   {
+    path: "/terms-and-conditions",
+    element: <Termscondition/>,
+  },
+ 
 ];
 
 // const router = createBrowserRouter([

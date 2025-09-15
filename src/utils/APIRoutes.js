@@ -1,9 +1,19 @@
 // export const domain = "http://192.168.18.214:2000";
-export const domain ="https://backend.sonasutra.in";
-export const rupees = "₹" ;
+export const frontend = "https://sonasutra.in";
+export const domain = "https://backend.sonasutra.in";
+export const rupees = "₹";
 
 export const endpoint = {
+  review_customer: `${domain}/api/v1/create-product-review`,
+  checkd_order_placed: `${domain}/api/v1/check-order-placed`,
+  
+  get_customer_review: `${domain}/api/v1/get-product-review`,
+  get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
+  get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
 
+
+
+  email_insider: `${domain}/api/v1/insert-external-leads`,
   login: `${domain}/api/v1/login-user`,
   //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
@@ -78,7 +88,28 @@ export const endpoint = {
   delete_banner: `${domain}/api/v1/delete-banner`,
   status_banner: `${domain}/api/v1/change-banner-status`,
 
-  //pending
+  //collection
+  create_collection: `${domain}/api/v1/create-collections`,
+  get_collection: `${domain}/api/v1/get-collections`,
+  update_collection: `${domain}/api/v1/update-collections`,
+  delete_collection: `${domain}/api/v1/delete-collections`,
+
+  //bnanner
+  create_video: `${domain}/api/v1/create-videos`,
+  get_video: `${domain}/api/v1/get-videos`,
+  update_video: `${domain}/api/v1/update-videos`,
+  delete_video: `${domain}/api/v1/delete-videos`,
+
+
+  // address shipping
+  add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
+  get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
+  set_shipping_Address: `${domain}/api/v1/set-shipping-address-as-default`,
+
+  //payment order 
+  create_order_payment: `${domain}/api/v1/creata-order-payment`,
+
+
 
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
@@ -99,13 +130,19 @@ export const endpoint = {
   update_master_material: `${domain}/api/v1/update-master-materials`,
   delete_master_material: `${domain}/api/v1/delete-master-materials`,
 
+  //backup material 
+  get_master_material_backup: `${domain}/api/v1/get-master-material-backup`,
+
   //purity
   create_material_purity: `${domain}/api/v1/create-materials-purity`,
   update_material_purity: `${domain}/api/v1/update-materials-purity`,
   get_material_purity: `${domain}/api/v1/get-materials-purity`,
 
-  
 
+  //insider email
+  get_external_leads: `${domain}/api/v1/get-external-leads`,
+
+  // collection
 
   //get_demo call
   req_demo_call: `${domain}/api/v1/u-req-demo-call`,
@@ -156,7 +193,18 @@ export const endpoint = {
   //
   get_custom_order: `${domain}/api/v1/get-custom-orders`,
   create_custom_order: `${domain}/api/v1/u-create-custom-order`,
+  get_order_status: `${domain}/api/v1/update-order-status`,
 
+  //coupon 
+  create_coupon: `${domain}/api/v1/create-coupon`,
+  get_coupon: `${domain}/api/v1/get-coupon`,
+  update_coupon: `${domain}/api/v1/update-coupon`,
+  update_coupon_status: `${domain}/api/v1/update-coupon-status`,
+
+  //range 
+  create_coupon_range: `${domain}/api/v1/create-coupon-range`,
+  get_coupon_range: `${domain}/api/v1/get-coupon-range`,
+  update_coupon_range: `${domain}/api/v1/update-coupon-range`,
 
   //payment
   create_payment_method: `${domain}/api/v1/create-payment-method`,
@@ -198,6 +246,7 @@ export const endpoint = {
   change_password: `${domain}/api/v1/change-customer-password`,
   disable_customer_account: `${domain}/api/v1/dissable-customer-account`,
 
+  create_order: `${domain}/api/v1/create-order`,
   get_order: `${domain}/api/v1/get-order-details`,
   get_order_detail_by: `${domain}/api/v1/get-order-details-by-order-id`,
 
@@ -211,5 +260,16 @@ export const endpoint = {
   get_most_frequent: `${domain}/api/v1/u-get-most-frequent-search-items`,
   get_categroy_filtered_item: `${domain}/api/v1/u-get-home-filtered-items`,
   get_search_product: `${domain}/api/v1/u-get-search-product`,
+
+  //user coupon
+  get_coupon_varient: `${domain}/api/v1/u-get-coupon-on-varient`,
+
+  //mlm api 
+  get_distributor_name: `${domain}/api/v1/get-distributor-name`,
+  distributor_registration: `${domain}/api/v1/distributor-registration`,
+  get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
+
+
+
 
 };

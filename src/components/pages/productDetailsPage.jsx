@@ -46,7 +46,8 @@ const DiamondIcon = () => (
 
 const ProductDetailWebPage = () => {
   const location = useLocation();
-  const productData = location.state?.product;
+  const [isLoading, setIsLoading] = useState(false);
+  const product_id_and_variant_id_only = location.state?.product;
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [variants, setVariants] = useState([]);
@@ -66,9 +67,11 @@ const ProductDetailWebPage = () => {
 
   useEffect(() => {
     const fetchVariants = async () => {
+      
       try {
+        setIsLoading(true);
         const response = await axios.get(
-          `${endpoint?.u_get_variant}?product_id=${productData.product_id}&varient_id=${productData.selected_variant_id}`
+          `${endpoint?.u_get_variant}?product_id=${product_id_and_variant_id_only.product_id}&varient_id=${product_id_and_variant_id_only.selected_variant_id}`
         );
         if (response.data.success) {
           setVariants(response.data.result);
@@ -82,12 +85,14 @@ const ProductDetailWebPage = () => {
         console.error("Error fetching variants:", error);
         setVariants([]);
       }
+      setIsLoading(false);
     };
 
-    if (productData?.product_id) {
+    if (product_id_and_variant_id_only?.product_id) {
       fetchVariants();
     }
-  }, [productData?.product_id]);
+  }, [product_id_and_variant_id_only?.product_id]);
+
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -107,7 +112,7 @@ const ProductDetailWebPage = () => {
     };
   }, [showCustomizationModal, showPriceBreakupModal]);
 
-  if (!productData) {
+  if (!isLoading && !selectedVariant) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-700">
         No product data found.
@@ -116,34 +121,20 @@ const ProductDetailWebPage = () => {
   }
 
   const image =
-    (typeof productData.product_images === "string"
-      ? JSON.parse(productData.product_images)
-      : productData.product_images) || [];
+    (typeof selectedVariant?.product_details?.product_images === "string"
+      ? JSON.parse(selectedVariant?.product_details?.product_images)
+      : selectedVariant?.product_details?.product_images) || [];
+
 
   const images = image
     .filter((img) => img?.p_image_url)
     .map((img) => img.p_image_url);
-
-  // let images = [];
-
-  // try {
-  //   const parsed = JSON.parse(productData?.product_images || "[]");
-  //   images = parsed
-  //     .filter((img) => img?.p_image_url)
-  //     .map((img) => img?.p_image_url);
-  // } catch (e) {
-  //   console.error("Failed to parse product images", e);
-  //   images = [];
-  // }
 
   const formatPrice = (price) => {
     const num = Number(price);
     if (isNaN(num)) return "₹0";
     return `₹${num.toLocaleString()}`;
   };
-
-  const discount = productData.discount || null;
-  const priceNum = Number(productData.price);
 
   const StaticSize = [
     { size: "5", value: "44.8 mm", status: "Made to Order" },
@@ -269,17 +260,15 @@ const ProductDetailWebPage = () => {
   };
 
   const handleAddToCart = async () => {
-    if (!productData || !selectedVariant) {
+    if (!product_id_and_variant_id_only || !selectedVariant) {
       toast.error("Product or variant not selected");
       return;
     }
-
     const payload = {
-      product_id: productData.product_id,
+      product_id: product_id_and_variant_id_only.product_id,
       varient_id: selectedVariant.varient_id,
       quantity: quantity,
     };
-
     try {
       const response = await apiConnectorPost(endpoint.create_cart, payload);
       if (response?.data?.message !== "Unauthorised User!") {
@@ -295,11 +284,11 @@ const ProductDetailWebPage = () => {
   };
 
   const handleWishlist = async () => {
-    if (!productData || !selectedVariant) {
+    if (!product_id_and_variant_id_only || !selectedVariant) {
       toast.error("Product or variant not selected");
       return;
     }
-    const { product_id } = productData;
+    const { product_id } = product_id_and_variant_id_only;
     const { varient_id } = selectedVariant;
     try {
       const response = await apiConnectorGet(
@@ -332,14 +321,6 @@ const ProductDetailWebPage = () => {
       groupedMaterials[group].push(mat);
     });
   }
-
-  // selectedVariant?.material_details.forEach((mat) => {
-  //   const group = mat.master_mat_name;
-  //   if (!groupedMaterials[group]) {
-  //     groupedMaterials[group] = [];
-  //   }
-  //   groupedMaterials[group].push(mat);
-  // });
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
@@ -389,84 +370,61 @@ const ProductDetailWebPage = () => {
       )}
       <div className="px-3 py-2 border-b border-gray-100">
         <p className="text-xs text-gray-700">
-          {productData.description || "No description available."}
+          {selectedVariant?.product_details?.product_description || "No description available."}
         </p>
       </div>
-      {productData.specifications && (
-        <>
-          <div className="bg-orange-50 rounded-lg p-3 mb-3 border border-orange-100">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 bg-orange-200 rounded-full flex items-center justify-center">
-                <GoldIcon />
-              </div>
-              <span className="font-medium text-gray-800 text-sm">GOLD</span>
+      {selectedVariant?.material_details?.map((material, index) => (
+        <div
+          key={index}
+          className="bg-orange-50 rounded-lg mb-3 border mx-2 border-orange-100"
+        >
+          {/* Material Header */}
+          <div className="flex items-center gap-2 rounded-tr-lg rounded-tl-lg p-2 mb-2 bg-orange-100">
+            <div className="w-5 h-5 bg-orange-200 rounded-full flex items-center justify-center">
+              <GoldIcon />
             </div>
-            <div className="grid grid-cols-3 gap-3 text-xs">
-              <div>
-                <p className="text-gray-600 mb-1">Dimensions</p>
-                <p className="text-gray-800">
-                  {productData.specifications.dimensions ||
-                    "Width: N/A, Height: N/A"}
+            <span className="font-medium text-[#45289b] text-sm">
+              {material.master_mat_name} ({material.material_name})
+            </span>
+          </div>
+
+          {/* Data Grid */}
+          <div className="grid grid-cols-3 text-xs p-3">
+            {/* Headings */}
+            <div className=" mb-3  border-r font-semibold text-[#45289b] border-orange-200  ">Dimensions</div>
+            <div className=" mb-3 font-semibold border-r text-[#45289b] border-orange-200 text-center">Weight</div>
+            <div className=" mb-3 font-semibold text-[#45289b] text-center">Purity</div>
+
+            {/* Values */}
+            <div className="text-gray-800 border-r border-orange-200 ">
+              {selectedVariant?.attributes?.map((attr, i) => (
+                <p key={i}>
+                  {attr?.attribute_name} : {attr?.value}
                 </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Weight</p>
-                <p className="text-gray-800">
-                  {selectedVariant?.varient_weight ||
-                    productData.weight ||
-                    "N/A"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Purity</p>
-                <p className="text-gray-800">
-                  {productData.specifications.purity || "N/A"}
-                </p>
-              </div>
+              ))}
+            </div>
+
+            <div className="text-gray-800 border-r border-orange-200 ">
+              <p className="text-center">{material?.weight}</p>
+            </div>
+
+            <div className="text-gray-800">
+              <p className="text-center">{material?.pur_stamp_name}</p>
             </div>
           </div>
-          <div className="bg-blue-50 rounded-lg p-3 mb-3 border border-blue-100">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center text-blue-800">
-                <DiamondIcon />
-              </div>
-              <span className="font-medium text-gray-800 text-sm">DIAMOND</span>
-            </div>
-            <div className="grid grid-cols-3 gap-3 text-xs">
-              <div>
-                <p className="text-gray-600 mb-1">Type</p>
-                <p className="text-gray-800">
-                  {productData.specifications.diamondType || "N/A"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Setting</p>
-                <p className="text-gray-800">
-                  {productData.specifications.setting || "N/A"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 mb-1">Total Weight</p>
-                <p className="text-gray-800">
-                  {productData.specifications.diamondWeight || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+        </div>
+      ))}
+
+
       {!showLess && (
         <>
           <div className="px-3 py-2 border-t border-gray-100">
             <p className="text-gray-600 text-xs mb-1">Manufactured by</p>
             <p className="text-gray-800 text-xs font-medium">
-              {productData.manufacturer || "N/A"}
+              N/A
             </p>
           </div>
-          <div className="px-3 py-2 border-t border-gray-100">
-            <p className="text-gray-600 text-xs mb-1">Quantity</p>
-            <p className="text-gray-800 text-xs">1N</p>
-          </div>
+
           <div className="px-3 py-2 border-t border-gray-100">
             <p className="text-gray-600 text-xs mb-1">Country of Origin</p>
             <p className="text-gray-800 text-xs">India</p>
@@ -496,13 +454,13 @@ const ProductDetailWebPage = () => {
           </div>
           <div className="flex flex-col items-center text-center flex-1">
             <img
-              src="https://cdn.caratlane.com/media/static/images/web/Tata-Certified-1.png"
+              src="https://sonasutra.in/static/media/desklogo.6f320541be826154d86f.png"
               alt="Tata Certified"
               className="h-6 object-contain mb-1"
             />
             <div className="text-xs text-gray-700">
-              <div className="font-medium text-xs">Trust of TATA</div>
-              <div className="text-xs">Spirit of CaratLane</div>
+              <div className="font-medium text-xs">Trust of Sonasutra</div>
+              <div className="text-xs">Spirit of Sonasutra</div>
             </div>
           </div>
           <div className="flex flex-col items-center text-center flex-1">
@@ -513,7 +471,7 @@ const ProductDetailWebPage = () => {
             />
             <div className="text-xs text-gray-700">
               <div className="font-medium text-xs">100% Certified</div>
-              <div className="text-xs">by CaratLane</div>
+              <div className="text-xs">by Sonasutra</div>
             </div>
           </div>
         </div>
@@ -528,320 +486,383 @@ const ProductDetailWebPage = () => {
       </div>
       <ScrollSpyNavigation />
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4 overflow-x-hidden sm:mt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
-          <div className="space-y-3">
-            {/* Mobile Image Slider */}
-            {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
-            <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
-              {/* Main Image Container */}
-              <div className="relative bg-white overflow-hidden">
-                <div
-                  className="w-full h-120 overflow-hidden cursor-pointer"
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  <img
-                    src={images[selectedImage]}
-                    alt=""
-                    className="w-full h-full object-contain transition-transform duration-300"
-                  />
-                </div>
-                <div className="absolute bottom-2 left-2 z-10">
-                  <span className="bg-yellow-400 text-black text-xs font-semibold px-1.5 py-0.5 rounded">
-                    BESTSELLER
-                  </span>
-                </div>
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
-                  <div className="flex space-x-1">
-                    {images.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleDotClick(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
-                          ? "bg-purple-500 shadow-lg"
-                          : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
-                          }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="absolute bottom-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm rounded px-1.5 py-0.5">
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                    <span className="text-xs font-medium text-gray-800">5</span>
-                    <span className="text-xs text-gray-600">|</span>
-                    <span className="text-xs text-gray-600">0</span>
-                  </div>
+        {
+          isLoading ? (
+            // 👉 Skeleton Layout While Loading
+            <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6">
+              {/* Image skeleton */}
+              <div className="space-y-4">
+                <div className="h-96 bg-gray-200 rounded animate-pulse w-full" />
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }).map((_, idx) => (
+                    <div key={idx} className="h-24 bg-gray-200 rounded animate-pulse" />
+                  ))}
                 </div>
               </div>
+
+              {/* Info skeleton */}
+              <div className="space-y-4">
+                <div className="h-6 bg-gray-200 rounded w-1/2 animate-pulse" />
+                <div className="h-5 bg-gray-100 rounded w-2/3 animate-pulse" />
+                <div className="h-8 bg-gray-200 rounded w-full animate-pulse" />
+                <div className="h-24 bg-gray-100 rounded animate-pulse" />
+                <div className="h-10 bg-gray-200 rounded w-full animate-pulse" />
+                <div className="flex gap-3">
+                  <div className="h-10 w-24 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
+                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
+                </div>
+                <div className="h-32 bg-gray-100 rounded animate-pulse" />
+                <div className="h-64 bg-gray-100 rounded animate-pulse" />
+              </div>
             </div>
-            <div className="hidden md:block">
-              <div className="grid grid-cols-2 gap-3">
-                {(() => {
-                  const displayImages = [...images];
-                  while (displayImages.length < 8) {
-                    displayImages.push(...images);
-                  }
-                  return displayImages.slice(0, 8).map((image, index) => (
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
+              <div className="space-y-3">
+                {/* Mobile Image Slider */}
+                {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
+                <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
+                  {/* Main Image Container */}
+                  <div className="relative bg-white overflow-hidden">
                     <div
-                      key={index}
-                      onClick={() => setSelectedImage(index % images.length)}
-                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
-                        ? "border-purple-500 shadow-md"
-                        : "border-gray-200 hover:border-gray-300"
-                        }`}
+                      className="w-full h-120 overflow-hidden cursor-pointer"
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
                     >
-                      <div className="w-full h-100 overflow-hidden">
-                        <img
-                          src={image}
-                          alt={`${productData.name} ${index + 1}`}
-                          className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      {index === 0 && (
-                        <div className="absolute top-2 right-2">
-                          <button
-                            onClick={handleWishlist}
-                            className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
-                              } hover:text-red-500 transition-colors`}
-                          >
-                            <Heart
-                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
-                                }`}
-                            />
-                          </button>
-                        </div>
-                      )}
+                      <img
+                        src={images[selectedImage]}
+                        alt=""
+                        className="w-full h-full object-contain transition-transform duration-300"
+                      />
                     </div>
-                  ));
-                })()}
-              </div>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <div className="md:hidden flex items-center justify-between px-1">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={handleWishlist}
-                  className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
-                >
-                  <Heart
-                    className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""
-                      }`}
-                  />
-                </button>
-                <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
-                  <Share2 className="w-4 h-4" />
-                </button>
-                <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
-                  <Copy className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            <div className="space-y-1 px-1 md:px-0">
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold text-gray-900">
-                  ₹ {selectedVariant?.material_details?.reduce(
-                    (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
-                    0
-                  ).toLocaleString()}
-                </span>
+                    <div className="absolute bottom-2 left-2 z-10">
+                      <span className="bg-yellow-400 text-black text-xs font-semibold px-1.5 py-0.5 rounded">
+                        BESTSELLER
+                      </span>
+                    </div>
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
+                      <div className="flex space-x-1">
+                        {images.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleDotClick(index)}
+                            className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
+                              ? "bg-purple-500 shadow-lg"
+                              : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
+                              }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="absolute bottom-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm rounded px-1.5 py-0.5">
+                      <div className="flex items-center space-x-1">
+                        <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                        <span className="text-xs font-medium text-gray-800">5</span>
+                        <span className="text-xs text-gray-600">|</span>
+                        <span className="text-xs text-gray-600">0</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="hidden md:block">
+                  <div className="grid grid-cols-2 gap-3">
+                    {(() => {
+                      const displayImages = [...images];
+                      while (displayImages.length < 8) {
+                        displayImages.push(...images);
+                      }
+                      return displayImages.slice(0, 8).map((image, index) => (
+                        <div
+                          key={index}
+                          onClick={() => setSelectedImage(index % images.length)}
+                          className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
+                            ? "border-purple-500 shadow-md"
+                            : "border-gray-200 hover:border-gray-300"
+                            }`}
+                        >
+                          <div className="w-full h-100 overflow-hidden">
+                            <img
+                              src={image}
+                              alt={""}
+                              className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          {index === 0 && (
+                            <div className="absolute top-2 right-2">
+                              <button
+                                onClick={handleWishlist}
+                                className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
+                                  } hover:text-red-500 transition-colors`}
+                              >
+                                <Heart
+                                  className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
+                                    }`}
+                                />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ));
+                    })()}
 
-              </div>
-              <p className="text-sm text-gray-600">
-                (MRP Inclusive of all taxes)
-              </p>
-            </div>
-            <div className="px-1 md:px-0">
-              <h1 className="text-lg lg:text-xl font-medium text-gray-900 mb-2">
-                {productData.name || "Unnamed Product"}
-              </h1>
-            </div>
-            {discount && (
-              <div className="-mx-1 md:mx-0 md:rounded-lg">
-                <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
-                  <span className="text-sm font-medium text-red-800">
-                    Flat {discount}% off on Diamond Prices
-                  </span>
+
+                  </div>
                 </div>
               </div>
-            )}
-            <div id="customise" className="flex items-stretch w-fit bg-white border border-yellow-200 rounded-lg overflow-hidden mx-1 md:mx-0">
-              {groupedMaterials &&
-                Object.keys(groupedMaterials).map((groupName, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      const group = groupedMaterials[groupName] || [];
-                      setSelectedMaterialGroup(group);
-                      setShowCustomizationModal(true);
-                    }}
-                    className="px-4 py-2 border-l border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
-                  >
-                    {groupName}
-                  </button>
-                ))}
 
-              {/* {groupedMaterials &&
-                Object.keys(groupedMaterials).map((groupName, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setShowCustomizationModal(true)}
-                    className="px-4 py-2 border-l border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
-                  >
-                    {groupName}
-                  </button>
-                ))} */}
-              <button
-                onClick={() => {
-                  setSelectedMaterialGroup(selectedVariant?.material_details); // all materials
-                  setShowCustomizationModal(true);
-                }}
-                className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
-              >
-                <span className="text-sm font-bold text-black">CUSTOMISE</span>
-              </button>
-            </div>
-            <div className="flex justify-start gap-5 items-center">
-              {selectedVariant?.inventory_details?.stock_status &&
-                selectedVariant?.inventory_details?.stock_status !== "OK" && (
-                  <div>
-                    <label className="text-gray-600 text-xs mb-1 font-semibold block">
-                      Stock
-                    </label>
-                    <span className="text-sm font-medium text-red-600">
-                      {selectedVariant?.inventory_details?.stock_status}
-                    </span>
+              <div className="space-y-4">
+                <div className="md:hidden flex items-center justify-between px-1">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleWishlist}
+                      className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""}`}
+                      />
+                    </button>
+                    <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                    <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
+                      <Copy className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="px-1 md:px-0">
+                  <div className="flex items-center justify-between space-x-2">
+                    <div className="space-y-0.5">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xl font-bold text-gray-900">
+                          ₹{" "}
+                          {Number(
+                            selectedVariant?.final_varient_price
+                          ).toFixed(2)
+                          }
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">(MRP Inclusive of all taxes)</p>
+                      <h1 className="text-lg lg:text-xl font-medium text-gray-900">
+                        {selectedVariant?.product_details?.product_name || "Unnamed Product"}
+                      </h1>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <div
+                        className="text-white text-center font-semibold w-20 ml-2.5"
+                        style={{
+                          background: "linear-gradient(90deg, #FD8B64 0%, #FF5B6C 100%)",
+                          borderRadius: "8px 8px 0 0",
+                          textTransform: "uppercase",
+                          fontSize: "0.6rem",
+                          padding: "1px 0",
+                          lineHeight: "10px",
+                        }}
+                      >
+                        BUY FOR LESS
+                      </div>
+                      <div
+                        className="bg-[#F5F1FF] rounded-lg p-2 w-[100px] border border-purple-300"
+                      >
+                        <div className="text-center">
+
+                          <div className="text-purple-700 font-bold text-xs flex items-center justify-center mb-1"
+                            style={{
+                              background: "#E5DDFF",
+
+                              color: "#4F3267",
+                              padding: "8px 6px",
+                              marginbottom: "10px",
+                              borderRadius: "8px",
+                              fontSize: "11px",
+                              position: "relative",
+                              texttransform: "uppercase",
+                              height: "30px",
+                            }}>
+                            9+1 SAVINGS
+                            <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                              <path
+                                fillRule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                          <div className="text-[10px] text-gray-600 leading-tight">
+                            Pay for 9 months, 100% off on the 10th
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {variants?.discount_details && (
+                  <div className="px-1 md:px-0">
+                    <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
+                      <span className="text-sm font-medium text-red-800">
+                        Flat {variants?.discount_details?.discount_value}% off on Diamond Prices
+                      </span>
+                    </div>
                   </div>
                 )}
+                <div id="customise" className="flex items-stretch w-full bg-white border border-yellow-200 rounded-lg overflow-hidden  md:px-0">
+                  {groupedMaterials &&
+                    Object.keys(groupedMaterials).map((groupName, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          const group = groupedMaterials[groupName] || [];
+                          setSelectedMaterialGroup(group);
+                          setShowCustomizationModal(true);
+                        }}
+                        className=" w-full px-4 py-4 flex-1 border-r  border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
 
-              <div className="px-3 py-2 border-t border-gray-100">
-                <label className="text-gray-600 text-xs mb-1 font-semibold block">
-                  Quantity
-                </label>
-                <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
+                      >
+                        {groupName}
+                      </button>
+                    ))}
                   <button
-                    onClick={() =>
-                      setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
-                    }
-                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
-                    aria-label="Decrease quantity"
+                    onClick={() => {
+                      setSelectedMaterialGroup(selectedVariant?.material_details);
+                      setShowCustomizationModal(true);
+                    }}
+                    className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
                   >
-                    -
+                    <span className="text-sm font-bold text-black">CUSTOMISE</span>
                   </button>
-                  <input
-                    type="text"
-                    readOnly
-                    value={quantity}
-                    className="w-10 text-center outline-none border-l border-r border-gray-300"
-                    aria-label="Quantity"
-                  />
-                  <button
-                    onClick={() => setQuantity((prev) => prev + 1)}
-                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
+                </div>
+                <div className="flex justify-start gap-5 items-center px-1 md:px-0">
+                  {selectedVariant?.inventory_details?.stock_status &&
+                    selectedVariant?.inventory_details?.stock_status !== "OK" && (
+                      <div>
+                        <label className="text-gray-600 text-xs mb-1 font-semibold block">
+                          Stock
+                        </label>
+                        <span className="text-sm font-medium text-red-600">
+                          {selectedVariant?.inventory_details?.stock_status}
+                        </span>
+                      </div>
+                    )}
+                  <div className="px-3 py-2 border-t border-gray-100">
+                    <label className="text-gray-600 text-xs mb-1 font-semibold block">
+                      Quantity
+                    </label>
+                    <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
+                      <button
+                        onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
+                        aria-label="Decrease quantity"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        readOnly
+                        value={quantity}
+                        className="w-10 text-center outline-none border-l border-r border-gray-300"
+                        aria-label="Quantity"
+                      />
+                      <button
+                        onClick={() => setQuantity((prev) => prev + 1)}
+                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 px-1 md:px-0">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-2">Available Variants</h2>
+                  <div className="flex flex-wrap gap-3">
+                    {variants.length
+                      ? variants.map((variant) => (
+                        <button
+                          key={variant.varient_id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                            }`}
+                        >
+                          SKU: {variant.varient_sku}
+                        </button>
+                      ))
+                      : [
+                        {
+                          varient_id: "default",
+                          varient_sku: "Default",
+                          varient_price: selectedVariant?.price,
+                          varient_weight: selectedVariant.weight || "",
+                          unit_name: selectedVariant.unit_name || "",
+                        },
+                      ].map((variant) => (
+                        <button
+                          key={variant.varient_id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
+                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
+                            }`}
+                        >
+                          SKU: {variant.varient_sku}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+                <div className="hidden md:block px-1 md:px-0">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={handleAddToCart}
+                      className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
+                      style={{
+                        background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
+                      }}
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>ADD TO CART</span>
+                    </button>
+                    <button
+                      onClick={handleWishlist}
+                      className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
+                    >
+                      <Heart
+                        className={`w-5 h-5 ${isWishlisted ? "text-red-500 fill-current" : "text-gray-600"}`}
+                      />
+                    </button>
+                    <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
+                      <Share2 className="w-5 h-5 text-gray-600" />
+                    </button>
+                  </div>
+                </div>
+                <div id="delivery-stores" className="w-full px-1 md:px-0">
+                  <DeliveryStoresUI />
+                </div>
+                <FeaturesComponent />
+                <div id="details" className="self-start w-full space-y-6 px-1 md:px-0">
+                  <ProductDetailsSection />
                 </div>
               </div>
             </div>
-
-            <div className="mt-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                Available Variants
-              </h2>
-              <div className="flex flex-wrap gap-3">
-                {variants.length
-                  ? variants.map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
-                        }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))
-                  : [
-                    {
-                      varient_id: "default",
-                      varient_sku: "Default",
-                      varient_price: productData.price,
-                      varient_weight: productData.weight || "",
-                      unit_name: productData.unit_name || "",
-                    },
-                  ].map((variant) => (
-                    <button
-                      key={variant.varient_id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                        ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                        : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
-                        }`}
-                    >
-                      SKU: {variant.varient_sku}
-                    </button>
-                  ))}
-              </div>
-            </div>
-            <div className="hidden md:block">
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
-                  }}
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>ADD TO CART</span>
-                </button>
-
-                <button
-                  onClick={handleWishlist}
-                  className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
-                >
-                  <Heart
-                    className={`w-5 h-5 ${isWishlisted
-                      ? "text-red-500 fill-current"
-                      : "text-gray-600"
-                      }`}
-                  />
-                </button>
-                <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
-                  <Share2 className="w-5 h-5 text-gray-600" />
-                </button>
-              </div>
-            </div>
-            <div id="delivery-stores" className="w-full"><DeliveryStoresUI /></div>
-            <FeaturesComponent />
-            <div id="details" className="self-start w-full space-y-6">
-              <ProductDetailsSection />
-            </div>
-          </div>
-        </div>
+          )}
       </div>
       <div className="w-full">
 
         <BannerSlidder />
         <YouMayLike />
-        <SimilarProducts productData={productData} />
+        <SimilarProducts productData={product_id_and_variant_id_only} />
         <div id="reviews">
-          <CustomerReviewSection productId={productData.product_id} />
+          <CustomerReviewSection productId={product_id_and_variant_id_only.product_id} />
         </div>
         <RecentlyViewed />
         <ContinueBrowsing />
-        <More18KProducts />
         <CaratLaneSignup />
         <MobileVideoSlider />
-        <RelatedCategories productData={productData} />
         <ShopByProducts />
-        <Footer />
+        <div className="mb-10">
+          <Footer />
+        </div>
+
       </div>
       {/* <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40"> */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-30">
@@ -873,7 +894,7 @@ const ProductDetailWebPage = () => {
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-purple-800">
-                  {productData.name || "Product"}
+                  {selectedVariant?.product_name || "Product"}
                 </h2>
 
                 <button
@@ -896,9 +917,9 @@ const ProductDetailWebPage = () => {
                 </button>
               </div>
             </div>
-            <div className="p-4 space-y-6 mb-10">
+            <div className="p-4 space-y-6 mb-1">
               <div>
-                <h3 className="text-sm font-semibold text-gray-800 mb-4">
+                <h3 className="text-sm mt-10 font-semibold text-gray-800 mb-4">
                   PRICE BREAKUP
                 </h3>
 
@@ -941,7 +962,7 @@ const ProductDetailWebPage = () => {
                             </div>
 
                             {/* Material Rows */}
-                            {materials.map((material, index) => (
+                            {materials?.map((material, index) => (
                               <div
                                 key={`mat-${i}-${index}`}
                                 className="grid grid-cols-4 gap-2 text-xs text-gray-800 py-1"
@@ -950,10 +971,10 @@ const ProductDetailWebPage = () => {
                                   {material?.pur_stamp_name} {material?.material_name}
                                 </div>
                                 <div>
-                                  ₹{material?.ma_price_per_unit} / {material?.ma_unit}
+                                  ₹{Number(material?.final_mat_price_per_unit)?.toFixed(2)} / {material?.ma_unit}
                                 </div>
-                                <div>{material?.weight} / {material?.ma_unit}</div>
-                                <div>{material?.sub_total_price}</div>
+                                <div>{Number(material?.weight)?.toFixed(3)} / {material?.ma_unit}</div>
+                                <div>{Number(material?.sub_total_price)?.toFixed(2)}</div>
                               </div>
                             ))}
 
@@ -973,7 +994,7 @@ const ProductDetailWebPage = () => {
                         <div>SubTotal</div>
                         <div>-</div>
                         <div>-</div>
-                        <div>{rupees}{totalMaterialValue}</div>
+                        <div>{rupees}{Number(totalMaterialValue)?.toFixed(2)}</div>
                       </div>
 
                       {/* Making Charges */}
@@ -985,24 +1006,152 @@ const ProductDetailWebPage = () => {
                           <div>+{formatPrice(selectedVariant?.making_price || 0)}</div>
                           : <div>
                             <span className="text-xs font-extrabold ">+ {rupees}
-                           {(Number(totalMaterialValue) * Number(selectedVariant?.making_price) / 100).toFixed(2)}</span>
-                           {" "}
-                          ({Number(selectedVariant?.making_price)?.toFixed(0, 2) || 0}%)
-                           </div>}
+                              {(Number(totalMaterialValue) * Number(selectedVariant?.making_price) / 100).toFixed(2)}</span>
+                            {" "}
+                            {/* ({Number(selectedVariant?.making_price)?.toFixed(0, 2) || 0}%) */}
+                          </div>}
+                      </div>
+                      {/* {total} */}
+                      <div className="grid grid-cols-4 gap-2 text-xs pt-2 text-gray-800 font-bold border-t mt-2">
+                        <div> Total</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          {rupees} {
+                            (
+                              totalMaterialValue +
+                              (selectedVariant?.mak_price_type === "Percent"
+                                ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
+                                : Number(selectedVariant?.making_price || 0))
+                            ).toFixed(2) // Ensures the final number has 2 decimal places
+                          }
+
+                        </div>
                       </div>
 
+
+                      {/* {tax} */}
+                      <p className="text-left font-bold mt-2">Tax</p>
+                      {selectedVariant?.tax_details?.map((items) => {
+                        return <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                          <div>{items?.tax_name}</div>
+                          <div>-</div>
+                          <div>-</div>
+                          <div>{items?.tax_percentage}% </div>
+                        </div>
+                      })}
+                      <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                        <div>Total Tax</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          + {
+                            (() => {
+                              const makingCharge = selectedVariant?.mak_price_type === "Percent"
+                                ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
+                                : Number(selectedVariant?.making_price || 0);
+
+                              const total = totalMaterialValue + makingCharge;
+
+                              const totalTaxPercentage = selectedVariant?.tax_details
+                                ?.reduce((acc, item) => acc + Number(item?.tax_percentage || 0), 0) || 0;
+
+                              const taxAmount = (total * totalTaxPercentage) / 100;
+
+                              return taxAmount.toFixed(2); // Optional: format to 2 decimal places
+                            })()
+                          }
+
+                        </div>
+
+                      </div>
+                      {/* Discount */}
+                      <p className="text-left font-bold mt-2">Discount</p>
+                      {selectedVariant?.discount_details?.map((items) => {
+                        return <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                          <div>{items?.discount_name}</div>
+                          <div>-</div>
+                          <div>-</div>
+                          <div>{items?.discount_type === "Flat" && rupees}{items?.discount_value}{items?.discount_type === "Percentage" && '%'}</div>
+                        </div>
+                      })}
+                      <div className="grid grid-cols-4 gap-2 text-xs  text-gray-800 font-bold border-t pt-1">
+                        <div>Total Discount</div>
+                        <div>-</div>
+                        <div>-</div>
+                        <div>
+                          - {
+                            (() => {
+                              const makingCharge = selectedVariant?.mak_price_type === "Percent"
+                                ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
+                                : Number(selectedVariant?.making_price || 0);
+
+                              const total = totalMaterialValue + makingCharge;
+
+                              const totalDiscountPercentage =
+                                (total *
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Percentage")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  )) / 100;
+
+                              const totalDiscountFlat =
+                                (
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Flat")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  ));
+
+
+                              return (totalDiscountPercentage + totalDiscountFlat).toFixed(2);
+                            })()
+                          }
+                        </div>
+
+                      </div>
                       {/* Grand Total */}
                       <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
                         <div>Grand Total</div>
                         <div>-</div>
                         <div>-</div>
                         <div>
-                          {formatPrice(
-                            totalMaterialValue +
-                            (selectedVariant?.mak_price_type === "Percent"
-                              ? (Number(selectedVariant?.making_price || 0) / 100 * totalMaterialValue)
-                              : Number(selectedVariant?.making_price || 0))
-                          )}
+                          {rupees}  {Math.round(Number(selectedVariant?.final_varient_price))?.toFixed(2)}
+                          {/* {
+                            (() => {
+                              const makingCharge = selectedVariant?.mak_price_type === "Percent"
+                                ? (Number(selectedVariant?.making_price || 0) / 100) * totalMaterialValue
+                                : Number(selectedVariant?.making_price || 0);
+
+                              const total = totalMaterialValue + makingCharge;
+
+                              const totalDiscountPercentage =
+                                (total *
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Percentage")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  )) / 100;
+
+                              const totalDiscountFlat =
+                                (
+                                  (
+                                    selectedVariant?.discount_details
+                                      ?.filter((i) => i?.discount_type === "Flat")
+                                      ?.reduce((acc, item) => acc + (item?.discount_value || 0), 0) || 0
+                                  ));
+
+                              const totalDiscount = totalDiscountPercentage + totalDiscountFlat;
+
+                              const totalTaxPercentage = selectedVariant?.tax_details
+                                ?.reduce((acc, item) => acc + Number(item?.tax_percentage || 0), 0) || 0;
+
+                              const taxAmount = (total * totalTaxPercentage) / 100;
+                              const grand = total + taxAmount - totalDiscount
+                              return Math.round(grand)
+                            })()
+                          } */}
                         </div>
                       </div>
                     </>
@@ -1010,29 +1159,6 @@ const ProductDetailWebPage = () => {
                 })()}
               </div>
             </div>
-
-
-            {/* <div className="p-4 space-y-6 mb-10">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-800 mb-4">
-                  PRICE BREAKUP
-                </h3>
-                <div className="grid grid-cols-4 gap-2 mb-3 text-xs font-medium text-purple-600">
-                  <div>COMPONENT</div>
-                  <div>RATE</div>
-                  <div>WEIGHT</div>
-                  <div>VALUE</div>
-                </div>
-                {selectedVariant?.material_details?.map((material, index) => (
-                  <div key={index} className="grid grid-cols-4 gap-2 text-xs text-gray-800">
-                    <div>{material.material_name}</div>
-                    <div>₹{material.material_price}</div>
-                    <div>{material.weight} {material.v_un_name}</div>
-                    <div>{formatPrice(calculateMaterialValue(material))}</div>
-                  </div>
-                ))}
-              </div>
-            </div> */}
           </div>
         </div>
       )}

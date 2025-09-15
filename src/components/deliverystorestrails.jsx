@@ -1,154 +1,4 @@
-// import React from 'react';
-// import { 
-//   MapPin, 
-//   Truck, 
-//   Store, 
-//   Home, 
-//   Video, 
-//   Check, 
-//   Clock,
-//   Calendar,
-//   Edit3
-// } from 'lucide-react';
-// import VideoCallModal from './pages/ClientDemo/VideoCall';
-// import { useState } from 'react';
 
-
- 
-// const DeliveryStoresUI = () => {
-// const [isModalOpen, setIsModalOpen] = useState(false);
-//   return (
-//     <div className="max-w-lg mx-auto bg-white rounded-xl shadow-lg p-4 space-y-4 ">
-//       {/* Header */}
-//       <h1 className="text-lg font-bold text-gray-800 mb-4">
-//         Delivery, Stores & Trial
-//       </h1>
-      
-//       {/* Location Input */}
-//       <div className="flex items-center justify-between bg-gray-50 rounded-lg p-3 border border-purple-600">
-//         <div className="flex items-center space-x-2">
-//           <MapPin className="w-4 h-4 text-gray-600" />
-//           <span className="text-gray-800 text-sm font-medium">201308</span>
-//         </div>
-//         <button className="text-purple-600 text-sm font-semibold hover:text-purple-700 transition-colors">
-//           CHANGE
-//         </button>
-//       </div>
-
-//       {/* Free Delivery */}
-//       <div className="bg-white rounded-lg p-3 border border-grey-200">
-//         <div className="flex items-start space-x-2">
-//           <div className="bg-pink-100 p-1.5 rounded-lg">
-//             <Truck className="w-4 h-4 text-pink-600" />
-//           </div>
-//           <div className="flex-1">
-//             <h3 className="text-sm font-semibold text-gray-800 mb-1">
-//               Free Delivery Tomorrow 9AM-2PM
-//             </h3>
-//             <div className="flex items-center space-x-2 text-xs text-gray-600">
-//               <span>Order in next</span>
-//               <div className="flex items-center space-x-1 bg-white px-1.5 py-0.5 rounded border">
-//                 <Clock className="w-3 h-3" />
-//                 <span className="font-medium">3 Hrs 24 Mins</span>
-//               </div>
-//               <span className="text-red-500 font-medium">T&C</span>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Nearest Store */}
-//       <div className="bg-white rounded-lg p-3 border border-grey-200">
-//         <div className="flex items-start space-x-2 mb-3">
-//           <div className="bg-orange-100 p-1.5 rounded-lg">
-//             <Store className="w-4 h-4 text-orange-600" />
-//           </div>
-//           <div className="flex-1">
-//             <h3 className="text-sm font-semibold text-gray-800 mb-2">
-//               Nearest Store - <span className="text-gray-700">Gaur City Mall</span> (21km)
-//             </h3>
-//             <div className="flex items-center space-x-2 mb-1">
-//               <div className="bg-green-100 px-2 py-0.5 rounded-full flex items-center space-x-1">
-//                 <Check className="w-3 h-3 text-green-600" />
-//                 <span className="text-green-700 text-xs font-medium">DESIGN AVAILABLE</span>
-//               </div>
-//             </div>
-//             <p className="text-xs text-gray-600">
-//               Also Available in <span className="text-purple-600 font-medium">6 other stores</span>
-//             </p>
-//           </div>
-//         </div>
-//         <button className="w-full  hover:bg-orange-500 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors" style={{background:"linear-gradient(270deg, rgb(255, 91, 108) 0%, rgb(253, 139, 100) 100%)"}}>
-//           FIND IN STORE
-//         </button>
-//       </div>
-
-//       {/* Try At Home */}
-//       <div className="bg-white rounded-xl p-4 border border-grey-200">
-//         <div className="flex items-start space-x-3 mb-4">
-//           <div className="bg-blue-100 p-2 rounded-lg">
-//             <Home className="w-5 h-5 text-blue-600" />
-//           </div>
-//           <div className="flex-1">
-//             <h3 className="font-semibold text-gray-800 mb-1">
-//               Try At Home <span className="text-green-600">(It's Free)</span>
-//             </h3>
-//             <p className="text-sm text-gray-600">
-//               Home Appointment <span className="font-medium text-blue-600">Available to try from Today!</span>
-//             </p>
-//           </div>
-//         </div>
-//         <button className="w-full text-sm hover:bg-blue-600 text-white font-semibold py-2 rounded-xl transition-colors flex items-center justify-center space-x-2" style={{background:"linear-gradient(to right, rgb(156, 162, 244), rgb(119, 109, 231)) "}}>
-//           <Calendar className="w-4 h-4" />
-//           <span>BOOK HOME APPOINTMENT</span>
-//         </button>
-//       </div>
-
-//       {/* Live Video Call */}
-//       <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-//         <div className="flex items-start space-x-4">
-//           <div className="flex-shrink-0">
-//             <img 
-//               src="https://www.caratlane.com/media/wysiwyg/CL-Icons/video-call-icon.png"
-//               alt="Video call consultation"
-//               className="w-20 h-30 sm:w-24 sm:h-24 rounded-xl object-cover"
-//             />
-//           </div>
-//           <div className="flex-1 min-w-0">
-//             <h3 className="font-semibold text-gray-800">
-//               Live Video Call
-//             </h3>
-//             <p className="text-xs text-gray-600  leading-relaxed mb-2">
-//               Join a live video call with our consultants to see your favourite designs up close!
-//             </p>
-           
-
-//     <div>
-//   {/* Button */}
-//   <button
-//     onClick={() => setIsModalOpen(true)}
-//     className="bg-green-100 text-white py-2 px-4 rounded-xl transition-colors flex items-center space-x-2"
-//   >
-//     <span className="text-[15px] text-[green]">Schedule a Video Call</span>
-//   </button>
-
-  
-//   <VideoCallModal 
-//     isOpen={isModalOpen} 
-//     onClose={() => setIsModalOpen(false)} 
-//   />
-// </div>
-//           </div>
-//         </div>
-//       </div>
-
-      
-     
-//     </div>
-//   );
-// };
-
-// export default DeliveryStoresUI;
 import React, { useState } from 'react';
 import { 
   MapPin, 
@@ -260,7 +110,7 @@ const DeliveryStoresUI = () => {
       </div>
 
       {/* Try At Home */}
-      <div className="bg-white rounded-xl p-4 border border-grey-200">
+      {/* <div className="bg-white rounded-xl p-4 border border-grey-200">
         <div className="flex items-start space-x-3 mb-4">
           <div className="bg-blue-100 p-2 rounded-lg">
             <Home className="w-5 h-5 text-blue-600" />
@@ -278,7 +128,7 @@ const DeliveryStoresUI = () => {
           <Calendar className="w-4 h-4" />
           <span>BOOK HOME APPOINTMENT</span>
         </button>
-      </div>
+      </div> */}
 
       {/* Live Video Call */}
       <div className="bg-green-50 rounded-xl p-4 border border-green-200">
