@@ -73,6 +73,8 @@ const fullMenuItems = [
     icon: <PermScanWifi />,
     path: "/permissions",
   },
+  
+  
   {
     id: "banner",
     label: "Banner",
@@ -108,6 +110,12 @@ const fullMenuItems = [
     label: "Products",
     icon: <MarsStroke />,
     path: "/products",
+  },
+   {
+    id: "rank",
+    label: "Rank",
+    icon: <PermScanWifi />,
+    path: "/rank",
   },
   {
     id: "utils",

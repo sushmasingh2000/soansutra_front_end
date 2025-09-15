@@ -48,6 +48,7 @@ import CouponPriceRange from "../components/admin/CouponPriceRange..js";
 import { elements } from "chart.js";
 import Order from "../components/admin/Order.js";
 import OrderDetails from "../components/admin/OrderDetails.js";
+import Rank from "../components/admin/Rank.js";
 
 export const routes = [
   {
@@ -130,6 +131,14 @@ export const routes = [
     element: (
       <MainLayout>
         <OrderDetails />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/rank",
+    element: (
+      <MainLayout>
+        <Rank />{" "}
       </MainLayout>
     ),
   },

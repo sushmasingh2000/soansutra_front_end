@@ -1,6 +1,6 @@
-// export const domain = "http://192.168.18.214:2000";
+export const domain = "http://192.168.18.214:2000";
 export const frontend = "https://sonasutra.in";
-export const domain = "https://backend.sonasutra.in";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
@@ -269,6 +269,16 @@ export const endpoint = {
   distributor_registration: `${domain}/api/v1/distributor-registration`,
   get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
   get_distributor_dashboard: `${domain}/api/v1/get-distributor-dashboard`,
+  get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
+  update_rank_deatils: `${domain}/api/v1/update-rank-details-by-admin`,
+  
+  // /update-rank-details-by-admin
+  //  rank_id,
+  //     customer_buss,
+  //     self_buss,
+  //     clossing_night_comm,
+  //     clossing_instent_comm,
+  //     reward_income,
 
 
 
