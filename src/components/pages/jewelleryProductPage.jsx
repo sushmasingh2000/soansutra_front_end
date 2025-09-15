@@ -186,7 +186,7 @@ const ProductCardSkeleton = () => {
 };
 
 // Updated Product Card Component with navigation
-const ProductCard = ({ product, onWishlist,collectionId }) => {
+const ProductCard = ({ product, onWishlist, collectionId }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
 
@@ -211,12 +211,14 @@ const ProductCard = ({ product, onWishlist,collectionId }) => {
   };
   const handleImageClick = (product) => {
     navigate("/productdetails", {
-      state: { product : {
-        product_id:product?.product_id,
-        selected_variant_id:product?.selected_variant_id,
-        collectionId:collectionId
+      state: {
+        product: {
+          product_id: product?.product_id,
+          selected_variant_id: product?.selected_variant_id,
+          collectionId: collectionId
 
-      }},
+        }
+      },
     });
   };
 
@@ -280,7 +282,7 @@ const ProductCard = ({ product, onWishlist,collectionId }) => {
 
         <div className="flex items-center gap-2 mb-1">
           <span className="text-sm font-semibold text-gray-800">
-            ₹{Number(product.final_varient_price).toFixed(2)}
+            ₹{product.final_varient_price || 0}
           </span>
         </div>
 
@@ -293,13 +295,13 @@ const ProductCard = ({ product, onWishlist,collectionId }) => {
 };
 
 // Product List Component
-const ProductList = ({ products, onWishlist ,collectionId}) => {
+const ProductList = ({ products, onWishlist, collectionId }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
 
-      {products ?.map((product) => (
+      {products?.map((product) => (
         <ProductCard
-        collectionId={collectionId}
+          collectionId={collectionId}
           key={product.product_id}
           product={product}
           onWishlist={onWishlist}
@@ -394,8 +396,8 @@ const DynamicProductListingPage = () => {
     ["get_product", subcategoryId, categoryId],
     fetchProducts,
     {
-    enabled: !!subcategoryId || !!categoryId || !!collectionId,
-  }
+      enabled: !!subcategoryId || !!categoryId || !!collectionId,
+    }
   );
 
   const product = data?.data?.result || [];
@@ -490,60 +492,38 @@ const DynamicProductListingPage = () => {
     setProducts(filteredProducts);
   }, [activeTab, filters, sortBy, allProducts]);
   const isCollection = !!collectionId;
-  const applyBackendFilters = async (newFilters) => {
-    // const payload = {isCollection};
-    const payload = {
-      isCollection,
-      product_sub_cat_id:Number(subcategoryId)
-      // cat_id 
-      
-    };
-
-    if (newFilters.price) payload.price_group = newFilters.price;
-    if (newFilters.tags) payload.product_tags = newFilters.tags;
-    if (newFilters.size) payload.attribute_value = newFilters.size;
-    if (newFilters.metal) payload.ma_mat_name = newFilters.metal;
-
-    try {
-      const response = await apiConnectorPost(endpoint.filter_u_filte_by, payload);
-      const filtered = response?.data?.result || [];
-
-      // 🔁 Map to match ProductCard expected format
-      const transformed = filtered.map((item, i) => {
-        const product = item.product_details;
-        const originalPrice = parseFloat(item.varient_price);
-        const discount = item?.discount_details?.[0];
-
-        const discountAmount =
-          discount?.discount_type === "Percentage"
-            ? (originalPrice * parseFloat(discount?.discount_value)) / 100
-            : parseFloat(discount?.discount_value || 0);
-
-        const finalPrice = discount ? originalPrice - discountAmount : originalPrice;
-
-        return {
-          product_id: item.product_id,
-          name: product?.product_name || "Product",
-          price: finalPrice,
-          originalPrice: discount ? originalPrice : null,
-          product_images: [
-            {
-              p_image_url:
-                product?.product_image?.p_image_url ||
-                "https://via.placeholder.com/400x400",
-            },
-          ],
-          isNew: Math.random() > 0.7,
-        };
-      });
-
-      setAllProducts(transformed);
-      setProducts(transformed);
-    } catch (error) {
-      toast.error("Failed to apply filters.");
-      console.error(error);
-    }
+ const applyBackendFilters = async (newFilters) => {
+  const payload = {
+    isCollection,
+    product_sub_cat_id: Number(subcategoryId)
   };
+
+  if (newFilters.price) payload.price_group = newFilters.price;
+  if (newFilters.tags) payload.product_tags = newFilters.tags;
+  if (newFilters.size) payload.attribute_value = newFilters.size;
+  if (newFilters.metal) payload.ma_mat_name = newFilters.metal;
+
+  try {
+    const response = await apiConnectorPost(endpoint.filter_u_filte_by, payload);
+    const filtered = response?.data?.result || [];
+
+    const transformed = filtered.map((item, i) => ({
+      product_id: item.product_id,
+      name: item.product_details?.product_name || "Product",
+      final_varient_price: item.final_varient_price || 0,
+      product_images: item.product_details?.product_images || [],
+      selected_variant_id: item.varient_id || null,
+      isNew: Math.random() > 0.7,
+    }));
+
+    setAllProducts(transformed);
+    setProducts(transformed);
+  } catch (error) {
+    toast.error("Failed to apply filters.");
+    console.error(error);
+  }
+};
+
 
   const handleFilterChange = (filterKey, value, isChecked) => {
     setFilters((prev) => {
@@ -639,7 +619,7 @@ const DynamicProductListingPage = () => {
 
   const categoryConfig = CATEGORY_CONFIG[currentCategory];
 
- 
+
 
   if (loading) {
     return (
@@ -718,7 +698,7 @@ const DynamicProductListingPage = () => {
                 ))}
               </div>
             ) : products.length > 0 ? (
-              <ProductList products={products} onWishlist={handleWishlist} collectionId={collectionId}/>
+              <ProductList products={products} onWishlist={handleWishlist} collectionId={collectionId} />
             ) : (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="text-gray-400 mb-4">
