@@ -268,6 +268,7 @@ export const endpoint = {
   get_distributor_name: `${domain}/api/v1/get-distributor-name`,
   distributor_registration: `${domain}/api/v1/distributor-registration`,
   get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
+  get_distributor_dashboard: `${domain}/api/v1/get-distributor-dashboard`,
 
 
 

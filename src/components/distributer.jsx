@@ -37,6 +37,17 @@ const Distributor = () => {
   }
 
 
+  const { data: get_didtri_dash } = useQuery(
+    ["dashbooard_get"],
+    () => apiConnectorGet(endpoint.get_distributor_dashboard),
+    {
+      ...usequeryBoolean,
+    }
+  );
+
+  const dashbooard_get = get_didtri_dash?.data?.result;
+  // console.log(dashbooard_get)
+
   const RegistrationFn = async () => {
     try {
       if (!customer) {
