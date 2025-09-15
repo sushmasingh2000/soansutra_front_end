@@ -492,37 +492,54 @@ const DynamicProductListingPage = () => {
     setProducts(filteredProducts);
   }, [activeTab, filters, sortBy, allProducts]);
   const isCollection = !!collectionId;
- const applyBackendFilters = async (newFilters) => {
-  const payload = {
-    isCollection,
-    product_sub_cat_id: Number(subcategoryId)
+  const applyBackendFilters = async (newFilters) => {
+    const payload = {
+      isCollection,
+      product_sub_cat_id: Number(subcategoryId)
+    };
+
+    if (newFilters.price) payload.price_group = newFilters.price;
+    if (newFilters.tags) payload.product_tags = newFilters.tags;
+    if (newFilters.size) payload.attribute_value = newFilters.size;
+    if (newFilters.metal) payload.ma_mat_name = newFilters.metal;
+
+    try {
+      const response = await apiConnectorPost(endpoint.filter_u_filte_by, payload);
+      const filtered = response?.data?.result || [];
+
+      // const transformed = filtered.map((item, i) => ({
+      //   product_id: item.product_id,
+      //   name: item.product_details?.product_name || "Product",
+      //   final_varient_price: item.final_varient_price || 0,
+      //   product_images: item.product_details?.product_images || [],
+      //   selected_variant_id: item.varient_id || null,
+      //   isNew: Math.random() > 0.7,
+      // }));
+
+      const transformed = filtered.map(item => ({
+        ...item,
+        product_name: item.product_details?.product_name || "Product",
+        varient_id: item.varient_id,
+        varient_price: item.varient_price || 0,
+        final_varient_price: item.final_varient_price || 0,
+        product_details: {
+          ...item.product_details,
+          product_images: item.product_details?.product_images || [],
+        },
+        // Optionally add images array for UI if needed:
+        images: item.product_details?.product_images?.map(img => img.p_image_url) || [],
+        isNew: Math.random() > 0.7,
+      }));
+
+
+
+      setAllProducts(transformed);
+      setProducts(transformed);
+    } catch (error) {
+      toast.error("Failed to apply filters.");
+      console.error(error);
+    }
   };
-
-  if (newFilters.price) payload.price_group = newFilters.price;
-  if (newFilters.tags) payload.product_tags = newFilters.tags;
-  if (newFilters.size) payload.attribute_value = newFilters.size;
-  if (newFilters.metal) payload.ma_mat_name = newFilters.metal;
-
-  try {
-    const response = await apiConnectorPost(endpoint.filter_u_filte_by, payload);
-    const filtered = response?.data?.result || [];
-
-    const transformed = filtered.map((item, i) => ({
-      product_id: item.product_id,
-      name: item.product_details?.product_name || "Product",
-      final_varient_price: item.final_varient_price || 0,
-      product_images: item.product_details?.product_images || [],
-      selected_variant_id: item.varient_id || null,
-      isNew: Math.random() > 0.7,
-    }));
-
-    setAllProducts(transformed);
-    setProducts(transformed);
-  } catch (error) {
-    toast.error("Failed to apply filters.");
-    console.error(error);
-  }
-};
 
 
   const handleFilterChange = (filterKey, value, isChecked) => {

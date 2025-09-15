@@ -246,10 +246,10 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
       alert('Please enter a valid pincode for store pickup.');
       return;
     }
-    if (useDifferentBilling && (!billingAddress.firstName || !billingAddress.address || !billingAddress.mobile)) {
-      alert('Please fill in all required billing address fields.');
-      return;
-    }
+    // if (useDifferentBilling && (!billingAddress.firstName || !billingAddress.address || !billingAddress.mobile)) {
+    //   alert('Please fill in all required billing address fields.');
+    //   return;
+    // }
     console.log('Save & Continue clicked');
     if (onSaveContinue) {
       onSaveContinue(); // Call the callback to update parent state
@@ -330,10 +330,10 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                 <input type="radio" checked={!useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-red-600" />
                 Same as shipping address
               </label>
-              <label className="flex items-center mb-2">
+              {/* <label className="flex items-center mb-2">
                 <input type="radio" checked={useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-red-600" />
                 Use a different billing address
-              </label>
+              </label> */}
               <p className="text-xs text-gray-500 mt-2">We will not send an invoice to the shipping address</p>
               {useDifferentBilling && (
                 <div className="mt-4 space-y-2">
@@ -520,8 +520,8 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   <label className="flex items-center mb-2">
                     <input
                       type="radio"
-                      checked={selectedAddress === addr.id}
-                      onChange={() => selectAddress(addr.id)}
+                      checked={selectedAddress === addr.address_id}
+                      onChange={() => selectAddress(addr.address_id)}
                       className="mr-2 accent-purple-600"
                     />
                     <p className="text-sm">Mobile: +91 {addr.phone_number}</p>

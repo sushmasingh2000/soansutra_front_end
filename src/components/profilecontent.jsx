@@ -353,7 +353,7 @@ const ProfileContent = () => {
           <div className="bg-white rounded-lg border border-yellow-200">
             <button
               onClick={() => setPersonalExpanded(!personalExpanded)}
-              className="w-full px-4 py-3 bg-red-100 rounded-t-lg flex justify-between items-center hover:bg-purple-150"
+              className="w-full px-4 py-3 bg-red-100 rounded-t-lg flex justify-between items-center hover:bg-yellow-150"
             >
               <h2 className="font-medium text-gray-900">Personal Details</h2>
               <svg
@@ -385,7 +385,7 @@ const ProfileContent = () => {
                     </h3>
                   </div>
                   <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center ml-3">
-                    <span className="text-purple-800 font-bold text-lg">₹</span>
+                    <span className="text-yellow-800 font-bold text-lg">₹</span>
                   </div>
                 </div>
 
@@ -488,7 +488,7 @@ const ProfileContent = () => {
                             }
                             className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                               profileData.gender === gender
-                                ? "bg-purple-600 text-white"
+                                ? "bg-yellow-600 text-white"
                                 : "bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200"
                             }`}
                           >
@@ -598,7 +598,7 @@ const ProfileContent = () => {
                         name="spouse_birthday"
                         value={fk?.values?.spouse_birthday}
                         onChange={fk.handleChange}
-                        className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-3 bg-white border border-yellow-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                       />
                     </div>
                   </div>
@@ -1001,9 +1001,9 @@ const ProfileContent = () => {
 
   return (
     <div className="p-3 md:p-6">
-      <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4 flex items-center">
-        <div className="w-10 h-10 bg-purple-200 rounded-lg flex items-center justify-center mr-3">
-          <Gift className="w-5 h-5 text-purple-600" />
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 flex items-center">
+        <div className="w-10 h-10 bg-yellow-200 rounded-lg flex items-center justify-center mr-3">
+          <Gift className="w-5 h-5 text-yellow-600" />
         </div>
         <div className="flex-1">
           <h3 className="font-semibold text-gray-900 mb-1 text-sm">
@@ -1021,11 +1021,11 @@ const ProfileContent = () => {
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-base font-medium text-gray-900">Your Profile</h2>
-          <span className="text-purple-600 text-sm">60% Complete</span>
+          <span className="text-yellow-600 text-sm">60% Complete</span>
         </div>
         <button
           onClick={() => setIsEditing(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-xs"
+          className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-xs"
         >
           Edit Profile
         </button>

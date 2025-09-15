@@ -1,4 +1,5 @@
 
+
 import axios from "axios";
 import { addDays, format } from "date-fns";
 import {
@@ -46,8 +47,8 @@ const DiamondIcon = () => (
 
 const ProductDetailWebPage = () => {
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
   const product_id_and_variant_id_only = location.state?.product;
+  console.log(product_id_and_variant_id_only, "mhgdrjh")
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [variants, setVariants] = useState([]);
@@ -67,9 +68,7 @@ const ProductDetailWebPage = () => {
 
   useEffect(() => {
     const fetchVariants = async () => {
-      
       try {
-        setIsLoading(true);
         const response = await axios.get(
           `${endpoint?.u_get_variant}?product_id=${product_id_and_variant_id_only.product_id}&varient_id=${product_id_and_variant_id_only.selected_variant_id}`
         );
@@ -85,7 +84,6 @@ const ProductDetailWebPage = () => {
         console.error("Error fetching variants:", error);
         setVariants([]);
       }
-      setIsLoading(false);
     };
 
     if (product_id_and_variant_id_only?.product_id) {
@@ -112,7 +110,7 @@ const ProductDetailWebPage = () => {
     };
   }, [showCustomizationModal, showPriceBreakupModal]);
 
-  if (!isLoading && !selectedVariant) {
+  if (!selectedVariant) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-700">
         No product data found.
@@ -120,10 +118,10 @@ const ProductDetailWebPage = () => {
     );
   }
 
-  const image =
-    (typeof selectedVariant?.product_details?.product_images === "string"
-      ? JSON.parse(selectedVariant?.product_details?.product_images)
-      : selectedVariant?.product_details?.product_images) || [];
+const image =
+  (typeof selectedVariant?.product_details?.product_images === "string"
+    ? JSON.parse(selectedVariant?.product_details?.product_images)
+    : selectedVariant?.product_details?.product_images) || [];
 
 
   const images = image
@@ -264,11 +262,13 @@ const ProductDetailWebPage = () => {
       toast.error("Product or variant not selected");
       return;
     }
+
     const payload = {
       product_id: product_id_and_variant_id_only.product_id,
       varient_id: selectedVariant.varient_id,
       quantity: quantity,
     };
+
     try {
       const response = await apiConnectorPost(endpoint.create_cart, payload);
       if (response?.data?.message !== "Unauthorised User!") {
@@ -322,6 +322,14 @@ const ProductDetailWebPage = () => {
     });
   }
 
+  // selectedVariant?.material_details.forEach((mat) => {
+  //   const group = mat.master_mat_name;
+  //   if (!groupedMaterials[group]) {
+  //     groupedMaterials[group] = [];
+  //   }
+  //   groupedMaterials[group].push(mat);
+  // });
+
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
       <div className="bg-gradient-to-r from-yellow-100 to-blue-100 px-3 py-2 flex justify-between items-center">
@@ -349,7 +357,7 @@ const ProductDetailWebPage = () => {
         </div>
       </div>
       {showToast && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-[10000]">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50">
           <div className="flex items-center">
             <svg
               className="w-4 h-4 mr-2"
@@ -421,7 +429,7 @@ const ProductDetailWebPage = () => {
           <div className="px-3 py-2 border-t border-yellow-100">
             <p className="text-gray-600 text-xs mb-1">Manufactured by</p>
             <p className="text-gray-800 text-xs font-medium">
-              N/A
+             N/A
             </p>
           </div>
          
@@ -486,130 +494,99 @@ const ProductDetailWebPage = () => {
       </div>
       <ScrollSpyNavigation />
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-4 overflow-x-hidden sm:mt-20">
-        {
-          isLoading ? (
-            // 👉 Skeleton Layout While Loading
-            <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6">
-              {/* Image skeleton */}
-              <div className="space-y-4">
-                <div className="h-96 bg-gray-200 rounded animate-pulse w-full" />
-                <div className="grid grid-cols-2 gap-3">
-                  {Array.from({ length: 4 }).map((_, idx) => (
-                    <div key={idx} className="h-24 bg-gray-200 rounded animate-pulse" />
-                  ))}
+        <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
+          <div className="space-y-3">
+            {/* Mobile Image Slider */}
+            {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
+            <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
+              {/* Main Image Container */}
+              <div className="relative bg-white overflow-hidden">
+                <div
+                  className="w-full h-120 overflow-hidden cursor-pointer"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <img
+                    src={images[selectedImage]}
+                    alt=""
+                    className="w-full h-full object-contain transition-transform duration-300"
+                  />
                 </div>
-              </div>
-
-              {/* Info skeleton */}
-              <div className="space-y-4">
-                <div className="h-6 bg-gray-200 rounded w-1/2 animate-pulse" />
-                <div className="h-5 bg-gray-100 rounded w-2/3 animate-pulse" />
-                <div className="h-8 bg-gray-200 rounded w-full animate-pulse" />
-                <div className="h-24 bg-gray-100 rounded animate-pulse" />
-                <div className="h-10 bg-gray-200 rounded w-full animate-pulse" />
-                <div className="flex gap-3">
-                  <div className="h-10 w-24 bg-gray-200 rounded animate-pulse" />
-                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
-                  <div className="h-10 w-10 bg-gray-100 rounded-full animate-pulse" />
+                <div className="absolute bottom-2 left-2 z-10">
+                  <span className="bg-yellow-400 text-black text-xs font-semibold px-1.5 py-0.5 rounded">
+                    BESTSELLER
+                  </span>
                 </div>
-                <div className="h-32 bg-gray-100 rounded animate-pulse" />
-                <div className="h-64 bg-gray-100 rounded animate-pulse" />
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
+                  <div className="flex space-x-1">
+                    {images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleDotClick(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
+                          ? "bg-yellow-500 shadow-lg"
+                          : "bg-gray-300 bg-opacity-70 hover:bg-yellow-300"
+                          }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="absolute bottom-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm rounded px-1.5 py-0.5">
+                  <div className="flex items-center space-x-1">
+                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                    <span className="text-xs font-medium text-gray-800">5</span>
+                    <span className="text-xs text-gray-600">|</span>
+                    <span className="text-xs text-gray-600">0</span>
+                  </div>
+                </div>
               </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 items-start ">
-              <div className="space-y-3">
-                {/* Mobile Image Slider */}
-                {/* <div className="md:hidden relative -mx-2 sm:-mx-4"> */}
-                <div className="md:hidden relative -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12">
-                  {/* Main Image Container */}
-                  <div className="relative bg-white overflow-hidden">
+            <div className="hidden md:block">
+              <div className="grid grid-cols-2 gap-3">
+                   {(() => {
+                  const displayImages = [...images];
+                  while (displayImages.length < 8) {
+                    displayImages.push(...images);
+                  }
+                  return displayImages.slice(0, 8).map((image, index) => (
                     <div
-                      className="w-full h-120 overflow-hidden cursor-pointer"
-                      onTouchStart={handleTouchStart}
-                      onTouchMove={handleTouchMove}
-                      onTouchEnd={handleTouchEnd}
+                      key={index}
+                      onClick={() => setSelectedImage(index % images.length)}
+                      className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
+                        ? "border-yellow-500 shadow-md"
+                        : "border-gray-200 hover:border-yellow-300"
+                        }`}
                     >
-                      <img
-                        src={images[selectedImage]}
-                        alt=""
-                        className="w-full h-full object-contain transition-transform duration-300"
-                      />
-                    </div>
-                    <div className="absolute bottom-2 left-2 z-10">
-                      <span className="bg-yellow-400 text-black text-xs font-semibold px-1.5 py-0.5 rounded">
-                        BESTSELLER
-                      </span>
-                    </div>
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
-                      <div className="flex space-x-1">
-                        {images.map((_, index) => (
+                      <div className="w-full h-100 overflow-hidden">
+                        <img
+                          src={image}
+                          alt={""}
+                          className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      {index === 0 && (
+                        <div className="absolute top-2 right-2">
                           <button
-                            key={index}
-                            onClick={() => handleDotClick(index)}
-                            className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
-                              ? "bg-purple-500 shadow-lg"
-                              : "bg-gray-300 bg-opacity-70 hover:bg-purple-300"
-                              }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <div className="absolute bottom-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm rounded px-1.5 py-0.5">
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                        <span className="text-xs font-medium text-gray-800">5</span>
-                        <span className="text-xs text-gray-600">|</span>
-                        <span className="text-xs text-gray-600">0</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="hidden md:block">
-                  <div className="grid grid-cols-2 gap-3">
-                    {(() => {
-                      const displayImages = [...images];
-                      while (displayImages.length < 8) {
-                        displayImages.push(...images);
-                      }
-                      return displayImages.slice(0, 8).map((image, index) => (
-                        <div
-                          key={index}
-                          onClick={() => setSelectedImage(index % images.length)}
-                          className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
-                            ? "border-purple-500 shadow-md"
-                            : "border-gray-200 hover:border-gray-300"
-                            }`}
-                        >
-                          <div className="w-full h-100 overflow-hidden">
-                            <img
-                              src={image}
-                              alt={""}
-                              className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
+                            onClick={handleWishlist}
+                            className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
+                              } hover:text-red-500 transition-colors`}
+                          >
+                            <Heart
+                              className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
+                                }`}
                             />
-                          </div>
-                          {index === 0 && (
-                            <div className="absolute top-2 right-2">
-                              <button
-                                onClick={handleWishlist}
-                                className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
-                                  } hover:text-red-500 transition-colors`}
-                              >
-                                <Heart
-                                  className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
-                                    }`}
-                                />
-                              </button>
-                            </div>
-                          )}
+                          </button>
                         </div>
-                      ));
-                    })()}
-
-
-                  </div>
-                </div>
+                      )}
+                    </div>
+                  ));
+                })()}
+                  
+               
               </div>
+            </div>
+          </div>
 
           <div className="space-y-4">
             <div className="md:hidden flex items-center justify-between px-1">
@@ -841,10 +818,8 @@ const ProductDetailWebPage = () => {
               <ProductDetailsSection />
             </div>
           </div>
-       </div>
-    )}
-  </div>
-          
+        </div>
+      </div>
       <div className="w-full">
 
         <BannerSlidder />
@@ -1340,9 +1315,7 @@ const ProductDetailWebPage = () => {
         </div>
       )}
     </div>
-
   );
-
 };
 
 export default ProductDetailWebPage;
