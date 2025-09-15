@@ -107,27 +107,15 @@ export default function TreasureChestBanner() {
         {/* Background with custom gradient - only when slider is not fully open */}
         {sliderPosition < 100 && (
           <div
-            className="absolute inset-0"
-            style={{
-              background: `
-                radial-gradient(at 17% 100%, hsla(240,87%,93%,1) 0px, transparent 50%),
-                radial-gradient(at 1% 57%, hsla(240,100%,70%,0.57) 0px, transparent 50%),
-                radial-gradient(at 93% 99%, hsla(287,100%,84%,1) 0px, transparent 50%)
-              `
-            }}
+            className="absolute inset-0  bg-[radial-gradient(at_17%_100%,hsla(50,100%,70%,1)_0px,transparent_50%),radial-gradient(at_1%_57%,hsla(40,100%,50%,0.57)_0px,transparent_50%),radial-gradient(at_93%_99%,hsla(0,100%,70%,1)_0px,transparent_50%)]"
+
           />
         )}
 
         {/* Content Container - only show when slider is not fully open */}
         {sliderPosition < 100 && (
-          <div className="fixed inset-0 z-10 pt-20"
-            style={{
-              background: `
-                  radial-gradient(at 17% 100%, hsla(240,87%,93%,1) 0px, transparent 50%),
-                  radial-gradient(at 1% 57%, hsla(240,100%,70%,0.57) 0px, transparent 50%),
-                  radial-gradient(at 93% 99%, hsla(287,100%,84%,1) 0px, transparent 50%)
-                `
-            }}
+          <div className="fixed inset-0 z-10 pt-20  bg-[radial-gradient(at_17%_100%,hsla(50,100%,70%,1)_0px,transparent_50%),radial-gradient(at_1%_57%,hsla(40,100%,50%,0.57)_0px,transparent_50%),radial-gradient(at_93%_99%,hsla(0,100%,70%,1)_0px,transparent_50%)]"
+
           >
             {/* Desktop Version */}
             <div className="hidden md:block">
@@ -143,7 +131,7 @@ export default function TreasureChestBanner() {
                       />
                     </div>
                     <div className="mb-3">
-                      <h1 className="text-[38px] font-semibold text-[#4F3267] mb-6 leading-tight">
+                      <h1 className="text-[38px] font-semibold text-black mb-6 leading-tight">
                         Start Saving for Jewellery,<br />
                         The Smart Way.
                       </h1>
@@ -153,10 +141,8 @@ export default function TreasureChestBanner() {
                       </p>
                     </div>
                     <button
-                      className="px-8 py-4 rounded-[10px] text-white font-semibold text-[12px] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                      style={{
-                        background: 'linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)'
-                      }}
+                      className="px-8 py-4 rounded-[10px] text-black font-semibold text-[12px] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-yellow-400 to-yellow-600"
+
                     >
                       CHOOSE YOUR PLAN & JOIN
                     </button>
@@ -174,31 +160,31 @@ export default function TreasureChestBanner() {
                       />
                     </div>
                     <div className="grid grid-cols-3 gap-3 w-full max-w-2xl">
-                      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
-                        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
                           <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                         </div>
-                        <h3 className="font-semibold text-gray-800 mb-1 text-sm">Trust of TATA</h3>
+                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Trust of TATA</h3>
                         <p className="text-gray-600 text-xs">Spirit of CaratLane.<br />3,00,270+ enrolments.</p>
                       </div>
-                      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
-                        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
                           <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
-                        <h3 className="font-semibold text-gray-800 mb-1 text-sm">Assured Bonus</h3>
+                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Assured Bonus</h3>
                         <p className="text-gray-600 text-xs">Your 10th instalment is on<br />us- 100% FREE.</p>
                       </div>
-                      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center">
-                        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
+                        <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
                           <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                           </svg>
                         </div>
-                        <h3 className="font-semibold text-gray-800 mb-1 text-sm">Flexible Plan</h3>
+                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Flexible Plan</h3>
                         <p className="text-gray-600 text-xs">Redeem at ease- online or<br />in-store.</p>
                       </div>
                     </div>
@@ -242,7 +228,7 @@ export default function TreasureChestBanner() {
             </div>
           </div>
         )}
-
+<div>
         {/* Mobile Sticky Footer */}
         {showStickyFooter && (
           <div className="fixed bottom-0 left-0 right-0 z-50 block md:hidden">
@@ -250,13 +236,11 @@ export default function TreasureChestBanner() {
               <div className="flex items-center justify-between">
                 <div className="text-left flex-1">
                   <p className="text-gray-800 font-semibold text-xs py-[-10]">Start saving ₹5,000/month</p>
-                  <p className="text-gray-600 text-xs">for your dream jewellery</p>
+                  <p className="text-yellow-600 text-xs">for your dream jewellery</p>
                 </div>
                 <button
-                  className="ml-4 px-6 py-3 rounded-[10px] text-white font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 whitespace-nowrap"
-                  style={{
-                    background: 'linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)'
-                  }}
+                  className="ml-4 px-6 py-3 rounded-[10px] bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 whitespace-nowrap"
+                 
                   onClick={() => {
                     setSliderPosition(100);
                     setShowStickyFooter(false);
@@ -290,7 +274,7 @@ export default function TreasureChestBanner() {
           style={{
             transform: `translateY(calc(100% - 80px + ${(sliderPosition * -1)}%))`,
             minHeight: '100vh',
-            bottom: showStickyFooter ? '80px' : '0px',
+            bottom: showStickyFooter ? '55px' : '0px',
             background: `
                   radial-gradient(at 17% 100%, hsla(240,87%,93%,1) 0px, transparent 50%),
                   radial-gradient(at 1% 57%, hsla(240,100%,70%,0.57) 0px, transparent 50%),
@@ -316,16 +300,17 @@ export default function TreasureChestBanner() {
 
               <div className="max-w-6xl mx-auto">
                 <div className="text-black font-semibold text-sm text-left mb-4 ml-2 md:hidden">
-                  <p className='text-[#4F3267] text-xl'>Choose your plan</p>
+                  <p className='text-black text-xl'>Choose your plan</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-8">
-                  <div className="bg-white rounded-3xl p-4 md:p-8 shadow-xl border border-purple-100" style={{
-                    background: `radial-gradient(at 98% 7%,hsla(254,100%,90%,1) 0px,transparent 50%), radial-gradient(at 0% 0%,hsla(240,33%,99%,1) 0px,transparent 50%)`,
-                    border: `1px solid #9598F299`
+                  <div className="bg-white rounded-3xl p-4 md:p-8 shadow-xl border border-red-100" style={{
+                    background: ` radial-gradient(at 98% 7%, hsla(0,100%,90%,1) 0px, transparent 50%),   /* Red accent */
+  radial-gradient(at 0% 0%, hsla(240,33%,99%,1) 0px, transparent 50%)`,
+                    border: `1px solid red`
                   }}>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-6 h-6 text-purple-600">
+                        <div className="w-6 h-6 text-red-600">
                           <svg viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                           </svg>
@@ -334,30 +319,31 @@ export default function TreasureChestBanner() {
                       </div>
                     </div>
                     <div className="mb-6">
-                      <span className=" text-white px-4 py-2 rounded-full text-sm md:text-base font-semibold" style={{ background: `linear-gradient(90deg,#9CA2F4 0%,#776DE7 100%)` }}>
+                      <span className=" text-white px-4 py-2 rounded-full text-sm md:text-base font-semibold" style={{ background: `linear-gradient(90deg, #FF9A9E 0%, #FF0000 100%)
+` }}>
                         💎 ICON
                       </span>
                     </div>
                     <div className="space-y-4 mb-6">
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">A fixed instalment for 9 months</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">100% assured returns on your instalment</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">Get the last months instalment as CaratLane discount</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">Buy your favourite CaratLane jewellery hassle-free</span>
                       </div>
                     </div>
-                    <div className="bg-purple-50 rounded-2xl p-4 mb-6">
-                      <p className="text-purple-800 font-medium text-sm md:text-base">
+                    <div className="bg-red-50 rounded-2xl p-4 mb-6">
+                      <p className="text-red-800 font-medium text-sm md:text-base">
                         <span className="font-bold">Assured Bonus</span> on redemption
                       </p>
                     </div>
@@ -373,17 +359,18 @@ export default function TreasureChestBanner() {
                       transition-all 
                       duration-300 
                       hover:scale-105
-                      bg-gradient-to-r from-[#9CA2F4] to-[#776DE7]
-                      hover:from-purple-600 hover:to-purple-700
+                       bg-gradient-to-r from-[red] to-[red]
+                       hover:from-red-600 hover:to-red-700
+                     
                     ">
                       START SAVING
                     </button>
                   </div>
-                  <div className="rounded-3xl p-4 md:p-8 shadow-xl border border-orange-100 relative overflow-hidden" style={{
+                  <div className="rounded-3xl p-4 md:p-8 shadow-xl border border-yellow-100 relative overflow-hidden" style={{
                     background: `radial-gradient(at 98% 7%,hsla(36,100%,90%,1) 0px,transparent 50%), radial-gradient(at 0% 0%,hsla(24,100%,99%,1) 0px,transparent 50%)`,
-                    border: `1px solid #F5A62333`
+                    border: `1px solid yellow`
                   }}>
-                    <div className="absolute -right-4 top-6 bg-orange-400 text-white px-8 py-1 text-sm md:text-base font-bold transform rotate-12 shadow-md">
+                    <div className="absolute -right-4 top-6 bg-yellow-800 text-white px-8 py-1 text-sm md:text-base font-bold transform rotate-12 shadow-md">
                       POPULAR
                     </div>
                     <div className="flex items-center justify-between mb-4">
@@ -397,34 +384,34 @@ export default function TreasureChestBanner() {
                       </div>
                     </div>
                     <div className="mb-6">
-                      <span className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm md:text-base font-semibold">
+                      <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-full text-sm md:text-base font-semibold">
                         ⭐ EDGE
                       </span>
                     </div>
                     <div className="space-y-4 mb-6">
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">9 monthly instalments converted into grams of gold</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">Gold value accumulated over time with each instalment</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">Complete transparency ensured with real time gold rates</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 text-sm md:text-base leading-relaxed">Enjoy CaratLane benefit— no matter how gold rates move.</span>
                       </div>
                     </div>
-                    <div className="bg-orange-50 rounded-2xl p-4 mb-6">
+                    <div className="bg-yellow-50 rounded-2xl p-4 mb-6">
                       <p className="text-orange-800 font-medium text-sm md:text-base">
                         <span className="font-bold">Gold Value + Assured Bonus</span> on redemption
                       </p>
                     </div>
-                    <button className="w-full bg-gradient-to-r from-orange-400 to-orange-500 text-white py-4 rounded-2xl font-semibold text-base md:text-lg hover:from-orange-500 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-4 rounded-2xl font-semibold text-base md:text-lg hover:from-orange-500 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
                       START SAVING
                     </button>
                   </div>
@@ -434,9 +421,9 @@ export default function TreasureChestBanner() {
                 <div className="max-w-5xl mx-auto mt-8 mb-6">
                   <div className="bg-white rounded-2xl p-4 md:p-8">
                     {/* Header */}
-                    <h2 className="text-center text-xl md:text-2xl font-semibold text-[#4F3267] mb-6">CALCULATE YOUR SAVINGS</h2>
-                    <div className="mb-6">
-                      <div className="relative max-w-md mx-auto">
+                    <h2 className="text-center text-xl md:text-2xl  font-semibold text-[black] mb-6">CALCULATE YOUR SAVINGS</h2>
+                    <div className="mb-6 ">
+                      <div className="relative max-w-md mx-auto bg-[yellow] ">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-base md:text-lg text-gray-600">₹</span>
                         <input
                           type="number"
@@ -474,19 +461,19 @@ export default function TreasureChestBanner() {
                       <div className="flex justify-center gap-2 mt-3">
                         <button
                           onClick={() => setSelectedAmount(1000)}
-                          className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-xs md:text-sm"
+                          className="bg-yellow-50 hover:bg-yellow-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-xs md:text-sm"
                         >
                           ₹1,000
                         </button>
                         <button
                           onClick={() => setSelectedAmount(5000)}
-                          className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-xs md:text-sm"
+                          className="bg-yellow-50 hover:bg-yellow-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-xs md:text-sm"
                         >
                           ₹5,000
                         </button>
                         <button
                           onClick={() => setSelectedAmount(10000)}
-                          className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-xs md:text-sm"
+                          className="bg-yellow-100 hover:bg-yellow-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-xs md:text-sm"
                         >
                           ₹10,000
                         </button>
@@ -495,7 +482,7 @@ export default function TreasureChestBanner() {
 
                     {/* Tab Navigation */}
                     <div className="flex justify-center mb-6">
-                      <div className="flex bg-gray-100 rounded-full p-1 max-w-md w-full">
+                      <div className="flex bg-yellow-100 rounded-full p-1 max-w-md w-full">
                         <button
                           type="button"
                           onClick={(e) => {
@@ -504,8 +491,8 @@ export default function TreasureChestBanner() {
                             setActiveTab('comparison');
                           }}
                           className={`flex-1 py-2 px-4 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === 'comparison'
-                            ? 'bg-[#4F3267] text-white'
-                            : 'text-gray-600 hover:text-[#4F3267]'
+                            ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black'
+                            : 'text-gray-600 hover:text-[black]'
                             }`}
                         >
                           Plan Comparison
@@ -518,8 +505,8 @@ export default function TreasureChestBanner() {
                             setActiveTab('description');
                           }}
                           className={`flex-1 py-2 px-4 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === 'description'
-                            ? 'bg-[#4F3267] text-white'
-                            : 'text-gray-600 hover:text-[#4F3267]'
+                            ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black'
+                            : 'text-gray-600 hover:text-[black]'
                             }`}
                         >
                           Description
@@ -531,7 +518,7 @@ export default function TreasureChestBanner() {
                     {activeTab === 'comparison' ? (
                       <div className="flex flex-col space-y-6 max-w-4xl mx-auto">
                         {/* Treasure Chest ICON Plan */}
-                        <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{ background: `#FBF9FF`, border: `1px solid #E5E5FF` }}>
+                        <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{ background: `#FFF5F5`, border: `1px solid #FFE5E5` }}>
                           <div className="flex items-center mb-6">
                             <div className="w-5 h-5 text-gray-600 mr-3 flex-shrink-0">
                               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -539,7 +526,7 @@ export default function TreasureChestBanner() {
                               </svg>
                             </div>
                             <span className="font-medium text-gray-800 text-base md:text-lg mr-3">Treasure Chest</span>
-                            <span className="bg-gradient-to-r from-[#9CA2F4] to-[#776DE7] text-white px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap">
+                            <span className=" text-white px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap" style={{background:'linear-gradient(90deg, rgb(255, 154, 158) 0%, rgb(255, 0, 0) 100%)',}}>
                               💎 ICON
                             </span>
                           </div>
@@ -602,7 +589,7 @@ export default function TreasureChestBanner() {
                               </svg>
                             </div>
                             <span className="font-medium text-gray-800 text-base md:text-lg mr-3">Treasure Chest</span>
-                            <span className="bg-gradient-to-r from-orange-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap">
+                            <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap">
                               ⭐ EDGE
                             </span>
                           </div>
@@ -629,7 +616,7 @@ export default function TreasureChestBanner() {
                                 </div>
                                 <span className="text-gray-700 text-sm md:text-base ">CaratLane Bonus (10th Month)</span>
                               </div>
-                              <span className="bg-orange-400 text-white px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{selectedAmount.toLocaleString()}</span>
+                              <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{selectedAmount.toLocaleString()}</span>
                             </div>
 
                             <div className="flex items-center justify-between gap-2 sm:gap-0">
@@ -641,7 +628,7 @@ export default function TreasureChestBanner() {
                                 </div>
                                 <span className="text-gray-700 text-sm md:text-base break-words">Gold Value Appreciation (Adjust slider)</span>
                               </div>
-                              <span className="bg-orange-400 text-white px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{Math.round((selectedAmount * 10) * (growthPercent / 100)).toLocaleString()} ({growthPercent}%)</span>
+                              <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{Math.round((selectedAmount * 10) * (growthPercent / 100)).toLocaleString()} ({growthPercent}%)</span>
                             </div>
 
                             <div className="relative mt-4">
@@ -683,7 +670,7 @@ export default function TreasureChestBanner() {
                           <div
                             className="rounded-lg p-6 sm:p-8 mb-5"
                             style={{
-                              backgroundColor: 'rgb(251, 249, 255)',
+                              backgroundColor: 'rgb(255, 245, 245)',
                               border: '1px solid rgb(229, 229, 255)'
                             }}
                           >
@@ -772,13 +759,14 @@ export default function TreasureChestBanner() {
                     </div>
                   </div>
                 </div>
-                <TreasureChestFaqToggleComponent/>
+                <TreasureChestFaqToggleComponent />
               </div>
-              <div className="mt-auto">
-                <Footer className="p-0 m-0" />
+              <div >
+                <Footer  />
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </>

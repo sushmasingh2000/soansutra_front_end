@@ -59,7 +59,7 @@ const SimilarProducts = () => {
   const displayedProducts = showMore ? products : products.slice(0, 3);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+    <div className="w-full max-w-9xl bg-white mx-auto px-4 py-8">
       {/* Desktop View */}
       <div className="hidden md:block">
         <h2 className="text-2xl font-medium text-gray-800 text-center mb-8">Similar Products</h2>
@@ -68,7 +68,7 @@ const SimilarProducts = () => {
           {displayedProducts.map((product) => (
             <div key={product.id} className="flex flex-col items-center">
               <div className="relative mb-4">
-                <span className="absolute top-2 left-2 bg-purple-800 text-white text-xs px-2 py-1 rounded">
+                <span className="absolute top-2 left-2 bg-yellow-800 text-white text-xs px-2 py-1 rounded">
                   {product.discount}
                 </span>
                 <img 
@@ -92,7 +92,7 @@ const SimilarProducts = () => {
           <div className="flex justify-center">
             <button 
               onClick={() => setShowMore(true)}
-              className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-full text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 border bg-gradient-to-r from-yellow-400 to-yellow-600 border-yellow-300 rounded-full text-black-600 hover:bg-yellow-50 transition-colors"
             >
               <ChevronDown size={16} />
               SHOW MORE
@@ -109,7 +109,7 @@ const SimilarProducts = () => {
           {products.slice(0, 3).map((product) => (
             <div key={product.id} className="flex-shrink-0 w-40">
               <div className="relative mb-3">
-                <span className="absolute top-2 left-2 bg-purple-800 text-white text-xs px-2 py-1 rounded z-10">
+                <span className="absolute top-2 left-2 bg-yellow-800 text-white text-xs px-2 py-1 rounded z-10">
                   {product.discount}
                 </span>
                 <img 
@@ -130,7 +130,7 @@ const SimilarProducts = () => {
           
           {/* See More Card */}
           <div className="flex-shrink-0 w-40 h-40 flex items-center justify-center">
-            <button className="flex flex-col items-center justify-center text-purple-600 hover:text-purple-700 transition-colors">
+            <button className="flex flex-col items-center justify-center text-yellow-600 hover:text-yellow-700 transition-colors">
               <ArrowRight size={24} className="mb-2" />
               <span className="text-sm font-medium">SEE MORE</span>
             </button>

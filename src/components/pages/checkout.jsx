@@ -25,9 +25,9 @@ const CheckoutHeader = ({ currentStep = 0, steps = ['Address', 'Payment'], onBac
   };
 
   return (
-    <div className="w-full bg-gray-50 p-3 shadow-md">
+    <div className="w-full bg-white p-3 shadow-md">
       {/* Mobile Layout */}
-      <div className="flex justify-between items-center md:hidden bg-gray-50">
+      <div className="flex justify-between items-center md:hidden bg-white">
         <div className="flex items-center">
           <ArrowBackIcon
             className="mr-2 text-[BLACK] cursor-pointer"
@@ -39,7 +39,7 @@ const CheckoutHeader = ({ currentStep = 0, steps = ['Address', 'Payment'], onBac
       </div>
 
       {/* Step Indicator (Mobile) - Centered */}
-      <div className="mt-4 text-[0.8rem] md:hidden flex justify-center bg-gray-50">
+      <div className="mt-4 text-[0.8rem] md:hidden flex justify-center bg-white">
         <Stepper activeStep={currentStep} alternativeLabel>
           {steps.map((label) => (
             <Step key={label}>
@@ -61,7 +61,7 @@ const CheckoutHeader = ({ currentStep = 0, steps = ['Address', 'Payment'], onBac
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden md:flex justify-between items-center bg-gray-50">
+      <div className="hidden md:flex w-full max-w-9xl justify-between items-center bg-white shadow-lg">
         <div className="flex items-center">
           <ArrowBackIcon
             className="mr-2 text-[Black] cursor-pointer"

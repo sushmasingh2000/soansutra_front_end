@@ -16,7 +16,7 @@ const ShopByProducts = () => {
 
   const products = data?.data?.result || [];
   return (
-    <div className="w-full bg-pink-50 py-4 px-8 mb-10">
+    <div className="w-full bg-white py-4 px-8 mb-10">
       <div className="max-w-7xl mx-auto">
         {/* name */}
         <h2 className="text-1xl md:text-2xl font-semibold text-gray-800 text-center mb-8">

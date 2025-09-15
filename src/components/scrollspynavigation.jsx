@@ -92,7 +92,7 @@ const ScrollSpyNavigation = () => {
 
   return (
     <div
-      className={`fixed top-16 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm transition-transform duration-300 ${
+      className={`fixed top-16 left-0 right-0 z-40 bg-white border-b border-yellow-200 shadow-sm transition-transform duration-300 ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       } md:hidden`}
     >
@@ -104,13 +104,13 @@ const ScrollSpyNavigation = () => {
               onClick={() => scrollToSection(section.id)}
               className={`flex-1 py-2 px-1 text-xs font-medium text-center transition-colors duration-200 relative ${
                 activeSection === section.id
-                  ? 'text-purple-600'
-                  : 'text-gray-600 hover:text-purple-600'
+                  ? 'text-yellow-600'
+                  : 'text-gray-600 hover:text-yellow-600'
               }`}
             >
               {section.label}
               {activeSection === section.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 transition-all duration-300" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-600 transition-all duration-300" />
               )}
             </button>
           ))}

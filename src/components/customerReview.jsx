@@ -250,7 +250,7 @@ const CustomerReviewSection = ({ productId }) => {
     );
 
   return (
-    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 bg-white">
+    <div className="max-w-9xl mx-auto p-4 sm:p-6 lg:p-8 bg-white">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         <div className="lg:col-span-1">
           <div className="space-y-6">
@@ -291,7 +291,7 @@ const CustomerReviewSection = ({ productId }) => {
               </p>
 
               <button
-                className="w-full sm:w-auto bg-purple-400 hover:bg-purple-500 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+                className="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-yellow-600 hover:bg-yellow-500 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                 onClick={() => {
                   if (!user) {
                     setShowLoginModal(true);
@@ -383,7 +383,7 @@ const CustomerReviewSection = ({ productId }) => {
       </div>
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 bg-white mt-6">
-        <div className="border-t border-gray-200 pt-6">
+        <div className="border-t border-yellow-200 pt-6">
           <p className="text-gray-600 text-sm mb-6">
             Customer Reviews : Showing {reviews.length} out of {reviews.length}
           </p>
@@ -412,7 +412,7 @@ const CustomerReviewSection = ({ productId }) => {
 
             return (
               <div
-                className="mb-8 pb-6 border-b border-gray-100"
+                className="mb-8 pb-6 border-b border-yellow-100"
                 key={review_id}
               >
                 <div className="flex items-start gap-3 mb-3">
@@ -467,7 +467,7 @@ const CustomerReviewSection = ({ productId }) => {
                       {reviewTags.map((tag) => (
                         <span
                           key={tag}
-                          className="bg-purple-100 text-purple-700 text-xs px-2.5 py-1 rounded"
+                          className="bg-yellow-100 text-red-700 text-xs px-2.5 py-1 rounded"
                         >
                           {tag}
                         </span>
@@ -479,7 +479,7 @@ const CustomerReviewSection = ({ productId }) => {
                   {isExpanded ? review_text : shortText}
                   {review_text.length > 100 && (
                     <span
-                      className="text-purple-500 cursor-pointer ml-2 hover:underline"
+                      className="text-red-500 cursor-pointer ml-2 hover:underline"
                       onClick={() =>
                         setExpandedReviewId(isExpanded ? null : review_id)
                       }
@@ -512,14 +512,14 @@ const CustomerReviewSection = ({ productId }) => {
           <div className="flex justify-center mt-8">
             <div className="flex items-center gap-2">
               <button
-                className="px-3 py-2 text-sm border border-purple-300 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="px-3 py-2 text-sm border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
                 onClick={() => goToPage(1)}
                 disabled={currPage === 1}
               >
                 FIRST
               </button>
               <button
-                className="w-8 h-8 flex items-center justify-center text-sm border border-purple-300 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="w-8 h-8 flex items-center justify-center text-sm border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
                 onClick={() => goToPage(currPage - 1)}
                 disabled={currPage === 1}
               >
@@ -532,10 +532,11 @@ const CustomerReviewSection = ({ productId }) => {
                   <button
                     key={pg}
                     onClick={() => goToPage(pg)}
-                    className={`w-8 h-8 flex items-center justify-center text-sm border rounded-lg ${pg === currPage
-                      ? "bg-purple-200 text-purple-800 border-purple-300"
-                      : "border-purple-300 text-purple-600 hover:bg-purple-50"
-                      }`}
+                    className={`w-8 h-8 flex items-center justify-center text-sm border rounded-lg ${
+                      pg === currPage
+                        ? "bg-yellow-200 text-red-800 border-yellow-300"
+                        : "border-yellow-300 text-red-600 hover:bg-yellow-50"
+                    }`}
                   >
                     {pg}
                   </button>
@@ -543,14 +544,14 @@ const CustomerReviewSection = ({ productId }) => {
               )}
 
               <button
-                className="w-8 h-8 flex items-center justify-center text-sm border border-purple-300 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="w-8 h-8 flex items-center justify-center text-sm border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
                 onClick={() => goToPage(currPage + 1)}
                 disabled={currPage === totalPages}
               >
                 &gt;
               </button>
               <button
-                className="px-3 py-2 text-sm border border-purple-300 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="px-3 py-2 text-sm border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
                 onClick={() => goToPage(totalPages)}
                 disabled={currPage === totalPages}
               >

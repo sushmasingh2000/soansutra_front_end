@@ -79,7 +79,7 @@ const SonaSutraDigitalGoldHome = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-y-hidden">
          <Header/>
     <NavigationBar/>
         <EgoldHeader/>
@@ -95,7 +95,7 @@ const SonaSutraDigitalGoldHome = () => {
               <h1 className="text-2xl lg:text-3xl  mb-4">CaratLane Digital Gold</h1>
               <p className="text-[15px] mb-6">Invest in Pure 24k Gold online -100% Safe & trustworthy</p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="bg-gradient-to-r from-[#de57e5] to-[#8863fb] text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+                <button className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
                   Buy Now
                 </button>
                 <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-all">
@@ -114,7 +114,7 @@ const SonaSutraDigitalGoldHome = () => {
             <div className="text-white w-full text-center mb-40">
               <h1 className="text-2xl  mb-4 mt-1">CaratLane Digital Gold</h1>
               <p className="text-[14px] mb-6">Invest in Pure 24k Gold online -100% Safe & trustworthy</p>
-              <button className="bg-gradient-to-r from-[#de57e5] to-[#8863fb] text-white px-4 py-2 rounded-lg font-semibold w-[1/2] max-w-xs">
+              <button className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg font-semibold w-[1/2] max-w-xs">
                 Buy Now
               </button>
             </div>
@@ -136,9 +136,9 @@ const SonaSutraDigitalGoldHome = () => {
               <input 
                 type="tel" 
                 placeholder="Enter your mobile number" 
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="flex-1 border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-              <button className="bg-gradient-to-r from-[#de57e5] to-[#8863fb] text-white px-6 py-3 rounded-lg font-semibold whitespace-nowrap">
+              <button className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg font-semibold whitespace-nowrap">
                 Call Me Back
               </button>
             </div>
@@ -154,9 +154,9 @@ const SonaSutraDigitalGoldHome = () => {
                 >
                   <span className="font-medium">{faq.question}</span>
                   {openFaq === index ? (
-                    <Minus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                    <Minus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                   ) : (
-                    <Plus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                    <Plus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                   )}
                 </button>
                 {openFaq === index && (
@@ -178,9 +178,9 @@ const SonaSutraDigitalGoldHome = () => {
                   >
                     <span className="font-medium">{faq.question}</span>
                     {openFaq === faqIndex ? (
-                      <Minus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <Minus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                     ) : (
-                      <Plus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <Plus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                     )}
                   </button>
                   {openFaq === faqIndex && (
@@ -203,9 +203,9 @@ const SonaSutraDigitalGoldHome = () => {
                   >
                     <span className="font-medium">{faq.question}</span>
                     {openFaq === faqIndex ? (
-                      <Minus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <Minus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                     ) : (
-                      <Plus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <Plus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                     )}
                   </button>
                   {openFaq === faqIndex && (
@@ -228,9 +228,9 @@ const SonaSutraDigitalGoldHome = () => {
                   >
                     <span className="font-medium">{faq.question}</span>
                     {openFaq === faqIndex ? (
-                      <Minus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <Minus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                     ) : (
-                      <Plus className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <Plus className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                     )}
                   </button>
                   {openFaq === faqIndex && (

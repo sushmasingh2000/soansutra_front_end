@@ -166,10 +166,17 @@ export default function ResponsiveCart() {
     //   toast.error('Please enter a coupon code');
     //   return;
     // }
+  const handleApplyCoupon = async () => {
+    // if (!code.trim()) {
+    //   toast.error('Please enter a coupon code');
+    //   return;
+    // }
 
+   
     const variantIds = cartItems.map(item => item.varient_id);
     const productAmount = subtotal;
 
+  
     try {
       const response = await apiConnectorPost(endpoint.get_coupon_varient, {
         v_id: JSON.stringify(variantIds || []),
@@ -342,10 +349,10 @@ export default function ResponsiveCart() {
           {cartItems.length > 0 && (
             <div className="w-80 space-y-3">
               <div
-                className="rounded-lg p-3 cursor-pointer"
-                style={{ background: "#E8E1FF" }}
+                className="rounded-lg p-3 cursor-pointer bg-yellow-50"
+
               >
-                <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm">
+                <div className="w-full flex items-center justify-between text-yellow-700 font-medium text-sm">
                   <div className="flex items-center gap-2"
                     onClick={openCouponModal}
                   >
@@ -369,7 +376,7 @@ export default function ResponsiveCart() {
                   <span className="font-medium text-sm">{pincode}</span>
                   <button
                     onClick={openPincodeModal}
-                    className="text-purple-600 text-xs ml-auto"
+                    className="text-yellow-700 text-xs ml-auto"
                   >
                     Change Pincode
                   </button>
@@ -439,8 +446,8 @@ export default function ResponsiveCart() {
                     </p>
                     <button
                       onClick={() => navigate('/')}
-                      className="text-white py-2 px-6 rounded-lg font-medium text-sm"
-                      style={{ background: "linear-gradient(90deg,#E56EEB 0%,#8863FB 100%)" }}
+                      className="text-black py-2 px-6 rounded-lg font-medium text-sm bg-gradient-to-r from-yellow-400 to-yellow-600"
+
                     >
                       Start Shopping
                     </button>
@@ -515,11 +522,11 @@ export default function ResponsiveCart() {
                   Sonasutra Offers
                 </div>
                 <div
-                  className="rounded-lg p-3 mb-3 cursor-pointer"
-                  style={{ background: "#E8E1FF" }}
+                  className="rounded-lg p-3 mb-3 cursor-pointer bg-yellow-50"
+
 
                 >
-                  <div className="w-full flex items-center justify-between text-purple-700 font-medium text-sm mb-2"
+                  <div className="w-full flex items-center justify-between text-yellow-700 font-medium text-sm mb-2"
                     onClick={openCouponModal}>
                     <div className="flex items-center gap-2" >
                       <Tag size={16} />
@@ -571,7 +578,7 @@ export default function ResponsiveCart() {
                     </div>
                     <button
                       onClick={openPincodeModal}
-                      className="text-purple-600 text-sm font-medium"
+                      className="text-yellow-600 text-sm font-medium"
                     >
                       Change Pincode
                     </button>
@@ -584,7 +591,7 @@ export default function ResponsiveCart() {
                       <span className="text-lg font-bold text-gray-900">{rupees}{Math.round(totalCost)}</span>
                       <button
                         onClick={scrollToOrderSummary}
-                        className="text-purple-600 text-xs underline text-left"
+                        className="text-yellow-600 text-xs underline text-left"
                       >
                         View Order Summary
                       </button>
@@ -607,23 +614,23 @@ export default function ResponsiveCart() {
       {showCouponModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-4 border-b">
+            <div className="flex items-center justify-between p-4 border-b border-b-yellow-300">
               <h2 className="text-lg font-semibold text-gray-900">Apply Coupon</h2>
               <button
                 onClick={closeCouponModal}
                 className="text-gray-400 hover:text-gray-600"
               >
-                <X size={20} />
+                <X size={20} className='text-red-800' />
               </button>
             </div>
-            <div className="p-4 border-b">
+            <div className="p-4 border-b border-b-yellow-300">
               <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="Enter coupon code"
                   value={coupon?.applicableCoupon?.coupon_data?.coupon_code}
                   onChange={(e) => setCouponCode(e.target.value)}
-                  className="flex-1 px-3 py-2 border rounded-md text-sm"
+                  className="flex-1 px-3 py-2 border border-yellow-300 rounded-md text-sm"
                 />
                 <button
                   onClick={() => {
@@ -631,19 +638,20 @@ export default function ResponsiveCart() {
                     setShowCouponModal(false);
                     setAppliedCoupon(true);
                   }}
-                  className="px-4 py-2 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700"
+                  className="px-4 py-2 bg-yellow-600 text-black text-sm rounded-md hover:bg-yellow-700"
                 >
                   APPLY
                 </button>
               </div>
             </div>
+
             <div className="p-4">
               <h3 className="text-sm font-medium text-gray-900 mb-3">Other Offers at CaratLane</h3>
               <div className="space-y-3">
                 {coupon?.allCoupon?.map((coupon, index) => (
                   <div
                     key={index}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 ${!coupon.isApplicable ? 'opacity-60' : ''}`}
+                    className={`flex items-center gap-3 p-3 rounded-lg border border-yellow-300 cursor-pointer hover:bg-gray-50 ${!coupon.isApplicable ? 'opacity-60' : ''}`}
                     onClick={() => coupon.isApplicable && applyCouponFromModal(coupon.code)}
                   >
                     <div className="flex-shrink-0 bg-gray-100 text-gray-600 text-xs font-bold px-2 py-4 rounded text-center min-w-[50px] flex items-center justify-center">
@@ -676,7 +684,7 @@ export default function ResponsiveCart() {
               onClick={closePincodeModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
             >
-              <X size={20} />
+              <X size={20} className='text-red-700'/>
             </button>
             <div className="p-6 text-center">
               <h2 className="text-lg font-semibold text-gray-900 mb-2">
@@ -695,7 +703,7 @@ export default function ResponsiveCart() {
               </div>
               <p className="text-blue-400 text-sm mb-6">In-Store Design</p>
               <div className="relative mb-4">
-                <div className="flex items-center border rounded-lg p-3 bg-gray-50">
+                <div className="flex items-center border border-yellow-300 rounded-lg p-3 bg-gray-50">
                   <MapPin size={16} className="text-gray-600 mr-2" />
                   <input
                     type="text"
@@ -707,7 +715,7 @@ export default function ResponsiveCart() {
                   />
                   <button
                     onClick={handlePincodeChange}
-                    className="text-purple-600 font-medium text-sm"
+                    className="text-red-600 font-medium text-sm"
                   >
                     CHANGE
                   </button>
@@ -732,4 +740,5 @@ export default function ResponsiveCart() {
   );
 }
 
-// isme varinat isd jyegi jb apply coupon pr click krenge to api variant id multiple bhi jaskti array me jyega or subtotal amount jyega 
+// isme varinat isd jyegi jb apply coupon pr click krenge to api variant id multiple bhi jaskti array me jyega or subtotal amount jyega
+}

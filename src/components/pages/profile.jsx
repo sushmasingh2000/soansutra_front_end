@@ -124,10 +124,8 @@ const ProfileDashboard = () => {
         return <PaymentContent />;
       case 'MANAGE_REFUNDS':
         return <ManageRefundsContent />;
-      case 'DISTRIBUTER':
-        return <Distributer />;
-      case 'TRY_AT_HOME':
-        return <TryAtHomeContent />;
+         case 'DISTRIBUTER':
+        return <Distributer/>;
       case 'COUPONS':
         return <CouponsContent />;
       case 'XCLUSIVE':
@@ -144,7 +142,7 @@ const ProfileDashboard = () => {
                 .flatMap(category => category.items)
                 .find(item => item.id === activeTab)?.label || 'Content'}
             </h2>
-            <div className="bg-white rounded-lg border border-gray-200 p-6 text-center">
+            <div className="bg-white rounded-lg border border-yellow-200 p-6 text-center">
               <p className="text-gray-500 text-sm">Content for {activeTab} will be displayed here</p>
             </div>
           </div>
@@ -153,7 +151,7 @@ const ProfileDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white-50">
       {/* Header Component */}
       <Header1 />
 
@@ -162,11 +160,11 @@ const ProfileDashboard = () => {
         <div className={`
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} 
           md:translate-x-0 fixed md:static inset-y-0 left-0 z-40 
-          w-80 bg-white border-r border-gray-200 min-w-screen 
+          w-80 bg-white border-r border-yellow-200 min-w-screen 
           transition-transform duration-300 ease-in-out
         `}>
           {/* Mobile Close Button */}
-          <div className="md:hidden flex justify-end p-3 border-b border-gray-200">
+          <div className="md:hidden flex justify-end p-3 border-b border-yellow-200">
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -176,7 +174,7 @@ const ProfileDashboard = () => {
           </div>
 
           {/* User Info */}
-          <div className="p-3 border-b border-gray-200">
+          <div className="p-3 border-b border-yellow-200">
             <h3 className="font-semibold text-gray-900 text-base">{profileData.name}</h3>
             <p className="text-xs text-gray-500">{profileData.cl_email}</p>
 
@@ -196,16 +194,17 @@ const ProfileDashboard = () => {
                       <button
                         key={item.id}
                         onClick={() => handleNavClick(item.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${activeTab === item.id
-                            ? 'bg-purple-50 text-purple-700 border-r-2 border-purple-700'
-                            : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                          }`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${
+                          activeTab === item.id
+                            ? 'bg-yellow-50 text-yellow-900 border-r-2 border-yellow-700'
+                            : 'text-gray-700 hover:bg-yellow-50 hover:text-gray-900'
+                        }`}
                       >
                         <div className="flex items-center">
                           <Icon className="w-3 h-3 mr-2" />
                           {item.label}
                         </div>
-                        <ChevronRight className="w-3 h-3 text-gray-400" />
+                        <ChevronRight className="w-3 h-3 text-yellow-400" />
                       </button>
                     );
                   })}
@@ -226,7 +225,7 @@ const ProfileDashboard = () => {
         {/* Main Content */}
         <div className="flex-1 md:ml-0">
           {/* Mobile Menu Button */}
-          <div className="md:hidden bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+          <div className="md:hidden bg-white border-b border-yellow-200 p-4 flex items-center justify-between">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               className="flex items-center text-gray-700 hover:text-gray-900 transition-colors"

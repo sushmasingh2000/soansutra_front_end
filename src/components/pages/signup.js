@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { endpoint } from '../../utils/APIRoutes';
 import Footer from "../Footer1";
-// import NavigationBar from '../navigationbar';
+import NavigationBar from '../navigationbar';
 import Header from '../Header1';
 import LoginModal from '../pages/LoginPage';
 import logo from '../../assets/desklogo.png';
@@ -149,7 +149,7 @@ const SignUpPage = () => {
   return (
     <>
       <Header />
-      {/* <NavigationBar /> */}
+      <NavigationBar />
       <div className="bg-white flex items-center justify-center p-2">
         <div className="w-full max-w-md rounded-lg overflow-hidden">
           <div className="p-3 sm:p-4">

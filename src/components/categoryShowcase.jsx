@@ -37,8 +37,8 @@ const JewelryCategories = () => {
   return (
     <div className="w-full p-2 sm:p-4 lg:p-6">
       <div
-        className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl"
-        style={{ backgroundColor: 'rgb(246, 243, 249)' }}
+        className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-yellow-50"
+        // style={{ backgroundColor: 'rgb(246, 243, 249)' }}
       >
 
         <div className="block sm:hidden">
@@ -54,7 +54,7 @@ const JewelryCategories = () => {
                 />
               </div>
               <div className="p-2 text-center">
-                <h3 className="text-xs font-semibold text-purple-600">
+                <h3 className="text-xs font-semibold text-yellow-600">
                  Wrapped with Love
                 </h3>
               </div>
@@ -104,7 +104,7 @@ const JewelryCategories = () => {
                   />
                 </div>
                 <div className="p-2 text-center">
-                  <h3 className="text-lg font-semibold text-purple-600">
+                  <h3 className="text-lg font-semibold text-yellow-600">
                     Wrapped with Love
                   </h3>
                 </div>

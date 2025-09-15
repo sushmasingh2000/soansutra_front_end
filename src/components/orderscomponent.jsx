@@ -230,7 +230,7 @@ const OrdersContent = () => {
                   {options.map(opt => (
                     <button
                       key={opt}
-                      className={`py-1 px-2 border rounded text-xs ${improveSelected.includes(opt) ? 'bg-purple-100 text-purple-800' : 'text-gray-600'}`}
+                      className={`py-1 px-2 border rounded text-xs ${improveSelected.includes(opt) ? 'bg-yellow-100 text-yellow-800' : 'text-gray-600'}`}
                       onClick={() => toggleOption(setImproveSelected, improveSelected, opt)}
                     >
                       {opt}
@@ -246,7 +246,7 @@ const OrdersContent = () => {
               {options.map(opt => (
                 <button
                   key={opt}
-                  className={`py-1 px-2 border rounded text-xs ${impressSelected.includes(opt) ? 'bg-purple-100 text-purple-800' : 'text-gray-600'}`}
+                  className={`py-1 px-2 border rounded text-xs ${impressSelected.includes(opt) ? 'bg-yellow-100 text-yellow-800' : 'text-gray-600'}`}
                   onClick={() => toggleOption(setImpressSelected, impressSelected, opt)}
                 >
                   {opt}
@@ -255,9 +255,9 @@ const OrdersContent = () => {
             </div>
 
             <div className="mt-3">
-              <label htmlFor="media-upload" className="w-full border border-gray-200 rounded flex justify-center items-center py-4 cursor-pointer">
-                <div className="bg-purple-50 rounded p-3">
-                  <ImagePlus className="w-6 h-6 text-purple-600" />
+              <label htmlFor="media-upload" className="w-full border border-yellow-200 rounded flex justify-center items-center py-4 cursor-pointer">
+                <div className="bg-yellow-50 rounded p-3">
+                  <ImagePlus className="w-6 h-6 text-yellow-600" />
                 </div>
                 <input id="media-upload" type="file" accept="image/*,video/*" className="hidden" onChange={(e) => setMedia(e.target.files[0])} />
               </label>
@@ -273,10 +273,9 @@ const OrdersContent = () => {
                 onChange={e => setFeedback(e.target.value)}
                 placeholder="Our designers would love to hear your feedback"
               />
-              <p className="text-right text-xs text-gray-500">{500 - feedback.length}</p>
+              <p className=" text-right text-xs text-gray-500">{500 - feedback.length}</p>
             </div>
-
-            <button className="w-full bg-purple-600 text-white py-2 rounded mt-3 font-medium text-sm" onClick={handleSubmit}>
+            <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 rounded mt-3 font-medium text-sm" onClick={handleSubmit}>
               Submit Review
             </button>
           </div>
@@ -416,7 +415,7 @@ const OrdersContent = () => {
   const currentOrders = activeTab === 'myOrders' ? activeOrders : cancelledOrders;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-white-50 p-4 md:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6 md:mb-8">
@@ -430,22 +429,22 @@ const OrdersContent = () => {
             <button
               onClick={() => setActiveTab('myOrders')}
               className={`flex-1 px-4 md:px-6 py-4 text-sm md:text-base font-medium rounded-l-lg transition-colors ${activeTab === 'myOrders'
-                ? 'bg-gray-50 text-gray-900 border-b-2 border-purple-500'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'bg-yellow-50 text-gray-900 border-b-2 border-red-500'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-yellow-50'
                 }`}
             >
               MY ORDERS
-              {activeOrders.length > 0 && (
-                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-purple-500 rounded-full">
-                  {activeOrders.length}
+              {currentOrders.length > 0 && (
+                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-yellow-500 rounded-full">
+                  {currentOrders.length}
                 </span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('cancelledOrders')}
               className={`flex-1 px-4 md:px-6 py-4 text-sm md:text-base font-medium rounded-r-lg transition-colors ${activeTab === 'cancelledOrders'
-                ? 'bg-gray-50 text-gray-900 border-b-2 border-purple-500'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'bg-yellow-50 text-gray-900 border-b-2 border-red-500'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-yellow-50'
                 }`}
             >
               CANCELLED ORDERS

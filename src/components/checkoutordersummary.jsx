@@ -83,7 +83,7 @@ const CheckoutOrderSummary = ({ selectedOrderId, shipping = 0, deliveryInfo = 'E
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="w-full md:w-[500px] md:ml-auto md:sticky md:top-4 bg-gray-50 shadow-md overflow-hidden md:min-h-[calc(100vh)]">
+    <div className="w-full md:w-[500px] md:ml-auto md:sticky md:top-4 bg-white shadow-md overflow-hidden md:min-h-[calc(100vh)]">
       {/* Toggle bar for mobile */}
       <div
         className="md:hidden flex justify-between items-center bg-gradient-to-r from-yellow-400 to-yellow-600 p-4 cursor-pointer text-sm font-medium text-black"
@@ -103,7 +103,7 @@ const CheckoutOrderSummary = ({ selectedOrderId, shipping = 0, deliveryInfo = 'E
       <div
         className={`overflow-hidden transition-max-height duration-300 ease-in-out ${
           isExpanded ? 'max-h-[1000px]' : 'max-h-0'
-        } md:max-h-none md:block md:flex md:flex-col md:h-full`}
+        } md:max-h-none md:block  md:h-full`}
       >
         <div className="p-4 md:flex-1 md:overflow-y-auto">
           {/* Products list */}

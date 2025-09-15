@@ -324,20 +324,20 @@ const ProductDetailWebPage = () => {
 
   const ProductDetailsSection = () => (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden self-start">
-      <div className="bg-gradient-to-r from-purple-100 to-blue-100 px-3 py-2 flex justify-between items-center">
+      <div className="bg-gradient-to-r from-yellow-100 to-blue-100 px-3 py-2 flex justify-between items-center">
         <h1 className="text-base font-semibold text-gray-800">
           Product Details
         </h1>
         <button
           onClick={handlePriceBreakupClick}
-          className="bg-purple-200 hover:bg-purple-300 text-purple-800 px-2 py-1 rounded-full text-xs font-medium transition-colors"
+          className="bg-yellow-200 hover:bg-yellow-300 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium transition-colors"
         >
           + PRICE BREAKUP
         </button>
       </div>
-      <div className="px-3 py-2 border-b border-gray-100">
+      <div className="px-3 py-2 border-b border-yellow-100">
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-purple-600 font-medium">
+          <span className="text-yellow-600 font-medium">
             SKU: {selectedVariant?.varient_sku || "Default"}
           </span>
           <button
@@ -368,7 +368,7 @@ const ProductDetailWebPage = () => {
           </div>
         </div>
       )}
-      <div className="px-3 py-2 border-b border-gray-100">
+      <div className="px-3 py-2 border-b border-yellow-100">
         <p className="text-xs text-gray-700">
           {selectedVariant?.product_details?.product_description || "No description available."}
         </p>
@@ -418,28 +418,28 @@ const ProductDetailWebPage = () => {
 
       {!showLess && (
         <>
-          <div className="px-3 py-2 border-t border-gray-100">
+          <div className="px-3 py-2 border-t border-yellow-100">
             <p className="text-gray-600 text-xs mb-1">Manufactured by</p>
             <p className="text-gray-800 text-xs font-medium">
               N/A
             </p>
           </div>
-
-          <div className="px-3 py-2 border-t border-gray-100">
+         
+          <div className="px-3 py-2 border-t border-yellow-100">
             <p className="text-gray-600 text-xs mb-1">Country of Origin</p>
             <p className="text-gray-800 text-xs">India</p>
           </div>
         </>
       )}
-      <div className="px-3 py-2 border-t border-gray-100">
+      <div className="px-3 py-2 border-t border-yellow-100">
         <button
           onClick={() => setShowLess(!showLess)}
-          className="text-purple-600 hover:text-purple-800 text-xs font-medium transition-colors"
+          className="text-yellow-600 hover:text-yellow-800 text-xs font-medium transition-colors"
         >
           {showLess ? "Show More" : "Show Less"}
         </button>
       </div>
-      <div className="px-3 py-2 border-t border-gray-100">
+      <div className="px-3 py-2 border-t border-yellow-100">
         <div className="flex items-center justify-between space-x-2">
           <div className="flex flex-col items-center text-center flex-1">
             <img
@@ -611,241 +611,239 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="md:hidden flex items-center justify-between px-1">
+          <div className="space-y-4">
+            <div className="md:hidden flex items-center justify-between px-1">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleWishlist}
+                  className="p-1.5 text-gray-600 hover:text-yellow-500 transition-colors"
+                >
+                  <Heart
+                    className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""}`}
+                  />
+                </button>
+                <button className="p-1.5 text-gray-600 hover:text-yellow-500 transition-colors">
+                  <Share2 className="w-4 h-4" />
+                </button>
+                <button className="p-1.5 text-gray-600 hover:text-yellow-500 transition-colors">
+                  <Copy className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="px-1 md:px-0">
+              <div className="flex items-center justify-between space-x-2">
+                <div className="space-y-0.5">
                   <div className="flex items-center space-x-2">
-                    <button
-                      onClick={handleWishlist}
-                      className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors"
-                    >
-                      <Heart
-                        className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""}`}
-                      />
-                    </button>
-                    <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
-                      <Share2 className="w-4 h-4" />
-                    </button>
-                    <button className="p-1.5 text-gray-600 hover:text-purple-500 transition-colors">
-                      <Copy className="w-4 h-4" />
-                    </button>
+                    <span className="text-xl font-bold text-gray-900">
+                      ₹{" "}
+                      {Number(
+                        selectedVariant?.final_varient_price
+                      ).toFixed(2)
+                      }
+                    </span>
                   </div>
+                  <p className="text-sm text-gray-600">(MRP Inclusive of all taxes)</p>
+                  <h1 className="text-lg lg:text-xl font-medium text-gray-900">
+                    {selectedVariant?.product_details?.product_name || "Unnamed Product"}
+                  </h1>
                 </div>
-                <div className="px-1 md:px-0">
-                  <div className="flex items-center justify-between space-x-2">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xl font-bold text-gray-900">
-                          ₹{" "}
-                          {Number(
-                            selectedVariant?.final_varient_price
-                          ).toFixed(2)
-                          }
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600">(MRP Inclusive of all taxes)</p>
-                      <h1 className="text-lg lg:text-xl font-medium text-gray-900">
-                        {selectedVariant?.product_details?.product_name || "Unnamed Product"}
-                      </h1>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <div
-                        className="text-white text-center font-semibold w-20 ml-2.5"
-                        style={{
-                          background: "linear-gradient(90deg, #FD8B64 0%, #FF5B6C 100%)",
-                          borderRadius: "8px 8px 0 0",
-                          textTransform: "uppercase",
-                          fontSize: "0.6rem",
-                          padding: "1px 0",
-                          lineHeight: "10px",
-                        }}
-                      >
-                        BUY FOR LESS
-                      </div>
-                      <div
-                        className="bg-[#F5F1FF] rounded-lg p-2 w-[100px] border border-purple-300"
-                      >
-                        <div className="text-center">
-
-                          <div className="text-purple-700 font-bold text-xs flex items-center justify-center mb-1"
-                            style={{
-                              background: "#E5DDFF",
-
-                              color: "#4F3267",
-                              padding: "8px 6px",
-                              marginbottom: "10px",
-                              borderRadius: "8px",
-                              fontSize: "11px",
-                              position: "relative",
-                              texttransform: "uppercase",
-                              height: "30px",
-                            }}>
-                            9+1 SAVINGS
-                            <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                              <path
-                                fillRule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div className="text-[10px] text-gray-600 leading-tight">
-                            Pay for 9 months, 100% off on the 10th
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {variants?.discount_details && (
-                  <div className="px-1 md:px-0">
-                    <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
-                      <span className="text-sm font-medium text-red-800">
-                        Flat {variants?.discount_details?.discount_value}% off on Diamond Prices
-                      </span>
-                    </div>
-                  </div>
-                )}
-                <div id="customise" className="flex items-stretch w-full bg-white border border-yellow-200 rounded-lg overflow-hidden  md:px-0">
-                  {groupedMaterials &&
-                    Object.keys(groupedMaterials).map((groupName, index) => (
-                      <button
-                        key={index}
-                        onClick={() => {
-                          const group = groupedMaterials[groupName] || [];
-                          setSelectedMaterialGroup(group);
-                          setShowCustomizationModal(true);
-                        }}
-                        className=" w-full px-4 py-4 flex-1 border-r  border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
-
-                      >
-                        {groupName}
-                      </button>
-                    ))}
-                  <button
-                    onClick={() => {
-                      setSelectedMaterialGroup(selectedVariant?.material_details);
-                      setShowCustomizationModal(true);
+                <div className="flex-shrink-0">
+                  <div
+                    className="text-white text-center font-semibold w-20 ml-2.5"
+                    style={{
+                      background: "linear-gradient(90deg, #FD8B64 0%, #FF5B6C 100%)",
+                      borderRadius: "8px 8px 0 0",
+                      textTransform: "uppercase",
+                      fontSize: "0.6rem",
+                      padding: "1px 0",
+                      lineHeight: "10px",
                     }}
-                    className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
                   >
-                    <span className="text-sm font-bold text-black">CUSTOMISE</span>
-                  </button>
-                </div>
-                <div className="flex justify-start gap-5 items-center px-1 md:px-0">
-                  {selectedVariant?.inventory_details?.stock_status &&
-                    selectedVariant?.inventory_details?.stock_status !== "OK" && (
-                      <div>
-                        <label className="text-gray-600 text-xs mb-1 font-semibold block">
-                          Stock
-                        </label>
-                        <span className="text-sm font-medium text-red-600">
-                          {selectedVariant?.inventory_details?.stock_status}
-                        </span>
+                    BUY FOR LESS
+                  </div>
+                  <div
+                    className="bg-yellow-50 rounded-lg p-2 w-[100px] border border-yellow-300"
+                  >
+                    <div className="text-center">
+
+                      <div className="text-yellow-700 font-bold text-xs flex items-center justify-center mb-1"
+                        style={{
+                          background: "#fef9c3",
+
+                          color: "#4F3267",
+                          padding: "8px 6px",
+                          marginbottom: "10px",
+                          borderRadius: "8px",
+                          fontSize: "11px",
+                          position: "relative",
+                          texttransform: "uppercase",
+                          height: "30px",
+                        }}>
+                        9+1 SAVINGS
+                        <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       </div>
-                    )}
-                  <div className="px-3 py-2 border-t border-gray-100">
-                    <label className="text-gray-600 text-xs mb-1 font-semibold block">
-                      Quantity
-                    </label>
-                    <div className="inline-flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
-                      <button
-                        onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
-                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
-                        aria-label="Decrease quantity"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="text"
-                        readOnly
-                        value={quantity}
-                        className="w-10 text-center outline-none border-l border-r border-gray-300"
-                        aria-label="Quantity"
-                      />
-                      <button
-                        onClick={() => setQuantity((prev) => prev + 1)}
-                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 font-bold text-lg"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
+                      <div className="text-[10px] text-gray-600 leading-tight">
+                        Pay for 9 months, 100% off on the 10th
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="mt-6 px-1 md:px-0">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-2">Available Variants</h2>
-                  <div className="flex flex-wrap gap-3">
-                    {variants.length
-                      ? variants.map((variant) => (
-                        <button
-                          key={variant.varient_id}
-                          onClick={() => setSelectedVariant(variant)}
-                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
-                            }`}
-                        >
-                          SKU: {variant.varient_sku}
-                        </button>
-                      ))
-                      : [
-                        {
-                          varient_id: "default",
-                          varient_sku: "Default",
-                          varient_price: selectedVariant?.price,
-                          varient_weight: selectedVariant.weight || "",
-                          unit_name: selectedVariant.unit_name || "",
-                        },
-                      ].map((variant) => (
-                        <button
-                          key={variant.varient_id}
-                          onClick={() => setSelectedVariant(variant)}
-                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                            ? "border-purple-700 bg-purple-100 text-purple-700 font-semibold"
-                            : "border-gray-300 hover:border-purple-500 hover:bg-purple-50"
-                            }`}
-                        >
-                          SKU: {variant.varient_sku}
-                        </button>
-                      ))}
-                  </div>
-                </div>
-                <div className="hidden md:block px-1 md:px-0">
-                  <div className="flex items-center space-x-3">
-                    <button
-                      onClick={handleAddToCart}
-                      className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
-                      style={{
-                        background: "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
-                      }}
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      <span>ADD TO CART</span>
-                    </button>
-                    <button
-                      onClick={handleWishlist}
-                      className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
-                    >
-                      <Heart
-                        className={`w-5 h-5 ${isWishlisted ? "text-red-500 fill-current" : "text-gray-600"}`}
-                      />
-                    </button>
-                    <button className="p-3 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
-                      <Share2 className="w-5 h-5 text-gray-600" />
-                    </button>
-                  </div>
-                </div>
-                <div id="delivery-stores" className="w-full px-1 md:px-0">
-                  <DeliveryStoresUI />
-                </div>
-                <FeaturesComponent />
-                <div id="details" className="self-start w-full space-y-6 px-1 md:px-0">
-                  <ProductDetailsSection />
                 </div>
               </div>
             </div>
-          )}
+            {variants?.discount_details && (
+              <div className="px-1 md:px-0">
+                <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
+                  <span className="text-sm font-medium text-red-800">
+                    Flat {variants?.discount_details?.discount_value}% off on Diamond Prices
+                  </span>
+                </div>
+              </div>
+            )}
+            <div id="customise" className="flex items-stretch w-full bg-white border border-yellow-200 rounded-lg overflow-hidden  md:px-0">
+              {groupedMaterials &&
+                Object.keys(groupedMaterials).map((groupName, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      const group = groupedMaterials[groupName] || [];
+                      setSelectedMaterialGroup(group);
+                      setShowCustomizationModal(true);
+                    }}
+                     className=" w-full px-4 py-4 flex-1 border-r  border-yellow-300 text-sm text-gray-700 hover:bg-yellow-50 transition-colors"
+                    
+                  >
+                    {groupName}
+                  </button>
+                ))}
+              <button
+                onClick={() => {
+                  setSelectedMaterialGroup(selectedVariant?.material_details);
+                  setShowCustomizationModal(true);
+                }}
+                className="bg-yellow-400 px-6 flex items-center justify-center flex-shrink-0 hover:bg-yellow-500 transition-colors"
+              >
+                <span className="text-sm font-bold text-black">CUSTOMISE</span>
+              </button>
+            </div>
+            <div className="flex justify-start gap-5 items-center px-1 md:px-0">
+              {selectedVariant?.inventory_details?.stock_status &&
+                selectedVariant?.inventory_details?.stock_status !== "OK" && (
+                  <div>
+                    <label className="text-gray-600 text-xs mb-1 font-semibold block">
+                      Stock
+                    </label>
+                    <span className="text-sm font-medium text-red-600">
+                      {selectedVariant?.inventory_details?.stock_status}
+                    </span>
+                  </div>
+                )}
+              <div className="px-3 py-2 border-t border-yellow-100">
+                <label className="text-gray-600 text-xs mb-1 font-semibold block">
+                  Quantity
+                </label>
+                <div className="inline-flex items-center border border-yellow-300 rounded-md overflow-hidden w-max">
+                  <button
+                    onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+                    className="px-3 py-1 bg-yellow-200 hover:bg-yellow-300 font-bold text-lg"
+                    aria-label="Decrease quantity"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="text"
+                    readOnly
+                    value={quantity}
+                    className="w-10 text-center outline-none border-l border-r border-yellow-300"
+                    aria-label="Quantity"
+                  />
+                  <button
+                    onClick={() => setQuantity((prev) => prev + 1)}
+                    className="px-3 py-1 bg-yellow-200 hover:bg-yellow-300 font-bold text-lg"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 px-1 md:px-0">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">Available Variants</h2>
+              <div className="flex flex-wrap gap-3">
+                {variants.length
+                  ? variants.map((variant) => (
+                    <button
+                      key={variant.varient_id}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                        ? "border-yellow-700 bg-yellow-100 text-yellow-700 font-semibold"
+                        : "border-gray-300 hover:border-yellow-500 hover:bg-yellow-50"
+                        }`}
+                    >
+                      SKU: {variant.varient_sku}
+                    </button>
+                  ))
+                  : [
+                    {
+                      varient_id: "default",
+                      varient_sku: "Default",
+                      varient_price: selectedVariant?.price,
+                      varient_weight: selectedVariant.weight || "",
+                      unit_name: selectedVariant.unit_name || "",
+                    },
+                  ].map((variant) => (
+                    <button
+                      key={variant.varient_id}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
+                        ? "border-yellow-700 bg-yellow-100 text-yellow-700 font-semibold"
+                        : "border-yellow-300 hover:border-yellow-500 hover:bg-yellow-50"
+                        }`}
+                    >
+                      SKU: {variant.varient_sku}
+                    </button>
+                  ))}
+              </div>
+            </div>
+            <div className="hidden md:block px-1 md:px-0">
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex-1 text-black py-3 px-6 rounded-lg font-semibold bg-gradient-to-r from-yellow-400 to-yellow-600 text-sm transition-colors flex items-center justify-center space-x-2"
+                  
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>ADD TO CART</span>
+                </button>
+                <button
+                  onClick={handleWishlist}
+                  className="p-3 border border-yellow-300 rounded-lg hover:border-yellow-400 transition-colors"
+                >
+                  <Heart
+                    className={`w-5 h-5 ${isWishlisted ? "text-red-500 fill-current" : "text-red-600"}`}
+                  />
+                </button>
+                <button className="p-3 border border-yellow-300 rounded-lg hover:border-yellow-400 transition-colors">
+                  <Share2 className="w-5 h-5 text-red-600" />
+                </button>
+              </div>
+            </div>
+            <div id="delivery-stores" className="w-full px-1 md:px-0">
+              <DeliveryStoresUI />
+            </div>
+            <FeaturesComponent />
+            <div id="details" className="self-start w-full space-y-6 px-1 md:px-0">
+              <ProductDetailsSection />
+            </div>
+          </div>
+        </div>
       </div>
+                
       <div className="w-full">
 
         <BannerSlidder />
@@ -865,15 +863,12 @@ const ProductDetailWebPage = () => {
 
       </div>
       {/* <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-40"> */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-30">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-yellow-200 p-2 z-30">
         <div className="flex justify-end">
           <button
             onClick={handleAddToCart}
-            className="flex-1 text-white py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
-            style={{
-              background:
-                "linear-gradient(90deg, #E56EEB -13.59%, #8863FB 111.41%)",
-            }}
+            className="flex-1 text-black py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2 bg-gradient-to-r from-yellow-400 to-yellow-600"
+           
           >
             <ShoppingCart className="w-4 h-4" />
             <span>ADD TO CART</span>
@@ -891,9 +886,9 @@ const ProductDetailWebPage = () => {
               : "translate-y-full md:translate-x-full"
               }`}
           >
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
+            <div className="sticky top-0 bg-white border-b border-yellow-200 p-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-purple-800">
+                <h2 className="text-lg font-semibold text-black">
                   {selectedVariant?.product_name || "Product"}
                 </h2>
 
@@ -924,7 +919,7 @@ const ProductDetailWebPage = () => {
                 </h3>
 
                 {/* Header Row */}
-                <div className="grid grid-cols-4 gap-2 mb-3 text-xs font-medium text-purple-600">
+                <div className="grid grid-cols-4 gap-2 mb-3 text-xs font-medium text-red-600">
                   <div>COMPONENT</div>
                   <div>RATE</div>
                   <div>WEIGHT</div>
@@ -1112,7 +1107,7 @@ const ProductDetailWebPage = () => {
 
                       </div>
                       {/* Grand Total */}
-                      <div className="grid grid-cols-4 gap-2 text-xs text-purple-700 pt-2 font-bold border-t mt-2">
+                      <div className="grid grid-cols-4 gap-2 text-xs text-red-700 pt-2 font-bold border-t mt-2">
                         <div>Grand Total</div>
                         <div>-</div>
                         <div>-</div>
@@ -1173,7 +1168,7 @@ const ProductDetailWebPage = () => {
               : "translate-y-full md:translate-x-full"
               }`}
           >
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-3 rounded-t-3xl md:rounded-t-lg">
+            <div className="sticky top-0 bg-white border-b border-yellow-200 p-3 rounded-t-3xl md:rounded-t-lg">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="text-xs text-gray-500">Estimated price</div>
@@ -1220,8 +1215,8 @@ const ProductDetailWebPage = () => {
                           key={index}
                           onClick={() => setSelectedMetal(metal)}
                           className={`p-2 rounded-lg border-2 text-center transition-all ${selectedMetal === metal
-                            ? "border-purple-300 bg-purple-50"
-                            : "border-gray-200 hover:border-gray-300"
+                            ? "border-yellow-300 bg-yellow-50"
+                            : "border-yellow-200 hover:border-yellow-300"
                             }`}
                         >
                           <div className="text-xs font-medium text-gray-900">
@@ -1269,7 +1264,7 @@ const ProductDetailWebPage = () => {
                   <h3 className="text-sm font-medium text-gray-900">
                     Select Size
                   </h3>
-                  <button className="text-xs text-purple-600 font-medium">
+                  <button className="text-xs text-red-600 font-medium">
                     SIZE GUIDE
                   </button>
                 </div>
@@ -1303,8 +1298,8 @@ const ProductDetailWebPage = () => {
                           key={index}
                           onClick={() => setSelectedSize(staticSize.size)}
                           className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-24 ${isSizeMatch || selectedSize === staticSize.size
-                            ? "border-purple-300 bg-purple-50"
-                            : "border-gray-200 hover:border-gray-300"
+                            ? "border-yellow-300 bg-yellow-50"
+                            : "border-yellow-200 hover:border-yellow-300"
                             }`}
                         >
                           <div className="text-sm font-bold text-gray-900">
@@ -1319,7 +1314,7 @@ const ProductDetailWebPage = () => {
 
                           <div
                             className={`text-xs mt-1 ${stockStatus?.toLowerCase().includes("made")
-                              ? "text-purple-600"
+                              ? "text-yellow-600"
                               : "text-red-600"
                               }`}
                           >
@@ -1332,10 +1327,10 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
             </div>
-            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-3">
+            <div className="sticky bottom-0 bg-white border-t border-yellow-200 p-3">
               <button
                 onClick={handleConfirmCustomization}
-                className="w-full bg-purple-600 text-white py-2.5 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-sm"
+                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2.5 rounded-lg font-semibold hover:bg-yellow-900 transition-colors text-sm"
               >
                 CONFIRM CUSTOMISATION
               </button>
@@ -1344,7 +1339,9 @@ const ProductDetailWebPage = () => {
         </div>
       )}
     </div>
+
   );
+
 };
 
 export default ProductDetailWebPage;

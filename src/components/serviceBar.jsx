@@ -2,7 +2,7 @@ import React from 'react';
 
 const ServiceShowcase = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mt-5 mb-5">
       {/* Desktop Layout */}
       <div className="hidden lg:grid lg:grid-cols-3 gap-4 p-4 min-h-screen">
         

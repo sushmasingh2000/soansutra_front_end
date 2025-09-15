@@ -56,14 +56,14 @@ const FAQBuyGold = () => {
         <h1 className="text-2xl sm:text-3xl font-semibold" style={{ color: '#231535' }}>
           Buying Gold
         </h1>
-        <span className="text-sm font-medium bg-white px-1  mt-3 rounded-full" style={{ color: 'rgb(136, 99, 251)' }}>
+        <span className="text-sm font-medium bg-white px-1  mt-3 rounded-full text-yellow-500" >
           FAQs
         </span>
       </div>
 
-      <div className="space-y-0 border border-gray Ferrara200 rounded-lg overflow-hidden">
+      <div className="space-y-0  Ferrara200 rounded-lg overflow-hidden">
         {faqData.map((item, index) => (
-          <div key={index} className="border-b border-gray-200 last:border-b-0">
+          <div key={index} className="border-b border-yellow-200 last:border-b-0">
             <button
               onClick={() => toggleItem(index)}
               className="w-full px-4 sm:px-6 py-4 sm:py-5 text-left hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
@@ -74,9 +74,9 @@ const FAQBuyGold = () => {
                 </span>
                 <div className="flex-shrink-0 ml-2">
                   {openItems[index] ? (
-                    <Minus className="w-5 h-5 text-gray-600" />
+                    <Minus className="w-5 h-5 text-yellow-600" />
                   ) : (
-                    <Plus className="w-5 h-5 text-gray-600" />
+                    <Plus className="w-5 h-5 text-yellow-600" />
                   )}
                 </div>
               </div>

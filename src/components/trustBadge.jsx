@@ -30,7 +30,7 @@ export default function WarrantyFeatures() {
 
   return (
     // Full width container that touches screen boundaries
-    <div className="w-screen" style={{ backgroundColor: 'rgb(246, 243, 249)' }}>
+    <div className="w-screen bg-white" >
       <div className="py-3 sm:py-4 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Single Row Layout for All Screen Sizes */}

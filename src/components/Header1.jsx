@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BrandLogo } from "./brand-logo";
+
 import logo from "../assets/desklogo.png";
 import { TreasureChestIcon } from "./treasure-chest-icon";
 import {
@@ -505,7 +505,11 @@ export default function Header() {
               onClick={() => user ? navigate("/wish") : setShowLoginModal(true)}
               className="relative text-black hover:text-yellow-600 transition-colors"
             >
-              <HeartIcon className="h-6 w-6" />
+              {/* <HeartIcon className="h-6 w-6" /> */}
+             <div>
+              <img src={hearticon} className="h-6 w-6"/>
+             </div>
+
               <span className="absolute -top-3 -right-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                 {wishlistitems?.length}
               </span>
