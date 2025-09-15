@@ -51,7 +51,7 @@ const RecentlyViewed = () => {
   
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+    <div className="w-full max-w-9xl mx-auto px-4 py-8 bg-white">
       {/* Desktop View */}
       <div className="hidden md:block">
         <h2 className="text-2xl font-medium text-gray-800 text-center mb-8">
@@ -86,7 +86,7 @@ const RecentlyViewed = () => {
           <div className="flex justify-center">
             <button
               onClick={() => setShowMore(true)}
-              className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-full text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 border bg-gradient-to-r from-yellow-400 to-yellow-600 border-yellow-300 rounded-full text-black-600 hover:bg-gray-50 transition-colors"
             >
               <ChevronDown size={16} />
               SHOW MORE
@@ -131,7 +131,7 @@ const RecentlyViewed = () => {
             <div className="flex-shrink-0 w-40 h-40 flex items-center justify-center">
               <button
                 onClick={() => setShowMore(true)}
-                className="flex flex-col items-center justify-center text-purple-600 hover:text-purple-700 transition-colors"
+                className="flex flex-col items-center justify-center text-yellow-600 hover:text-yellow-700 transition-colors"
               >
                 <ArrowRight size={24} className="mb-2" />
                 <span className="text-sm font-medium">SEE MORE</span>

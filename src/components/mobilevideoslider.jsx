@@ -153,16 +153,16 @@ const MobileVideoSlider = () => {
   );
   return (
     <>
-      <div className="w-full">
+      <div className="w-full mb-10 mt-10">
         {/* Mobile View */}
-        <div className="lg:hidden max-w-9xl mx-auto bg-gradient-to-br from-pink-100 to-purple-100 mb-10">
+        <div className="lg:hidden max-w-9xl mx-auto bg-yellow-50 mb-10">
           {/* Header */}
           <div className="px-4 pt-6 pb-4">
             <div className="flex items-center justify-between mb-2">
               <h1 className="text-lg font-medium text-gray-800">
                 Personally curated for you to watch
               </h1>
-              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
                 <Play className="w-4 h-4 text-white fill-white" />
               </div>
             </div>
@@ -189,7 +189,7 @@ const MobileVideoSlider = () => {
         </div>
 
         {/* Desktop View */}
-        <div className="hidden lg:block min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 py-8">
+        <div className="hidden lg:block min-h-screen bg-white py-8 ">
           <div className="max-w-7xl mx-auto px-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
@@ -201,7 +201,7 @@ const MobileVideoSlider = () => {
                   Where every piece tells you a story!
                 </p>
               </div>
-              <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
                 <Play className="w-6 h-6 text-white fill-white" />
               </div>
             </div>
@@ -222,7 +222,7 @@ const MobileVideoSlider = () => {
               <div className="flex justify-center mt-8">
                 <button
                   onClick={() => setShowMore(true)}
-                  className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full transition-colors duration-300 font-medium"
+                  className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-8 py-3 rounded-full transition-colors duration-300 font-medium"
                 >
                   See More
                   <ChevronRight className="w-5 h-5" />

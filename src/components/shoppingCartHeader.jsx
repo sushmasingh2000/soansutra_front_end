@@ -1,77 +1,80 @@
 import React from 'react';
 import { BrandLogo } from './brand-logo';
 import { Link } from 'react-router-dom';
+import  logo  from '../assets/desklogo.png'
 
-<BrandLogo/>
-const CartHeader = ({ onBackClick , cartItems }) => {
+
+const CartHeader = ({ onBackClick, cartItems }) => {
   return (
     <>
       {/* Font Awesome CDN - Make sure this is included in your HTML head */}
-      <link 
-        rel="stylesheet" 
+      <link
+        rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossOrigin="anonymous"
       />
-      
+
       <div className="bg-white px-4 sm:px-5 py-3 flex justify-between items-center shadow-lg">
         {/* Left Section */}
         <div className="flex items-center gap-3 sm:gap-4">
           {/* Back Arrow - Added onClick handler */}
-          <i 
+          <i
             className="fas fa-arrow-left text-lg sm:text-xl cursor-pointer transition-transform hover:-translate-x-1"
             style={{ color: '#4f3267' }}
             onClick={onBackClick}
           />
-          
+
           {/* Logo */}
-          <Link to={"/"}><BrandLogo/></Link>
-          
+          <Link to={"/"} className="flex-shrink-0 " >
+            <img src={logo} alt="" className="w-12 h-7 " />
+          </Link>
+
         </div>
-        
+
         {/* Center Section */}
         <div className="flex items-center">
-          <div className="border border-gray-200 rounded-full px-3 sm:px-4 py-2 flex items-center gap-2 cursor-pointer transition-all hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-xl shadow-md" style={{background:"#E8E1FF"}}>
-            <i 
+          <div className="border border-red-200 rounded-full px-3 sm:px-4 py-2 flex items-center gap-2 cursor-pointer bg-gradient-to-r from-yellow-400 to-yellow-600 transition-all hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-xl shadow-md" >
+            <i
               className="fas fa-shopping-cart text-sm sm:text-base"
-              style={{ color: '#4f3267' }}
+              style={{ color: 'black' }}
             />
-            <span 
-              className="text-sm sm:text-base font-medium"
-              style={{ color: '#4f3267' }}
+            <span
+              className="text-sm sm:text-base font-medium "
+              style={{ color: 'black' }}
             >
               Shopping Cart
             </span>
-            <div 
+            <div
               className="w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold"
-              style={{ backgroundColor: '#4f3267' }}
+              style={{ backgroundColor: 'black' }}
             >
               {cartItems?.length}
             </div>
           </div>
         </div>
-        
+
         {/* Right Section */}
         <div className="flex items-center gap-2">
-          <span 
+          <span
             className="text-sm sm:text-base font-medium hidden sm:block"
             style={{ color: '#4f3267' }}
           >
             Need Assistance?
           </span>
-          
+
           {/* WhatsApp Icon - Multiple fallback options */}
           <div className="relative">
             {/* Primary WhatsApp Icon */}
-            <i 
-              className="fab fa-whatsapp text-lg sm:text-xl cursor-pointer transition-all hover:text-green-500 hover:scale-110"
-              style={{ color: '#4f3267' }}
+            <i
+              className="fab fa-whatsapp text-lg  sm:text-xl cursor-pointer transition-all hover:text-green-500 hover:scale-110"
+              style={{ color: '#a16207' }}
             />
-            
+
             {/* Fallback if Font Awesome doesn't load */}
-            <span 
+            <span
               className="absolute inset-0 flex items-center justify-center text-lg sm:text-xl cursor-pointer transition-all hover:text-green-500 hover:scale-110"
-              style={{ 
+              style={{
                 color: '#4f3267',
                 display: 'none' // Will be shown by CSS if Font Awesome fails
               }}
@@ -81,7 +84,7 @@ const CartHeader = ({ onBackClick , cartItems }) => {
           </div>
         </div>
       </div>
-      
+
       <style jsx>{`
         /* Fallback if Font Awesome doesn't load */
         .fa-whatsapp:before {

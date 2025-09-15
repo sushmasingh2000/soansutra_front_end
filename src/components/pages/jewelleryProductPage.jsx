@@ -19,8 +19,8 @@ const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
           key={tab}
           onClick={() => onTabChange(tab)}
           className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${activeTab === tab
-            ? "bg-purple-600 text-white"
-            : "bg-purple-100 text-purple-700 hover:bg-purple-200"
+            ? "bg-yellow-600 text-white"
+            : "bg-yellow-100 text-yellow-700 hover:bg-purple-200"
             }`}
         >
           {tab}
@@ -59,7 +59,7 @@ const MobileFilterModal = ({
           <div className="flex items-center gap-2">
             <button
               onClick={onClearAll}
-              className="text-pink-500 text-xs font-medium"
+              className="text-yellow-500 text-xs font-medium"
             >
               CLEAR ALL
             </button>
@@ -84,7 +84,7 @@ const MobileFilterModal = ({
                     >
                       <input
                         type="checkbox"
-                        className="w-4 h-4 text-purple-600 rounded border-gray-300"
+                        className="w-4 h-4 text-purple-600 rounded border-yellow-300"
                         checked={
                           filters[filterKey]?.includes(option.value) || false
                         }
@@ -120,7 +120,7 @@ const DynamicSidebarFilters = ({
   onClearAll,
 }) => {
   return (
-    <div className="hidden lg:block w-64 bg-white p-4 border-r border-gray-200">
+    <div className="hidden lg:block w-64 bg-white p-4 border-r border-yellow-200">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-sm text-gray-800 flex items-center gap-2">
           <Filter className="w-4 h-4" />
@@ -131,7 +131,7 @@ const DynamicSidebarFilters = ({
         </h3>
         <button
           onClick={onClearAll}
-          className="text-pink-500 text-xs font-medium"
+          className="text-yellow-500 text-xs font-medium"
         >
           CLEAR ALL
         </button>
@@ -151,7 +151,7 @@ const DynamicSidebarFilters = ({
                 >
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-purple-600 rounded border-gray-300"
+                    className="w-4 h-4 text-yellow-600 rounded border-yellow-300"
                     checked={
                       filters[filterKey]?.includes(option.value) || false
                     }
@@ -174,7 +174,7 @@ const DynamicSidebarFilters = ({
 };
 const ProductCardSkeleton = () => {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-pulse">
+    <div className="bg-white rounded-lg shadow-sm border border-yellow-200 overflow-hidden animate-pulse">
       <div className="aspect-square bg-gray-200"></div>
       <div className="p-3 space-y-2">
         <div className="h-4 bg-gray-300 rounded w-3/4"></div>
@@ -224,7 +224,7 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
 
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-lg shadow-sm border border-yellow-200 overflow-hidden hover:shadow-md transition-shadow">
       <div className="relative group">
         <div
           className="aspect-square bg-gray-100 overflow-hidden cursor-pointer"
@@ -267,7 +267,7 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
           }}
           className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
         >
-          <Heart className="w-4 h-4 text-pink-500" />
+          <Heart className="w-4 h-4 text-yellow-500" />
         </button>
 
         {/* {product.isNew && (
@@ -286,7 +286,7 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
           </span>
         </div>
 
-        <button className="text-pink-500 text-xs font-medium hover:text-pink-600">
+        <button className="text-yellow-500 text-xs font-medium hover:text-yellow-600">
           Check delivery date
         </button>
       </div>
@@ -319,7 +319,7 @@ const SortDropdown = ({ sortBy, onSortChange }) => {
       <select
         value={sortBy}
         onChange={(e) => onSortChange(e.target.value)}
-        className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-500"
+        className="border border-yellow-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-yellow-500"
       >
         <option value="customer">Customer Recommended</option>
         <option value="price-low">Price: Low to High</option>
@@ -624,17 +624,17 @@ const DynamicProductListingPage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col">
+    <div className="bg-white-50 min-h-screen flex flex-col">
       <Header />
 
       <div className="flex-1">
-        <div className="bg-white border-b border-gray-200 px-4 py-3">
+        <div className="bg-white border-b border-yelloe-200 px-4 py-3">
           <div className="flex gap-2 overflow-x-auto no-scrollbar">
             {subcategories.length > 0 && (
               <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 py-2 bg-white border-b">
@@ -642,7 +642,7 @@ const DynamicProductListingPage = () => {
                   <button
                     key={subcat.product_subcategory_id}
                     onClick={() => navigate(`/products_web?subcategory=${subcat.product_subcategory_id}`)}
-                    className="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-medium hover:bg-purple-200 whitespace-nowrap"
+                    className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-medium hover:bg-yellow-200 whitespace-nowrap"
                   >
                     {subcat.name}
                   </button>
@@ -663,7 +663,7 @@ const DynamicProductListingPage = () => {
         <div className="flex">
           <button
             onClick={() => setMobileFiltersOpen(true)}
-            className="lg:hidden fixed bottom-6 right-6 bg-purple-600 text-white p-3 rounded-full shadow-lg z-40"
+            className="lg:hidden fixed bottom-6 right-6 bg-yellow-600 text-white p-3 rounded-full shadow-lg z-40"
           >
             <Filter className="w-5 h-5" />
           </button>
@@ -685,7 +685,7 @@ const DynamicProductListingPage = () => {
           />
 
           <div className="flex-1">
-            <div className="flex items-center justify-between px-3 py-2 bg-white border-b border-gray-200">
+            <div className="flex items-center justify-between px-3 py-2 bg-white border-b border-yellow-200">
               <div className="text-xs text-gray-600">
                 Showing {products.length} of {allProducts.length} products
               </div>
@@ -725,7 +725,7 @@ const DynamicProductListingPage = () => {
                 </p>
                 <button
                   onClick={handleClearAll}
-                  className="px-3 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700"
+                  className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700"
                 >
                   Clear All Filters
                 </button>

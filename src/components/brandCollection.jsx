@@ -17,9 +17,9 @@ const SonasutraCollections = () => {
 
 
   return (
-    <div className="w-full bg-gradient-to-b from-purple-50 to-purple-100 py-8 px-4">
+    <div className="w-full bg-yellow-50 py-8 px-4">
       <div className="text-center mb-8">
-        <h1 className="text-1xl md:text-3xl font-semibold text-purple-900 mb-2">
+        <h1 className="text-1xl md:text-3xl font-semibold text-black mb-2">
           Sonasutra Collections
         </h1>
       </div>
@@ -76,7 +76,7 @@ const SonasutraCollections = () => {
         </div>
 
         <div className="flex justify-center mt-8" onClick={() => handleScroll("viewcollection_scroll")}>
-          <button className="bg-purple-800 hover:bg-purple-900 text-white text-sm font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <button className="bg-yellow-800 hover:bg-yellow-900 text-white text-sm font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
             VIEW ALL COLLECTIONS
           </button>
         </div>

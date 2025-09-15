@@ -21,13 +21,13 @@ const PaymentContent = () => {
     <div className="p-3 md:p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-900">Payment Methods</h2>
-        <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+        <button className="bg-yellow-600 hover:bg-yellow-700 text-black px-4 py-2 rounded-lg text-sm font-medium">
           Add New Card
         </button>
       </div>
       <div className="space-y-3">
         {paymentMethods.map((method, index) => (
-          <div key={index} className="bg-white rounded-lg border border-gray-200 p-4">
+          <div key={index} className="bg-white rounded-lg border border-yellow-200 p-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <CreditCard className="w-5 h-5 text-gray-400 mr-3" />

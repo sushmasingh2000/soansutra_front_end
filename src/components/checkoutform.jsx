@@ -270,11 +270,11 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
   };
 
   return (
-    <div className={`w-full flex justify-center items-start min-h-screen bg-white p-4 overflow-y-auto no-scrollbar ${className}`}>
+    <div className={`w-full flex justify-center items-start min-h-screen bg-gray-50 p-4 overflow-y-auto no-scrollbar ${className}`}>
       <div className="w-full max-w-xl bg-white p-6">
         <div className="flex justify-center space-x-2 mb-4">
           <button
-            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'home' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
+            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'home' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-yellow-100 text-gray-800'
               }`}
             onClick={() => handleDeliveryTypeChange('home')}
           >
@@ -282,7 +282,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             HOME DELIVERY
           </button>
           <button
-            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'store' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-gray-200 text-gray-800'
+            className={`flex items-center px-3 py-1.5 rounded-full text-sm ${deliveryType === 'store' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : 'bg-yellow-100 text-gray-800'
               }`}
             onClick={() => handleDeliveryTypeChange('store')}
           >
@@ -299,7 +299,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                 <>
                   <p className="text-sm text-gray-600">
                     Est. Delivery {estDelivery}{' '}
-                    <span className="text-purple-600 cursor-pointer" onClick={openDateModal}>
+                    <span className="text-yellow-600 cursor-pointer" onClick={openDateModal}>
                       CHANGE DATE
                     </span>
                   </p>
@@ -310,7 +310,12 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                     {currentAddress?.postal_code}, {currentAddress?.country}
                   </p>
                 </>
-              ) : null}
+              ) : (
+                <div>
+                  {/* Inline form will go here when no address is added */}
+                  <p>No address added yet. Please add a shipping address below.</p>
+                </div>
+              )}
               <button
                 className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 py-2 rounded-lg mt-2 text-gray-800"
                 onClick={handleAddressButtonClick}
@@ -322,11 +327,11 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             <div className="bg-[#FFF8E7] p-4 rounded-lg mb-6">
               <h3 className="font-semibold mb-2">Billing Address</h3>
               <label className="flex items-center mb-2">
-                <input type="radio" checked={!useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-purple-600" />
+                <input type="radio" checked={!useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-red-600" />
                 Same as shipping address
               </label>
               <label className="flex items-center mb-2">
-                <input type="radio" checked={useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-purple-600" />
+                <input type="radio" checked={useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-red-600" />
                 Use a different billing address
               </label>
               <p className="text-xs text-gray-500 mt-2">We will not send an invoice to the shipping address</p>
@@ -337,14 +342,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                       name="firstName"
                       value={billingAddress.firstName}
                       onChange={handleBillingInputChange}
-                      className="w-1/2 p-2 border rounded-lg"
+                      className="w-1/2 p-2 border border-yellow-300 bg-white rounded-lg"
                       placeholder="First Name"
                     />
                     <input
                       name="lastName"
                       value={billingAddress.lastName}
                       onChange={handleBillingInputChange}
-                      className="w-1/2 p-2 border rounded-lg"
+                      className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                       placeholder="Last Name"
                     />
                   </div>
@@ -352,14 +357,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                     name="address"
                     value={billingAddress.address}
                     onChange={handleBillingInputChange}
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-2 border border-yellow-300 rounded-lg"
                     placeholder="Address (Flat No./House No./Street, Area)"
                   />
                   <input
                     name="landmark"
                     value={billingAddress.landmark}
                     onChange={handleBillingInputChange}
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-2 border border-yellow-300 rounded-lg"
                     placeholder="Landmark (Optional)"
                   />
                   <div className="flex space-x-2">
@@ -367,14 +372,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                       name="city"
                       value={billingAddress.city}
                       onChange={handleBillingInputChange}
-                      className="w-1/2 p-2 border rounded-lg"
+                      className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                       placeholder="City"
                     />
                     <input
                       name="pincode"
                       value={billingAddress.pincode}
                       onChange={handleBillingInputChange}
-                      className="w-1/2 p-2 border rounded-lg"
+                      className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                       placeholder="Pincode"
                     />
                   </div>
@@ -383,7 +388,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                       name="state"
                       value={billingAddress.state}
                       onChange={handleBillingInputChange}
-                      className="w-1/2 p-2 border rounded-lg"
+                      className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                     >
                       <option>State</option>
                       {indianStates.map((state) => (
@@ -394,7 +399,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                       name="country"
                       value={billingAddress.country}
                       onChange={handleBillingInputChange}
-                      className="w-1/2 p-2 border rounded-lg"
+                      className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                     >
                       {countries.map((country) => (
                         <option key={country} value={country}>{country}</option>
@@ -402,12 +407,12 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                     </select>
                   </div>
                   <div className="flex">
-                    <span className="p-2 border-r border-gray-300 bg-gray-50 text-gray-500">+91</span>
+                    <span className="p-2 border-r border border-yellow-300 bg-white text-gray-500">+91</span>
                     <input
                       name="mobile"
                       value={billingAddress.mobile}
                       onChange={handleBillingInputChange}
-                      className="w-full p-2 border rounded-lg"
+                      className="w-full p-2 border border-yellow-300 rounded-lg"
                       placeholder="Mobile Number"
                     />
                   </div>
@@ -422,7 +427,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             <div className="bg-[#FFF8E7] p-4 rounded-lg mb-6">
               <h3 className="font-semibold mb-2">Find the nearest store for pick up</h3>
               <input
-                className="w-full p-2 border rounded-lg mb-2"
+                className="w-full p-2 border border-yellow-300 rounded-lg mb-2"
                 placeholder="201308"
               />
               <p className="text-sm text-gray-600">
@@ -441,8 +446,8 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
               <h3 className="font-semibold mb-2">Billing Address</h3>
               <div className="mt-4 space-y-2">
                 <div className="flex space-x-2">
-                  <input className="w-1/2 p-2 border rounded-lg" placeholder="First Name" />
-                  <input className="w-1/2 p-2 border rounded-lg" placeholder="Last Name" />
+                  <input className="w-1/2 p-2 border border-yellow-300 rounded-lg" placeholder="First Name" />
+                  <input className="w-1/2 p-2 border border-yellow-300 rounded-lg" placeholder="Last Name" />
                 </div>
                 <input
                   className="w-full p-2 border rounded-lg"
@@ -453,26 +458,26 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   placeholder="Landmark (Optional)"
                 />
                 <div className="flex space-x-2">
-                  <input className="w-1/2 p-2 border rounded-lg" placeholder="City" />
-                  <input className="w-1/2 p-2 border rounded-lg" placeholder="Pincode" />
+                  <input className="w-1/2 p-2 border border-yellow-300 rounded-lg" placeholder="City" />
+                  <input className="w-1/2 p-2 border  border-yellow-300 rounded-lg" placeholder="Pincode" />
                 </div>
                 <div className="flex space-x-2">
-                  <select className="w-1/2 p-2 border rounded-lg">
+                  <select className="w-1/2 p-2 bg-white border border-yellow-300 rounded-lg">
                     <option>State</option>
                     {indianStates.map((state) => (
                       <option key={state} value={state}>{state}</option>
                     ))}
                   </select>
-                  <select className="w-1/2 p-2 border rounded-lg">
+                  <select className="w-1/2 p-2 border bg-white border-yellow-300 rounded-lg">
                     {countries.map((country) => (
                       <option key={country} value={country}>{country}</option>
                     ))}
                   </select>
                 </div>
                 <div className="flex">
-                  <span className="p-2 border-r border-gray-300 bg-gray-50 text-gray-500">+91</span>
+                  <span className="p-2 border-r border border-yellow-300 bg-white text-gray-500">+91</span>
                   <input
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-2 border rounded-lg border-yellow-300"
                     placeholder="Mobile Number"
                   />
                 </div>
@@ -482,7 +487,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
         )}
 
         <button
-          className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white p-3 rounded-lg font-semibold"
+          className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-3 rounded-lg font-semibold"
           onClick={handleSaveContinue}
         >
           SAVE & CONTINUE
@@ -496,7 +501,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             className="bg-white w-full md:w-1/3 h-auto max-h-[80vh] md:max-h-full rounded-t-lg md:rounded-lg shadow-lg overflow-y-auto
             transition-transform duration-300 ease-in-out transform translate-y-0 md:translate-y-0 md:right-0 md:top-0 md:bottom-0 md:h-screen"
           >
-            <div className="flex justify-between items-center p-4 border-b">
+            <div className="flex justify-between items-center p-4 border-b border border-yellow-300">
               <h2 className="font-semibold">Select Address</h2>
               <button onClick={closeSelectModal} className="text-gray-600">
                 ×
@@ -504,7 +509,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             </div>
             <div className="p-4">
               <button
-                className="w-full bg-gray-200 py-2 rounded-lg mb-4 text-gray-800"
+                className="w-full bg-yellow-200 py-2 rounded-lg mb-4 text-gray-800"
                 onClick={() => openAddEditModal()}
               >
                 ADD NEW ADDRESS
@@ -515,8 +520,8 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   <label className="flex items-center mb-2">
                     <input
                       type="radio"
-                      checked={selectedAddress === addr.address_id}
-                      onChange={() => selectAddress(addr.address_id)} // ← updated
+                      checked={selectedAddress === addr.id}
+                      onChange={() => selectAddress(addr.id)}
                       className="mr-2 accent-purple-600"
                     />
                     <p className="text-sm">Mobile: +91 {addr.phone_number}</p>
@@ -527,13 +532,13 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
 
                   <div className="flex justify-end space-x-2 mt-2">
                     <button
-                      className="bg-purple-100 text-purple-600 px-3 py-1 rounded-lg"
+                      className="bg-yellow-100 text-red-600 px-3 py-1 rounded-lg"
                       onClick={() => deleteAddress(addr.id)}
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                     <button
-                      className="bg-purple-100 text-purple-600 px-3 py-1 rounded-lg"
+                      className="bg-yellow-100 text-red-600 px-3 py-1 rounded-lg"
                       onClick={() => openAddEditModal(addr)}
                     >
                       <FontAwesomeIcon icon={faEdit} />
@@ -544,7 +549,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             </div>
             <div className="p-4 border-t">
               <button
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-lg"
+                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-3 rounded-lg"
                 onClick={closeSelectModal}
               >
                 CONFIRM
@@ -561,7 +566,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             className="bg-white w-full md:w-1/3 h-auto max-h-[80vh] md:max-h-full rounded-t-lg md:rounded-lg shadow-lg overflow-y-auto
             transition-transform duration-300 ease-in-out transform translate-y-0 md:translate-y-0 md:right-0 md:top-0 md:bottom-0 md:h-screen"
           >
-            <div className="flex justify-between items-center p-4 border-b">
+            <div className="flex justify-between items-center p-4 border-b border border-yellow-300">
               <h2 className="font-semibold">{editingAddress ? 'Edit Address' : 'Add Address'}</h2>
               <button onClick={closeAddEditModal} className="text-gray-600">
                 ×
@@ -574,19 +579,19 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   name="firstName"
                   value={newAddress.firstName}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg"
+                  className="w-1/2 p-2 border  border-yellow-300 rounded-lg"
                   placeholder="First Name"
                 />
                 <input
                   name="lastName"
                   value={newAddress.lastName}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg"
+                  className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                   placeholder="Last Name"
                 />
               </div>
               <div className="flex">
-                <span className="p-2 border-r border-gray-300 bg-gray-50 text-gray-500">+91</span>
+                <span className="p-2 border-r border border-yellow-300 bg-gray-50 text-gray-500">+91</span>
                 <input
                   name="mobile"
                   value={newAddress.mobile}
@@ -601,14 +606,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                 name="address"
                 value={newAddress.address}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded-lg"
+                className="w-full p-2 border border-yellow-300 rounded-lg"
                 placeholder="Address (Flat No./House No./Street, Area)"
               />
               <input
                 name="landmark"
                 value={newAddress.landmark}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded-lg"
+                className="w-full p-2 border border-yellow-300 rounded-lg"
                 placeholder="Landmark (Optional)"
               />
               <div className="flex space-x-2">
@@ -616,14 +621,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   name="city"
                   value={newAddress.city}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg"
+                  className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                   placeholder="City"
                 />
                 <input
                   name="pincode"
                   value={newAddress.pincode}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg"
+                  className="w-1/2 p-2 border border-yellow-300 rounded-lg"
                   placeholder="Pincode"
                 />
               </div>
@@ -632,7 +637,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   name="state"
                   value={newAddress.state}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg"
+                  className="w-1/2 p-2 border border-yellow-300 bg-white rounded-lg"
                 >
                   <option>State</option>
                   {indianStates.map((state) => (
@@ -643,7 +648,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                   name="country"
                   value={newAddress.country}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg"
+                  className="w-1/2 p-2 border border-yellow-300 bg-white rounded-lg"
                 >
                   {countries.map((country) => (
                     <option key={country} value={country}>{country}</option>
@@ -654,14 +659,14 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
               <h3 className="font-semibold">Address Type</h3>
               <div className="flex space-x-2">
                 <button
-                  className={`px-4 py-2 rounded-lg ${newAddress.type === 'Home' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'
+                  className={`px-4 py-2 rounded-lg ${newAddress.type === 'Home' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   onClick={() => handleAddressTypeChange('Home')}
                 >
                   Home (7am-10pm)
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg ${newAddress.type === 'Office' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'
+                  className={`px-4 py-2 rounded-lg ${newAddress.type === 'Office' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-800'
                     }`}
                   onClick={() => handleAddressTypeChange('Office')}
                 >
@@ -675,7 +680,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             </div>
             <div className="p-4 border-t">
               <button
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-lg"
+                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-3 rounded-lg"
                 onClick={saveAddress}
               >
                 SAVE ADDRESS
@@ -692,7 +697,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             className="bg-white w-full md:w-1/3 h-auto max-h-[80vh] md:max-h-full rounded-t-lg md:rounded-lg shadow-lg overflow-y-auto
             transition-transform duration-300 ease-in-out transform translate-y-0 md:translate-y-0 md:right-0 md:top-0 md:bottom-0 md:h-screen no-scrollbar"
           >
-            <div className="flex justify-between items-center p-4 border-b">
+            <div className="flex justify-between items-center p-4 border-b border border-yellow-300">
               <h2 className="font-semibold">Change Delivery Date</h2>
               <button onClick={closeDateModal} className="text-gray-600">
                 ×
@@ -711,7 +716,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                       {product.dates.map((date, idx) => (
                         <button
                           key={idx}
-                          className={`px-4 py-2 rounded-lg min-w-[50px] ${selectedDates[index] === date ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'
+                          className={`px-4 py-2 rounded-lg min-w-[50px] ${selectedDates[index] === date ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-800'
                             }`}
                           onClick={() => handleDateSelect(index, date)}
                         >
@@ -725,7 +730,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             </div>
             <div className="p-4 border-t">
               <button
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-lg"
+                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white p-3 rounded-lg"
                 onClick={confirmDate}
               >
                 CONFIRM

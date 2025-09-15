@@ -31,14 +31,14 @@ const CouponsContent = () => {
       <h2 className="text-xl font-semibold text-gray-900 mb-4">Available Coupons</h2>
       <div className="space-y-4">
         {coupons.map((coupon, index) => (
-          <div key={index} className={`bg-white rounded-lg border-2 p-4 ${coupon.isActive ? 'border-purple-200' : 'border-gray-200 opacity-60'}`}>
+          <div key={index} className={`bg-white rounded-lg border-2 p-4 ${coupon.isActive ? 'border-yellow-200' : 'border-gray-200 opacity-60'}`}>
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center">
-                <Ticket className="w-5 h-5 text-purple-600 mr-2" />
-                <span className="font-mono font-bold text-lg text-purple-600">{coupon.code}</span>
+                <Ticket className="w-5 h-5 text-yellow-600 mr-2" />
+                <span className="font-mono font-bold text-lg text-red-600">{coupon.code}</span>
               </div>
               {coupon.isActive && (
-                <button className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm font-medium">
+                <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium">
                   Apply
                 </button>
               )}
