@@ -514,9 +514,9 @@ const FeaturedSection = ({ items }) => (
         <button
           key={index}
           // onClick={() => onItemClick(item)}
-          className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 text-center hover:bg-purple-100 transition-colors"
+          className="bg-white-50 border border-yellow-200 rounded-lg px-3 py-2 text-center hover:bg-white-100 transition-colors"
         >
-          <span className="text-sm font-medium text-purple-700">
+          <span className="text-sm font-medium text-yellow-700">
             {item.name}
           </span>
         </button>
@@ -535,10 +535,10 @@ const StyleSection = ({ items, onClick }) => {
       <div className="grid grid-cols-2 gap-4">
         {isLoading
           ? Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="bg-gray-50 rounded-lg p-3 animate-pulse">
+            <div key={index} className="bg-white-50 rounded-lg p-3 animate-pulse">
               <div className="flex flex-col items-center text-center space-y-2">
-                <div className="w-10 h-10 bg-gray-300 rounded" />
-                <div className="h-3 w-16 bg-gray-300 rounded" />
+                <div className="w-10 h-10 border-yellow-300 bg-yellow-300 rounded" />
+                <div className="h-3 w-16 border-yellow-300 bg-yellow-300 rounded" />
               </div>
             </div>
           ))
@@ -546,7 +546,7 @@ const StyleSection = ({ items, onClick }) => {
             <button
               key={index}
               onClick={() => onClick(item?.product_subcategory_id)}
-              className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+              className="bg-white-50 rounded-lg p-3 hover:bg-white-100 transition-colors"
             >
               <div className="flex flex-col items-center text-center space-y-2">
                 {item.subcat_image && (
@@ -577,7 +577,7 @@ const MetalSection = ({ items, onClick, isLoading }) => (
         ? Array.from({ length: 6 }).map((_, index) => (
           <div
             key={index}
-            className="bg-gray-100 rounded-lg p-3 animate-pulse h-[60px]"
+            className="bg-yellow-100 rounded-lg p-3 animate-pulse h-[60px]"
           >
             <div className="flex flex-col items-center text-center space-y-2">
               <span className="text-xs font-medium text-gray-800 leading-tight" />
@@ -595,7 +595,7 @@ const MetalSection = ({ items, onClick, isLoading }) => (
                 {isMasterNameNew && (
                   <button
                     onClick={() => onClick(item.product_subcategory_id)}
-                    className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+                    className="bg-yellow-50 rounded-lg p-3 hover:bg-white-100 transition-colors"
                   >
                     <div className="flex flex-col items-center text-center space-y-2">
                       <span className="text-xs font-medium text-gray-800 leading-tight">
@@ -606,7 +606,7 @@ const MetalSection = ({ items, onClick, isLoading }) => (
                 )}
                 <button
                   onClick={() => onClick(item.product_subcategory_id)}
-                  className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+                  className="bg-yellow-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex flex-col items-center text-center space-y-2">
                     <span className="text-xs font-medium text-gray-800 leading-tight">
@@ -634,7 +634,7 @@ const PriceRangeSection = ({ items, onClick, isLoading }) => {
             <div
               key={index}
               className="bg-gray-100 rounded-lg h-10 animate-pulse"
-            >  <span className="text-xs font-medium text-purple-700" /></div>
+            >  <span className="text-xs font-medium text-yellow-700" /></div>
           ))
           : [...new Map(items.map(price => [price.price_group, price])).values()]
             .sort((a, b) => {
@@ -648,9 +648,9 @@ const PriceRangeSection = ({ items, onClick, isLoading }) => {
               <button
                 key={index}
                 onClick={() => onClick(price.product_subcategory_id)}
-                className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 text-center hover:bg-purple-100 transition-colors"
+                className="bg-white-50 border border-yellow-200 rounded-lg px-3 py-2 text-center hover:bg-white-100 transition-colors"
               >
-                <span className="text-xs font-medium text-purple-700">
+                <span className="text-xs font-medium text-yellow-700">
                   {price?.price_group}
                 </span>
               </button>
@@ -707,7 +707,7 @@ const GenderCategoriesSection = () => {
   ];
 
   return (
-    <div className="px-4 py-3 bg-purple-50">
+    <div className="px-4 py-3 bg-white-50">
       <div className="space-y-2">
         {genderCategories.map((gender, index) => (
           <button

@@ -115,10 +115,10 @@ const Payment = ({ selectedOrderId }) => {
           <div className="mb-6">
             <h3 className="text-base font-medium text-gray-700 mb-3">Gift Cards</h3>
 
-            <div className="bg-purple-50 border border-purple-100 rounded-lg p-4 flex items-center justify-between">
+            <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 flex items-center justify-between">
               <div className="flex items-center">
-                <div className="bg-purple-100 rounded-lg p-2 mr-3">
-                  <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                <div className="bg-yellow-100 rounded-lg p-2 mr-3">
+                  <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" />
                   </svg>
                 </div>
@@ -127,7 +127,7 @@ const Payment = ({ selectedOrderId }) => {
                   <p className="text-sm text-gray-600">Avail additional discounts with gift cards</p>
                 </div>
               </div>
-              <button className="text-purple-500 font-medium text-sm px-3 py-1 hover:bg-purple-100 rounded">
+              <button className="text-yellow-500 font-medium text-sm px-3 py-1 hover:bg-yellow-100 rounded">
                 Add
               </button>
             </div>
@@ -137,10 +137,10 @@ const Payment = ({ selectedOrderId }) => {
           <div className="mb-6">
             <h3 className="text-base font-medium text-gray-700 mb-3">Payment Options</h3>
 
-            <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-4 flex items-center justify-between">
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 flex items-center justify-between">
               <div className="flex items-center">
-                <div className="bg-purple-100 rounded-lg p-2 mr-3">
-                  <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                <div className="bg-yellow-100 rounded-lg p-2 mr-3">
+                  <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
                   </svg>
                 </div>
@@ -149,7 +149,7 @@ const Payment = ({ selectedOrderId }) => {
                   <p className="text-sm text-gray-600">Credit, Debit, Net Banking, UPI & More</p>
                 </div>
               </div>
-              <div className="bg-purple-500 rounded-full p-1">
+              <div className="bg-yellow-500 rounded-full p-1">
                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                 </svg>
@@ -158,15 +158,15 @@ const Payment = ({ selectedOrderId }) => {
           </div>
 
           {/* Pay Now Button */}
-          <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white 
-          font-medium py-4 rounded-lg text-lg hover:from-purple-600 hover:to-purple-700 transition-all 
+          <button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black 
+          font-medium py-4 rounded-lg text-lg hover:from-yellow-600 hover:to-yellow-700 transition-all 
           duration-200 shadow-lg" onClick={order_paymentFn}>
             PAY NOW
           </button>
         </div>
 
         {/* Delivery Details */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <div className="bg-yellow-50 rounded-lg p-4 mb-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <p className="text-sm text-gray-600 mb-1">{defaultAddress?.address_line1}</p>
@@ -182,12 +182,12 @@ const Payment = ({ selectedOrderId }) => {
               </p>
               <p className="text-sm text-gray-700">
                 <span className="font-medium">Address Type:</span>{" "}
-                <span className="text-blue-600">{defaultAddress?.type || "Default"}</span>
+                <span className="text-red-600">{defaultAddress?.type || "Default"}</span>
               </p>
             </div>
             {/* <button 
               onClick={openEditModal}
-              className="text-purple-500 font-medium text-sm hover:text-purple-600"
+              className="text-yellow-500 font-medium text-sm hover:text-yellow-600"
             >
               Edit
             </button> */}
@@ -195,10 +195,10 @@ const Payment = ({ selectedOrderId }) => {
         </div>
 
         {/* Gift Options */}
-        <div className="bg-gray-50 rounded-lg p-4">
+        <div className="bg-yellow-50 rounded-lg p-4">
           <div className="flex justify-between items-center mb-2">
             <p className="text-gray-700">No gift wrap added</p>
-            <button className="text-purple-500 font-medium text-sm hover:text-purple-600">
+            <button className="text-yellow-500 font-medium text-sm hover:text-yellow-600">
               Edit
             </button>
           </div>
@@ -226,24 +226,24 @@ const Payment = ({ selectedOrderId }) => {
                   name="firstName"
                   value={newAddress.firstName}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   placeholder="First Name"
                 />
                 <input
                   name="lastName"
                   value={newAddress.lastName}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   placeholder="Last Name"
                 />
               </div>
               <div className="flex">
-                <span className="p-2 border-r border-gray-300 bg-gray-50 text-gray-500 rounded-l-lg">+91</span>
+                <span className="p-2 border-r border-gray-300 bg-yellow-50 text-gray-500 rounded-l-lg">+91</span>
                 <input
                   name="mobile"
                   value={newAddress.mobile}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full p-2 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   placeholder="Mobile Number"
                 />
               </div>
@@ -253,14 +253,14 @@ const Payment = ({ selectedOrderId }) => {
                 name="address"
                 value={newAddress.address}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 placeholder="Address (Flat No./House No./Street, Area)"
               />
               <input
                 name="landmark"
                 value={newAddress.landmark}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 placeholder="Landmark (Optional)"
               />
               <div className="flex space-x-2">
@@ -268,14 +268,14 @@ const Payment = ({ selectedOrderId }) => {
                   name="city"
                   value={newAddress.city}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   placeholder="City"
                 />
                 <input
                   name="pincode"
                   value={newAddress.pincode}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   placeholder="Pincode"
                 />
               </div>
@@ -284,7 +284,7 @@ const Payment = ({ selectedOrderId }) => {
                   name="state"
                   value={newAddress.state}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 >
                   <option>State</option>
                   {indianStates.map((state) => (
@@ -295,7 +295,7 @@ const Payment = ({ selectedOrderId }) => {
                   name="country"
                   value={newAddress.country}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 >
                   {countries.map((country) => (
                     <option key={country} value={country}>{country}</option>
@@ -306,14 +306,14 @@ const Payment = ({ selectedOrderId }) => {
               <h3 className="font-semibold">Address Type</h3>
               <div className="flex space-x-2">
                 <button
-                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Home' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Home' ? 'bg-yellow-600 text-white' : 'bg-yellow-200 text-gray-800 hover:bg-yellow-300'
                     }`}
                   onClick={() => handleAddressTypeChange('Home')}
                 >
                   Home (7am-10pm)
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Office' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Office' ? 'bg-yellow-600 text-white' : 'bg-yellow-200 text-gray-800 hover:bg-yellow-300'
                     }`}
                   onClick={() => handleAddressTypeChange('Office')}
                 >
@@ -327,7 +327,7 @@ const Payment = ({ selectedOrderId }) => {
             </div>
             <div className="p-4 border-t">
               <button
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors"
+                className="w-full bg-gradient-to-r from-yellow-500 to-pink-500 text-white p-3 rounded-lg hover:from-yellow-600 hover:to-pink-600 transition-colors"
                 onClick={saveAddress}
               >
                 SAVE ADDRESS

@@ -29,6 +29,7 @@ import { useQuery } from "react-query";
 import { debounce } from "lodash";
 import LoginModal from "./pages/LoginPage";
 import copy from "copy-to-clipboard";
+import hearticon from "../assets/hearticon.png"
 
 
 
@@ -168,7 +169,7 @@ export default function Header() {
       name: "Collections",
       image:
         "https://cdn.caratlane.com/media/static/images/V4/2024/CL/11_NOV/Banner/Mobile/bestsellers/collections_t.png",
-      bgColor: "bg-gradient-to-r from-gray-100 to-gray-50",
+      bgColor: "bg-gradient-to-r from-yellow-100 to-yellow-50",
     },
   ];
 
@@ -298,7 +299,7 @@ export default function Header() {
               {debouncedSearchQuery &&
                 showDropdown &&
                 data?.data?.result?.length > 0 && (
-                  <div className="absolute z-50 bg-white shadow-xl w-full mt-1 rounded-md max-h-80 overflow-auto border border-gray-200">
+                  <div className="absolute z-50 bg-white shadow-xl w-full mt-1 rounded-md max-h-80 overflow-auto border border-yellow-200">
                     {data.data.result.map((item, index) => (
                       <div
                         key={`${item.product_id}-${index}`}
@@ -306,7 +307,7 @@ export default function Header() {
                           navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
-                        className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-gray-200 cursor-pointer transition-colors"
+                        className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-yellow-200 cursor-pointer transition-colors"
                       >
                         <div className="font-medium text-black">{item.pro_name}</div>
                         <div className="text-xs text-gray-600">
@@ -399,7 +400,7 @@ export default function Header() {
               {debouncedSearchQuery &&
                 showDropdown &&
                 data?.data?.result?.length > 0 && (
-                  <div className="absolute z-50 bg-white shadow-xl w-full mt-1 rounded-md max-h-80 overflow-auto border border-gray-200">
+                  <div className="absolute z-50 bg-white shadow-xl w-full mt-1 rounded-md max-h-80 overflow-auto border border-yellow-200">
                     {data.data.result.map((item, index) => (
                       <div
                         key={`${item.product_id}-${index}`}
@@ -407,7 +408,7 @@ export default function Header() {
                           navigate(`/products_web?subcategory=${item?.product_sub_cat_id}`);
                           setShowDropdown(false);
                         }}
-                        className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-gray-200 cursor-pointer transition-colors"
+                        className="block px-4 py-2 hover:bg-yellow-50 text-sm text-black border-b border-yellow-200 cursor-pointer transition-colors"
                       >
                         <div className="font-medium text-black">{item.pro_name}</div>
                         <div className="text-xs text-gray-600">
@@ -448,7 +449,7 @@ export default function Header() {
             <img
               src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
               alt="India"
-              className="h-5 w-6 rounded-sm border border-gray-300"
+              className="h-5 w-6 rounded-sm border border-yellow-300"
             />
 
             {/* User */}
@@ -460,14 +461,14 @@ export default function Header() {
               >
                 <UserIcon className="h-6 w-6 text-black hover:text-yellow-600 cursor-pointer transition-colors" />
                 {showUserDropdown && (
-                  <div className="absolute right-0  w-72 bg-white shadow-xl border border-gray-200 rounded-md z-50">
+                  <div className="absolute right-0  w-72 bg-white shadow-xl border border-yellow-200 rounded-md z-50">
                     {/* User Dropdown content here */}
                     <div className="p-4">
                       <div className="text-center mb-3">
                         <h3 className="text-lg font-semibold text-black">{profile?.name}</h3>
                         <p className="text-sm text-gray-600">{profile?.cl_email}</p>
                       </div>
-                      <hr className="border-gray-200" />
+                      <hr className="border-yellow-200" />
                       <div className="mt-3 space-y-2">
                         <Link to="/myaccount/profile" className="block text-sm text-left text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors">My Account</Link>
                       {distri_pro?.mlm_is_distributor === 1 && (
@@ -551,7 +552,7 @@ export default function Header() {
                 <>
                   {/* Sidebar Header */}
                   {/* Left side - Close button and Flag */}
-                  <div className="flex items-center justify-between p-2 border-b border-gray-200 bg-white">
+                  <div className="flex items-center justify-between p-2 border-b border-yellow-200 bg-white">
                     {/* Left side - Close button and Flag */}
                     <div className="flex items-center space-x-2">
                       <button
@@ -564,7 +565,7 @@ export default function Header() {
                         <img
                           src="https://th.bing.com/th/id/OIP.EDvMPBoxcb7F3r0YRni4YAHaHa?rs=1&pid=ImgDetMain&cb=idpwebpc2"
                           alt="Indian Flag"
-                          className="w-5 h-auto border border-gray-300 rounded-sm"
+                          className="w-5 h-auto border border-yellow-300 rounded-sm"
                         />
                         <span className="font-medium text-sm text-black">INDIA</span>
                       </div>
@@ -674,7 +675,7 @@ export default function Header() {
                     <div className="grid grid-cols-2 gap-4">
                       {loading
                         ? Array.from({ length: 6 }).map((_, index) => (
-                          <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                          <div key={index} className="bg-white border border-yellow-200 rounded-lg p-4 shadow-sm">
                             <div className="flex flex-col items-center text-center space-y-2">
                               <div className="w-12 h-12 bg-gray-200 rounded-md animate-pulse" />
                               <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
@@ -684,7 +685,7 @@ export default function Header() {
                         : categories.map((item, index) => (
                           <div
                             key={index}
-                            className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-yellow-50 hover:border-yellow-500 transition-all cursor-pointer shadow-sm"
+                            className="bg-white border border-yellow-200 rounded-lg p-4 hover:bg-yellow-50 hover:border-yellow-500 transition-all cursor-pointer shadow-sm"
                             onClick={() => {
                               setSelectedCategory(item); // Set selected category
                               setShowSubcategory(true); // Show the SubcategoryView
@@ -723,7 +724,7 @@ export default function Header() {
 
                   {/* Promotional Slides */}
                   <div className="px-4 py-2">
-                    <div className="relative rounded-lg overflow-hidden group border border-gray-200">
+                    <div className="relative rounded-lg overflow-hidden group border border-yellow-200">
                       <img
                         src={slides[currentSlide].image}
                         alt={slides[currentSlide].alt}
@@ -775,7 +776,7 @@ export default function Header() {
                       {categorySections.map((category, index) => (
                         <div
                           key={index}
-                          className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-all duration-300 border border-gray-200 hover:border-yellow-500 hover:shadow-md"
+                          className="relative rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-all duration-300 border border-yellow-200 hover:border-yellow-500 hover:shadow-md"
                         >
                           <img
                             src={category.image}
@@ -808,7 +809,7 @@ export default function Header() {
                       {productsServices.map((service, index) => (
                         <div
                           key={index}
-                          className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-lg hover:border-yellow-500 transition-all duration-300 cursor-pointer"
+                          className="bg-white border border-yellow-200 rounded-lg p-3 hover:shadow-lg hover:border-yellow-500 transition-all duration-300 cursor-pointer"
                         >
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0">
@@ -833,7 +834,7 @@ export default function Header() {
                   </div>
 
                   {/* Mobile User Profile Section at Bottom */}
-                  <div className="px-4 py-3 border-t border-gray-200 mt-auto bg-white">
+                  <div className="px-4 py-3 border-t border-yellow-200 mt-auto bg-white">
                     <div className="bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 rounded-lg p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
