@@ -32,6 +32,7 @@ import { useLoginModal } from "../../context/Login";
 import DeliveryStoresUI from "../deliverystorestrails";
 import ScrollSpyNavigation from "../scrollspynavigation";
 import FeaturesComponent from "../featuregrid";
+import Loader from "../../Shared/Loader";
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -65,6 +66,7 @@ const ProductDetailWebPage = () => {
   const [selectedMaterialGroup, setSelectedMaterialGroup] = useState([]);
   const { setShowLoginModal } = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
+  const [loadercart, setIsLoadingCart] = useState(false);
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -273,7 +275,9 @@ const image =
     };
 
     try {
+      setIsLoadingCart(true);
       const response = await apiConnectorPost(endpoint.create_cart, payload);
+      setIsLoadingCart(false);
       if (response?.data?.message !== "Unauthorised User!") {
         toast(response?.data?.message, { id: 1 })
       }
@@ -284,6 +288,7 @@ const image =
       toast.error("Error adding to cart");
       console.error("Add to cart error:", error);
     }
+      setIsLoadingCart(false);
   };
 
   const handleWishlist = async () => {
@@ -294,9 +299,11 @@ const image =
     const { product_id } = product_id_and_variant_id_only;
     const { varient_id } = selectedVariant;
     try {
+      setIsLoadingCart(true);
       const response = await apiConnectorGet(
         `${endpoint.create_wishlist}?product_id=${product_id}&varient_id=${varient_id}`
       );
+      setIsLoadingCart(false);
       if (response?.data?.message !== "Unauthorised User!") {
         toast(response?.data?.message, { id: 1 })
       }
@@ -312,6 +319,7 @@ const image =
       console.error("Wishlist error:", error);
       toast.error("Error updating wishlist");
     }
+      setIsLoadingCart(false);
   };
   const groupedMaterials = {};
 
@@ -492,6 +500,7 @@ const image =
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <Loader isLoading={loadercart}/>
       <div className="fixed top-0 left-0 right-0 z-[9999] bg-white shadow-sm">
         <Header />
       </div>

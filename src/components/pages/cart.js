@@ -11,6 +11,7 @@ import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../../utils/
 import { endpoint, rupees } from '../../utils/APIRoutes';
 import AssurityComponent from '../assuritycomponent';
 import CartHeader from '../shoppingCartHeader';
+import Loader from '../../Shared/Loader';
 
 export default function ResponsiveCart() {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ export default function ResponsiveCart() {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [coupon, setCoupon] = useState([])
+    const [isLoading, setIsLoading] = useState(false);
+  
 
   // Placeholder images for modal carousel
   const placeholderImages = [
@@ -118,6 +121,7 @@ export default function ResponsiveCart() {
   };
     const handlePlaceOrder = async () => {
     try {
+      setIsLoading(true)
       const orderItems = cartItems.map(item => ({
         varient_id: item.varient_id,
         quantity: item.quantity
@@ -140,6 +144,7 @@ export default function ResponsiveCart() {
       };
 
       const response = await apiConnectorPost(endpoint?.create_order, payload);
+      setIsLoading(false)
       if (!response?.data?.message === "Order placed successfully.") {
         toast(response?.data?.message);
       };
@@ -153,6 +158,7 @@ export default function ResponsiveCart() {
       console.error("Error placing order:", error);
       toast.error("Something went wrong. Please try again.");
     }
+      setIsLoading(false)
   };
 
   const handleApplyCoupon = async () => {
@@ -237,6 +243,7 @@ export default function ResponsiveCart() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 lg:pb-16 overflow-x-hidden">
+      <Loader isLoading={isLoading}/>
       <CartHeader onBackClick={handleBackClick} cartItems={cartItems} />
       <div className="max-w-7xl mx-auto px-4 py-4">
         {/* Desktop Layout */}
