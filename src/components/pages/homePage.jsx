@@ -12,7 +12,6 @@ const WarrantyFeatures = lazy(() => import('../trustBadge.jsx'));
 const ServiceShowcase = lazy(() => import('../serviceBar.jsx'));
 const SonasutraCollections = lazy(() => import('../brandCollection.jsx'));
 const BannerSlidder = lazy(() => import('../bannerSlidder.jsx'));
-const ExclusiveDealsSection = lazy(() => import('../exclusiveDeal.jsx'));
 const CaratLaneSignup = lazy(() => import('../emailSubscription.jsx'));
 const Footer = lazy(() => import('../Footer1'));
 const FloatingSupportMenu = lazy(() => import('./ClientDemo/Support.js'));

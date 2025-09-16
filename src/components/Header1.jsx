@@ -424,20 +424,24 @@ export default function Header() {
           {/* Right - Icons & Actions */}
           <div className="flex items-center space-x-3">
             {/* Treasure Chest */}
-            <button className="flex items-center px-3 py-1.5 text-sm rounded-md bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 text-black hover:from-[#B8922E] hover:to-[#E6E599] transition-colors">
+            <button className="flex items-center px-3 py-1.5 text-sm rounded-md bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] 
+            border border-yellow-500 text-black hover:from-[#B8922E] hover:to-[#E6E599] transition-colors" 
+            onClick={()=>navigate('/treasure-chest')}>
               <TreasureChestIcon className="h-5 w-5 mr-1 text-yellow-800" />
               <span className="text-black">Treasure Chest</span>
               <span className="ml-2 bg-yellow-800 text-white text-xs px-2 py-0.5 rounded-full">NEW</span>
             </button>
 
             {/* Store Locator */}
-            <button className="flex items-center px-3 py-1.5 text-sm rounded-md border border-yellow-600 text-black hover:bg-yellow-50 transition-colors">
+            <button className="flex items-center px-3 py-1.5 text-sm rounded-md border border-yellow-600 text-black
+             hover:bg-yellow-50 transition-colors" >
               <MapPinIcon className="h-5 w-5 mr-1 text-yellow-600" />
               <span className="text-black">Store Locator</span>
             </button>
 
             {/* e-Gold */}
-            <div className="px-3 py-1.5 bg-white border border-yellow-500 rounded-md hover:from-[#B8922E] hover:to-[#E6E599] transition-colors cursor-pointer">
+            <div className="px-3 py-1.5 bg-white border border-yellow-500 rounded-md hover:from-[#B8922E] hover:to-[#E6E599]
+             transition-colors cursor-pointer" onClick={()=>navigate('/e-gold')}>
               <img
                 src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png"
                 alt="e-Gold"

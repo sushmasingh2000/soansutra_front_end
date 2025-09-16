@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import EgoldHeader from '../egoldheader';
-import Header from '../Header1';
-import { Navigation } from 'lucide-react';
-import NavigationBar from '../navigationbar';
-import Footer from '../Footer1';
-import FAQBuyGold from '../faqbuygold';
-import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
-import { endpoint } from '../../utils/APIRoutes';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../../utils/ApiConnector';
+import { endpoint } from '../../utils/APIRoutes';
+import EgoldHeader from '../egoldheader';
+import FAQBuyGold from '../faqbuygold';
+import Footer from '../Footer1';
+import Header from '../Header1';
+import NavigationBar from '../navigationbar';
+import toast from 'react-hot-toast';
 
 const BuyGold = () => {
   const [amount, setAmount] = useState('');
+  const [paymentlink, setPaymentLink] = useState("")
   const [grams, setGrams] = useState('');
-  const [buyRate, setBuyRate] = useState(11311.47); // Price per gram including GST
   const [timeLeft, setTimeLeft] = useState(4 * 60 + 54); // 4 minutes 54 seconds in seconds
 
   // Update timer countdown
@@ -42,12 +42,6 @@ const BuyGold = () => {
       setGrams('');
       return;
     }
-
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && numericValue >= 0) {
-      const calculatedGrams = numericValue / buyRate;
-      setGrams(calculatedGrams.toFixed(4));
-    }
   };
 
   // Calculate amount when grams change
@@ -60,30 +54,13 @@ const BuyGold = () => {
       return;
     }
 
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && numericValue >= 0) {
-      const calculatedAmount = numericValue * buyRate;
-      setAmount(calculatedAmount.toFixed(2));
-    }
   };
 
-  // Validate before proceeding to buy
-  const handleProceedToBuy = () => {
-    const numericAmount = parseFloat(amount);
-    if (isNaN(numericAmount) || numericAmount < 10) {
-      alert('Minimum purchase amount is ₹10');
-      return;
-    }
-
-    // Proceed with the purchase logic here
-    alert(`Proceeding to buy ${grams}g of gold for ₹${amount}`);
-  };
   const { data } = useQuery(
     ["get_master_material_price"],
     () => apiConnectorGet(endpoint.get_master_material_price),
     usequeryBoolean
   );
-
   const get_price = data?.data?.result?.[0] || {};
 
   const unitPrice = Number(get_price.ma_price_per_unit) || 0;
@@ -94,6 +71,32 @@ const BuyGold = () => {
   const gstAmount = basePrice * (gstPercent / 100);
   const total_price = (basePrice + gstAmount).toFixed(4);
 
+  const buygoldFn = async()=>{
+    try{
+      const res= await apiConnectorPost(endpoint?.create_egold_price , {
+        req_amount : amount,
+        u_payment_method : 1
+      })
+      toast(res?.data?.message)
+      const qr_url = (res?.data?.result && res?.data?.result?.payment_url) || "";
+      if (qr_url) {
+        setPaymentLink(qr_url);
+      } else {
+        res?.data?.message ? toast(res?.data?.message) : toast("Something went wrong");
+      }
+
+    }
+    
+    catch(e){
+      console.log("something went wrong")
+    }
+  }
+
+  if (paymentlink) {
+    return (
+      document.location.href=paymentlink
+    );
+  }
   return (
     <>
       <Header />
@@ -133,7 +136,7 @@ const BuyGold = () => {
                   <span className="text-sm text-gray-600 ml-2">gms</span>
                   <button
                     className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-4 rounded ml-2"
-                    onClick={handleProceedToBuy}
+                    onClick={buygoldFn}
                   >
                     Proceed to Buy
                   </button>
@@ -158,7 +161,7 @@ const BuyGold = () => {
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
                 </svg>
-                <span>The minimum buy amount to purchase CaratLane eGold is ₹10</span>
+                <span>The minimum buy amount to purchase SonaSutra eGold is ₹10</span>
               </div>
               <div className="w-1/5 text-right pr-6">
                 <button className="text-yellow-500 text-sm">Check Buy History →</button>
@@ -199,7 +202,7 @@ const BuyGold = () => {
               </div>
               <button
                 className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-4 rounded w-full mb-2"
-                onClick={handleProceedToBuy}
+                onClick={buygoldFn}
               >
                 Proceed to Buy
               </button>
@@ -209,7 +212,7 @@ const BuyGold = () => {
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
               </svg>
-              <span>The minimum buy amount to purchase CaratLane eGold is ₹10</span>
+              <span>The minimum buy amount to purchase SonaSutra eGold is ₹10</span>
             </div>
             <div className="bg-white rounded-lg p-4 shadow mb-4">
               <h3 className="text-lg font-semibold mb-2">Buy Rate</h3>

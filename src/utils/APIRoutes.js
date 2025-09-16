@@ -1,6 +1,6 @@
-export const domain = "http://192.168.18.214:2000";
+// export const domain = "http://192.168.18.214:2000";
 export const frontend = "https://sonasutra.in";
-// export const domain = "https://backend.sonasutra.in";
+export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
@@ -139,7 +139,9 @@ export const endpoint = {
   //insider email
   get_external_leads: `${domain}/api/v1/get-external-leads`,
 
-  // collection
+  // egold order
+  get_order_egold: `${domain}/api/v1/get-egold-order-details`,
+  get_order_egold_detail_by: `${domain}/api/v1/get-egold-order-details-by-order-id`,
 
   //get_demo call
   req_demo_call: `${domain}/api/v1/u-req-demo-call`,
@@ -273,7 +275,10 @@ export const endpoint = {
   get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
   get_distributor_dashboard: `${domain}/api/v1/get-distributor-dashboard`,
   get_master_material_price: `${domain}/api/v1/get-master-material-pice`,
- 
+  create_egold_price: `${domain}/api/v1/create-egold-order`,
+  create_egold_price_sell: `${domain}/api/v1/create-egold-sell-order`,
+
+  
   
 
 };

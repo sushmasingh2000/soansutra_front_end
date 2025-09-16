@@ -51,6 +51,7 @@ import OrderDetails from "../components/admin/OrderDetails.js";
 import Rank from "../components/admin/Rank.js";
 import Distributor from "../components/admin/Distributor.js";
 import Rankachiver from "../components/admin/RankAchiver.js";
+import EgoldOrder from "../components/admin/E-goldOrder.js";
 
 export const routes = [
   {
@@ -335,6 +336,14 @@ export const routes = [
     element: (
       <MainLayout>
         <RequestDemo />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/egold_order",
+    element: (
+      <MainLayout>
+        <EgoldOrder />{" "}
       </MainLayout>
     ),
   },
