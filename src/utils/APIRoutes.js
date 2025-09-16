@@ -4,14 +4,6 @@ export const frontend = "https://sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
-  review_customer: `${domain}/api/v1/create-product-review`,
-  checkd_order_placed: `${domain}/api/v1/check-order-placed`,
-  
-  get_customer_review: `${domain}/api/v1/get-product-review`,
-  get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
-  get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
-
-
 
   email_insider: `${domain}/api/v1/insert-external-leads`,
   login: `${domain}/api/v1/login-user`,
@@ -110,6 +102,11 @@ export const endpoint = {
   create_order_payment: `${domain}/api/v1/creata-order-payment`,
 
 
+  //rankmlm
+   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
+  update_rank_deatils: `${domain}/api/v1/update-rank-details-by-admin`,
+  get_distributor_details: `${domain}/api/v1/get-distributer-details`,
+  get_rank_achivers_details: `${domain}/api/v1/get-rank-achievers-details`,
 
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
@@ -263,16 +260,20 @@ export const endpoint = {
 
   //user coupon
   get_coupon_varient: `${domain}/api/v1/u-get-coupon-on-varient`,
+    review_customer: `${domain}/api/v1/create-product-review`,
+  checkd_order_placed: `${domain}/api/v1/check-order-placed`,
+  
+  get_customer_review: `${domain}/api/v1/get-product-review`,
+  get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
+  get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
 
   //mlm api 
   get_distributor_name: `${domain}/api/v1/get-distributor-name`,
   distributor_registration: `${domain}/api/v1/distributor-registration`,
   get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
   get_distributor_dashboard: `${domain}/api/v1/get-distributor-dashboard`,
-  get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
-  update_rank_deatils: `${domain}/api/v1/update-rank-details-by-admin`,
-  get_distributor_details: `${domain}/api/v1/get-distributer-details`,
-  get_rank_achivers_details: `${domain}/api/v1/get-rank-achievers-details`,
+  get_master_material_price: `${domain}/api/v1/get-master-material-pice`,
+ 
   
 
 };

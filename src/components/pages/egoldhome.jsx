@@ -7,6 +7,9 @@ import HowToRedeem from '../howtoredeem';
 import Header from '../Header1';
 import NavigationBar from '../navigationbar';
 import Footer from '../Footer1';
+import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
+import { useQuery } from 'react-query';
+import { endpoint } from '../../utils/APIRoutes';
 
 const SonaSutraDigitalGoldHome = () => {
   const [openFaq, setOpenFaq] = useState(null);
@@ -14,7 +17,8 @@ const SonaSutraDigitalGoldHome = () => {
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
   };
-
+ 
+  
   const faqs = [
     {
       question: "What is digital gold?",
