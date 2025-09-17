@@ -2,23 +2,33 @@
 
 import React from 'react';
 import NavigationBar from '../navigationbar';
- import Footer from '../Footer1';
- import EgoldHeader from '../egoldheader';
- import Header from '../Header1';
+import Footer from '../Footer1';
+import EgoldHeader from '../egoldheader';
+import Header from '../Header1';
 import ExchangeRedeemFAQ from '../faqexchangegold';
+import { useQuery } from 'react-query';
+import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
+import { endpoint } from '../../utils/APIRoutes';
 
 const ExchangeRedeemComponent = () => {
+  const { data } = useQuery(
+    ["get_master_material_price_sell"],
+    () => apiConnectorGet(endpoint.get_master_material_price),
+    usequeryBoolean
+  );
+  const get_price = data?.data?.result?.[0] || {};
+
   return (
-    
+
     <div className="w-full bg-gray-50 min-h-screen">
       {/* Desktop View */}
-      <Header/>
-    <NavigationBar/>
-    <EgoldHeader/>
+      <Header />
+      <NavigationBar />
+      <EgoldHeader />
       <div className="hidden lg:block max-w-6xl mx-auto p-6">
         {/* Header */}
         <h1 className="text-4xl font-bold text-gray-800 mb-12">Exchange / Redeem</h1>
-        
+
         {/* Main Process Flow */}
         <div className="bg-white rounded-xl p-8 shadow-sm mb-8">
           <div className="flex items-center justify-between">
@@ -26,7 +36,7 @@ const ExchangeRedeemComponent = () => {
             <div className="flex flex-col items-center text-center flex-1">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-2 border-yellow-200 bg-yellow-50 flex items-center justify-center">
-                  <div 
+                  <div
                     className="w-14 h-14"
                     style={{
                       background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0) -326px -9px / 560px no-repeat',
@@ -43,18 +53,18 @@ const ExchangeRedeemComponent = () => {
                 Add to cart any Gold coin(s) or Jewellery
               </p>
             </div>
-            
+
             {/* Arrow 1 */}
             <div className="mx-8">
               <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            
+
             {/* Step 2 */}
             <div className="flex flex-col items-center text-center flex-1">
               <div className="relative mb-4">
-                <div 
+                <div
                   className="w-24 h-24"
                   style={{
                     background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0) -406px -109px / 560px no-repeat',
@@ -70,18 +80,18 @@ const ExchangeRedeemComponent = () => {
                 Pay by Digital Gold option at Checkout
               </p>
             </div>
-            
+
             {/* Arrow 2 */}
             <div className="mx-8">
               <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            
+
             {/* Step 3 */}
             <div className="flex flex-col items-center text-center flex-1">
               <div className="relative mb-4">
-                <div 
+                <div
                   className="w-24 h-24"
                   style={{
                     background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0) -143px -99px / 560px no-repeat',
@@ -99,7 +109,7 @@ const ExchangeRedeemComponent = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Bottom Section Desktop */}
         <div className="flex justify-between items-start">
           <div className="flex-1">
@@ -112,14 +122,14 @@ const ExchangeRedeemComponent = () => {
                 View all Gold coins
               </button>
             </div>
-            
+
             <div className="bg-yellow-50 rounded-lg p-4 flex items-start gap-3 max-w-lg">
               <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-white text-sm font-bold">!</span>
               </div>
               <div className="flex-1">
                 <p className="text-gray-600 text-sm">
-                  You can also Redeem your Gold Balance online as well as offline stores of 
+                  You can also Redeem your Gold Balance online as well as offline stores of
                   caratlane & our Jewellery Partner
                 </p>
               </div>
@@ -131,7 +141,7 @@ const ExchangeRedeemComponent = () => {
               </button>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl p-6 shadow-sm ml-8 min-w-80">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-800">EXCHANGE Rate</h3>
@@ -139,16 +149,19 @@ const ExchangeRedeemComponent = () => {
                 <span className="text-white text-xs">i</span>
               </div>
             </div>
-            
+
             <div className="mb-2">
               <span className="text-sm text-gray-500">Price valid for </span>
               <span className="text-sm text-red-500 font-medium">3 : 11 min</span>
             </div>
-            
+
             <div className="text-2xl font-bold text-gray-800 mb-1">
-              ₹10654.56/gram
+              ₹{(
+                Number(get_price?.ma_price) +
+                (Number(get_price?.ma_price) * Number(get_price?.ma_sell_tax_percentage) / 100)
+              ).toFixed(2)} /gram
             </div>
-            
+
             <div className="text-sm text-gray-600">
               24K 99.99% Purity
             </div>
@@ -162,7 +175,7 @@ const ExchangeRedeemComponent = () => {
         <div className="p-4 bg-white">
           <h1 className="text-2xl font-bold text-gray-800">Exchange / Redeem</h1>
         </div>
-        
+
         {/* Mobile Process Flow - Vertical */}
         <div className="bg-gray-50 p-4">
           <div className="bg-white rounded-xl p-6 mb-6">
@@ -170,7 +183,7 @@ const ExchangeRedeemComponent = () => {
             <div className="flex flex-col items-center text-center mb-8">
               <div className="relative mb-4">
                 <div className="w-20 h-20 rounded-full border-2 border-yellow-200 bg-yellow-50 flex items-center justify-center border-dashed">
-                  <div 
+                  <div
                     className="w-12 h-12"
                     style={{
                       background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0)',
@@ -187,18 +200,18 @@ const ExchangeRedeemComponent = () => {
                 Add to cart any Gold coin(s) or Jewellery
               </p>
             </div>
-            
+
             {/* Arrow Down */}
             <div className="flex justify-center mb-8">
               <svg className="w-6 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </div>
-            
+
             {/* Step 2 */}
             <div className="flex flex-col items-center text-center mb-8">
               <div className="relative mb-4">
-                <div 
+                <div
                   className="w-20 h-20 flex items-center justify-center"
                   style={{
                     background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0)',
@@ -214,18 +227,18 @@ const ExchangeRedeemComponent = () => {
                 Pay by Digital Gold option at Checkout
               </p>
             </div>
-            
+
             {/* Arrow Down */}
             <div className="flex justify-center mb-8">
               <svg className="w-6 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </div>
-            
+
             {/* Step 3 */}
             <div className="flex flex-col items-center text-center">
               <div className="relative mb-4">
-                <div 
+                <div
                   className="w-20 h-16 flex items-center justify-center"
                   style={{
                     background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0)',
@@ -242,7 +255,7 @@ const ExchangeRedeemComponent = () => {
               </p>
             </div>
           </div>
-          
+
           {/* Mobile Buttons */}
           <div className="space-y-4 mb-6">
             <button className="w-full py-3 px-4 border border-yellow-300 text-yellow-600 rounded-lg bg-white hover:bg-yellow-50 transition-colors">
@@ -253,7 +266,7 @@ const ExchangeRedeemComponent = () => {
               View all Gold coins
             </button>
           </div>
-          
+
           {/* Mobile Info Box */}
           <div className="bg-yellow-50 rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
@@ -262,7 +275,7 @@ const ExchangeRedeemComponent = () => {
               </div>
               <div className="flex-1">
                 <p className="text-gray-600 text-sm mb-3">
-                  You can also Redeem your Gold Balance online as well as offline stores of 
+                  You can also Redeem your Gold Balance online as well as offline stores of
                   caratlane & our Jewellery Partner
                 </p>
                 <button className="text-yellow-600 text-sm font-medium hover:text-yellow-700 flex items-center gap-1">
@@ -274,7 +287,7 @@ const ExchangeRedeemComponent = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Mobile Exchange Rate */}
           <div className="bg-white rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between mb-3">
@@ -283,19 +296,19 @@ const ExchangeRedeemComponent = () => {
                 <span className="text-white text-xs">i</span>
               </div>
             </div>
-            
+
             <div className="text-sm text-gray-500 mb-4">
               Price is only valid for 5 mins
             </div>
-            
+
             <button className="w-full py-3 px-4 border border-yellow-300 text-yellow-600 rounded-lg bg-white hover:bg-yellow-50 transition-colors">
               Refresh Gold Rate
             </button>
           </div>
         </div>
       </div>
-      <ExchangeRedeemFAQ/>
-      <Footer/>
+      <ExchangeRedeemFAQ />
+      <Footer />
     </div>
   );
 };

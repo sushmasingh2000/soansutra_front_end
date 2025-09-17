@@ -10,6 +10,7 @@ import Footer from '../Footer1';
 import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
 import { useQuery } from 'react-query';
 import { endpoint } from '../../utils/APIRoutes';
+import { useNavigate } from 'react-router-dom';
 
 const SonaSutraDigitalGoldHome = () => {
   const [openFaq, setOpenFaq] = useState(null);
@@ -17,6 +18,7 @@ const SonaSutraDigitalGoldHome = () => {
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
   };
+ const navigate = useNavigate();
  
   
   const faqs = [
@@ -29,8 +31,8 @@ const SonaSutraDigitalGoldHome = () => {
       answer: "You pay the current market price of gold plus applicable taxes and small transaction fees. The price is updated in real-time based on international gold rates."
     },
     {
-      question: "Why should I buy CaratLane Digital Gold?",
-      answer: "CaratLane Digital Gold offers 24K pure gold, secure storage, insurance coverage, instant liquidity, and the ability to convert to physical jewelry anytime."
+      question: "Why should I buy SonaSutra Digital Gold?",
+      answer: "SonaSutra Digital Gold offers 24K pure gold, secure storage, insurance coverage, instant liquidity, and the ability to convert to physical jewelry anytime."
     },
     {
       question: "How do I know my gold is safe?",
@@ -54,7 +56,7 @@ const SonaSutraDigitalGoldHome = () => {
     },
     {
       question: "Can I convert digital gold to physical jewellery?",
-      answer: "Yes, you can convert your digital gold to beautiful CaratLane jewelry. The gold value will be adjusted against your jewelry purchase."
+      answer: "Yes, you can convert your digital gold to beautiful SonaSutra jewelry. The gold value will be adjusted against your jewelry purchase."
     },
     {
       question: "How can I sell my Digital Gold?",
@@ -78,7 +80,7 @@ const SonaSutraDigitalGoldHome = () => {
     },
     {
       question: "How can I see the gold amount in my account?",
-      answer: "You can view your gold holdings anytime through your CaratLane account dashboard, which shows current quantity, value, and transaction history."
+      answer: "You can view your gold holdings anytime through your SonaSutra account dashboard, which shows current quantity, value, and transaction history."
     }
   ];
 
@@ -96,10 +98,11 @@ const SonaSutraDigitalGoldHome = () => {
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <div className="relative z-10 flex items-center h-full max-w-7xl mx-auto px-4">
             <div className="text-white max-w-2xl">
-              <h1 className="text-2xl lg:text-3xl  mb-4">CaratLane Digital Gold</h1>
+              <h1 className="text-2xl lg:text-3xl  mb-4">SonaSutra Digital Gold</h1>
               <p className="text-[15px] mb-6">Invest in Pure 24k Gold online -100% Safe & trustworthy</p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+                <button className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+                 onClick={()=>navigate('/buy-gold')}>
                   Buy Now
                 </button>
                 <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-all">
@@ -116,9 +119,10 @@ const SonaSutraDigitalGoldHome = () => {
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <div className="relative z-10 flex items-center h-full px-4 ">
             <div className="text-white w-full text-center mb-40">
-              <h1 className="text-2xl  mb-4 mt-1">CaratLane Digital Gold</h1>
+              <h1 className="text-2xl  mb-4 mt-1">SonaSutra Digital Gold</h1>
               <p className="text-[14px] mb-6">Invest in Pure 24k Gold online -100% Safe & trustworthy</p>
-              <button className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg font-semibold w-[1/2] max-w-xs">
+              <button className=" bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg font-semibold w-[1/2] max-w-xs"
+              onClick={()=>navigate('/buy-gold')}>
                 Buy Now
               </button>
             </div>
@@ -133,7 +137,7 @@ const SonaSutraDigitalGoldHome = () => {
       {/* FAQ Section */}
       <div className="bg-gray-50 py-16 ">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-2xl  text-center mb-5 ">Have questions about CaratLane eGOLD? Share your number and we will call you back!</h2>
+          <h2 className="text-2xl  text-center mb-5 ">Have questions about SonaSutra eGOLD? Share your number and we will call you back!</h2>
           
           <div className="bg-white rounded-lg p-6 mb-8">
             <div className="flex gap-4 mb-4">

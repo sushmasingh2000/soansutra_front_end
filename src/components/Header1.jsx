@@ -23,7 +23,7 @@ import {
 } from "../utils/ApiConnector";
 import { endpoint, frontend } from "../utils/APIRoutes";
 import { Lock } from "lucide-react";
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import SubcategoryView from "./SubcategoryView";
 import { useQuery } from "react-query";
 import { debounce } from "lodash";
@@ -111,15 +111,15 @@ export default function Header() {
     debouncedSetSearchQuery(e.target.value);
   };
 
-  
 
- const functionTOCopy = (value) => {
+
+  const functionTOCopy = (value) => {
     copy(value);
     toast.success("Copied to clipboard!", { id: 1 });
   };
-  
 
-  const { data} = useQuery(
+
+  const { data } = useQuery(
     ["search_product", debouncedSearchQuery],
     () =>
       apiConnectorPost(endpoint.get_search_product, {
@@ -234,14 +234,12 @@ export default function Header() {
 
   const wishlistitems = wish?.data?.result || [];
 
-  const { data:distri } = useQuery(
+  const { data: distri } = useQuery(
     ["profile_distributor"],
     () => apiConnectorGet(endpoint.get_profile_distributor),
     usequeryBoolean
   );
-
   const distri_pro = distri?.data?.result?.[0] || [];
-
 
   return (
     <header className="bg-white shadow-lg border-b border-yellow-600 relative">
@@ -392,7 +390,7 @@ export default function Header() {
                 style={{
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
-                  marginRight:'-5px',
+                  marginRight: '-5px',
                 }}
               >
                 <MagnifyingGlassIcon className="h-5 w-5" />
@@ -425,8 +423,14 @@ export default function Header() {
           <div className="flex items-center space-x-3">
             {/* Treasure Chest */}
             <button className="flex items-center px-3 py-1.5 text-sm rounded-md bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] 
-            border border-yellow-500 text-black hover:from-[#B8922E] hover:to-[#E6E599] transition-colors" 
-            onClick={()=>navigate('/treasure-chest')}>
+            border border-yellow-500 text-black hover:from-[#B8922E] hover:to-[#E6E599] transition-colors"
+              onClick={() => {
+                if (user) {
+                  navigate('/treasure-chest');
+                } else {
+                  setShowLoginModal(true);
+                }
+              }}>
               <TreasureChestIcon className="h-5 w-5 mr-1 text-yellow-800" />
               <span className="text-black">Treasure Chest</span>
               <span className="ml-2 bg-yellow-800 text-white text-xs px-2 py-0.5 rounded-full">NEW</span>
@@ -441,7 +445,14 @@ export default function Header() {
 
             {/* e-Gold */}
             <div className="px-3 py-1.5 bg-white border border-yellow-500 rounded-md hover:from-[#B8922E] hover:to-[#E6E599]
-             transition-colors cursor-pointer" onClick={()=>navigate('/e-gold')}>
+             transition-colors cursor-pointer"
+              onClick={() => {
+                if (user) {
+                  navigate('/e-gold');
+                } else {
+                  setShowLoginModal(true);
+                }
+              }}>
               <img
                 src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png"
                 alt="e-Gold"
@@ -475,16 +486,16 @@ export default function Header() {
                       <hr className="border-yellow-200" />
                       <div className="mt-3 space-y-2">
                         <Link to="/myaccount/profile" className="block text-sm text-left text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors">My Account</Link>
-                      {distri_pro?.mlm_is_distributor === 1 && (
-                        <button
-                          onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
-                          className="flex items-center justify-between w-full text-left text-sm text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors"
-                        >
-                          <span>Referral Code</span>
-                          <ClipboardDocumentIcon className="w-5 h-5 text-yellow-600" />
-                        </button>
-                    )} 
-                        
+                        {distri_pro?.mlm_is_distributor === 1 && (
+                          <button
+                            onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
+                            className="flex items-center justify-between w-full text-left text-sm text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors"
+                          >
+                            <span>Referral Code</span>
+                            <ClipboardDocumentIcon className="w-5 h-5 text-yellow-600" />
+                          </button>
+                        )}
+
                         {/* <Toaster position="top-right" reverseOrder={false} /> */}
                         <button
                           onClick={() => {
@@ -511,9 +522,9 @@ export default function Header() {
               className="relative text-black hover:text-yellow-600 transition-colors"
             >
               {/* <HeartIcon className="h-6 w-6" /> */}
-             <div>
-              <img src={hearticon} className="h-6 w-6"/>
-             </div>
+              <div>
+                <img src={hearticon} className="h-6 w-6" />
+              </div>
 
               <span className="absolute -top-3 -right-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                 {wishlistitems?.length}
@@ -649,17 +660,17 @@ export default function Header() {
                   {/* Login Button */}
                   {user ? (
                     <div className="px-4 py-3">
-                     {distri_pro?.mlm_is_distributor === 1 && (
-                      <button
-                           onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
+                      {distri_pro?.mlm_is_distributor === 1 && (
+                        <button
+                          onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile?.cust_unique_id)}
                           className="flex items-center justify-between w-full text-left px-3 py-2 bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] border border-yellow-500 rounded-lg hover:from-[#B8922E] hover:to-[#E6E599] transition-colors"
                         >
                           <span className="text-black">Referral Code</span>
                           <ClipboardDocumentIcon className="w-5 h-5 text-yellow-800" />
                         </button>
-                    )} 
-                       
-                        {/* <Toaster position="top-right" reverseOrder={false} /> */}
+                      )}
+
+                      {/* <Toaster position="top-right" reverseOrder={false} /> */}
                     </div>
                   ) : (
                     <div className="px-4 py-3">
