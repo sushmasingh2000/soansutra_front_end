@@ -212,12 +212,12 @@ const fullMenuItems = [
     icon: <Person />,
     path: "/order",
   },
-  {
-    id: "E-gold Order",
-    label: "E-gold Order",
-    icon: <Person />,
-    path: "/egold_order",
-  },
+  // {
+  //   id: "E-gold Order",
+  //   label: "E-gold Order",
+  //   icon: <Person />,
+  //   path: "/egold_order",
+  // },
     {
     id: "Leads",
     label: "External Leads",

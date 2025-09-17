@@ -18,7 +18,9 @@ const MasterMaterial = () => {
     ma_sell_value: "",
     ma_sell_price: "",
     ma_sell_tax_percentage: "",
-    ma_buy_tax_percentage: ""
+    ma_buy_tax_percentage: "",
+    ma_buy_making_price_type: "",
+    ma_buy_making_price: "",
   });
 
   const fetchMaterials = async () => {
@@ -46,15 +48,18 @@ const MasterMaterial = () => {
       ma_sell_value: "",
       ma_sell_price: "",
       ma_sell_tax_percentage: "",
-      ma_buy_tax_percentage: ""
+      ma_buy_tax_percentage: "",
+      ma_buy_making_price: "",
+      ma_buy_making_price_type: ""
     });
     setSelectedMaterial(null);
   };
 
   const handleSubmit = async () => {
-    const { ma_material_name, ma_price, ma_unit, ma_value, ma_sell_value, ma_sell_price , ma_sell_tax_percentage , ma_buy_tax_percentage} = formData;
+    const { ma_material_name, ma_price, ma_unit, ma_value, ma_sell_value, ma_sell_price, ma_sell_tax_percentage, ma_buy_tax_percentage, ma_buy_making_price, ma_buy_making_price_type } = formData;
 
-    if (!ma_material_name || !ma_price || !ma_unit || !ma_value || !ma_sell_value || !ma_sell_price || !ma_sell_tax_percentage || !ma_buy_tax_percentage) {
+    if (!ma_material_name || !ma_price || !ma_unit || !ma_value || !ma_sell_value || !ma_sell_price || !ma_sell_tax_percentage
+      || !ma_buy_tax_percentage || !ma_buy_making_price || !ma_buy_making_price_type) {
       toast.error("All fields are required.");
       return;
     }
@@ -92,8 +97,10 @@ const MasterMaterial = () => {
       ma_value: material.ma_value || "",
       ma_sell_price: material.ma_sell_price || "",
       ma_sell_value: material.ma_sell_value || "",
-      ma_sell_tax_percentage:material.ma_sell_tax_percentage || "",
-      ma_buy_tax_percentage:material.ma_buy_tax_percentage|| ""
+      ma_sell_tax_percentage: material.ma_sell_tax_percentage || "",
+      ma_buy_tax_percentage: material.ma_buy_tax_percentage || "",
+      ma_buy_making_price: material.ma_buy_making_price || "",
+      ma_buy_making_price_type: material.ma_buy_making_price_type === "Flat" ? 1 : 2 || ""
     });
     setModalOpen(true);
   };
@@ -122,7 +129,7 @@ const MasterMaterial = () => {
         </button>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="bg-white shadow rounded-lg overflow-scroll">
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50">
             <tr>
@@ -134,6 +141,8 @@ const MasterMaterial = () => {
               <th className="px-4 py-3 text-left">🌕 Sell Price</th>
               <th className="px-4 py-3 text-left">🌕 Sell Value</th>
               <th className="px-4 py-3 text-left">🌕 Sell Tax(%)</th>
+              <th className="px-4 py-3 text-left">Buy Making Price </th>
+              <th className="px-4 py-3 text-left"> Buy Making Price Type </th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
           </thead>
@@ -154,6 +163,9 @@ const MasterMaterial = () => {
                 <td className="px-4 py-2">  {material.ma_sell_price || "--"} </td>
                 <td className="px-4 py-2">  {material.ma_sell_value || "--"} </td>
                 <td className="px-4 py-2">  {material.ma_sell_tax_percentage || "--"} </td>
+                <td className="px-4 py-2">  {material.ma_buy_making_price || "--"} </td>
+                <td className="px-4 py-2">  {material.ma_buy_making_price_type || "--"} </td>
+
                 <td className="px-4 py-2 space-x-2">
                   <button
                     onClick={() => handleEdit(material)}
@@ -184,11 +196,11 @@ const MasterMaterial = () => {
       {/* Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-xl space-y-4">
+          <div className="bg-white p-6 rounded-lg w-full max-w-3xl space-y-4">
             <h2 className="text-xl font-semibold">
               {selectedMaterial ? "Edit Material" : "Add Material"}
             </h2>
-            <div className="grid lg:grid-cols-2 grid-cols-1 place-content-center gap-6">
+            <div className="grid lg:grid-cols-3 grid-cols-2 place-content-center gap-6">
               <div>
                 <label>Material Name</label>
                 <input
@@ -257,7 +269,20 @@ const MasterMaterial = () => {
                   className="w-full border p-2 rounded"
                 />
               </div>
-              
+              <div>
+                <label>Buy Making  Price</label>
+                <input
+                  type="number"
+                  name="ma_buy_making_price"
+                  placeholder="Buy Making  Price"
+                  value={formData.ma_buy_making_price}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ma_buy_making_price: e.target.value })
+                  }
+                  className="w-full border p-2 rounded"
+                />
+              </div>
+             
 
               <div>
                 <label> Sell Material Price</label>
@@ -286,7 +311,7 @@ const MasterMaterial = () => {
                   className="w-full border p-2 rounded"
                 /> </div>
 
-                 <div>
+              <div>
                 <label>Sell  Tax (%)</label>
                 <input
                   type="number"
@@ -299,7 +324,22 @@ const MasterMaterial = () => {
                   className="w-full border p-2 rounded"
                 /> </div>
             </div>
-            
+
+             <div className="flex flex-col w-fit">
+                <label>Buy Making  Price Type</label>
+                <select 
+                name="ma_buy_making_price_type"
+                 value={formData.ma_buy_making_price_type}
+                   onChange={(e) =>
+                    setFormData({ ...formData, ma_buy_making_price_type: e.target.value })
+                  }
+                   className="p-3 border rounded">
+                  <option value="">Select Buy Making  Price Type </option>
+                  <option value="1">Flat</option>
+                  <option value="2">Percentage</option>
+                </select>
+              </div>
+
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => {

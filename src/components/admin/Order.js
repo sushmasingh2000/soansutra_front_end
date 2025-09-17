@@ -9,12 +9,14 @@ const Order = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [productType, setProductType] = useState('PRODUCT');
+  const [egoldType, setEgoldType] = useState('Buy');
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
       const res = await apiConnectorGet(
-        `${endpoint.get_order}?page=${page}&count=${10}`
+        `${endpoint.get_order}?page=${page}&count=${10}&product_type=${productType}&order_type=${egoldType}`
       );
       setOrders(res?.data?.result || []);
     } catch (err) {
@@ -48,7 +50,7 @@ const Order = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [page]);
+  }, [page , productType , egoldType]);
 
   const statusButtons = [
     {
@@ -89,14 +91,39 @@ const Order = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Product Orders</h1>
       </div>
-
+      <div className="mb-4 flex flex-col justify-end items-end gap-2">
+        <select
+          value={productType}
+          onChange={(e) => setProductType(e.target.value)}
+          className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+        >
+          <option>Select Order Type</option>
+          <option value="PRODUCT">Product</option>
+          <option value="EGOLD">eGold</option>
+        </select>
+      </div>
+      {productType === "EGOLD" && (
+        <div className="mb-4 flex flex-col justify-end items-end gap-2">
+          <select
+            value={egoldType}
+            onChange={(e) => setEgoldType(e.target.value)}
+            className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+          >
+            <option>Select E-Gold Type</option>
+            <option value="BUY">Buy</option>
+            <option value="SELL">Sell</option>
+          </select>
+        </div>
+      )}
       <div className="bg-white shadow rounded-lg overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left">S.No</th>
               <th className="px-4 py-3 text-left">Order ID</th>
-              <th className="px-4 py-3 text-left">Products</th>
+              {productType === "EGOLD" ? 
+              <th className="px-4 py-3 text-left">Reciving Type</th> :
+               <th className="px-4 py-3 text-left">Products</th>}
               <th className="px-4 py-3 text-left">Status</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
@@ -114,7 +141,10 @@ const Order = () => {
                   >
                     {order.order_unique}
                   </td>
+                   {productType === "EGOLD" ? 
                   <td className="px-4 py-2 space-y-2">
+                          <p className="font-semibold">{order.receiving_type}</p>
+                  </td> :<td className="px-4 py-2 space-y-2">
                     {order.order_items.map((item, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <img
@@ -128,17 +158,17 @@ const Order = () => {
                       </div>
                     ))}
                   </td>
+}
                   <td className="px-4 py-2">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        order.status === "Pending"
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${order.status === "Pending"
                           ? "bg-yellow-100 text-yellow-700"
                           : order.status === "Confirmed"
-                          ? "bg-green-100 text-green-700"
-                          : order.status === "Cancelled"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-gray-100 text-gray-700"
-                      }`}
+                            ? "bg-green-100 text-green-700"
+                            : order.status === "Cancelled"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-gray-100 text-gray-700"
+                        }`}
                     >
                       {order.status}
                     </span>
