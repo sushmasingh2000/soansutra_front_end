@@ -19,6 +19,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import Loader from '../../Shared/Loader';
 
 const BuyGold = () => {
   const [amount, setAmount] = useState('');
@@ -27,6 +28,7 @@ const BuyGold = () => {
   const [timeLeft, setTimeLeft] = useState(4 * 60 + 54);
   const [showShippingPopup, setShowShippingPopup] = useState(false);
   const [showPaymentMethodPopup, setShowPaymentMethodPopup] = useState(false);
+  const [loader, setLoading] = useState(false);
 
   // Update timer countdown
   useEffect(() => {
@@ -149,6 +151,7 @@ const BuyGold = () => {
 
 
   const buygoldFn = async (rcv_type) => {
+    setLoading(true)
     try {
       const res = await apiConnectorPost(endpoint.create_egold_price, {
         req_amount: amount,
@@ -169,6 +172,7 @@ const BuyGold = () => {
     } catch (e) {
       console.log("something went wrong");
     }
+    setLoading(false)
   };
   if (paymentlink) {
     return (
@@ -180,6 +184,7 @@ const BuyGold = () => {
       <Header />
       <NavigationBar />
       <EgoldHeader />
+      <Loader isLoading={loader}/>
       <div className="w-full bg-white-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-7xl">
 
@@ -225,7 +230,10 @@ const BuyGold = () => {
               </div>
               <div className="bg-white rounded-lg p-4 shadow w-1/5">
                 <h3 className="text-lg font-semibold mb-2">Buy Rate</h3>
-                <p className="text-red-500">₹{Number(total_price).toFixed(2)}/gram</p>
+                <p className="text-red-500">  ₹{(
+                  Number(get_price?.ma_price) +
+                  (Number(get_price?.ma_price) * Number(get_price?.ma_buy_tax_percentage) / 100)
+                ).toFixed(2)} /gram</p>
                 <p className="text-xs text-gray-500"><span>{Number(get_price?.ma_price).toFixed(2)}</span> + {Number(get_price?.ma_buy_tax_percentage)?.toFixed(0, 2)}% GST</p>
                 <p className="text-xs text-gray-500">Price valid for {formatTime(timeLeft)} min</p>
                 <p className="text-xs text-gray-500">24K 99.99% Purity</p>
@@ -298,7 +306,10 @@ const BuyGold = () => {
             </div>
             <div className="bg-white rounded-lg p-4 shadow mb-4">
               <h3 className="text-lg font-semibold mb-2">Buy Rate</h3>
-              <p className="text-red-500">₹{Number(total_price).toFixed(2)}/gram</p>
+              <p className="text-red-500"> ₹{(
+                  Number(get_price?.ma_price) +
+                  (Number(get_price?.ma_price) * Number(get_price?.ma_buy_tax_percentage) / 100)
+                ).toFixed(2)} /gram</p>
               <p className="text-xs text-gray-500">(₹{Number(get_price?.ma_price).toFixed(2)} + {Number(get_price?.ma_buy_tax_percentage)?.toFixed(0, 2)}% GST)</p>
               <p className="text-xs text-gray-500">Priced fo valir {formatTime(timeLeft)} min</p>
               <p className="text-xs text-gray-500">24K 99.99% Purity</p>

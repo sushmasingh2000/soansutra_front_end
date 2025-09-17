@@ -1,6 +1,6 @@
-// export const domain = "http://192.168.18.214:2000";
+export const domain = "http://192.168.18.214:2000";
 export const frontend = "https://sonasutra.in";
-export const domain = "https://backend.sonasutra.in";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
