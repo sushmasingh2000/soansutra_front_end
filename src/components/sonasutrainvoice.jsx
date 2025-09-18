@@ -1,5 +1,5 @@
 import React from 'react';
-
+import logo from '../assets/desklogo.png'
 const SonasutraInvoice = () => {
   return (
     <div className="font-sans text-[11px] leading-[1.2] bg-white text-black p-[15px] flex flex-col items-center min-h-screen">
@@ -9,10 +9,19 @@ const SonasutraInvoice = () => {
           <div className="max-w-full border-none bg-white">
             {/* Header Section */}
             <div className="flex items-start p-[10px_15px] border-b border-black">
-              <div className="w-[120px] mr-5">
-                <div className="text-[#8B4B9B] font-bold text-base mb-[3px]">Sonasutra</div>
-                <div className="text-[8px] text-[#666] italic">A Sonasutra Partnership</div>
+              <div className="flex items-center w-[200px] mr-5">
+                {/* Logo */}
+                <div className="mr-2">
+                  <img src={logo} alt="logo" className="w-8 h-6" />
+                </div>
+
+                {/* Text */}
+                <div>
+                  <div className="text-[#b38d03] font-bold text-base mb-[3px]">Sonasutra</div>
+                  <div className="text-[8px] text-[#666] italic">A Sonasutra Partnership</div>
+                </div>
               </div>
+
               <div className="flex-1 text-[10px] leading-[1.3]">
                 <div className="font-bold mb-[2px]">Sonasutra TRADING PRIVATE LIMITED - Subsidiary of Titan Company Limited</div>
                 <div>Shop No 11, Ground Floor, Tower A, Vinayak Plaza, Maldahiya Crossing, Varanasi- 221001, Varanasi - 221001</div>
@@ -48,8 +57,8 @@ const SonasutraInvoice = () => {
                 <div className="mb-[2px]"><span className="font-bold inline-block min-w-[60px]">Number :</span> +91 7398307284</div>
                 <div className="mb-[2px]"><span className="font-bold inline-block min-w-[60px]">Address :</span> Jaunpur Jaunpur India</div>
                 <div className="mb-[2px]">
-                  <span className="font-bold inline-block min-w-[60px]">PIN :</span> 222137 
-                  <span className="font-bold inline-block min-w-[60px]">State :</span> Uttar Pradesh 
+                  <span className="font-bold inline-block min-w-[60px]">PIN :</span> 222137
+                  <span className="font-bold inline-block min-w-[60px]">State :</span> Uttar Pradesh
                   <span className="font-bold inline-block min-w-[60px]">State Code :</span> 09
                 </div>
                 <div className="mb-[2px]"><span className="font-bold inline-block min-w-[60px]">GSTIN :</span> <span className="font-bold inline-block min-w-[60px]">PAN :</span></div>
@@ -77,15 +86,15 @@ const SonasutraInvoice = () => {
                     <th className="bg-[#666] text-white border border-black p-[8px_5px] text-center font-bold text-[8px]" colSpan="9">Certificate No - JAYKBA67</th>
                   </tr>
                   <tr>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Purity<br/>(Karat)</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">HSN<br/>Codes</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Net<br/>Qty</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Gross<br/>WT (g)</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Diamond<br/>WT (CT/g)</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Gemstone<br/>WT (CT/g)</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Net WT<br/>(g)</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Making<br/>Charges (₹)</th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Price<br/>(₹)</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Purity<br />(Karat)</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">HSN<br />Codes</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Net<br />Qty</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Gross<br />WT (g)</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Diamond<br />WT (CT/g)</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Gemstone<br />WT (CT/g)</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Net WT<br />(g)</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Making<br />Charges (₹)</th>
+                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">Price<br />(₹)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,11 +136,11 @@ const SonasutraInvoice = () => {
                   <table className="w-full border-collapse text-[9px] mb-[15px]">
                     <thead>
                       <tr>
-                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Sr<br/>No.</th>
+                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Sr<br />No.</th>
                         <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Doc No</th>
-                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Doc<br/>Date</th>
+                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Doc<br />Date</th>
                         <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Payment Mode</th>
-                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Amount<br/>₹</th>
+                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">Amount<br />₹</th>
                       </tr>
                     </thead>
                     <tbody>
