@@ -28,6 +28,12 @@ const metricMap = {
   demo_call_status_Processing: { label: "Demo Calls - Processing", color: "blue" },
   demo_call_status_Rejected: { label: "Demo Calls - Rejected", color: "red" },
   demo_call_status_Success: { label: "Demo Calls - Success", color: "green" },
+
+  //gold 
+  buy_gold: { label: "Buy Gold", color: "yellow" },
+  sell_gold: { label: "Sell Gold", color: "red" },
+  total_distributor: { label: "Total Distributor", color: "green" },
+
 };
 
 const Dashboard = () => {

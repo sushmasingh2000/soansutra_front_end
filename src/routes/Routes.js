@@ -52,6 +52,7 @@ import Rank from "../components/admin/Rank.js";
 import Distributor from "../components/admin/Distributor.js";
 import Rankachiver from "../components/admin/RankAchiver.js";
 import EgoldOrder from "../components/admin/E-goldOrder.js";
+import Attribute from "../components/admin/Attributes.js";
 
 export const routes = [
   {
@@ -296,6 +297,14 @@ export const routes = [
     element: (
       <MainLayout>
         <Tax />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/attribute",
+    element: (
+      <MainLayout>
+        <Attribute />{" "}
       </MainLayout>
     ),
   },

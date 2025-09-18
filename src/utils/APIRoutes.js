@@ -93,6 +93,10 @@ export const endpoint = {
   delete_video: `${domain}/api/v1/delete-videos`,
 
 
+  release_income: `${domain}/api/v1/release-rank-income`,
+
+
+  
   // address shipping
   add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
   get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
