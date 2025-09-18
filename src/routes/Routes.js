@@ -45,6 +45,7 @@ import Video from "../components/admin/Video.js";
 import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
 import Coupon from "../components/admin/Coupon.js";
 import CouponPriceRange from "../components/admin/CouponPriceRange..js";
+import SonasutraInvoice from "../components/sonasutrainvoice.jsx";
 
 export const routes = [
   {
@@ -361,6 +362,10 @@ export const routes = [
    {
     path: "/terms-and-conditions",
     element: <Termscondition/>,
+  },
+   {
+    path: "/invoice",
+    element: <SonasutraInvoice/>,
   },
 ];
 
