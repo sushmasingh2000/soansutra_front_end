@@ -53,6 +53,7 @@ import Distributor from "../components/admin/Distributor.js";
 import Rankachiver from "../components/admin/RankAchiver.js";
 import EgoldOrder from "../components/admin/E-goldOrder.js";
 import Attribute from "../components/admin/Attributes.js";
+import SonasutraInvoice from "../components/sonasutrainvoice.js";
 
 export const routes = [
   {
@@ -407,6 +408,10 @@ export const routes = [
   {
     path: "/product-attributes/:id",
     element: <ProductVariant />,
+  },
+  {
+    path: "/invoice",
+    element: <SonasutraInvoice/>,
   },
     {
     path: "/wish",

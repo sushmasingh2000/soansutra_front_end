@@ -449,7 +449,7 @@ const Products = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg 
                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
               </div>
-              <div className="flex flex-col gap-1  justify-start">
+              {/* <div className="flex flex-col gap-1  justify-start">
                 <label>Product Image</label>
                 <input
                   type="file"
@@ -458,7 +458,7 @@ const Products = () => {
                   accept="image/*"
                   className="w-full border border-gray-300 rounded-lg p-3"
                 />
-              </div>
+              </div> */}
               {/* <div className="flex flex-col gap-1  justify-start">
                 <label>Product Price</label>
                 <input
@@ -523,6 +523,15 @@ const Products = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowCollectionField(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-fit"
+              >
+                Add Collection
+              </button>
+            </div>
             {selectedProduct?.product_id && (
               <>
                 <h3 className="text-lg font-semibold mb-2"> Multiple Images</h3>
@@ -567,25 +576,25 @@ const Products = () => {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col gap-1  justify-start">
-                <label>Select Collection</label>
-                <select
-                  name="product_coll_id"
-                  value={formData.product_coll_id}
-                  onChange={handleInputChange}
-                  className="border border-gray-200 rounded p-2"
-                >
-                  <option value="">Select Collection </option>
-                  {collections.map((item) => (
-                    <option
-                      key={item.coll_id}
-                      value={item.coll_id}
-                    >
-                      {item.coll_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {showCollectionField && (
+                <div className="flex flex-col gap-1 justify-start">
+                  <label>Select Collection</label>
+                  <select
+                    name="product_coll_id"
+                    value={formData.product_coll_id}
+                    onChange={handleInputChange}
+                    className="border border-gray-200 rounded p-2"
+                  >
+                    <option value="">Select Collection</option>
+                    {collections.map((item) => (
+                      <option key={item.coll_id} value={item.coll_id}>
+                        {item.coll_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+          
               <div className="flex flex-col gap-1  justify-start">
                 <label>Product Name</label>
                 <input
@@ -608,7 +617,7 @@ const Products = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div> */}
-              <div className="flex flex-col gap-1  justify-start">
+              {/* <div className="flex flex-col gap-1  justify-start">
                 <label>Product Image</label>
                 <input
                   type="file"
@@ -617,7 +626,7 @@ const Products = () => {
                   accept="image/*"
                   className="w-full border border-gray-300 rounded-lg p-3"
                 />
-              </div>
+              </div> */}
               <div className="flex flex-col gap-1  justify-start">
                 <label>Description</label>
                 <textarea
