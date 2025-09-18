@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { endpoint } from '../utils/APIRoutes';
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../utils/ApiConnector';
+import { useNavigate } from 'react-router-dom';
 
 const OrdersContent = () => {
   const [activeTab, setActiveTab] = useState('myOrders');
@@ -396,6 +397,16 @@ const OrdersContent = () => {
               </div>
             )}
           </div>
+          <div className="p-4">
+          <button
+            className="text-sm font-medium text-blue-600 underline"
+            onClick={() => {
+              navigate(`/invoice/${detail.order_unique}`); 
+            }}
+          >
+            View / Download Invoice
+          </button>
+        </div>
 
           {/* Actions etc. */}
           <div className="p-4 border-t border-gray-200">
@@ -415,6 +426,8 @@ const OrdersContent = () => {
   const activeOrders = orders.filter(o => o.status !== 'Cancelled');
 
   const currentOrders = activeTab === 'myOrders' ? activeOrders : cancelledOrders;
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-white-50 p-4 md:p-6 lg:p-8">

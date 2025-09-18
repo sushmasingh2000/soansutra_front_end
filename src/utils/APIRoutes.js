@@ -273,6 +273,9 @@ export const endpoint = {
   get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
   get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
 
+  //invoice
+  get_invoice: `${domain}/api/v1/invoice-detils`,
+
   //mlm api 
   get_distributor_name: `${domain}/api/v1/get-distributor-name`,
   distributor_registration: `${domain}/api/v1/distributor-registration`,

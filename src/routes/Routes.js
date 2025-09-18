@@ -410,7 +410,7 @@ export const routes = [
     element: <ProductVariant />,
   },
   {
-    path: "/invoice",
+    path: "/invoice/:orderId",
     element: <SonasutraInvoice/>,
   },
     {
