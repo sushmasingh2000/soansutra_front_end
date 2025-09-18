@@ -48,6 +48,8 @@ import CouponPriceRange from "../components/admin/CouponPriceRange..js";
 import { elements } from "chart.js";
 import Order from "../components/admin/Order.js";
 import OrderDetails from "../components/admin/OrderDetails.js";
+import SonasutraInvoice from "../components/sonasutrainvoice.jsx";
+
 
 export const routes = [
   {
@@ -390,67 +392,11 @@ export const routes = [
     path: "/terms-and-conditions",
     element: <Termscondition/>,
   },
- 
+  {
+    path:"/invoice",
+    element:<SonasutraInvoice/>
+  },
+
+   
 ];
 
-// const router = createBrowserRouter([
-//     {
-//         path: "/",
-//         element: <App />,
-//         children: [
-//             {
-//                 path: "login",
-//                 element: <LoginPage />
-//             },
-//             {
-
-//                 path: "/sign-up",
-//                 element: <SignUpPage />
-
-//             },
-//             {
-//                 path: "",
-//                 element: <HomePage />
-//             },
-//             {
-//                 path: "/products/:category",
-//                 element: <DynamicProductListingPage/>
-//             },
-//             {
-//                 path: "/myaccount/profile",
-//                 element: <ProfileDashboard/>
-//             },
-//             {
-//                 path: "/productdetails",
-//                 element: <ProductPage/>
-//             },
-//             {
-//                 path: "/shopping-cart",
-//                 element:<ShoppingCart/>
-//             },
-//             {
-//                 path:"/checkout",
-//                 element:<CheckoutHeader/>
-//             },
-//              {
-//                 path:"/admin",
-//                 element:<AdminLayout/>
-//             },
-//              {
-//                 path:"/admin-login",
-//                 element:<Login/>
-//             },
-//             {
-//               path:"/product-variant/:id",
-//                 element:<ProductVariant/>
-//            },
-//             {
-//               path:"/product-attributes/:id",
-//                 element:<ProductVariant/>
-//            },
-
-//         ]
-//     }
-// ])
-
-// export default router
