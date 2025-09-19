@@ -4,6 +4,7 @@ import logo from "../assets/desklogo.png";
 import { apiConnectorGet, usequeryBoolean } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import { useParams } from "react-router-dom";
+import moment from "moment/moment";
 const SonasutraInvoice = () => {
 
   const { orderId } = useParams();
@@ -13,9 +14,66 @@ const SonasutraInvoice = () => {
     usequeryBoolean
   );
 
-  const invoice_detail = data?.data?.result || [];
-  
-  console.log(invoice_detail?.[0]?.store_details);
+  const invoice_detail = data?.data?.result?.[0] || [];
+  const store = invoice_detail?.store_details || []
+  const bill = invoice_detail?.billing_details || []
+  const ship = invoice_detail?.shipping_details || []
+  const order = invoice_detail?.order_items || []
+  const payment = invoice_detail?.payment_details || []
+  const discount = order?.[0]?.discount_details || []
+
+  const totals = order?.reduce(
+    (acc, item) => {
+      acc.qnty += Number(item?.qnty || 0);
+      acc.grossWeight += Number(item?.varient_weight || 0);
+      acc.mat0 += Number(item?.material_details?.[0]?.weight || 0);
+      acc.mat1 += Number(item?.material_details?.[1]?.weight || 0);
+      acc.mat2 += Number(item?.material_details?.[2]?.weight || 0);
+      acc.making += Number(item?.making_price || 0);
+      acc.price += Number(item?.total_price || 0);
+      return acc;
+    },
+    {
+      qnty: 0,
+      grossWeight: 0,
+      mat0: 0,
+      mat1: 0,
+      mat2: 0,
+      making: 0,
+      price: 0,
+    }
+  );
+
+  const netWeight = totals.mat0 + totals.mat1 + totals.mat2;
+
+  function numberToWords(num) {
+    const a = [
+      '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+      'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
+      'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen',
+    ];
+    const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+    const numToWords = (n) => {
+      if (n < 20) return a[n];
+      if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + a[n % 10] : '');
+      if (n < 1000) return a[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' ' + numToWords(n % 100) : '');
+      if (n < 100000) return numToWords(Math.floor(n / 1000)) + ' Thousand' + (n % 1000 !== 0 ? ' ' + numToWords(n % 1000) : '');
+      if (n < 10000000) return numToWords(Math.floor(n / 100000)) + ' Lakh' + (n % 100000 !== 0 ? ' ' + numToWords(n % 100000) : '');
+      return numToWords(Math.floor(n / 10000000)) + ' Crore' + (n % 10000000 !== 0 ? ' ' + numToWords(n % 10000000) : '');
+    };
+
+    const integerPart = Math.floor(num);
+    const decimalPart = Math.round((num - integerPart) * 100);
+
+    let words = numToWords(integerPart) + ' Rupees';
+    if (decimalPart > 0) {
+      words += ' and ' + numToWords(decimalPart) + ' Paise';
+    }
+    return words + ' Only';
+  }
+
+
 
   const handlePrint = () => {
     window.print();
@@ -61,14 +119,16 @@ const SonasutraInvoice = () => {
                   Company Limited
                 </div>
                 <div>
-                  Shop No 11, Ground Floor, Tower A, Vinayak Plaza, Maldahiya
-                  Crossing, Varanasi- 221001, Varanasi - 221001
+                  {store?.address}
+                  {store?.city}
+                  {store?.pin_code}
+                  {/* Shop No 11, Ground Floor, Tower A, Vinayak Plaza, Maldahiya
+                  Crossing, Varanasi- 221001, Varanasi - 221001 */}
                 </div>
-                <div>, Uttar Pradesh , India</div>
+                <div>,{store?.state} ,{store?.country}</div>
                 <div>
-                  <strong>Store Contact Details:</strong> 7307515355 7307515355
-                  & cfvnsvpz@Sonasutra.com <strong>Store Timings:</strong> 11 am
-                  to 9:00 pm
+                  <strong>Store Contact Details:</strong> {store?.phone}
+                  & {store?.email}
                 </div>
               </div>
               <div className="text-right w-[200px]">
@@ -86,15 +146,15 @@ const SonasutraInvoice = () => {
             <div className="flex p-[10px_15px] border-b border-black">
               <div className="flex-1 text-[10px]">
                 <div>
-                  <strong>GST No :</strong> 09AADCC1791Q1Z2
+                  <strong>GST No :</strong> {store?.gstin_no}
                 </div>
                 <div>
-                  <strong>PAN :</strong> AADCC1791Q
+                  <strong>PAN :</strong> {store?.pan_no}
                 </div>
               </div>
               <div className="flex-1 text-right text-[10px]">
                 <div>
-                  <strong>Order No :</strong> EZVNSVPZ8115O-JR{" "}
+                  <strong>Order No :</strong> {bill?.order_id}{" "}
                   <strong>Dated :</strong> 01/01/2025
                 </div>
                 <div>
@@ -112,7 +172,7 @@ const SonasutraInvoice = () => {
                   <span className="font-bold inline-block min-w-[60px]">
                     Name :
                   </span>{" "}
-                  Chanda Soni Customer
+                  {bill?.name || "--"}
                 </div>
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
@@ -124,35 +184,35 @@ const SonasutraInvoice = () => {
                   <span className="font-bold inline-block min-w-[60px]">
                     Address :
                   </span>{" "}
-                  Jaunpur Jaunpur India
+                  {bill?.address}
                 </div>
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     PIN :
                   </span>{" "}
-                  222137
+                  {bill?.postal_code}
                   <span className="font-bold inline-block min-w-[60px]">
                     State :
                   </span>{" "}
-                  Uttar Pradesh
-                  <span className="font-bold inline-block min-w-[60px]">
+                  {bill?.state}
+                  {/* <span className="font-bold inline-block min-w-[60px]">
                     State Code :
                   </span>{" "}
-                  09
+                  09 */}
                 </div>
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
-                    GSTIN :
+                    GSTIN : {store?.gstin_no}
                   </span>{" "}
                   <span className="font-bold inline-block min-w-[60px]">
-                    PAN :
+                    PAN : {store?.pan_no}
                   </span>
                 </div>
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     Profile ID :
                   </span>{" "}
-                  C2120635
+                  {invoice_detail?.profile_id}
                 </div>
               </div>
               <div className="flex-1 pr-[15px] text-[10px]">
@@ -161,7 +221,7 @@ const SonasutraInvoice = () => {
                   <span className="font-bold inline-block min-w-[60px]">
                     Name :
                   </span>{" "}
-                  Chanda Soni Customer
+                  {ship?.name}
                 </div>
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
@@ -173,27 +233,26 @@ const SonasutraInvoice = () => {
                   <span className="font-bold inline-block min-w-[60px]">
                     Address :
                   </span>{" "}
-                  Shop No 11 Ground Floor Tower A Vinayak Plaza Maldahiya
-                  Crossing Varanasi-221001 Varanasi India
+                  {ship?.address}
                 </div>
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     PIN :
                   </span>{" "}
-                  221001
+                  {ship?.postal_code}
                 </div>
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     State :
                   </span>{" "}
-                  Uttar Pradesh
+                  {ship?.state}
                 </div>
-                <div className="mb-[2px]">
+                {/* <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     Place of Supply :
                   </span>{" "}
                   09
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -224,7 +283,7 @@ const SonasutraInvoice = () => {
                       className="bg-[#666] text-white border border-black p-[8px_5px] text-center font-bold text-[8px]"
                       colSpan="9"
                     >
-                      Certificate No - JAYKBA67
+                      Certificate No - {invoice_detail?.certificate_no}
                     </th>
                   </tr>
                   <tr>
@@ -249,15 +308,29 @@ const SonasutraInvoice = () => {
                       WT (g)
                     </th>
                     <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      Diamond
+                      {order?.[0]?.material_details?.[0]?.master_mat_name}
                       <br />
                       WT (CT/g)
                     </th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                    {order?.[1]?.material_details?.[1]?.master_mat_name && (
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        {order?.[1]?.material_details?.[1]?.master_mat_name}
+                        <br />
+                        WT (CT/g)
+                      </th>
+                    )}
+                    {order?.[2]?.material_details?.[2]?.master_mat_name && (
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        {order?.[2]?.material_details?.[2]?.master_mat_name}
+                        <br />
+                        WT (CT/g)
+                      </th>
+                    )}
+                    {/* <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
                       Gemstone
                       <br />
                       WT (CT/g)
-                    </th>
+                    </th> */}
                     <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
                       Net WT
                       <br />
@@ -275,45 +348,62 @@ const SonasutraInvoice = () => {
                     </th>
                   </tr>
                 </thead>
+
                 <tbody>
-                  <tr>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      01
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px] bg-[#e5e5e5] font-bold">
-                      JER04737-YDK000-NA <strong>FE97RUBNSXE</strong>
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-left text-[9px] relative">
-                      Starlight Kids' Diamond Earrings
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      18 KT
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      71131930
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      1 N
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      0.677
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      0.137/0.027
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      0.000/0.000
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      0.650
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      4140.00
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                      26898.27
-                    </td>
-                  </tr>
+                  {order?.map((item, index) => {
+                    return <>
+                      <tr>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {index + 1}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px] bg-[#e5e5e5] font-bold">
+                          {item?.varient_sku}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-left text-[9px] relative">
+                          {item?.product_name}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {item?.material_details?.[0]?.pur_stamp_name}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {item?.batch_no}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {item?.qnty}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {item?.varient_weight}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {item?.material_details?.[0]?.weight}
+                        </td>
+                        {item?.material_details?.[1]?.weight && (
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.material_details?.[1]?.weight}
+                          </td>
+                        )}
+                        {item?.material_details?.[2]?.weight && (
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.material_details?.[2]?.weight}
+                          </td>
+                        )}
+
+                        {/* <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          0.000/0.000
+                        </td> */}
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {([0, 1, 2].reduce((sum, i) => sum + (item?.material_details?.[i]?.weight || 0), 0))}
+                        </td>
+
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {item?.making_price}
+                        </td>
+                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {item?.total_price}
+                        </td>
+                      </tr>
+                    </>
+                  })}
                   <tr className="bg-[#e5e5e5] font-bold">
                     <td
                       className="border border-black p-[8px_5px] text-center"
@@ -322,28 +412,40 @@ const SonasutraInvoice = () => {
                       <strong>TOTAL</strong>
                     </td>
                     <td className="border border-black p-[8px_5px] text-center">
-                      1 N
+                      {totals.qnty}
                     </td>
                     <td className="border border-black p-[8px_5px] text-center">
-                      0.677
+                      {totals.grossWeight.toFixed(3)}
                     </td>
                     <td className="border border-black p-[8px_5px] text-center">
-                      0.137/0.027
+                      {totals.mat0.toFixed(3)}
                     </td>
-                    <td className="border border-black p-[8px_5px] text-center">
+                    {totals.mat1 > 0 && (
+                      <td className="border border-black p-[8px_5px] text-center">
+                        {totals.mat1.toFixed(3)}
+                      </td>
+                    )}
+                    {totals.mat2 > 0 && (
+                      <td className="border border-black p-[8px_5px] text-center">
+                        {totals.mat2.toFixed(3)}
+                      </td>
+                    )}
+                    {/* <td className="border border-black p-[8px_5px] text-center">
                       0.000/0.000
+                    </td> */}
+                    <td className="border border-black p-[8px_5px] text-center">
+                      {netWeight.toFixed(3)}
                     </td>
                     <td className="border border-black p-[8px_5px] text-center">
-                      0.650
+                      ₹ {totals.making.toFixed(2)}
                     </td>
                     <td className="border border-black p-[8px_5px] text-center">
-                      4140.00
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center">
-                      26898.27
+                      ₹ {totals.price.toFixed(2)}
                     </td>
                   </tr>
                 </tbody>
+
+
               </table>
             </div>
 
@@ -385,16 +487,16 @@ const SonasutraInvoice = () => {
                           01
                         </td>
                         <td className="border border-black p-[4px] text-center">
-                          REC/CFVNSVPZ/2024-25/JAN/3
+                          {payment?.trans_id}
                         </td>
                         <td className="border border-black p-[4px] text-center">
-                          2025-01-01
+                          {moment(payment?.payment_date)?.format("DD-MM-YYYY")}
                         </td>
                         <td className="border border-black p-[4px] text-center">
-                          UPI
+                          {payment?.pm_name}
                         </td>
                         <td className="border border-black p-[4px] text-center">
-                          24935.00
+                          {payment?.order_amount}
                         </td>
                       </tr>
                       <tr className="bg-[#e5e5e5] font-bold">
@@ -405,7 +507,7 @@ const SonasutraInvoice = () => {
                           Total (Incl. of all taxes)
                         </td>
                         <td className="border border-black p-[4px] text-center">
-                          24935.00
+                          {payment?.order_amount}
                         </td>
                       </tr>
                     </tbody>
@@ -421,26 +523,27 @@ const SonasutraInvoice = () => {
                         <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">
                           Product
                         </th>
-                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">
-                          Strike-Through Discount
-                        </th>
+
                         <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">
                           Coupon Discount / xCLusive Points
                         </th>
                       </tr>
                     </thead>
                     <tbody>
+
                       <tr>
                         <td className="border border-black p-[4px] text-center">
-                          Product 1
+
+                          {invoice_detail?.coupon_discount}
                         </td>
+
                         <td className="border border-black p-[4px] text-center">
-                          2689.83
-                        </td>
-                        <td className="border border-black p-[4px] text-center">
-                          0.00
+
+                          {invoice_detail?.coupon_discount}
                         </td>
                       </tr>
+                      s
+
                     </tbody>
                   </table>
                   <div className="text-[8px] mt-[5px]">
@@ -457,23 +560,23 @@ const SonasutraInvoice = () => {
                         Pre-Discount Value ₹
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        26898.27
+                        {invoice_detail?.total_discount}
                       </td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
                         Strike-Through Discount* ₹
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
                         - 2689.83
                       </td>
-                    </tr>
+                    </tr> */}
                     <tr>
                       <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
                         Coupon Discount/xCLusive Points* ₹
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        - 0.00
+                        {invoice_detail?.coupon_discount}
                       </td>
                     </tr>
                     <tr>
@@ -481,7 +584,7 @@ const SonasutraInvoice = () => {
                         <strong>Taxable Value ₹</strong>
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        <strong>24208.44</strong>
+                        <strong>{invoice_detail?.total_tax}</strong>
                       </td>
                     </tr>
                     <tr>
@@ -489,7 +592,7 @@ const SonasutraInvoice = () => {
                         CGST ₹ (1.50%)
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        363.13
+                        {(invoice_detail?.total_tax / 2)?.toFixed(2)}
                       </td>
                     </tr>
                     <tr>
@@ -497,15 +600,7 @@ const SonasutraInvoice = () => {
                         SGST ₹ (1.50%)
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        363.13
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
-                        IGST ₹ (0.00%)
-                      </td>
-                      <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        0.00
+                        {(invoice_detail?.total_tax / 2)?.toFixed(2)}
                       </td>
                     </tr>
                     <tr>
@@ -513,31 +608,31 @@ const SonasutraInvoice = () => {
                         <strong>Total Invoice Price ₹</strong>
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        <strong>24935.00</strong>
+                        <strong>{Number(invoice_detail?.grand_total)?.toFixed(2)}</strong>
                       </td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
                         Cash Discount ₹
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
                         0.00
                       </td>
-                    </tr>
-                    <tr>
+                    </tr> */}
+                    {/* <tr>
                       <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
                         TCS ₹
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
                         0.00
                       </td>
-                    </tr>
+                    </tr> */}
                     <tr className="bg-[#e5e5e5] font-bold">
                       <td className="p-[3px_8px] border border-black text-left">
                         <strong>Total Payable Amount ₹ (Rounded off)</strong>
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        <strong>24935</strong>
+                        <strong>{Math.round(invoice_detail?.grand_total || 0)}</strong>
                       </td>
                     </tr>
                   </tbody>
@@ -551,20 +646,26 @@ const SonasutraInvoice = () => {
                 <strong>Invoice value in words :</strong>
               </div>
               <div>
-                Twenty-Four Thousand Nine Hundred Thirty-Five Rupees Only
-                (Rounded off)
+                {numberToWords(Math.round(invoice_detail?.grand_total || 0))} (Rounded off)
               </div>
             </div>
 
             {/* Rates Section */}
             <div className="m-[10px_15px] text-[10px]">
-              <div>
-                <strong>Standard Gold Rate for 01-Jan-25 :</strong>{" "}
-                24KT/22KT/18KT/14KT : ₹ 7901/ 7243/ 5926/ 4622
-              </div>
-              <div>
-                <strong>Platinum Rate for 01-Jan-25 :</strong> ₹ 3490
-              </div>
+
+              {order?.[0]?.material_details?.map((item) => {
+                return <div>
+                  <strong>Standard {item?.master_mat_name} Rate for  :</strong>{" "}
+                  {item?.pur_stamp_name}T: ₹ {item?.ma_price_per_unit}/{item?.ma_unit}
+                </div>
+              })}
+
+              {order?.[0]?.material_details?.map((item) => {
+                return <div>
+                  <strong>{item?.material_name} Rate for :</strong> ₹ {item?.ma_price_per_unit}/{item?.ma_unit}
+                </div>
+              })}
+
             </div>
           </div>
           <div className="absolute bottom-[10px] left-0 right-0 text-center text-[10px] m-0">
