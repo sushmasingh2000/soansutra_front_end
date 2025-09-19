@@ -542,7 +542,7 @@ const SonasutraInvoice = () => {
                           {invoice_detail?.coupon_discount}
                         </td>
                       </tr>
-                      s
+                    
 
                     </tbody>
                   </table>
