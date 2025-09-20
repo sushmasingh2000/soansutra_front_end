@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { MapPin, Tag, Truck, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../../utils/ApiConnector';
 import { endpoint, rupees } from '../../utils/APIRoutes';
@@ -68,17 +68,40 @@ export default function ResponsiveCart() {
     navigate(-1);
   };
 
-  const removeItem = async (id) => {
-    try {
-      const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`);
+  // const removeItem = async (id) => {
+  //   try {
+  //     const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`);
+  //     toast(response?.data?.message);
+  //     if (response?.data?.success) {
+  //       getCart();
+  //     }
+  //   } catch (e) {
+  //     console.log("something went wrong");
+  //   }
+  // };
+
+  const queryClient = useQueryClient();
+
+const removeCartMutation = useMutation(
+  (cart_item_id) => apiConnectorGet(`${endpoint.remove_cart}?cart_item_id=${cart_item_id}`),
+  {
+    onSuccess: (response) => {
+      // show toast
       toast(response?.data?.message);
-      if (response?.data?.success) {
-        getCart();
-      }
-    } catch (e) {
-      console.log("something went wrong");
+        if (response?.data?.success) {
+          // invalidate get_cart so header refetches
+          queryClient.invalidateQueries(["get_cart"], { refetchInactive: true });
+        }
+    },
+    onError: (error) => {
+      toast.error("Error removing item");
     }
-  };
+  }
+);
+
+const removeItem = (id) => {
+  removeCartMutation.mutate(id);
+};
 
   // Handle pincode change
   const handlePincodeChange = () => {

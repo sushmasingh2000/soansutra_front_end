@@ -178,15 +178,15 @@ const SellGold = () => {
                   </button>
 
                 </div>
-                <p className="text-xs text-gray-500 ml-2">Inclusive of {Number(get_price?.ma_sell_tax_percentage)?.toFixed(0, 2)}% GST</p>
+                <p className="text-xs text-gray-500 ml-2">Inclusive of {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST</p>
               </div>
               <div className="bg-white rounded-lg p-4 shadow w-1/5">
                 <h3 className="text-lg font-semibold mb-2">Sell Rate</h3>
                 <p className="text-red-500"> ₹{(
-                  Number(get_price?.ma_price) +
-                  (Number(get_price?.ma_price) * Number(get_price?.ma_sell_tax_percentage) / 100)
+                  Number(get_price?.ma_price || 0) +
+                  (Number(get_price?.ma_price || 0) * Number(get_price?.ma_sell_tax_percentage || 0) / 100)
                 ).toFixed(2)} /gram</p>
-                <p className="text-xs text-gray-500"><span>{Number(get_price?.ma_price).toFixed(2)}</span> + {Number(get_price?.ma_sell_tax_percentage)?.toFixed(0, 2)}% GST</p>
+                <p className="text-xs text-gray-500"><span>{Number(get_price?.ma_price || 0).toFixed(2)}</span> + {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST</p>
                 <p className="text-xs text-gray-500">Price valid for {formatTime(timeLeft)} min</p>
                 <p className="text-xs text-gray-500">24K 99.99% Purity</p>
               </div>
@@ -247,7 +247,7 @@ const SellGold = () => {
               >
                 Proceed to Sell
               </button>
-            <p className="text-xs text-gray-500 mb-2">Inclusive of {Number(get_price?.ma_sell_tax_percentage)?.toFixed(0, 2)}% GST</p>
+            <p className="text-xs text-gray-500 mb-2">Inclusive of {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST</p>
           </div>
           <div className="flex items-center bg-yellow-100 rounded p-2 text-yellow-800 mt-4 mb-4">
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -259,12 +259,12 @@ const SellGold = () => {
             <h3 className="text-lg font-semibold mb-2">Sell Rate</h3>
             <p className="text-red-500">
               ₹{(
-                Number(get_price?.ma_price) +
-                (Number(get_price?.ma_price) * Number(get_price?.ma_sell_tax_percentage) / 100)
+                Number(get_price?.ma_price || 0) +
+                (Number(get_price?.ma_price || 0) * Number(get_price?.ma_sell_tax_percentage || 0) / 100)
               ).toFixed(2)} /gram
             </p>
 
-            <p className="text-xs text-gray-500">(₹{Number(get_price?.ma_price).toFixed(2)} + {Number(get_price?.ma_sell_tax_percentage)?.toFixed(0, 2)}% GST)</p>
+            <p className="text-xs text-gray-500">(₹{Number(get_price?.ma_price || 0).toFixed(2)} + {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST)</p>
             <p className="text-xs text-gray-500">Price valid for {formatTime(timeLeft)} min</p>
             <p className="text-xs text-gray-500">24K 99.99% Purity</p>
           </div>

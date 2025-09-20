@@ -1,7 +1,6 @@
 
 
 import axios from "axios";
-import { addDays, format } from "date-fns";
 import {
   Copy,
   Heart,
@@ -11,7 +10,10 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
+import Loader from "../../Shared/Loader";
+import { useLoginModal } from "../../context/Login";
 import { endpoint, rupees } from "../../utils/APIRoutes";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import Footer from "../Footer1";
@@ -19,20 +21,16 @@ import Header from "../Header1";
 import BannerSlidder from "../bannerSlidder";
 import ContinueBrowsing from "../continuebrowsing";
 import CustomerReviewSection from "../customerReview";
+import DeliveryStoresUI from "../deliverystorestrails";
 import CaratLaneSignup from "../emailSubscription";
+import FeaturesComponent from "../featuregrid";
 import MobileVideoSlider from "../mobilevideoslider";
-import More18KProducts from "../moreproduct";
 import YouMayLike from "../productyoumaylike";
 import RecentlyViewed from "../recentlyviewed";
-import RelatedCategories from "../relatedcategories";
+import ScrollSpyNavigation from "../scrollspynavigation";
 import ShopByProducts from "../shopbyproduct";
 import SimilarProducts from "../similarproduct";
-import WarrantyFeatures from "../trustBadge";
-import { useLoginModal } from "../../context/Login";
-import DeliveryStoresUI from "../deliverystorestrails";
-import ScrollSpyNavigation from "../scrollspynavigation";
-import FeaturesComponent from "../featuregrid";
-import Loader from "../../Shared/Loader";
+
 
 const GoldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -47,6 +45,7 @@ const DiamondIcon = () => (
 );
 
 const ProductDetailWebPage = () => {
+  const queryClient = useQueryClient();
   const location = useLocation();
   const product_id_and_variant_id_only = location.state?.product;
   const [selectedImage, setSelectedImage] = useState(0);
@@ -67,6 +66,32 @@ const ProductDetailWebPage = () => {
   const { setShowLoginModal } = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
   const [loadercart, setIsLoadingCart] = useState(false);
+
+  const addToCartMutation = useMutation(
+    (payload) => apiConnectorPost(endpoint.create_cart, payload),
+    {
+      onMutate: () => {
+        setIsLoadingCart(true);
+      },
+      onSuccess: (response) => {
+        setIsLoadingCart(false);
+        if (response?.data?.message === "Unauthorised User!") {
+          setShowLoginModal(true);
+        } else {
+          toast(response?.data?.message, { id: 1 });
+          // invalidate get_cart query so count updates
+          queryClient.invalidateQueries(["get_cart"]);
+        }
+      },
+      onError: (error) => {
+        setIsLoadingCart(false);
+        toast.error("Error adding to cart");
+        console.error("Add to cart error:", error);
+      },
+    }
+  );
+  
+
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -262,6 +287,8 @@ const image =
     setTimeout(() => setShowToast(false), 2000);
   };
 
+  
+
   const handleAddToCart = async () => {
     if (!product_id_and_variant_id_only || !selectedVariant) {
       toast.error("Product or variant not selected");
@@ -273,22 +300,7 @@ const image =
       varient_id: selectedVariant.varient_id,
       quantity: quantity,
     };
-
-    try {
-      setIsLoadingCart(true);
-      const response = await apiConnectorPost(endpoint.create_cart, payload);
-      setIsLoadingCart(false);
-      if (response?.data?.message !== "Unauthorised User!") {
-        toast(response?.data?.message, { id: 1 })
-      }
-      if (response?.data?.message === "Unauthorised User!") {
-        setShowLoginModal(true);
-      }
-    } catch (error) {
-      toast.error("Error adding to cart");
-      console.error("Add to cart error:", error);
-    }
-      setIsLoadingCart(false);
+    addToCartMutation.mutate(payload);
   };
 
   const handleWishlist = async () => {
