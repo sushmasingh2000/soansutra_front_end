@@ -91,6 +91,7 @@ const removeCartMutation = useMutation(
         if (response?.data?.success) {
           // invalidate get_cart so header refetches
           queryClient.invalidateQueries(["get_cart"], { refetchInactive: true });
+          getCart();
         }
     },
     onError: (error) => {
