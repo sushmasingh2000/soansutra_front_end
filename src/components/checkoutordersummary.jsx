@@ -1,5 +1,8 @@
 
 import React, { useState } from 'react';
+import { useQuery } from 'react-query';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
+import { endpoint } from '../utils/APIRoutes';
 
 const ProductCard = ({ product }) => {
   const { image, title, size, qty, price, originalPrice, discountPercent } = product;
@@ -14,14 +17,14 @@ const ProductCard = ({ product }) => {
           {originalPrice && (
             <p className="ml-2 text-xs text-red-500 line-through">₹{originalPrice.toLocaleString('en-IN')}</p>
           )}
-          {discountPercent && <p className="ml-1 text-xs text-red-500">({discountPercent}%)</p>}
+          {/* {discountPercent && <p className="ml-1 text-xs text-red-500">({discountPercent}%)</p>} */}
         </div>
       </div>
     </div>
   );
 };
 
-const PriceBreakdown = ({ subtotal, cartDiscount, shipping, total }) => {
+const PriceBreakdown = ({ subtotal, cartDiscount, shipping, total ,tax }) => {
   return (
     <div className="mt-6 space-y-2">
       <div className="flex justify-between text-sm text-black">
@@ -32,7 +35,12 @@ const PriceBreakdown = ({ subtotal, cartDiscount, shipping, total }) => {
         <p>Cart Discount</p>
         <p>- ₹{cartDiscount.toLocaleString('en-IN')}</p>
       </div>
+     
       <div className="flex justify-between text-sm text-black">
+        <p>Total Tax </p>
+        <p> + ₹{tax.toLocaleString('en-IN')}</p>
+      </div>
+       <div className="flex justify-between text-sm text-black">
         <p>Shipping (Standard)</p>
         <p>{shipping === 0 ? 'Free' : `₹${shipping.toLocaleString('en-IN')}`}</p>
       </div>
@@ -44,95 +52,34 @@ const PriceBreakdown = ({ subtotal, cartDiscount, shipping, total }) => {
   );
 };
 
-const CheckoutOrderSummary = ({ products: propProducts = [], cartDiscount = 4549, shipping = 0, deliveryInfo = 'Est. Delivery by Tomorrow 4PM-9PM' }) => {
-  let products = propProducts;
-  if (!products.length) {
-    products = [
-      {
-        image: 'https://via.placeholder.com/80?text=Ring1',
-        title: 'Rewrite your Future Gemstone Ring',
-        size: 12,
-        qty: 1,
-        price: 41806,
-        originalPrice: 46355,
-        discountPercent: 9,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring2',
-        title: 'Oceanic Blue Gemstone Ring',
-        size: 12,
-        qty: 2,
-        price: 27256,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring3',
-        title: 'Emerald Green Gemstone Ring',
-        size: 10,
-        qty: 1,
-        price: 35000,
-        originalPrice: 40000,
-        discountPercent: 12,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring4',
-        title: 'Ruby Red Gemstone Ring',
-        size: 14,
-        qty: 3,
-        price: 15000,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring5',
-        title: 'Sapphire Sparkle Ring',
-        size: 11,
-        qty: 1,
-        price: 28000,
-        originalPrice: 30000,
-        discountPercent: 7,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring6',
-        title: 'Diamond Delight Ring',
-        size: 13,
-        qty: 2,
-        price: 50000,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring7',
-        title: 'Amethyst Aura Ring',
-        size: 12,
-        qty: 1,
-        price: 22000,
-        originalPrice: 25000,
-        discountPercent: 12,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring8',
-        title: 'Topaz Twilight Ring',
-        size: 15,
-        qty: 4,
-        price: 18000,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring9',
-        title: 'Pearl Paradise Ring',
-        size: 9,
-        qty: 1,
-        price: 12000,
-        originalPrice: 15000,
-        discountPercent: 20,
-      },
-      {
-        image: 'https://via.placeholder.com/80?text=Ring10',
-        title: 'Garnet Glow Ring',
-        size: 12,
-        qty: 2,
-        price: 26000,
-      },
-    ];
-  }
+const CheckoutOrderSummary = ({ selectedOrderId, shipping = 0, deliveryInfo = 'Est. Delivery by Tomorrow 4PM-9PM' }) => {
+  const { data: order_details } = useQuery(
+    ["order_details", selectedOrderId],
+    () => apiConnectorGet(`${endpoint.get_order_detail_by}?order_id=${selectedOrderId}`),
+    {
+      ...usequeryBoolean,
+      enabled: !!selectedOrderId,
+    }
+  );
 
-  const subtotal = products.reduce((acc, p) => acc + p.price * p.qty, 0);
-  const total = subtotal - cartDiscount + shipping;
+  const orderData = order_details?.data?.result;
+  const orderItems = orderData?.order_items || [];
+
+  const products = orderItems.map((item) => ({
+    image: item.p_image_url,
+    title: item.sku || 'Product',
+    size: '-', // You can add size if available in the variant
+    qty: item.quantity,
+    price: item.grand_total, // Use grand total after discount
+    originalPrice: item.total_price, // Before discount
+    // discountPercent: item.discount ? Math.round((item.discount / item.unit_price) * 100) : null,
+  }));
+
+  const subtotal = Number(orderData?.total_amount || 0);
+  const cartDiscount = Number(orderData?.total_discount || 0);
+  const total = Number(orderData?.grand_total || 0);
+  const tax = Number(orderData?.total_tax || 0)
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -173,7 +120,12 @@ const CheckoutOrderSummary = ({ products: propProducts = [], cartDiscount = 4549
           </div>
 
           {/* Price breakdown */}
-          <PriceBreakdown subtotal={subtotal} cartDiscount={cartDiscount} shipping={shipping} total={total} />
+          <PriceBreakdown
+           subtotal={subtotal} 
+           cartDiscount={cartDiscount}
+            shipping={shipping}
+            tax={tax}
+             total={total} />
         </div>
       </div>
     </div>

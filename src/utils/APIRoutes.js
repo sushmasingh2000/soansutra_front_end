@@ -1,14 +1,9 @@
 // export const domain = "http://192.168.18.214:2000";
+export const frontend = "https://sonasutra.in";
 export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
-  review_customer: `${domain}/api/v1/create-product-review`,
-  get_customer_review: `${domain}/api/v1/get-product-review`,
-  get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
-  get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
-
-
 
   email_insider: `${domain}/api/v1/insert-external-leads`,
   login: `${domain}/api/v1/login-user`,
@@ -98,6 +93,25 @@ export const endpoint = {
   delete_video: `${domain}/api/v1/delete-videos`,
 
 
+  release_income: `${domain}/api/v1/release-rank-income`,
+
+
+  
+  // address shipping
+  add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
+  get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
+  set_shipping_Address: `${domain}/api/v1/set-shipping-address-as-default`,
+
+  //payment order 
+  create_order_payment: `${domain}/api/v1/creata-order-payment`,
+
+
+  //rankmlm
+   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
+  update_rank_deatils: `${domain}/api/v1/update-rank-details-by-admin`,
+  get_distributor_details: `${domain}/api/v1/get-distributer-details`,
+  get_rank_achivers_details: `${domain}/api/v1/get-rank-achievers-details`,
+
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
   get_product_attributes: `${domain}/api/v1/get-product-attributes`,
@@ -129,7 +143,9 @@ export const endpoint = {
   //insider email
   get_external_leads: `${domain}/api/v1/get-external-leads`,
 
-  // collection
+  // egold order
+  get_order_egold: `${domain}/api/v1/get-egold-order-details`,
+  get_order_egold_detail_by: `${domain}/api/v1/get-egold-order-details-by-order-id`,
 
   //get_demo call
   req_demo_call: `${domain}/api/v1/u-req-demo-call`,
@@ -180,8 +196,9 @@ export const endpoint = {
   //
   get_custom_order: `${domain}/api/v1/get-custom-orders`,
   create_custom_order: `${domain}/api/v1/u-create-custom-order`,
+  get_order_status: `${domain}/api/v1/update-order-status`,
 
-//coupon 
+  //coupon 
   create_coupon: `${domain}/api/v1/create-coupon`,
   get_coupon: `${domain}/api/v1/get-coupon`,
   update_coupon: `${domain}/api/v1/update-coupon`,
@@ -232,6 +249,7 @@ export const endpoint = {
   change_password: `${domain}/api/v1/change-customer-password`,
   disable_customer_account: `${domain}/api/v1/dissable-customer-account`,
 
+  create_order: `${domain}/api/v1/create-order`,
   get_order: `${domain}/api/v1/get-order-details`,
   get_order_detail_by: `${domain}/api/v1/get-order-details-by-order-id`,
 
@@ -248,12 +266,25 @@ export const endpoint = {
 
   //user coupon
   get_coupon_varient: `${domain}/api/v1/u-get-coupon-on-varient`,
+    review_customer: `${domain}/api/v1/create-product-review`,
+  checkd_order_placed: `${domain}/api/v1/check-order-placed`,
+  
+  get_customer_review: `${domain}/api/v1/get-product-review`,
+  get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
+  get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
+
+  //invoice
+  get_invoice: `${domain}/api/v1/invoice-detils`,
 
   //mlm api 
   get_distributor_name: `${domain}/api/v1/get-distributor-name`,
   distributor_registration: `${domain}/api/v1/distributor-registration`,
   get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
-  
+  get_distributor_dashboard: `${domain}/api/v1/get-distributor-dashboard`,
+  get_master_material_price: `${domain}/api/v1/get-master-material-pice`,
+  create_egold_price: `${domain}/api/v1/create-egold-order`,
+  create_egold_price_sell: `${domain}/api/v1/create-egold-sell-order`,
+
   
   
 

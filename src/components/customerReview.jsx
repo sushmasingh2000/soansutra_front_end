@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Star } from "lucide-react";
+import { ImagePlus, Star, X } from "lucide-react";
 import { useQuery } from "react-query";
-import { apiConnectorGet } from "../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../utils/ApiConnector";
 import { endpoint } from "../utils/APIRoutes";
 import ReviewModal from "./ReviewModal";
 import { useLoginModal } from "../context/Login";
+import toast from "react-hot-toast";
 
 const tagLabels = {
   rev_disign: "DESIGN",
@@ -17,20 +18,185 @@ const tagLabels = {
   rev_other: "OTHERS",
 };
 
-const CustomerReviewSection = () => {
+const CreateReviewModal = ({ onClose, product, productId }) => {
+  const [rating, setRating] = useState(0);
+  const [improveSelected, setImproveSelected] = useState([]);
+  const [impressSelected, setImpressSelected] = useState([]);
+  const [feedback, setFeedback] = useState('');
+  const [media, setMedia] = useState(null);
+
+  const options = ['Design', 'Size/Fit', 'Quality', 'Delivery', 'Packaging', 'Customer Service', 'Overall Experience', 'Others'];
+
+  const toggleOption = (setFunc, selected, option) => {
+    if (selected.includes(option)) {
+      setFunc(selected.filter(o => o !== option));
+    } else {
+      setFunc([...selected, option]);
+    }
+  };
+
+  const handleSubmit = async () => {
+
+    const tagMap = {
+      'Design': 'disign',
+      'Size/Fit': 'size_fit',
+      'Quality': 'quality',
+      'Delivery': 'delivery',
+      'Packaging': 'packaging',
+      'Customer Service': 'customer_service',
+      'Overall Experience': 'overall_exp',
+      'Others': 'other',
+    };
+
+    const reviewData = {
+      product_id: productId,
+      rating,
+      review_text: feedback,
+    };
+
+    Object.values(tagMap).forEach(key => {
+      reviewData[`rev_${key}`] = 0;
+      reviewData[`rev_${key}_impr`] = 0;
+    });
+
+    impressSelected.forEach(tag => {
+      const key = tagMap[tag];
+      if (key) reviewData[`rev_${key}`] = 1;
+    });
+
+    improveSelected.forEach(tag => {
+      const key = tagMap[tag];
+      if (key) reviewData[`rev_${key}_impr`] = 1;
+    });
+
+    const formData = new FormData();
+    Object.entries(reviewData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    if (media) {
+      formData.append("file", media);
+    }
+    try {
+      const response = await apiConnectorPost(endpoint.review_customer, formData);
+      toast(response?.data?.message);
+      if (response?.data?.success) {
+        onClose();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to submit review. Try again.");
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 z-50">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[70vh] overflow-y-auto text-sm">
+        <div className="flex items-center justify-between p-3 border-b">
+          <p className="text-black font-bold">Write a Review</p>
+          <button onClick={onClose}><X className="w-4 h-4" /></button>
+        </div>
+        <h3 className="mt-4 text-md px-5  font-medium">Write a review for the product</h3>
+        <div className="p-5">
+          <div className="flex justify-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-6 h-6 cursor-pointer ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                onClick={() => setRating(i + 1)}
+              />
+            ))}
+          </div>
+          <p className="text-center text-xs text-gray-600 mt-1">Tap on the stars to rate your experience</p>
+          <div className="flex gap-5 my-3">
+            <div>
+              <h4 className="mt-3 text-sm font-medium">What can we improve?</h4>
+              <p className="text-green-600 text-xs">You can select multiple options.</p>
+              <div className="grid grid-cols-3 gap-1 mt-1">
+                {options.map(opt => (
+                  <button
+                    key={opt}
+                    className={`py-1 px-2 border rounded text-xs
+                   ${improveSelected.includes(opt) ? 'bg-purple-100 text-purple-800'
+                        : 'text-gray-600'}`}
+                    onClick={() => toggleOption(setImproveSelected, improveSelected, opt)}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="mt-3 text-sm font-medium">What did we impress you with?</h4>
+              <p className="text-green-600 text-xs">You can select multiple options.</p>
+              <div className="grid grid-cols-3 gap-1 mt-1">
+                {options.map(opt => (
+                  <button
+                    key={opt}
+                    className={`py-1 px-2 border rounded text-xs ${impressSelected.includes(opt) ? 'bg-purple-100 text-purple-800' : 'text-gray-600'}`}
+                    onClick={() => toggleOption(setImpressSelected, impressSelected, opt)}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mt-3">
+            <label htmlFor="media-upload" className="w-full border border-gray-200 rounded flex justify-center items-center py-4 cursor-pointer">
+              <div className="bg-purple-50 rounded p-3">
+                <ImagePlus className="w-6 h-6 text-purple-600" />
+              </div>
+              <input id="media-upload" type="file" accept="image/*,video/*" className="hidden" onChange={(e) => setMedia(e.target.files[0])} />
+            </label>
+            {media && <p className="text-xs text-gray-600 mt-1">{media.name}</p>}
+          </div>
+          <div className="mt-4">
+            <textarea
+              className="w-full border rounded p-2 text-xs"
+              rows={4}
+              maxLength={500}
+              value={feedback}
+              onChange={e => setFeedback(e.target.value)}
+              placeholder="Our designers would love to hear your feedback"
+            />
+            <p className="text-right text-xs text-gray-500">{500 - feedback.length}</p>
+          </div>
+
+          <button className="w-full bg-purple-600 text-white py-2 rounded mt-3 font-medium text-sm"
+            onClick={handleSubmit}>
+            Submit Review
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+const CustomerReviewSection = ({ productId }) => {
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [expandedReviewId, setExpandedReviewId] = useState(null);
+  const user = localStorage.getItem("token");
+  const { setShowLoginModal } = useLoginModal();
 
-  const { data, isLoading, isError } = useQuery(["customer-review", page], () =>
+  const { data, isLoading, isError } = useQuery(
+    ["customer-review", page], () =>
     apiConnectorGet(endpoint.get_customer_review)
   );
 
   const reviews = data?.data?.result?.currentPage || [];
   const totalPages = data?.data?.result?.totalPage || 1;
   const currPage = data?.data?.result?.currPage || 1;
+  const { data: order_check, } = useQuery(
+    ["order_check", page], () =>
+    apiConnectorGet(endpoint.checkd_order_placed)
+  );
+
 
   const goToPage = (p) => {
     if (p >= 1 && p <= totalPages) {
@@ -38,13 +204,10 @@ const CustomerReviewSection = () => {
     }
   };
 
-  const user = localStorage.getItem("token");
-
-  const { data: single } = useQuery(["customer-review_single"], () =>
+  const { data: single } = useQuery(
+    ["customer-review_single"], () =>
     apiConnectorGet(endpoint.get_customer_single_review)
   );
-  const { setShowLoginModal } = useLoginModal();
-
   const singlereviews = single?.data?.result;
   const customerImages = reviews.filter((r) => r.review_image);
 
@@ -106,13 +269,12 @@ const CustomerReviewSection = () => {
                     return (
                       <Star
                         key={star}
-                        className={`w-5 h-5 ${
-                          star <= Math.floor(avgRating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : star - 0.5 === avgRating
+                        className={`w-5 h-5 ${star <= Math.floor(avgRating)
+                          ? "fill-yellow-400 text-yellow-400"
+                          : star - 0.5 === avgRating
                             ? "fill-yellow-400 text-yellow-200" // optional: lighter color for half
                             : "text-gray-300"
-                        }`}
+                          }`}
                       />
                     );
                   })}
@@ -133,9 +295,14 @@ const CustomerReviewSection = () => {
                 onClick={() => {
                   if (!user) {
                     setShowLoginModal(true);
-                  } else {
-                    console.log("Open review form or modal");
+                    return;
                   }
+                  if (order_check?.data?.message !== "Order exist") {
+                    alert("Please purchase your order first.");
+                    return;
+                  }
+                  setSelectedProduct();
+                  setShowReviewModal(true);
                 }}
               >
                 WRITE A REVIEW
@@ -269,11 +436,10 @@ const CustomerReviewSection = () => {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`w-3.5 h-3.5 ${
-                              star <= rating
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-gray-300"
-                            }`}
+                            className={`w-3.5 h-3.5 ${star <= rating
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                              }`}
                           />
                         ))}
                       </div>
@@ -401,6 +567,19 @@ const CustomerReviewSection = () => {
         onClose={() => setShowModal(false)}
         review={selectedReview}
       />
+      {showReviewModal && (
+        <CreateReviewModal
+          onClose={() => {
+            setShowReviewModal(false);
+            setSelectedProduct(null);
+          }}
+          product={selectedProduct}
+          productId={productId}
+        />
+      )}
+
+
+
     </div>
   );
 };

@@ -1,14 +1,17 @@
 
+
+
 import { useFormik } from 'formik';
 import { MapPin, Tag, Truck, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../../utils/ApiConnector';
 import { endpoint, rupees } from '../../utils/APIRoutes';
 import AssurityComponent from '../assuritycomponent';
 import CartHeader from '../shoppingCartHeader';
+import Loader from '../../Shared/Loader';
 
 export default function ResponsiveCart() {
   const navigate = useNavigate();
@@ -23,6 +26,8 @@ export default function ResponsiveCart() {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [coupon, setCoupon] = useState([])
+    const [isLoading, setIsLoading] = useState(false);
+  
 
   // Placeholder images for modal carousel
   const placeholderImages = [
@@ -63,17 +68,41 @@ export default function ResponsiveCart() {
     navigate(-1);
   };
 
-  const removeItem = async (id) => {
-    try {
-      const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`);
+  // const removeItem = async (id) => {
+  //   try {
+  //     const response = await apiConnectorGet(`${endpoint?.remove_cart}?cart_item_id=${id}`);
+  //     toast(response?.data?.message);
+  //     if (response?.data?.success) {
+  //       getCart();
+  //     }
+  //   } catch (e) {
+  //     console.log("something went wrong");
+  //   }
+  // };
+
+  const queryClient = useQueryClient();
+
+const removeCartMutation = useMutation(
+  (cart_item_id) => apiConnectorGet(`${endpoint.remove_cart}?cart_item_id=${cart_item_id}`),
+  {
+    onSuccess: (response) => {
+      // show toast
       toast(response?.data?.message);
-      if (response?.data?.success) {
-        getCart();
-      }
-    } catch (e) {
-      console.log("something went wrong");
+        if (response?.data?.success) {
+          // invalidate get_cart so header refetches
+          queryClient.invalidateQueries(["get_cart"], { refetchInactive: true });
+          getCart();
+        }
+    },
+    onError: (error) => {
+      toast.error("Error removing item");
     }
-  };
+  }
+);
+
+const removeItem = (id) => {
+  removeCartMutation.mutate(id);
+};
 
   // Handle pincode change
   const handlePincodeChange = () => {
@@ -113,6 +142,47 @@ export default function ResponsiveCart() {
     setCouponCode(couponCode);
     handleApplyCoupon(couponCode);
     setShowCouponModal(false);
+  };
+    const handlePlaceOrder = async () => {
+    try {
+      setIsLoading(true)
+      const orderItems = cartItems.map(item => ({
+        varient_id: item.varient_id,
+        quantity: item.quantity
+      }));
+
+      const totalAmount = Math.round(subtotal - couponDiscount); 
+
+      const payload = {
+        status: "Pending",
+        payment_method: 1, 
+        payment_status: "Unpaid",
+        notes: "N/A",
+        items: orderItems,
+        payment: {
+          method: 1,
+          status: "Unpaid",
+          amount: totalAmount
+        },
+        isCoupon: Boolean(appliedCoupon)
+      };
+
+      const response = await apiConnectorPost(endpoint?.create_order, payload);
+      setIsLoading(false)
+      if (!response?.data?.message === "Order placed successfully.") {
+        toast(response?.data?.message);
+      };
+      if (response?.data?.success) {
+        toast.success("Order Verified !  Confirm Your Address");
+        navigate("/checkout", { state: { orderId: response?.data?.result?.orderId } });
+      } else {
+        toast.error(response?.data?.message || "Failed to place order.");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+      setIsLoading(false)
   };
 
   const handleApplyCoupon = async () => {
@@ -197,6 +267,7 @@ export default function ResponsiveCart() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 lg:pb-16 overflow-x-hidden">
+      <Loader isLoading={isLoading}/>
       <CartHeader onBackClick={handleBackClick} cartItems={cartItems} />
       <div className="max-w-7xl mx-auto px-4 py-4">
         {/* Desktop Layout */}
@@ -362,7 +433,7 @@ export default function ResponsiveCart() {
 
                 <button
                   className="w-full text-black py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg font-medium hover:bg-yellow-700 transition-colors text-sm"
-
+                 onClick={handlePlaceOrder}
                 >
                   PLACE ORDER
                 </button>
@@ -550,7 +621,7 @@ export default function ResponsiveCart() {
                     </div>
                     <button
                       className="text-black py-3 px-6 rounded-lg font-medium text-sm bg-gradient-to-r from-yellow-400 to-yellow-600"
-
+                    onClick={handlePlaceOrder}
                     >
                       PLACE ORDER
                     </button>
@@ -692,4 +763,3 @@ export default function ResponsiveCart() {
   );
 }
 
-// isme varinat isd jyegi jb apply coupon pr click krenge to api variant id multiple bhi jaskti array me jyega or subtotal amount jyega 

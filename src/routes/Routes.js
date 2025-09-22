@@ -45,7 +45,15 @@ import Video from "../components/admin/Video.js";
 import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
 import Coupon from "../components/admin/Coupon.js";
 import CouponPriceRange from "../components/admin/CouponPriceRange..js";
-import SonasutraInvoice from "../components/sonasutrainvoice.jsx";
+import { elements } from "chart.js";
+import Order from "../components/admin/Order.js";
+import OrderDetails from "../components/admin/OrderDetails.js";
+import Rank from "../components/admin/Rank.js";
+import Distributor from "../components/admin/Distributor.js";
+import Rankachiver from "../components/admin/RankAchiver.js";
+import EgoldOrder from "../components/admin/E-goldOrder.js";
+import Attribute from "../components/admin/Attributes.js";
+import SonasutraInvoice from "../components/sonasutrainvoice.js";
 
 export const routes = [
   {
@@ -105,6 +113,56 @@ export const routes = [
   {
     path: "/sign-up",
     element: <SignUpPage />,
+  },
+
+   {
+    path: "/Collection",
+    element: (
+      <MainLayout>
+        <Collection />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/order",
+    element: (
+      <MainLayout>
+        <Order />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/order-details/:orderId",
+    element: (
+      <MainLayout>
+        <OrderDetails />{" "}
+      </MainLayout>
+    ),
+  },
+ 
+   {
+    path: "/rank",
+    element: (
+      <MainLayout>
+        <Rank />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/distributor",
+    element: (
+      <MainLayout>
+        <Distributor />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/rankachiver",
+    element: (
+      <MainLayout>
+        <Rankachiver />{" "}
+      </MainLayout>
+    ),
   },
   {
     path: "/categories",
@@ -243,6 +301,14 @@ export const routes = [
       </MainLayout>
     ),
   },
+   {
+    path: "/attribute",
+    element: (
+      <MainLayout>
+        <Attribute />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/product-tax",
     element: (
@@ -280,6 +346,14 @@ export const routes = [
     element: (
       <MainLayout>
         <RequestDemo />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/egold_order",
+    element: (
+      <MainLayout>
+        <EgoldOrder />{" "}
       </MainLayout>
     ),
   },
@@ -335,6 +409,10 @@ export const routes = [
     path: "/product-attributes/:id",
     element: <ProductVariant />,
   },
+  {
+    path: "/invoice/:orderId",
+    element: <SonasutraInvoice/>,
+  },
     {
     path: "/wish",
     element: <WishlistPage />,
@@ -363,10 +441,7 @@ export const routes = [
     path: "/terms-and-conditions",
     element: <Termscondition/>,
   },
-   {
-    path: "/invoice",
-    element: <SonasutraInvoice/>,
-  },
+ 
 ];
 
 // const router = createBrowserRouter([

@@ -1,7 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faStore, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import toast from 'react-hot-toast';
+import { endpoint } from '../utils/APIRoutes';
+import { apiConnectorGet, apiConnectorPost } from '../utils/ApiConnector';
 
 const CheckoutForm = ({ onSaveContinue, className }) => {
   const [deliveryType, setDeliveryType] = useState('home');
@@ -26,6 +29,23 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
   });
   const [addresses, setAddresses] = useState([]);
 
+  const addres_fn = async () => {
+    try {
+      const response = await apiConnectorGet(endpoint?.get_shipping_Address);
+      const addressList = response?.data?.result || [];
+      setAddresses(addressList);
+      const defaultAddress = addressList.find(addr => addr.is_default === "Active");
+      if (defaultAddress) {
+        setSelectedAddress(defaultAddress.address_id);
+      }
+    } catch (e) {
+      console.log("something");
+    }
+  };
+
+  useEffect(() => {
+    addres_fn()
+  }, [])
   const [newAddress, setNewAddress] = useState({
     firstName: '',
     lastName: '',
@@ -120,19 +140,47 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
     setNewAddress((prev) => ({ ...prev, type }));
   };
 
-  const saveAddress = () => {
-    if (editingAddress) {
-      const updatedAddresses = addresses.map((addr) =>
-        addr.id === editingAddress.id ? { ...newAddress, id: addr.id } : addr
-      );
-      setAddresses(updatedAddresses);
-    } else {
-      const newId = addresses.length;
-      setAddresses([...addresses, { ...newAddress, id: newId }]);
-      setSelectedAddress(newId);
+  const saveAddress = async () => {
+    const addressPayload = {
+      address_line1: newAddress.address,
+      address_line2: newAddress.landmark,
+      city: newAddress.city,
+      state: newAddress.state,
+      postal_code: newAddress.pincode,
+      country: newAddress.country,
+      phone_number: newAddress.mobile,
+      is_default: 1, // or 0 if needed
+    };
+
+    try {
+      const response = await apiConnectorPost(endpoint?.add_shipping_Address, addressPayload);
+      if (response?.data?.success) {
+        toast('Address saved successfully!');
+        const newId = addresses.length;
+        setAddresses([...addresses, { ...newAddress, id: newId }]);
+        setSelectedAddress(newId);
+        closeAddEditModal();
+      }
+    } catch (error) {
+      console.error('Error saving address:', error);
+      toast('Something went wrong. Try again later.');
     }
-    closeAddEditModal();
   };
+
+
+  // const saveAddress = () => {
+  //   if (editingAddress) {
+  //     const updatedAddresses = addresses.map((addr) =>
+  //       addr.id === editingAddress.id ? { ...newAddress, id: addr.id } : addr
+  //     );
+  //     setAddresses(updatedAddresses);
+  //   } else {
+  //     const newId = addresses.length;
+  //     setAddresses([...addresses, { ...newAddress, id: newId }]);
+  //     setSelectedAddress(newId);
+  //   }
+  //   closeAddEditModal();
+  // };
 
   const deleteAddress = (id) => {
     const updatedAddresses = addresses.filter((addr) => addr.id !== id);
@@ -144,9 +192,23 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
     }
   };
 
-  const selectAddress = (id) => {
+  const selectAddress = async (id) => {
     setSelectedAddress(id);
+
+    try {
+      const response = await apiConnectorGet(`${endpoint.set_shipping_Address}?address_id=${id}`);
+      if (response?.data?.success) {
+        toast.success("Address set as default successfully");
+        // refetchAddresses();
+      } else {
+        toast.error(response?.data?.message || "Could not set default address");
+      }
+    } catch (err) {
+      console.error("Failed to set default address", err);
+      toast.error("Error setting default address");
+    }
   };
+
 
   const toggleBillingAddress = () => {
     setUseDifferentBilling(!useDifferentBilling);
@@ -172,18 +234,22 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
 
   const handleSaveContinue = () => {
     // Basic validation
-    if (deliveryType === 'home' && (!currentAddress.firstName || !currentAddress.address || !currentAddress.mobile)) {
+    if (
+      deliveryType === 'home' &&
+      (!currentAddress?.address_line1 || !currentAddress?.phone_number || !currentAddress?.city || !currentAddress?.state || !currentAddress?.postal_code)
+    ) {
       alert('Please fill in all required shipping address fields.');
       return;
     }
+
     if (deliveryType === 'store' && !document.querySelector('input[placeholder="201308"]').value) {
       alert('Please enter a valid pincode for store pickup.');
       return;
     }
-    if (useDifferentBilling && (!billingAddress.firstName || !billingAddress.address || !billingAddress.mobile)) {
-      alert('Please fill in all required billing address fields.');
-      return;
-    }
+    // if (useDifferentBilling && (!billingAddress.firstName || !billingAddress.address || !billingAddress.mobile)) {
+    //   alert('Please fill in all required billing address fields.');
+    //   return;
+    // }
     console.log('Save & Continue clicked');
     if (onSaveContinue) {
       onSaveContinue(); // Call the callback to update parent state
@@ -191,7 +257,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
   };
 
   const hasAddress = addresses.length > 0 && selectedAddress >= 0;
-  const currentAddress = hasAddress ? addresses.find(addr => addr.id === selectedAddress) : {};
+  const currentAddress = hasAddress ? addresses.find(addr => addr.address_id === selectedAddress) : {};
 
   const addressButtonText = hasAddress ? 'CHANGE OR ADD ADDRESS' : 'ADD ADDRESS';
 
@@ -238,13 +304,11 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                     </span>
                   </p>
                   <p className="font-medium">
-                    {currentAddress.firstName} {currentAddress.lastName} ({currentAddress.type})
-                  </p>
+                    Mobile: +91 {currentAddress?.phone_number} </p>
                   <p className="text-sm">
-                    {currentAddress.address}, {currentAddress.city}, {currentAddress.state},{' '}
-                    {currentAddress.pincode}, {currentAddress.country}
+                    {currentAddress?.address_line1}, {currentAddress?.city}, {currentAddress?.state},{' '}
+                    {currentAddress?.postal_code}, {currentAddress?.country}
                   </p>
-                  <p className="text-sm">Mobile: +91 {currentAddress.mobile}</p>
                 </>
               ) : (
                 <div>
@@ -266,10 +330,10 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                 <input type="radio" checked={!useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-red-600" />
                 Same as shipping address
               </label>
-              <label className="flex items-center mb-2">
+              {/* <label className="flex items-center mb-2">
                 <input type="radio" checked={useDifferentBilling} onChange={toggleBillingAddress} className="mr-2 accent-red-600" />
                 Use a different billing address
-              </label>
+              </label> */}
               <p className="text-xs text-gray-500 mt-2">We will not send an invoice to the shipping address</p>
               {useDifferentBilling && (
                 <div className="mt-4 space-y-2">
@@ -452,20 +516,20 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
               </button>
               {addresses.length > 0 && <h3 className="font-semibold mb-2">Currently Selected</h3>}
               {addresses.map((addr) => (
-                <div key={addr.id} className="mb-4 border rounded-lg p-3">
+                <div key={addr.address_id} className="mb-4 border rounded-lg p-3">
                   <label className="flex items-center mb-2">
                     <input
                       type="radio"
-                      checked={selectedAddress === addr.id}
-                      onChange={() => selectAddress(addr.id)}
-                      className="mr-2 accent-red-600"
+                      checked={selectedAddress === addr.address_id}
+                      onChange={() => selectAddress(addr.address_id)}
+                      className="mr-2 accent-purple-600"
                     />
-                    {addr.firstName} {addr.lastName} ({addr.type})
+                    <p className="text-sm">Mobile: +91 {addr.phone_number}</p>
                   </label>
                   <p className="text-sm">
-                    {addr.address}, {addr.city}, {addr.state}, {addr.pincode}, {addr.country}
+                    {addr.address_line1}, {addr.city}, {addr.state}, {addr.postal_code}, {addr.country}
                   </p>
-                  <p className="text-sm">Mobile: +91 {addr.mobile}</p>
+
                   <div className="flex justify-end space-x-2 mt-2">
                     <button
                       className="bg-yellow-100 text-red-600 px-3 py-1 rounded-lg"

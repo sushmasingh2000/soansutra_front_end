@@ -1,12 +1,12 @@
 import React from 'react';
 
-const Header = ({ toggleSidebar }) => {
+const Header = ({ onToggleSidebar }) => {
   return (
     <header className=" bg-blue-600 text-white shadow-lg z-50">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center space-x-4">
           <button
-            onClick={toggleSidebar}
+            onClick={onToggleSidebar}
             className="p-2 rounded-md hover:bg-blue-700 transition-colors"
             aria-label="Toggle Sidebar"
           >

@@ -1,26 +1,29 @@
 
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { endpoint } from '../../utils/APIRoutes';
 import Footer from "../Footer1";
-import NavigationBar from '../navigationbar';
+// import NavigationBar from '../navigationbar';
 import Header from '../Header1';
 import LoginModal from '../pages/LoginPage';
 import logo from '../../assets/desklogo.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { apiConnectorPost } from '../../utils/ApiConnector';
 
 const SignUpPage = () => {
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const referralId = searchParams.get("referral_id");
   const [formData, setFormData] = useState({
     mobileNumber: '',
     email: '',
     firstName: '',
     lastName: '',
-    gender: '',
     password: '',
     confirmPassword: '',
     whatsappSupport: true,
-    invitationCode: ''
+    invitationCode: referralId
   });
 
   const [loading, setLoading] = useState(false);
@@ -55,14 +58,10 @@ const SignUpPage = () => {
     if (!formData.lastName.trim()) {
       errors.push('Last name is required');
     }
-
-    if (!formData.gender) {
-      errors.push('Please select your gender');
-    }
-
     return errors;
   };
-  const navigate = useNavigate()
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
@@ -77,15 +76,10 @@ const SignUpPage = () => {
         name: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         phone: formData.mobileNumber,
-        address: '',
-        city: '',
-        state: '',
-        country: '',
-        pincode: '',
         password: formData.password,
-        confirm_password: formData.confirmPassword
+        confirm_password: formData.confirmPassword,
+        spon_id: formData.invitationCode
       });
-
       const data = response.data;
       toast(data?.message);
       if (data?.success) {
@@ -100,6 +94,23 @@ const SignUpPage = () => {
       setLoading(false);
     }
   };
+  const [data, setData] = useState("");
+
+  const Customerfunction = async () => {
+    const reqbody = {
+      customer_id: formData.invitationCode,
+    };
+    try {
+      const res = await apiConnectorPost(endpoint?.get_distributor_name, reqbody);
+      setData(res?.data?.result?.[0]);
+    } catch (e) {
+      console.log("something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    Customerfunction();
+  }, [formData.invitationCode]);
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -138,7 +149,7 @@ const SignUpPage = () => {
   return (
     <>
       <Header />
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <div className="bg-white flex items-center justify-center p-2">
         <div className="w-full max-w-md rounded-lg overflow-hidden">
           <div className="p-3 sm:p-4">
@@ -263,7 +274,7 @@ const SignUpPage = () => {
 
               <div>
                 <label className="block text-xs font-medium text-black mb-1">
-                  Invitation Code (Optional)
+                  Invitation Code
                 </label>
                 <input
                   type="text"
@@ -273,12 +284,13 @@ const SignUpPage = () => {
                   onChange={handleInputChange}
                   className="w-full px-3 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-xs text-black"
                 />
+                <span className='text-red-600 text-xs mb-2'>{data?.name}</span>
                 <p className="text-xs text-gray-600 mt-0.5">
                   Get extra rewards with a valid invitation code
                 </p>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-xs font-medium text-black mb-2">
                   Gender *
                 </label>
@@ -298,7 +310,7 @@ const SignUpPage = () => {
                     </label>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               <div className="bg-gray-100 rounded-lg p-3">
                 <p className="text-xs text-black text-center leading-relaxed">

@@ -1,16 +1,28 @@
 import React from 'react';
+import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
+import { endpoint } from '../utils/APIRoutes';
 
 export default function ViewMyVault() {
+  const navigate = useNavigate();
+   const { data } = useQuery(
+      ["profile"],
+      () => apiConnectorGet(endpoint?.get_customer_profile),
+      usequeryBoolean
+    );
+  
+    const profileData = data?.data?.result || [];
   return (
     <div className=" bg-gray-50 p-4">
       {/* Header */}
       <div className="max-w-6xl mx-auto bg-white rounded-lg border border-yellow-200 p-4 mb-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
-            <h1 className="text-base text-gray-800">Hi abhishek chaurasia</h1>
+            <h1 className="text-base text-gray-800">Hi {profileData?.name}</h1>
             <div className="w-px h-6 bg-yellow-300 hidden sm:block"></div>
             <div className="flex items-center justify-between sm:justify-start gap-2">
-              <span className="text-gray-700 text-sm">Gold balance - 0.0000 gms</span>
+              <span className="text-gray-700 text-sm">Gold balance - {profileData?.gold_wallet}gms</span>
               <div 
                 className="inline-block ml-4 sm:ml-8 transform scale-75"
                 style={{
@@ -46,7 +58,7 @@ export default function ViewMyVault() {
                 <button 
                   className="px-6 py-2.5 rounded-lg text-black text-base bg-gradient-to-r from-yellow-400 to-yellow-600"
                  
-                >
+               onClick={()=>navigate('/buy-gold')} >
                   Buy eGold Now
                 </button>
                 <button className="flex items-center justify-center lg:justify-start gap-2 text-gray-700 text-sm">
