@@ -83,7 +83,7 @@ const MobileVideoSlider = () => {
   //   }
   // ];
   const { data } = useQuery(
-    ["category_user"],
+    ["user_video"],
     () => apiConnectorGet(endpoint.get_video),
     usequeryBoolean
   );

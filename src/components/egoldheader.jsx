@@ -20,7 +20,7 @@ const EgoldHeader = () => {
       {/* Desktop View */}
       <div className="hidden md:flex items-center justify-between px-6 py-4">
         {/* Logo */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 cursor-pointer" onClick={()=>navigate('/e-gold')}>
           <img 
             src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png" 
             alt="eGold by CaratLane" 
@@ -51,7 +51,7 @@ const EgoldHeader = () => {
 
       {/* Mobile View */}
       <div className="md:hidden">
-        <div className="flex justify-center py-4 px-4 border-b border-gray-200">
+        <div className="flex justify-center py-4 px-4 border-b border-gray-200 cursor-pointer" onClick={()=>navigate('/e-gold')}>
           <img 
             src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png" 
             alt="eGold by CaratLane" 

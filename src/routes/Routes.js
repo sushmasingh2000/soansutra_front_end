@@ -48,8 +48,17 @@ import CouponPriceRange from "../components/admin/CouponPriceRange..js";
 import { elements } from "chart.js";
 import Order from "../components/admin/Order.js";
 import OrderDetails from "../components/admin/OrderDetails.js";
+<<<<<<< HEAD
 import SonasutraInvoice from "../components/sonasutrainvoice.jsx";
 
+=======
+import Rank from "../components/admin/Rank.js";
+import Distributor from "../components/admin/Distributor.js";
+import Rankachiver from "../components/admin/RankAchiver.js";
+import EgoldOrder from "../components/admin/E-goldOrder.js";
+import Attribute from "../components/admin/Attributes.js";
+import SonasutraInvoice from "../components/sonasutrainvoice.js";
+>>>>>>> ce4b3c13aaa5b98263ef4702867f90222e146711
 
 export const routes = [
   {
@@ -132,6 +141,31 @@ export const routes = [
     element: (
       <MainLayout>
         <OrderDetails />{" "}
+      </MainLayout>
+    ),
+  },
+ 
+   {
+    path: "/rank",
+    element: (
+      <MainLayout>
+        <Rank />{" "}
+      </MainLayout>
+    ),
+  },
+   {
+    path: "/distributor",
+    element: (
+      <MainLayout>
+        <Distributor />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/rankachiver",
+    element: (
+      <MainLayout>
+        <Rankachiver />{" "}
       </MainLayout>
     ),
   },
@@ -272,6 +306,14 @@ export const routes = [
       </MainLayout>
     ),
   },
+   {
+    path: "/attribute",
+    element: (
+      <MainLayout>
+        <Attribute />{" "}
+      </MainLayout>
+    ),
+  },
   {
     path: "/product-tax",
     element: (
@@ -309,6 +351,14 @@ export const routes = [
     element: (
       <MainLayout>
         <RequestDemo />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/egold_order",
+    element: (
+      <MainLayout>
+        <EgoldOrder />{" "}
       </MainLayout>
     ),
   },
@@ -363,6 +413,10 @@ export const routes = [
   {
     path: "/product-attributes/:id",
     element: <ProductVariant />,
+  },
+  {
+    path: "/invoice/:orderId",
+    element: <SonasutraInvoice/>,
   },
     {
     path: "/wish",

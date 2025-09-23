@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { endpoint } from '../utils/APIRoutes';
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../utils/ApiConnector';
+import { useNavigate } from 'react-router-dom';
 
 const OrdersContent = () => {
   const [activeTab, setActiveTab] = useState('myOrders');
@@ -19,19 +20,21 @@ const OrdersContent = () => {
   const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productType, setProductType] = useState('PRODUCT');
+  const [egoldType, setEgoldType] = useState('Buy');
 
 
-  // Fetch list of orders
   const { data: listData } = useQuery(
-    ['orders_list'],
-    () => apiConnectorGet(endpoint.get_order),
+    ['orders_list', productType , egoldType], // Add productType as a key
+    () => apiConnectorGet(`${endpoint.get_order}?product_type=${productType}&order_type=${egoldType}`),
     usequeryBoolean
   );
+
 
   const orders = listData?.data?.result?.data || [];
 
   // Fetch detailed order only when selectedOrderId is set
-  const { data: detailData, isLoading: isDetailLoading, refetch: refetchDetail } = useQuery(
+  const { data: detailData, isLoading: isDetailLoading } = useQuery(
     ['order_details', selectedOrderId],
     () => apiConnectorGet(`${endpoint.get_order_detail_by}?order_id=${selectedOrderId}`),
     {
@@ -394,6 +397,16 @@ const OrdersContent = () => {
               </div>
             )}
           </div>
+          <div className="p-4">
+          <button
+            className="text-sm font-medium text-blue-600 underline"
+            onClick={() => {
+              navigate(`/invoice/${detail.order_unique}`); 
+            }}
+          >
+            View / Download Invoice
+          </button>
+        </div>
 
           {/* Actions etc. */}
           <div className="p-4 border-t border-gray-200">
@@ -414,9 +427,35 @@ const OrdersContent = () => {
 
   const currentOrders = activeTab === 'myOrders' ? activeOrders : cancelledOrders;
 
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-white-50 p-4 md:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
+        <div className="mb-4 flex flex-col justify-end items-end gap-2">
+          <select
+            value={productType}
+            onChange={(e) => setProductType(e.target.value)}
+            className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+          >
+            <option>Select Order Type</option>
+            <option value="PRODUCT">Product</option>
+            <option value="EGOLD">eGold</option>
+          </select>
+        </div>
+        {productType==="EGOLD" && (
+          <div className="mb-4 flex flex-col justify-end items-end gap-2">
+          <select
+            value={egoldType}
+            onChange={(e) => setEgoldType(e.target.value)}
+            className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+          >
+            <option>Select E-Gold Type</option>
+            <option value="BUY">Buy</option>
+            <option value="SELL">Sell</option>
+          </select>
+        </div>
+        )}
         {/* Header */}
         <div className="mb-6 md:mb-8">
           <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">My Orders</h1>
