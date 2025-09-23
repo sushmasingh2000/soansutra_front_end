@@ -54,6 +54,8 @@ import Rankachiver from "../components/admin/RankAchiver.js";
 import EgoldOrder from "../components/admin/E-goldOrder.js";
 import Attribute from "../components/admin/Attributes.js";
 import SonasutraInvoice from "../components/sonasutrainvoice.js";
+import OurStory from "../components/pages/ourstory.jsx";
+import ReturnPolicy from "../components/returnpolicy.jsx";
 
 export const routes = [
   {
@@ -440,6 +442,14 @@ export const routes = [
    {
     path: "/terms-and-conditions",
     element: <Termscondition/>,
+  },
+  {
+    path: "/our-story",
+    element: <OurStory/>,
+  },
+   {
+    path: "/return-policy",
+    element: <ReturnPolicy/>,
   },
  
 ];

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const [openSections, setOpenSections] = useState({});
@@ -74,7 +75,7 @@ const Footer = () => {
               </div>
             </div>
             <ul className={`space-y-2 mt-2 ${openSections.customerService ? 'block' : 'hidden'} md:block`}>
-              <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Return policy</a></li>
+              <li><a href="/return-policy" className="text-gray-600 hover:text-black transition-colors text-sm">Return policy</a></li>
               <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Order status</a></li>
             </ul>
           </div>
@@ -91,10 +92,10 @@ const Footer = () => {
               </div>
             </div>
             <ul className={`space-y-2 mt-2 ${openSections.aboutUs ? 'block' : 'hidden'} md:block`}>
-              <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Our story</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Press</a></li>
+              <li><Link to="/our-story" className="text-gray-600 hover:text-black transition-colors text-sm">Our story</Link></li>
+              {/* <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Press</a></li>
               <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Blog</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Careers</a></li>
+              <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Careers</a></li> */}
             </ul>
           </div>
 
@@ -103,8 +104,8 @@ const Footer = () => {
             <h3 className="text-base font-semibold mb-3" style={{color: sectionTitleColor}}>Contact Us</h3>
             <div className="space-y-3">
               <p className="text-black font-medium text-sm">Sonasutra Private Limited</p> {/* Changed to black */}
-              <p className="text-gray-600 text-xs leading-relaxed">
-                {/* No.727, 1st Floor, TIL Park Anna Salai, Pathari Road, Thousand Lights, Chennai, Tamil Nadu 600006. */}
+              <p className="text-gray-800 text-xs leading-relaxed">
+                 Shop No 10 Rajpura, BIDA MART, Bhadohi, Sant Ravidas Nagar Bhadohi,  Uttar Pradesh , India ,221401. 
               </p>
               
               <div className="mt-4">
