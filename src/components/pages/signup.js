@@ -149,7 +149,7 @@ const SignUpPage = () => {
   return (
     <>
       <Header />
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <div className="bg-white flex items-center justify-center p-2">
         <div className="w-full max-w-md rounded-lg overflow-hidden">
           <div className="p-3 sm:p-4">
