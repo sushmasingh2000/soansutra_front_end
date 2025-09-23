@@ -31,6 +31,12 @@ import TryAtHomeContent from '../tryathomecontent';
 import XclusiveContent from '../xclusivecontent';
 import Distributer from '../distributer';
 import { useLocation } from 'react-router-dom';
+import DirectDistributor from './distributor/DirectDistributor';
+import TeamDistributor from './distributor/TeamDistributer';
+import DirectCustomer from './distributor/DirectCustomer';
+import TeamCustomer from './distributor/TeamCustomer';
+import PayoutReport from './distributor/PayoutReport';
+import CommissionReport from './distributor/CommisionReport';
 
 const ProfileDashboard = () => {
  const location = useLocation();
@@ -76,6 +82,8 @@ const ProfileDashboard = () => {
             { id: 'TEAM DISTRIBUTER', label: 'TEAM DISTRIBUTER', icon: Home },
             { id: 'DIRECT CUSTOMER', label: 'DIRECT CUSTOMER', icon: Home },
             { id: 'TEAM CUSTOMER', label: 'TEAM CUSTOMER', icon: Home },
+            { id: 'PAYOUT REPORT', label: 'PAYOUT REPORT', icon: Home },
+            { id: 'COMMISSION REPORT', label: 'COMMISSION REPORT', icon: Home },
           ]
         }]
       : []),
@@ -130,6 +138,18 @@ const ProfileDashboard = () => {
         return <ManageRefundsContent />;
          case 'DISTRIBUTER':
         return <Distributer/>;
+        case 'DIRECT DISTRIBUTER':
+      return <DirectDistributor/>;
+       case 'PAYOUT REPORT':
+      return <PayoutReport/>;
+       case 'COMMISSION REPORT':
+      return <CommissionReport/>;
+    case 'TEAM DISTRIBUTER':
+      return <TeamDistributor />;
+    case 'DIRECT CUSTOMER':
+      return <DirectCustomer />;
+       case 'TEAM CUSTOMER':
+      return <TeamCustomer />;
       case 'COUPONS':
         return <CouponsContent />;
       case 'XCLUSIVE':

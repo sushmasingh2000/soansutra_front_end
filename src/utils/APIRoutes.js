@@ -1,6 +1,6 @@
-// export const domain = "http://192.168.18.214:2000";
+export const domain = "http://192.168.18.214:2000";
 export const frontend = "https://sonasutra.in";
-export const domain = "https://backend.sonasutra.in";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 
 export const endpoint = {
@@ -284,6 +284,7 @@ export const endpoint = {
   get_master_material_price: `${domain}/api/v1/get-master-material-pice`,
   create_egold_price: `${domain}/api/v1/create-egold-order`,
   create_egold_price_sell: `${domain}/api/v1/create-egold-sell-order`,
+  get_team_details: `${domain}/api/v1/get-team-details`,
 
   
   

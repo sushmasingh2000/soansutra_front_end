@@ -827,7 +827,7 @@ export default function Header() {
                       {productsServices.map((service, index) => (
                         <div
                           key={index}
-                          
+                          onClick={() =>navigate(service.path)}
                           className="bg-white border border-yellow-200 rounded-lg p-3 hover:shadow-lg hover:border-yellow-500 transition-all duration-300 cursor-pointer"
                         >
                           <div className="flex items-start space-x-3">
