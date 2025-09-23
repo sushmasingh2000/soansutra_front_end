@@ -174,32 +174,35 @@ export default function Header() {
   ];
 
   // Products & Services
-  const productsServices = [
-    {
-      name: "Treasure Chest",
-      description:
-        "Pay 9 instalments, and get the 10th FREE as a SonaSutra Benefit!",
-      image:
-        "https://cdn.caratlane.com/media/static/images/web/Treasure-Chest-1-26-may-25.png",
-      icon: "🎁",
-    },
-    {
-      name: "Stores",
-      description:
-        "Visit the nearest store today to try your favourite jewellery.",
-      image:
-        "https://cdn.caratlane.com/media/static/images/web/Store-Vector-25.png",
-      icon: "🏪",
-    },
-    {
-      name: "Digital Gold",
-      description:
-        "Invest in 24K gold hassle-free with CaratLane's Digital Gold.",
-      image:
-        "https://cdn.caratlane.com/media/static/images/discovery/responsive-hamburger-menu/egold-1x.png",
-      icon: "🥇",
-    },
-  ];
+   const productsServices = [
+  {
+    name: "Treasure Chest",
+    description:
+      "Pay 9 instalments, and get the 10th FREE as a SonaSutra Benefit!",
+    image:
+      "https://cdn.caratlane.com/media/static/images/web/Treasure-Chest-1-26-may-25.png",
+    icon: "🎁",
+    path: "/treasure-chest",   // 👈 Add path
+  },
+  {
+    name: "Stores",
+    description:
+      "Visit the nearest store today to try your favourite jewellery.",
+    image:
+      "https://cdn.caratlane.com/media/static/images/web/Store-Vector-25.png",
+    icon: "🏪",
+    path: "/",   // 👈 Add path (if you want navigation)
+  },
+  {
+    name: "Digital Gold",
+    description:
+      "Invest in 24K gold hassle-free with SonaSutra Digital Gold.",
+    image:
+      "https://cdn.caratlane.com/media/static/images/discovery/responsive-hamburger-menu/egold-1x.png",
+    icon: "🥇",
+    path: "/e-gold",   // 👈 Add path
+  },
+];
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -824,6 +827,7 @@ export default function Header() {
                       {productsServices.map((service, index) => (
                         <div
                           key={index}
+                          
                           className="bg-white border border-yellow-200 rounded-lg p-3 hover:shadow-lg hover:border-yellow-500 transition-all duration-300 cursor-pointer"
                         >
                           <div className="flex items-start space-x-3">
