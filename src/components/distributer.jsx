@@ -5,10 +5,13 @@ import {
   apiConnectorPost,
   usequeryBoolean,
 } from "../utils/ApiConnector";
-import { endpoint } from "../utils/APIRoutes";
+import { endpoint, frontend } from "../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
+import copy from "copy-to-clipboard";
+
 import Loader from "../Shared/Loader";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 
 const Distributor = () => {
   const [open, setOpen] = useState(false);
@@ -21,7 +24,10 @@ const Distributor = () => {
     setName("");
     setCustomer("");
   };
-
+  const functionTOCopy = (value) => {
+    copy(value);
+    toast.success("Copied to clipboard!", { id: 1 });
+  };
   const getDistributorfn = async () => {
     try {
       setLoading(true);
@@ -69,6 +75,15 @@ const Distributor = () => {
   );
 
   const distri_pro = data?.data?.result?.[0] || {};
+
+    const { data: profile_user } = useQuery(
+      ["profile_user"],
+      () =>
+        apiConnectorGet(endpoint?.get_customer_profile),
+      usequeryBoolean
+    );
+  
+    const profile_cust = profile_user?.data?.result || [];
 
   return (
     <>
@@ -151,6 +166,13 @@ const Distributor = () => {
         </Dialog>
 
         {/* Business Info Card 1 */}
+        <button
+          onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile_cust?.cust_unique_id)}
+          className="flex items-center justify-start gap-5 w-full text-left text-sm text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors"
+        >
+          <span>Referral Code</span>
+          <ClipboardDocumentIcon className="w-5 h-5 text-yellow-600" />
+        </button>
         <div className="bg-white border border-yellow-400 rounded-lg p-3 mb-4">
           <div className="flex justify-between mb-1">
             <span className="font-semibold">My Direct</span>
@@ -158,15 +180,15 @@ const Distributor = () => {
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Total Team</span>
-            <span>{dashbooard_get?.total_team || 0}</span>
+            <span>{Number(dashbooard_get?.total_team)?.toFixed(0, 2) || 0}</span>
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Self Business</span>
-            <span>${dashbooard_get?.total_self_buss || 0}</span>
+            <span>₹{Number(dashbooard_get?.total_self_buss)?.toFixed(2) || 0}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Team Business</span>
-            <span>${dashbooard_get?.total_team_buss || 0}</span>
+            <span>₹{Number(dashbooard_get?.total_team_buss)?.toFixed(2) || 0}</span>
           </div>
         </div>
 
@@ -174,7 +196,7 @@ const Distributor = () => {
         <div className="bg-white border border-yellow-400 rounded-lg p-3 mb-4">
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Direct Customer Business</span>
-            <span>${dashbooard_get?.total_dir_cust_buss || 0}</span>
+            <span>₹{dashbooard_get?.total_dir_cust_buss || 0}</span>
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Direct Distributors</span>
@@ -190,7 +212,7 @@ const Distributor = () => {
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold"> Income Wallet</span>
-            <span>${dashbooard_get?.u_mlm_income_wallet || 0}</span>
+            <span>₹{dashbooard_get?.u_mlm_income_wallet || 0}</span>
           </div>
         </div>
 
@@ -198,11 +220,11 @@ const Distributor = () => {
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-2 rounded-lg text-center">
             <span className="font-semibold block">Today Self Business</span>
-            <span>${dashbooard_get?.today_self_buss || 0}</span>
+            <span>₹{dashbooard_get?.today_self_buss || 0}</span>
           </div>
           <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-2 rounded-lg text-center">
             <span className="font-semibold block">Today Team Business</span>
-            <span>${dashbooard_get?.today_team_buss || 0}</span>
+            <span>₹{dashbooard_get?.today_team_buss || 0}</span>
           </div>
         </div>
 
