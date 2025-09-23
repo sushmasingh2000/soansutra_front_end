@@ -71,7 +71,11 @@ const ProfileDashboard = () => {
       ? [{
           category: 'DISTRIBUTER',
           items: [
-            { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home }
+            { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home },
+            { id: 'DIRECT DISTRIBUTER', label: 'DIRECT DISTRIBUTER', icon: Home },
+            { id: 'TEAM DISTRIBUTER', label: 'TEAM DISTRIBUTER', icon: Home },
+            { id: 'DIRECT CUSTOMER', label: 'DIRECT CUSTOMER', icon: Home },
+            { id: 'TEAM CUSTOMER', label: 'TEAM CUSTOMER', icon: Home },
           ]
         }]
       : []),

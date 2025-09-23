@@ -156,13 +156,14 @@ const BuyGold = () => {
       const res = await apiConnectorPost(endpoint.create_egold_price, {
         req_amount: amount,
         u_payment_method: 1,
-        receiving_type: rcv_type,
+        receiving_type: 1,
+        // receiving_type: rcv_type,
       });
       toast(res?.data?.message);
-      if (res?.data?.message === "Your Shipping Address not found") {
-        setShowShippingPopup(true);
-        return;
-      }
+      // if (res?.data?.message === "Your Shipping Address not found") {
+      //   setShowShippingPopup(true);
+      //   return;
+      // }
       const qr_url = res?.data?.result?.payment_url || "";
       if (qr_url) {
         setPaymentLink(qr_url);
@@ -219,7 +220,7 @@ const BuyGold = () => {
                   <span className="text-sm text-gray-600 ml-2">gms</span>
                   <button
                     className={`bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-4 rounded ml-2 ${!isAmountValid ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={() => isAmountValid && setShowPaymentMethodPopup(true)}
+                    onClick={() => isAmountValid && buygoldFn()}
                     disabled={!isAmountValid}
                   >
                     Proceed to Buy
@@ -290,7 +291,7 @@ const BuyGold = () => {
               </div>
               <button
                 className={`bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-4 rounded ml-2 ${!isAmountValid ? 'opacity-50 cursor-not-allowed' : ''}`}
-                onClick={() => isAmountValid && setShowPaymentMethodPopup(true)}
+                onClick={() => isAmountValid && buygoldFn()}
                 disabled={!isAmountValid}
               >
                 Proceed to Buy
