@@ -137,7 +137,7 @@ export default function TreasureChestBanner() {
                       </h1>
                       <p className="text-sm text-gray-600 mb-8">
                         Pay in 9 easy instalments & get the 10th one<br />
-                        free as a CaratLane discount!
+                        free as a SonaSutra discount!
                       </p>
                     </div>
                     <button
@@ -167,7 +167,7 @@ export default function TreasureChestBanner() {
                           </svg>
                         </div>
                         <h3 className="font-semibold text-red-800 mb-1 text-sm">Trust of TATA</h3>
-                        <p className="text-gray-600 text-xs">Spirit of CaratLane.<br />3,00,270+ enrolments.</p>
+                        <p className="text-gray-600 text-xs">Spirit of SonaSutra.<br />3,00,270+ enrolments.</p>
                       </div>
                       <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
                         <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -221,7 +221,7 @@ export default function TreasureChestBanner() {
                     Start Saving for Jewellery, The Smart Way.
                   </h1>
                   <p className="text-lg text-gray-600 mb-6">
-                    Pay in 9 easy instalments & get the 10th one free as a CaratLane discount!
+                    Pay in 9 easy instalments & get the 10th one free as a SonaSutra discount!
                   </p>
                 </div>
               </div>
@@ -335,11 +335,11 @@ export default function TreasureChestBanner() {
                       </div>
                       <div className="flex items-start space-x-3">
                         <Check className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 text-sm md:text-base leading-relaxed">Get the last months instalment as CaratLane discount</span>
+                        <span className="text-gray-700 text-sm md:text-base leading-relaxed">Get the last months instalment as SonaSutra discount</span>
                       </div>
                       <div className="flex items-start space-x-3">
                         <Check className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 text-sm md:text-base leading-relaxed">Buy your favourite CaratLane jewellery hassle-free</span>
+                        <span className="text-gray-700 text-sm md:text-base leading-relaxed">Buy your favourite SonaSutra jewellery hassle-free</span>
                       </div>
                     </div>
                     <div className="bg-red-50 rounded-2xl p-4 mb-6">
@@ -403,7 +403,7 @@ export default function TreasureChestBanner() {
                       </div>
                       <div className="flex items-start space-x-3">
                         <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 text-sm md:text-base leading-relaxed">Enjoy CaratLane benefit— no matter how gold rates move.</span>
+                        <span className="text-gray-700 text-sm md:text-base leading-relaxed">Enjoy SonaSutra benefit— no matter how gold rates move.</span>
                       </div>
                     </div>
                     <div className="bg-yellow-50 rounded-2xl p-4 mb-6">
@@ -551,7 +551,7 @@ export default function TreasureChestBanner() {
                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                   </svg>
                                 </div>
-                                <span className="text-gray-700 text-sm md:text-base break-words">CaratLane Bonus (10th Month)</span>
+                                <span className="text-gray-700 text-sm md:text-base break-words">SonaSutra Bonus (10th Month)</span>
                               </div>
                               <span className="bg-[#9CA2F4] text-white px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{selectedAmount.toLocaleString()}</span>
                             </div>
@@ -614,7 +614,7 @@ export default function TreasureChestBanner() {
                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                   </svg>
                                 </div>
-                                <span className="text-gray-700 text-sm md:text-base ">CaratLane Bonus (10th Month)</span>
+                                <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (10th Month)</span>
                               </div>
                               <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{selectedAmount.toLocaleString()}</span>
                             </div>
@@ -679,7 +679,7 @@ export default function TreasureChestBanner() {
                             </h2>
                             <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
                               With the Treasure Chest plan, you save a fixed amount of ₹5,000 every
-                              month for 9 months, totaling ₹45,000. and CaratLane pays your 10th
+                              month for 9 months, totaling ₹45,000. and SonaSutra pays your 10th
                               month contribution of ₹5,000.
                             </p>
                             <p className="text-gray-800 font-medium text-sm sm:text-base">
@@ -701,7 +701,7 @@ export default function TreasureChestBanner() {
                             <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
                               With the Treasure Chest Edge plan, your monthly contribution
                               of ₹5,000 is invested in the gold market. Based on the simulated market
-                              performance of 5%, your investment grows to ₹55,133. CaratLane adds a
+                              performance of 5%, your investment grows to ₹55,133. SonaSutra adds a
                               bonus of ₹5,000 in the 10th month.
                             </p>
                             <p className="text-gray-800 font-medium text-sm sm:text-base mb-4">
