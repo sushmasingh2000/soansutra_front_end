@@ -56,6 +56,8 @@ import Attribute from "../components/admin/Attributes.js";
 import SonasutraInvoice from "../components/sonasutrainvoice.js";
 import OurStory from "../components/pages/ourstory.jsx";
 import ReturnPolicy from "../components/returnpolicy.jsx";
+import PrivacyPolicyComponent from "../components/privacypolicy.jsx";
+import ShippingPolicy from "../components/shippingpolicy.jsx";
 
 
 
@@ -457,7 +459,14 @@ export const routes = [
     path:"/return-policy",
     element:<ReturnPolicy/>
   },
- 
+ {
+  path:"/privacy-policy",
+  element:<PrivacyPolicyComponent/>
+ },
+  {
+  path:"/shipping-policy",
+  element:<ShippingPolicy/>
+ },
 
    
 ];
