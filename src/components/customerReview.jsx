@@ -281,7 +281,7 @@ const CustomerReviewSection = ({ productId }) => {
                 </div>
                 <span className="text-2xl font-bold text-gray-800">
                   {" "}
-                  {parseFloat(singlereviews?.[0]?.avg_rating).toFixed(1)}/5
+                  {parseFloat(singlereviews?.[0]?.avg_rating || 0).toFixed(0,2)}/5
                 </span>
               </div>
 

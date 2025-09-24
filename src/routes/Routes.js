@@ -45,7 +45,6 @@ import Video from "../components/admin/Video.js";
 import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
 import Coupon from "../components/admin/Coupon.js";
 import CouponPriceRange from "../components/admin/CouponPriceRange..js";
-import { elements } from "chart.js";
 import Order from "../components/admin/Order.js";
 import OrderDetails from "../components/admin/OrderDetails.js";
 import Rank from "../components/admin/Rank.js";
