@@ -86,13 +86,6 @@ const Payment = ({ selectedOrderId }) => {
         order_id: selectedOrderId
       });
       toast(response?.data?.message , {id:1})
-      const qr_url = (response?.data?.result && response?.data?.result?.payment_url) || "";
-      const orderdata = response?.data?.result?.order_id || "";
-      if (qr_url) {
-        setPaymentLink(qr_url);
-      } else {
-        response?.data?.message ? toast(response?.data?.message) : toast("Something went wrong");
-      }
     } catch (e) {
       console.log("Error fetching address:", e);
     }

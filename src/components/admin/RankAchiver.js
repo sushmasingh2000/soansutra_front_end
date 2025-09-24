@@ -88,7 +88,7 @@ const Rankachiver = () => {
               <th className="px-4 py-2 border-b">Team Business</th>
               <th className="px-4 py-2 border-b">Distributor Reg</th>
               <th className="px-4 py-2 border-b">Level Info</th>
-              <th className="px-4 py-2 border-b">Release</th>
+              <th className="px-4 py-2 border-b">Status/Action</th>
             </tr>
           </thead>
           <tbody>
@@ -127,15 +127,13 @@ const Rankachiver = () => {
                       ? `L${d.level_details.l_level_id}, Team ₹${d.level_details.l_team_buss}, Comm ${d.level_details.l_commission * 100}%`
                       : "-"}
                   </td>
-                  {d?.rank_is_released !== "YES" ? 
+                  {(d?.rank_release_req === 1 && d?.rank_is_released === "NO") ? 
                     <td className="px-4 py-2 border-b"><button className="bg-blue-500 text-white p-2 rounded"
                       onClick={() => ReleseFn(d?.rank_id)}>Release</button>
                     </td> :
-                    <td className="px-4 py-2 border-b">
-                    <Lock/>
-                    </td> 
-                  }
-
+                    <td className={` ${d.rank_release_req === 0 ? "text-yellow-500" : ""} px-4 py-2 w-full h-full flex justify-center items-center  !text-center`}>
+                    {d?.rank_release_req === 0 ? "Pending" :<Lock className="!text-center"/>}
+                    </td> }
                 </tr>
               ))
             )}

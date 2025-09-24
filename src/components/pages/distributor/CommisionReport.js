@@ -19,13 +19,11 @@ const CommissionReport = () => {
     } = useQuery(
         ["commission_report", { searchTerm, startDate, endDate }],
         () =>
-            apiConnectorGet(endpoint?.get_team_details, {
+            apiConnectorGet(endpoint?.get_income_details, {
 
                 search: searchTerm,
                 start_date: startDate,
                 end_date: endDate,
-                level_id: 1,
-                is_distributer: 0,
                 page: page,
                 count: 10
 
@@ -80,10 +78,12 @@ const CommissionReport = () => {
                     <thead className="bg-yellow-100 text-left">
                         <tr>
                             <th className="border px-4 py-2">S.No</th>
-                            <th className="border px-4 py-2">Username</th>
-                            <th className="border px-4 py-2">Full Name</th>
-                            <th className="border px-4 py-2">Date</th>
-                            <th className="border px-4 py-2">Reg. Date</th>
+                            <th className="border px-4 py-2">CustID</th>
+                            <th className="border px-4 py-2"> Name</th>
+                            <th className="border px-4 py-2">TransID</th>
+                            <th className="border px-4 py-2">Amount</th>
+                            <th className="border px-4 py-2">Description</th>
+                            <th className="border px-4 py-2"> Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,14 +97,17 @@ const CommissionReport = () => {
                             distributors?.data?.map((distributor, index) => (
                                 <tr key={index} className="hover:bg-yellow-50">
                                     <td className="border px-4 py-2">{index + 1}</td>
-                                    <td className="border px-4 py-2">{distributor?.mlm_unique_id || "--"}</td>
-                                    <td className="border px-4 py-2">{distributor?.name || "--"}</td>
+                                    <td className="border px-4 py-2">{distributor?.from_cust_id}</td>
+                                    <td className="border px-4 py-2">{distributor?.from_name}</td>
+                                    
+                                    <td className="border px-4 py-2">{distributor?.ldg_trans_id || "--"}</td>
                                     <td className="border px-4 py-2">
-                                        {distributor?.mlm_created_at ? moment(distributor?.mlm_created_at).format("DD-MM-YYYY")
-                                            : "--"}
+                                        ₹{Number(distributor?.ldg_amount)?.toFixed(2) || "--"}
                                     </td>
+                                    <td className="border px-4 py-2">{distributor?.ldg_description || "--"}</td>
+
                                     <td className="border px-4 py-2">
-                                        {distributor?.mlm_dist_reg_date ? moment(distributor?.mlm_dist_reg_date).format("DD-MM-YYYY")
+                                        {distributor?.ldg_trans_date ? moment(distributor?.ldg_trans_date).format("DD-MM-YYYY")
                                             : "--"}
                                     </td>
 
