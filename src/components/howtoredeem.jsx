@@ -32,7 +32,7 @@ const HowToRedeem = () => {
               </div>
               <h3 className="text-sm text-gray-900 mb-2">Choose your</h3>
               <h3 className="text-sm text-gray-900 mb-2">favorite jewellery</h3>
-              <p className="text-gray-600">from CaratLane</p>
+              <p className="text-gray-600">from SonaSutra</p>
             </div>
 
             {/* Arrow 1 */}
@@ -63,7 +63,7 @@ const HowToRedeem = () => {
                 <div className="absolute top-1/2 -right-2 w-1 h-1 bg-yellow-400 rounded-full"></div>
               </div>
               <h3 className="text-sm text-gray-900 mb-2">Redeem your</h3>
-              <h3 className="text-sm text-gray-900 mb-2">Caratlane eGold at</h3>
+              <h3 className="text-sm text-gray-900 mb-2">SonaSutra eGold at</h3>
               <p className="text-gray-600">checkout</p>
             </div>
 
@@ -110,7 +110,7 @@ const HowToRedeem = () => {
                 </div>
                 <div>
                   <p className="text-gray-600 text-base leading-relaxed">
-                    You can redeem CaratLane eGold online or offline through one of our many jewellery stores across India.
+                    You can redeem SonaSutra eGold online or offline through one of our many jewellery stores across India.
                   </p>
                 </div>
               </div>
@@ -161,7 +161,7 @@ const HowToRedeem = () => {
                 </div>
               </div>
               <h3 className="text-base text-gray-900">Choose your favorite</h3>
-              <h3 className="text-base text-gray-900 mb-1">jewellery from CaratLane</h3>
+              <h3 className="text-base text-gray-900 mb-1">jewellery from SonaSutra</h3>
               
               {/* Arrow down */}
               <div className="flex justify-center my-6">
@@ -191,7 +191,7 @@ const HowToRedeem = () => {
                 <div className="absolute bottom-1 left-1 w-1 h-1 bg-yellow-400 rounded-full"></div>
                 <div className="absolute top-1/2 -right-1 w-1 h-1 bg-yellow-400 rounded-full"></div>
               </div>
-              <h3 className="text-base text-gray-900">Redeem your Caratlane</h3>
+              <h3 className="text-base text-gray-900">Redeem your SonaSutra</h3>
               <h3 className="text-base text-gray-900 mb-1">eGold at checkout</h3>
               
               {/* Arrow down */}
@@ -236,7 +236,7 @@ const HowToRedeem = () => {
                 <span className="text-yellow-600 text-xs">!</span>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">
-                You can redeem CaratLane eGold online or offline through one of our many jewellery stores across India.
+                You can redeem SonaSutra eGold online or offline through one of our many jewellery stores across India.
               </p>
             </div>
 
