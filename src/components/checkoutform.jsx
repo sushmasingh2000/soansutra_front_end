@@ -43,9 +43,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
     }
   };
 
-  useEffect(() => {
-    addres_fn()
-  }, [])
+
   const [newAddress, setNewAddress] = useState({
     firstName: '',
     lastName: '',
@@ -159,6 +157,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
         const newId = addresses.length;
         setAddresses([...addresses, { ...newAddress, id: newId }]);
         setSelectedAddress(newId);
+        addres_fn();
         closeAddEditModal();
       }
     } catch (error) {
