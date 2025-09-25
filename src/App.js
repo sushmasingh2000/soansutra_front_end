@@ -16,8 +16,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Test />} />
-        {/* <Route path="/" element={<HomePage />} /> */}
+        {/* <Route path="/" element={<Test />} /> */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/admin-login" element={<Login />} />
         {admin ? (
           routes.map((route, i) => (
