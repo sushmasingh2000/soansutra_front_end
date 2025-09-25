@@ -80,12 +80,45 @@ const Payment = ({ selectedOrderId }) => {
     addres_fn()
   }, [])
 
+  const loadCashfreeSdk = () => {
+    return new Promise((resolve, reject) => {
+      if (window.Cashfree) return resolve(window.Cashfree);
+
+      const script = document.createElement("script");
+      script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+      script.onload = () => resolve(window.Cashfree);
+      script.onerror = (err) => reject(err);
+      document.body.appendChild(script);
+    });
+  };
+
   const order_paymentFn = async () => {
     try {
       const response = await apiConnectorPost(endpoint?.create_order_payment, {
         order_id: selectedOrderId
       });
-      toast(response?.data?.message , {id:1})
+      const payment_session_id = response?.data?.payment_session_id
+      let cashfree;
+      try {
+        cashfree = await loadCashfreeSdk();
+      } catch (err) {
+        console.error("Cannot load Cashfree SDK:", err);
+        alert("Payment SDK load failed");
+        return;
+      }
+
+      // 3️⃣ initiate checkout
+      try {
+        cashfree = cashfree({ mode: "sandbox" }); // sandbox mode
+        cashfree.checkout({
+          paymentSessionId: payment_session_id,
+          redirectTarget: "_self",
+        });
+      } catch (err) {
+        console.error("Checkout error:", err);
+        alert("Checkout failed");
+      }
+
     } catch (e) {
       console.log("Error fetching address:", e);
     }
@@ -93,18 +126,15 @@ const Payment = ({ selectedOrderId }) => {
 
   if (paymentlink) {
     return (
-      document.location.href=paymentlink
+      document.location.href = paymentlink
     );
   }
   return (
     <>
 
       <div className="max-w-md mx-auto bg-white p-6 min-h-screen">
-        {/* Preferred Payment Options */}
         <div className="mb-8">
           <h2 className="text-lg font-medium text-gray-800 mb-4">Preferred Payment Options</h2>
-
-          {/* Gift Cards Section */}
           <div className="mb-6">
             <h3 className="text-base font-medium text-gray-700 mb-3">Gift Cards</h3>
 
@@ -126,7 +156,6 @@ const Payment = ({ selectedOrderId }) => {
             </div>
           </div>
 
-          {/* Payment Options */}
           <div className="mb-6">
             <h3 className="text-base font-medium text-gray-700 mb-3">Payment Options</h3>
 
@@ -150,7 +179,6 @@ const Payment = ({ selectedOrderId }) => {
             </div>
           </div>
 
-          {/* Pay Now Button */}
           <button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black 
           font-medium py-4 rounded-lg text-lg hover:from-yellow-600 hover:to-yellow-700 transition-all 
           duration-200 shadow-lg" onClick={order_paymentFn}>
@@ -158,7 +186,6 @@ const Payment = ({ selectedOrderId }) => {
           </button>
         </div>
 
-        {/* Delivery Details */}
         <div className="bg-yellow-50 rounded-lg p-4 mb-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
