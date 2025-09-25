@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiConnectorGet, apiConnectorPost } from '../utils/ApiConnector';
-import { endpoint } from '../utils/APIRoutes';
+import { endpoint, mode } from '../utils/APIRoutes';
 import toast from 'react-hot-toast';
 
 const Payment = ({ selectedOrderId }) => {
@@ -109,9 +109,7 @@ const Payment = ({ selectedOrderId }) => {
 
       // 3️⃣ initiate checkout
       try {
-        cashfree = cashfree({ mode: "production" });
-         // when use local ip -> sandbox mode 
-         // when use live ip -> production mode 
+        cashfree = cashfree({ mode: mode });
         cashfree.checkout({
           paymentSessionId: payment_session_id,
           redirectTarget: "_self",
@@ -184,7 +182,7 @@ const Payment = ({ selectedOrderId }) => {
           <button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black 
           font-medium py-4 rounded-lg text-lg hover:from-yellow-600 hover:to-yellow-700 transition-all 
           duration-200 shadow-lg" onClick={order_paymentFn}>
-            PAY NOW
+            PAY NOW .
           </button>
         </div>
 
