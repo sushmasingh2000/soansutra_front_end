@@ -71,7 +71,7 @@ const NavigationBar = () => {
     {
       name: "Digital Gold",
       description:
-        "Invest in 24K gold hassle-free with CaratLane's Digital Gold.",
+        "Invest in 24K gold hassle-free with SonaSutra's Digital Gold.",
       image:
         "https://cdn.caratlane.com/media/static/images/discovery/responsive-hamburger-menu/egold-1x.png",
       icon: "🥇",

@@ -54,7 +54,7 @@ const EgoldHeader = () => {
         <div className="flex justify-center py-4 px-4 border-b border-gray-200 cursor-pointer" onClick={()=>navigate('/e-gold')}>
           <img 
             src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png" 
-            alt="eGold by CaratLane" 
+            alt="eGold by sonasutra" 
             className="h-8"
           />
         </div>

@@ -34,20 +34,16 @@ const ExchangeRedeemComponent = () => {
           <div className="flex items-center justify-between">
             {/* Step 1 */}
             <div className="flex flex-col items-center text-center flex-1">
-              <div className="relative mb-4">
-                <div className="w-24 h-24 rounded-full border-2 border-yellow-200 bg-yellow-50 flex items-center justify-center">
-                  <div
-                    className="w-14 h-14"
-                    style={{
-                      background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0) -326px -9px / 560px no-repeat',
-                      backgroundSize: '560px',
-                      backgroundPosition: '-326px -9px',
-                      width: '93px',
-                      height: '95px',
-                      transform: 'scale(0.6)'
-                    }}
-                  ></div>
-                </div>
+              <div className="relative mb-4 w-[89px] h-[92px]">
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url(/image/jewellery.png)',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                  }}
+                ></div>
               </div>
               <p className="text-gray-700 font-medium max-w-40">
                 Add to cart any Gold coin(s) or Jewellery
@@ -63,16 +59,14 @@ const ExchangeRedeemComponent = () => {
 
             {/* Step 2 */}
             <div className="flex flex-col items-center text-center flex-1">
-              <div className="relative mb-4">
+              <div className="relative mb-4 w-[89px] h-[92px]">
                 <div
-                  className="w-24 h-24"
+                  className="w-full h-full"
                   style={{
-                    background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0) -406px -109px / 560px no-repeat',
-                    backgroundSize: '560px',
-                    backgroundPosition: '-406px -109px',
-                    width: '118px',
-                    height: '112px',
-                    transform: 'scale(0.7)'
+                    backgroundImage: 'url(/image/hand.png)',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
                   }}
                 ></div>
               </div>
@@ -90,16 +84,14 @@ const ExchangeRedeemComponent = () => {
 
             {/* Step 3 */}
             <div className="flex flex-col items-center text-center flex-1">
-              <div className="relative mb-4">
+              <div className="relative mb-4 w-[89px] h-[92px]">
                 <div
-                  className="w-24 h-24"
+                  className="w-full h-full"
                   style={{
-                    background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0) -143px -99px / 560px no-repeat',
-                    backgroundSize: '560px',
-                    backgroundPosition: '-143px -99px',
-                    width: '123px',
-                    height: '84px',
-                    transform: 'scale(0.7)'
+                    backgroundImage: 'url(/image/delivery.png)',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
                   }}
                 ></div>
               </div>
@@ -130,7 +122,7 @@ const ExchangeRedeemComponent = () => {
               <div className="flex-1">
                 <p className="text-gray-600 text-sm">
                   You can also Redeem your Gold Balance online as well as offline stores of
-                  caratlane & our Jewellery Partner
+                  SonaSutra & our Jewellery Partner
                 </p>
               </div>
               <button className="text-yellow-600 text-sm font-medium hover:text-yellow-700 flex items-center gap-1 whitespace-nowrap">
@@ -181,20 +173,16 @@ const ExchangeRedeemComponent = () => {
           <div className="bg-white rounded-xl p-6 mb-6">
             {/* Step 1 */}
             <div className="flex flex-col items-center text-center mb-8">
-              <div className="relative mb-4">
-                <div className="w-20 h-20 rounded-full border-2 border-yellow-200 bg-yellow-50 flex items-center justify-center border-dashed">
-                  <div
-                    className="w-12 h-12"
-                    style={{
-                      background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0)',
-                      backgroundSize: '560px',
-                      backgroundPosition: '-326px -9px',
-                      width: '93px',
-                      height: '95px',
-                      transform: 'scale(0.5)'
-                    }}
-                  ></div>
-                </div>
+              <div className="relative mb-4 w-[89px] h-[92px]">
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url(/image/jewellery.png)',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                  }}
+                ></div>
               </div>
               <p className="text-gray-700 font-medium text-center max-w-48">
                 Add to cart any Gold coin(s) or Jewellery
@@ -210,16 +198,14 @@ const ExchangeRedeemComponent = () => {
 
             {/* Step 2 */}
             <div className="flex flex-col items-center text-center mb-8">
-              <div className="relative mb-4">
+              <div className="relative mb-4 w-[89px] h-[92px]">
                 <div
-                  className="w-20 h-20 flex items-center justify-center"
+                  className="w-full h-full"
                   style={{
-                    background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0)',
-                    backgroundSize: '560px',
-                    backgroundPosition: '-406px -109px',
-                    width: '118px',
-                    height: '112px',
-                    transform: 'scale(0.6)'
+                    backgroundImage: 'url(/image/hand.png)',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
                   }}
                 ></div>
               </div>
@@ -237,16 +223,14 @@ const ExchangeRedeemComponent = () => {
 
             {/* Step 3 */}
             <div className="flex flex-col items-center text-center">
-              <div className="relative mb-4">
+              <div className="relative mb-4 w-[89px] h-[92px]">
                 <div
-                  className="w-20 h-16 flex items-center justify-center"
+                  className="w-full h-full"
                   style={{
-                    background: 'url(https://assets.cltstatic.com/images/responsive/digi-gold-sprite.png?v2.0)',
-                    backgroundSize: '560px',
-                    backgroundPosition: '-143px -99px',
-                    width: '123px',
-                    height: '84px',
-                    transform: 'scale(0.6)'
+                    backgroundImage: 'url(/image/delivery.png)',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
                   }}
                 ></div>
               </div>
@@ -276,7 +260,7 @@ const ExchangeRedeemComponent = () => {
               <div className="flex-1">
                 <p className="text-gray-600 text-sm mb-3">
                   You can also Redeem your Gold Balance online as well as offline stores of
-                  caratlane & our Jewellery Partner
+                  SonaSutra & our Jewellery Partner
                 </p>
                 <button className="text-yellow-600 text-sm font-medium hover:text-yellow-700 flex items-center gap-1">
                   Exchange History
