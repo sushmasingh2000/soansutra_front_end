@@ -6,6 +6,7 @@ import HomePage from './components/pages/homePage';
 import { default as LoginModal, default as LoginPage } from './components/pages/LoginPage';
 import { useLoginModal } from './context/Login';
 import { routes } from './routes/Routes';
+import Test from './Test';
 
 
 function App() {
@@ -15,7 +16,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Test />} />
+        {/* <Route path="/" element={<HomePage />} /> */}
         <Route path="/admin-login" element={<Login />} />
         {admin ? (
           routes.map((route, i) => (
