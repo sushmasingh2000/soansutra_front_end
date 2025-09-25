@@ -94,7 +94,7 @@ const SonaSutraDigitalGoldHome = () => {
       <div className="relative">
         {/* Desktop Banner */}
         <div className="hidden md:block h-[400px] lg:h-[466px] bg-cover bg-center relative" 
-             style={{backgroundImage: 'url(https://cdn.caratlane.com/media/static/images/V4/2024/CL/10_OCT/Banner/Egold/1/E_Gold_desktop_1132x466.jpg)'}}>
+             style={{backgroundImage: 'url(/image/e-suvarna-home-big-screen-background.jpg)'}}>
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <div className="relative z-10 flex items-center h-full max-w-7xl mx-auto px-4">
             <div className="text-white max-w-2xl">
@@ -115,7 +115,7 @@ const SonaSutraDigitalGoldHome = () => {
 
         {/* Mobile Banner */}
         <div className="block md:hidden h-[400px] bg-cover bg-center relative" 
-             style={{backgroundImage: 'url(https://cdn.caratlane.com/media/static/images/V4/2024/CL/10_OCT/Banner/Egold/1/E-Gold_banner_Mobile_780x800.jpg)'}}>
+             style={{backgroundImage: 'url(/image/e-swarna_home_mobile_background.jpg)'}}>
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <div className="relative z-10 flex items-center h-full px-4 ">
             <div className="text-white w-full text-center mb-40">

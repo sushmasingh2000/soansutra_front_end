@@ -174,7 +174,7 @@ export default function Header() {
   ];
 
   // Products & Services
-   const productsServices = [
+ const productsServices = [
   {
     name: "Treasure Chest",
     description:
@@ -196,7 +196,7 @@ export default function Header() {
   {
     name: "Digital Gold",
     description:
-      "Invest in 24K gold hassle-free with SonaSutra Digital Gold.",
+      "Invest in 24K gold hassle-free with SonaSutra's Digital Gold.",
     image:
       "https://cdn.caratlane.com/media/static/images/discovery/responsive-hamburger-menu/egold-1x.png",
     icon: "🥇",
