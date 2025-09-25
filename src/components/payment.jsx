@@ -109,7 +109,9 @@ const Payment = ({ selectedOrderId }) => {
 
       // 3️⃣ initiate checkout
       try {
-        cashfree = cashfree({ mode: "sandbox" }); // sandbox mode
+        cashfree = cashfree({ mode: "production" });
+         // when use local ip -> sandbox mode 
+         // when use live ip -> production mode 
         cashfree.checkout({
           paymentSessionId: payment_session_id,
           redirectTarget: "_self",
