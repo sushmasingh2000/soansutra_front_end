@@ -43,10 +43,12 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
     }
   };
 
-
+  useEffect(() => {
+    addres_fn()
+  }, [])
+  
   const [newAddress, setNewAddress] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     address: '',
     landmark: '',
     city: '',
@@ -103,8 +105,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
       setEditingAddress(address);
     } else {
       setNewAddress({
-        firstName: '',
-        lastName: '',
+        name: '',
         address: '',
         landmark: '',
         city: '',
@@ -141,6 +142,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
   const saveAddress = async () => {
     const addressPayload = {
       address_line1: newAddress.address,
+      full_name: newAddress.name,
       address_line2: newAddress.landmark,
       city: newAddress.city,
       state: newAddress.state,
@@ -245,11 +247,6 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
       alert('Please enter a valid pincode for store pickup.');
       return;
     }
-    // if (useDifferentBilling && (!billingAddress.firstName || !billingAddress.address || !billingAddress.mobile)) {
-    //   alert('Please fill in all required billing address fields.');
-    //   return;
-    // }
-    console.log('Save & Continue clicked');
     if (onSaveContinue) {
       onSaveContinue(); // Call the callback to update parent state
     }
@@ -302,6 +299,8 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                       CHANGE DATE
                     </span>
                   </p>
+                  <p className="font-medium">
+                  Name: {currentAddress?.name} </p>
                   <p className="font-medium">
                     Mobile: +91 {currentAddress?.phone_number} </p>
                   <p className="text-sm">
@@ -523,6 +522,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                       onChange={() => selectAddress(addr.address_id)}
                       className="mr-2 accent-purple-600"
                     />
+                    <p className="text-sm">Name :   {addr.name}</p>
                     <p className="text-sm">Mobile: +91 {addr.phone_number}</p>
                   </label>
                   <p className="text-sm">
@@ -573,21 +573,15 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
             </div>
             <div className="p-4 space-y-4">
               <h3 className="font-semibold">Contact Details</h3>
-              <div className="flex space-x-2">
+              <div className="flex ">
                 <input
-                  name="firstName"
-                  value={newAddress.firstName}
+                  name="name"
+                  value={newAddress.name}
                   onChange={handleInputChange}
-                  className="w-1/2 p-2 border  border-yellow-300 rounded-lg"
-                  placeholder="First Name"
+                  className="w-full p-2 border  border-yellow-300 rounded-lg"
+                  placeholder=" Name"
                 />
-                <input
-                  name="lastName"
-                  value={newAddress.lastName}
-                  onChange={handleInputChange}
-                  className="w-1/2 p-2 border border-yellow-300 rounded-lg"
-                  placeholder="Last Name"
-                />
+              
               </div>
               <div className="flex">
                 <span className="p-2 border-r border border-yellow-300 bg-gray-50 text-gray-500">+91</span>
@@ -655,7 +649,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                 </select>
               </div>
 
-              <h3 className="font-semibold">Address Type</h3>
+              {/* <h3 className="font-semibold">Address Type</h3>
               <div className="flex space-x-2">
                 <button
                   className={`px-4 py-2 rounded-lg ${newAddress.type === 'Home' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-800'
@@ -671,7 +665,7 @@ const CheckoutForm = ({ onSaveContinue, className }) => {
                 >
                   Office (10am-7pm)
                 </button>
-              </div>
+              </div> */}
               <p className="text-xs text-gray-500">
                 Preferences will help us plan your delivery. However, shipments can sometimes arrive early or later than
                 planned.

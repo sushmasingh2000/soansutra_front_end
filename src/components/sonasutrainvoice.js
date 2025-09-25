@@ -191,6 +191,7 @@ const SonasutraInvoice = () => {
                     PIN :
                   </span>{" "}
                   {bill?.postal_code}
+                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                   <span className="font-bold inline-block min-w-[60px]">
                     State :
                   </span>{" "}
@@ -204,6 +205,7 @@ const SonasutraInvoice = () => {
                   <span className="font-bold inline-block min-w-[60px]">
                     GSTIN : {store?.gstin_no}
                   </span>{" "}
+                  &nbsp; &nbsp; &nbsp; &nbsp;
                   <span className="font-bold inline-block min-w-[60px]">
                     PAN : {store?.pan_no}
                   </span>

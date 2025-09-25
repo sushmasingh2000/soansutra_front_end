@@ -2,8 +2,8 @@
 export const frontend = "https://sonasutra.in";
 export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
-// export const mode = "production";
-export const mode = "sandbox";
+export const mode = "production";
+// export const mode = "sandbox";
 
 export const endpoint = {
 

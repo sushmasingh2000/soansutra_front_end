@@ -575,25 +575,26 @@ const MetalSection = ({ items, onClick, isLoading }) => (
     <div className="grid grid-cols-2 gap-4">
       {isLoading
         ? Array.from({ length: 6 }).map((_, index) => (
-          <div
-            key={index}
-            className="bg-yellow-100 rounded-lg p-3 animate-pulse h-[60px]"
-          >
-            <div className="flex flex-col items-center text-center space-y-2">
-              <span className="text-xs font-medium text-gray-800 leading-tight" />
+            <div
+              key={index}
+              className="bg-yellow-100 rounded-lg p-3 animate-pulse h-[60px]"
+            >
+              <div className="flex flex-col items-center text-center space-y-2" />
             </div>
-          </div>
-        ))
+          ))
         : (() => {
-          const seenMasterNames = new Set();
-          return items?.map((item, index) => {
-            const isMasterNameNew = !seenMasterNames.has(item.master_mat_name);
-            if (isMasterNameNew) seenMasterNames.add(item.master_mat_name);
+            const seenMasterNames = new Set();
+            return items?.flatMap((item, index) => {
+              const isMasterNameNew = !seenMasterNames.has(item.master_mat_name);
+              if (isMasterNameNew) seenMasterNames.add(item.master_mat_name);
 
-            return (
-              <React.Fragment key={index}>
-                {isMasterNameNew && (
+              const buttons = [];
+
+              // Render master name button only once
+              if (isMasterNameNew) {
+                buttons.push(
                   <button
+                    key={`master-${index}`}
                     onClick={() => onClick(item.product_subcategory_id)}
                     className="bg-yellow-50 rounded-lg p-3 hover:bg-white-100 transition-colors"
                   >
@@ -603,24 +604,33 @@ const MetalSection = ({ items, onClick, isLoading }) => (
                       </span>
                     </div>
                   </button>
-                )}
-                <button
-                  onClick={() => onClick(item.product_subcategory_id)}
-                  className="bg-yellow-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <span className="text-xs font-medium text-gray-800 leading-tight">
-                      {item.material_name}
-                    </span>
-                  </div>
-                </button>
-              </React.Fragment>
-            );
-          });
-        })()}
+                );
+              }
+
+              // Only render material_name if different from master_mat_name
+              if (item.material_name !== item.master_mat_name) {
+                buttons.push(
+                  <button
+                    key={`material-${index}`}
+                    onClick={() => onClick(item.product_subcategory_id)}
+                    className="bg-yellow-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex flex-col items-center text-center space-y-2">
+                      <span className="text-xs font-medium text-gray-800 leading-tight">
+                        {item.material_name}
+                      </span>
+                    </div>
+                  </button>
+                );
+              }
+
+              return buttons;
+            });
+          })()}
     </div>
   </div>
 );
+
 
 
 // Price Range Component
