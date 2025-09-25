@@ -1,7 +1,11 @@
-//export const domain = "http://192.168.18.214:2000";
+// export const domain = "http://192.168.18.214:2000";
 export const frontend = "https://sonasutra.in";
- export const domain = "https://backend.sonasutra.in";
+export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
+export const mode = "production";
+// export const mode = "sandbox";
+// when use local ip -> sandbox mode 
+// when use live ip -> production mode 
 
 export const endpoint = {
 
@@ -96,7 +100,7 @@ export const endpoint = {
   release_income: `${domain}/api/v1/release-rank-income`,
 
 
-  
+
   // address shipping
   add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
   get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
@@ -106,7 +110,7 @@ export const endpoint = {
   create_order_payment: `${domain}/api/v1/creata-order-payment`,
 
 
- 
+
 
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
@@ -262,9 +266,9 @@ export const endpoint = {
 
   //user coupon
   get_coupon_varient: `${domain}/api/v1/u-get-coupon-on-varient`,
-    review_customer: `${domain}/api/v1/create-product-review`,
+  review_customer: `${domain}/api/v1/create-product-review`,
   checkd_order_placed: `${domain}/api/v1/check-order-placed`,
-  
+
   get_customer_review: `${domain}/api/v1/get-product-review`,
   get_customer_single_review: `${domain}/api/v1/get-single-product-review`,
   get_continue_browsing: `${domain}/api/v1/u-get-continue-browing-items`,
@@ -283,13 +287,13 @@ export const endpoint = {
   get_team_details: `${domain}/api/v1/get-team-details`,
   get_income_details: `${domain}/api/v1/get-income-details`,
 
-   //rankmlm
-   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
+  //rankmlm
+  get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
   update_rank_deatils: `${domain}/api/v1/update-rank-details-by-admin`,
   get_distributor_details: `${domain}/api/v1/get-distributer-details`,
   get_rank_achivers_details: `${domain}/api/v1/get-rank-achievers-details`,
   rank_relaese_request: `${domain}/api/v1/release-rank-request`,
-  
-  
+
+
 
 };
