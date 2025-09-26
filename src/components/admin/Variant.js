@@ -219,7 +219,7 @@ const VariantModal = ({
               <option value="">Select Attribute</option>
               {attributesList.map((attr) => (
                 <option key={attr.attribute_id} value={attr.attribute_id}>
-                  {attr.name}
+                  {attr.name} <span className="">({attr.un_slug})</span>
                 </option>
               ))}
             </select>

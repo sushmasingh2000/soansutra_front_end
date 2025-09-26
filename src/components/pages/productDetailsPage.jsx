@@ -473,7 +473,7 @@ const image =
             <div className="text-gray-800 border-r border-orange-200 ">
               {selectedVariant?.attributes?.map((attr, i) => (
                 <p key={i}>
-                  {attr?.attribute_name} : {attr?.value}
+                  {attr?.attribute_name} : {attr?.value} ({attr?.un_name})
                 </p>
               ))}
             </div>
