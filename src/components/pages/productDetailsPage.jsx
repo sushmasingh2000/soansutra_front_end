@@ -90,7 +90,42 @@ const ProductDetailWebPage = () => {
     }
   );
   
+useEffect(() => {
+  const checkIfWishlisted = async () => {
+    if (!selectedVariant || !product_id_and_variant_id_only) return;
 
+    const { product_id } = product_id_and_variant_id_only;
+    const { varient_id } = selectedVariant;
+
+    // First check from localStorage
+    const wishlistLS = JSON.parse(localStorage.getItem("wishlistItems") || "[]");
+    const isInWishlistLS = wishlistLS.some(
+      (item) => item.product_id === product_id && item.varient_id === varient_id
+    );
+    setIsWishlisted(isInWishlistLS);
+
+    try {
+      const response = await apiConnectorGet(endpoint.get_wishlist);
+      console.log("Wishlist API Response:", response?.data);
+
+      if (response?.data?.success) {
+        const wishlistItems = response?.data?.result || [];
+        console.log("Wishlist Items to store in localStorage:", wishlistItems);
+
+        localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
+
+        const isInWishlist = wishlistItems.some(
+          (item) => item.product_id === product_id && item.varient_id === varient_id
+        );
+        setIsWishlisted(isInWishlist);
+      }
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+    }
+  };
+
+  checkIfWishlisted();
+}, [selectedVariant, product_id_and_variant_id_only]);
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -635,10 +670,15 @@ const image =
                             className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
                               } hover:text-red-500 transition-colors`}
                           >
-                            <Heart
+                             <Heart
+                                  className="w-4 h-4"
+                                  fill={isWishlisted ? "red" : "none"}
+                                  stroke={isWishlisted ? "red" : "currentColor"}
+                                />
+                            {/* <Heart
                               className={`w-3 h-3 ${isWishlisted ? "fill-current" : ""
                                 }`}
-                            />
+                            /> */}
                           </button>
                         </div>
                       )}
@@ -658,9 +698,14 @@ const image =
                   onClick={handleWishlist}
                   className="p-1.5 text-gray-600 hover:text-yellow-500 transition-colors"
                 >
-                  <Heart
+                  {/* <Heart
                     className={`w-4 h-4 ${isWishlisted ? "text-red-500 fill-current" : ""}`}
-                  />
+                  /> */}
+                  <Heart
+                                  className="w-4 h-4"
+                                  fill={isWishlisted ? "red" : "none"}
+                                  stroke={isWishlisted ? "red" : "currentColor"}
+                                />
                 </button>
                 <button className="p-1.5 text-gray-600 hover:text-yellow-500 transition-colors">
                   <Share2 className="w-4 h-4" />
@@ -865,8 +910,13 @@ const image =
                   className="p-3 border border-yellow-300 rounded-lg hover:border-yellow-400 transition-colors"
                 >
                   <Heart
+                                  className="w-4 h-4"
+                                  fill={isWishlisted ? "red" : "none"}
+                                  stroke={isWishlisted ? "red" : "currentColor"}
+                                />
+                  {/* <Heart
                     className={`w-5 h-5 ${isWishlisted ? "text-red-500 fill-current" : "text-red-600"}`}
-                  />
+                  /> */}
                 </button>
                 <button className="p-3 border border-yellow-300 rounded-lg hover:border-yellow-400 transition-colors">
                   <Share2 className="w-5 h-5 text-red-600" />
