@@ -526,42 +526,97 @@ const FeaturedSection = ({ items }) => (
 );
 
 // Style Items Component
-const StyleSection = ({ items, onClick }) => {
+// const StyleSection = ({ items, onClick }) => {
+//   const isLoading = items.length === 0;
+
+//   return (
+//     <div className="px-4 py-3">
+//       <h3 className="text-sm font-medium text-gray-700 mb-3">By Style</h3>
+//       <div className="grid grid-cols-2 gap-4">
+//         {isLoading
+//           ? Array.from({ length: 6 }).map((_, index) => (
+//             <div key={index} className="bg-white-50 rounded-lg p-3 animate-pulse">
+//               <div className="flex flex-col items-center text-center space-y-2">
+//                 <div className="w-10 h-10 border-yellow-300 bg-yellow-300 rounded" />
+//                 <div className="h-3 w-16 border-yellow-300 bg-yellow-300 rounded" />
+//               </div>
+//             </div>
+//           ))
+//           : items.map((item, index) => (
+//             <button
+//               key={index}
+//               onClick={() => onClick(item?.product_subcategory_id)}
+//               className="bg-white-50 rounded-lg p-3 hover:bg-white-100 transition-colors"
+//             >
+//               <div className="flex flex-col items-center text-center space-y-2">
+//                 {item.subcat_image && (
+//                   <img
+//                     src={item.subcat_image}
+//                     alt={item.name}
+//                     className="w-10 h-10 object-contain"
+//                   />
+//                 )}
+//                 <span className="text-xs font-medium text-gray-800 leading-tight">
+//                   {item.name}
+//                 </span>
+//               </div>
+//             </button>
+//           ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+const StyleSection = ({ items, onClick, categoryId }) => { // Add category prop
   const isLoading = items.length === 0;
+  const navigate = useNavigate(); // Initialize navigate hook
+
+  const handleViewAll = () => {
+    // Navigate to the products page with the category ID
+    navigate(`/products_web?category=${categoryId}`);
+  };
 
   return (
     <div className="px-4 py-3">
-      <h3 className="text-sm font-medium text-gray-700 mb-3">By Style</h3>
+      <div className="flex justify-between items-center mb-3"> {/* Flex container for heading and button */}
+        <h3 className="text-sm font-medium text-gray-700">By Style</h3>
+        <button
+          onClick={handleViewAll}
+          className="text-xs font-medium text-yellow-700 hover:text-yellow-800 transition-colors"
+        >
+          View All
+        </button>
+      </div>
       <div className="grid grid-cols-2 gap-4">
         {isLoading
           ? Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="bg-white-50 rounded-lg p-3 animate-pulse">
-              <div className="flex flex-col items-center text-center space-y-2">
-                <div className="w-10 h-10 border-yellow-300 bg-yellow-300 rounded" />
-                <div className="h-3 w-16 border-yellow-300 bg-yellow-300 rounded" />
+              <div key={index} className="bg-white-50 rounded-lg p-3 animate-pulse">
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 border-yellow-300 bg-yellow-300 rounded" />
+                  <div className="h-3 w-16 border-yellow-300 bg-yellow-300 rounded" />
+                </div>
               </div>
-            </div>
-          ))
+            ))
           : items.map((item, index) => (
-            <button
-              key={index}
-              onClick={() => onClick(item?.product_subcategory_id)}
-              className="bg-white-50 rounded-lg p-3 hover:bg-white-100 transition-colors"
-            >
-              <div className="flex flex-col items-center text-center space-y-2">
-                {item.subcat_image && (
-                  <img
-                    src={item.subcat_image}
-                    alt={item.name}
-                    className="w-10 h-10 object-contain"
-                  />
-                )}
-                <span className="text-xs font-medium text-gray-800 leading-tight">
-                  {item.name}
-                </span>
-              </div>
-            </button>
-          ))}
+              <button
+                key={index}
+                onClick={() => onClick(item?.product_subcategory_id)}
+                className="bg-white-50 rounded-lg p-3 hover:bg-white-100 transition-colors"
+              >
+                <div className="flex flex-col items-center text-center space-y-2">
+                  {item.subcat_image && (
+                    <img
+                      src={item.subcat_image}
+                      alt={item.name}
+                      className="w-10 h-10 object-contain"
+                    />
+                  )}
+                  <span className="text-xs font-medium text-gray-800 leading-tight">
+                    {item.name}
+                  </span>
+                </div>
+              </button>
+            ))}
       </div>
     </div>
   );
