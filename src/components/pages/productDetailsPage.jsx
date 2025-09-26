@@ -732,7 +732,7 @@ const image =
                     {selectedVariant?.product_details?.product_name || "Unnamed Product"}
                   </h1>
                 </div>
-                <div className="flex-shrink-0">
+                {/* <div className="flex-shrink-0">
                   <div
                     className="text-white text-center font-semibold w-20 ml-2.5"
                     style={{
@@ -778,7 +778,7 @@ const image =
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             {variants?.discount_details && (
