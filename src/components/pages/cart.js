@@ -669,7 +669,7 @@ const removeItem = (id) => {
             </div>
 
             <div className="p-4">
-              <h3 className="text-sm font-medium text-gray-900 mb-3">Other Offers at CaratLane</h3>
+              <h3 className="text-sm font-medium text-gray-900 mb-3">Other Offers at SonaSutra</h3>
               <div className="space-y-3">
                 {coupon?.allCoupon?.map((coupon, index) => (
                   <div

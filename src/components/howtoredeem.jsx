@@ -4,7 +4,7 @@ import React from 'react';
 const HowToRedeem = () => {
   return (
     <div className="w-full bg-gray-50 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-9xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 md:mb-8">
           <h2 className="text-yellow-500 text-xs md:text-sm mb-2">Redeem</h2>
@@ -19,16 +19,26 @@ const HowToRedeem = () => {
             {/* Step 1 */}
             <div className="flex-1 text-center">
               <div className="w-24 h-24 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
-                  <div 
-                    className="w-8 h-8"
+                {/* <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
+                  <div
+                    className="w-[89px] h-[92px]"
                     style={{
-                      backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',
-                      backgroundSize: '1120px 690px',
-                      backgroundPosition: '-200px -100px'
+                      backgroundImage: 'url("/image/jewellery.png")',
+                      backgroundSize: "cover",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",
                     }}
                   />
-                </div>
+                </div> */}
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url("/image/jewellery.png")',
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                />
               </div>
               <h3 className="text-sm text-gray-900 mb-2">Choose your</h3>
               <h3 className="text-sm text-gray-900 mb-2">favorite jewellery</h3>
@@ -47,16 +57,15 @@ const HowToRedeem = () => {
             {/* Step 2 */}
             <div className="flex-1 text-center">
               <div className="w-24 h-24 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
-                  <div 
-                    className="w-12 h-10"
-                    style={{
-                      backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',
-                      backgroundSize: '1120px 690px',
-                      backgroundPosition: '-350px -150px'
-                    }}
-                  />
-                </div>
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url("/image/hand.png")',
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                />
                 {/* Sparkle effects */}
                 <div className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full"></div>
                 <div className="absolute bottom-2 left-2 w-1 h-1 bg-yellow-400 rounded-full"></div>
@@ -79,19 +88,18 @@ const HowToRedeem = () => {
             {/* Step 3 */}
             <div className="flex-1 text-center">
               <div className="w-24 h-24 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
-                  <div 
-                    className="w-12 h-8"
-                    style={{
-                      backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',
-                      backgroundSize: '1120px 690px',
-                      backgroundPosition: '-500px -200px'
-                    }}
-                  />
-                </div>
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url("/image/delivery.png")',
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                />
                 <div className="absolute top-2 left-2 w-2 h-2 bg-green-400 rounded-full flex items-center justify-center">
                   <svg className="w-1 h-1 text-white" fill="currentColor" viewBox="0 0 8 8">
-                    <path d="M2.5 4L3.5 5L5.5 3"/>
+                    <path d="M2.5 4L3.5 5L5.5 3" />
                   </svg>
                 </div>
               </div>
@@ -119,7 +127,7 @@ const HowToRedeem = () => {
             <div className="flex-shrink-0 ml-16">
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-yellow-100">
                 <div className="text-center mb-4">
-                  <div 
+                  <div
                     className="w-12 h-12 mx-auto mb-3"
                     style={{
                       backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',
@@ -147,22 +155,19 @@ const HowToRedeem = () => {
             {/* Step 1 */}
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4">
-                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
-                  <div 
-                    className="w-6 h-6"
-                    style={{
-                      backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',
-                      backgroundSize: '560px auto',
-                      backgroundPosition: '-328px -10px',
-                      width: '89px',
-                      height: '92px'
-                    }}
-                  />
-                </div>
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url("/image/jewellery.png")',
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                />
               </div>
               <h3 className="text-base text-gray-900">Choose your favorite</h3>
               <h3 className="text-base text-gray-900 mb-1">jewellery from SonaSutra</h3>
-              
+
               {/* Arrow down */}
               <div className="flex justify-center my-6">
                 <div className="w-0.5 h-12 bg-yellow-400 relative">
@@ -176,16 +181,15 @@ const HowToRedeem = () => {
             {/* Step 2 */}
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
-                  <div 
-                    className="w-10 h-8"
-                    style={{
-                      backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',
-                      backgroundSize: '840px 518px',
-                      backgroundPosition: '-260px -110px'
-                    }}
-                  />
-                </div>
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url("/image/hand.png")',
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                />
                 {/* Sparkle effects */}
                 <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
                 <div className="absolute bottom-1 left-1 w-1 h-1 bg-yellow-400 rounded-full"></div>
@@ -193,7 +197,7 @@ const HowToRedeem = () => {
               </div>
               <h3 className="text-base text-gray-900">Redeem your SonaSutra</h3>
               <h3 className="text-base text-gray-900 mb-1">eGold at checkout</h3>
-              
+
               {/* Arrow down */}
               <div className="flex justify-center my-6">
                 <div className="w-0.5 h-12 bg-yellow-400 relative">
@@ -207,19 +211,18 @@ const HowToRedeem = () => {
             {/* Step 3 */}
             <div className="text-center mb-8">
               <div className="w-20 h-20 mx-auto mb-4 relative">
-                <div className="w-full h-full rounded-full border-2 border-yellow-300 border-dashed flex items-center justify-center bg-white">
-                  <div 
-                    className="w-10 h-6"
-                    style={{
-                      backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',
-                      backgroundSize: '840px 518px',
-                      backgroundPosition: '-380px -150px'
-                    }}
-                  />
-                </div>
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: 'url("/image/delivery.png")',
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                />
                 <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-green-400 rounded-full flex items-center justify-center">
                   <svg className="w-1 h-1 text-white" fill="currentColor" viewBox="0 0 8 8">
-                    <path d="M2.5 4L3.5 5L5.5 3"/>
+                    <path d="M2.5 4L3.5 5L5.5 3" />
                   </svg>
                 </div>
               </div>
@@ -243,7 +246,7 @@ const HowToRedeem = () => {
             {/* Vault Card Mobile */}
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
               <div className="flex items-center space-x-3">
-                <div 
+                <div
                   className="w-10 h-10 flex-shrink-0"
                   style={{
                     backgroundImage: 'url("https://cdn.caratlane.com/media/static/images/V4/2024/CL/05-MAY/Others/62867401d05b4e7d92f8817d4354ae47.png")',

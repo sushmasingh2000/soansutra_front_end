@@ -6,13 +6,13 @@ import { endpoint } from '../utils/APIRoutes';
 
 export default function ViewMyVault() {
   const navigate = useNavigate();
-   const { data } = useQuery(
-      ["profile"],
-      () => apiConnectorGet(endpoint?.get_customer_profile),
-      usequeryBoolean
-    );
-  
-    const profileData = data?.data?.result || [];
+  const { data } = useQuery(
+    ["profile"],
+    () => apiConnectorGet(endpoint?.get_customer_profile),
+    usequeryBoolean
+  );
+
+  const profileData = data?.data?.result || [];
   return (
     <div className=" bg-gray-50 p-4">
       {/* Header */}
@@ -23,7 +23,7 @@ export default function ViewMyVault() {
             <div className="w-px h-6 bg-yellow-300 hidden sm:block"></div>
             <div className="flex items-center justify-between sm:justify-start gap-2">
               <span className="text-gray-700 text-sm">Gold balance - {profileData?.gold_wallet}gms</span>
-              <div 
+              <div
                 className="inline-block ml-4 sm:ml-8 transform scale-75"
                 style={{
                   width: '54px',
@@ -33,9 +33,9 @@ export default function ViewMyVault() {
               ></div>
             </div>
           </div>
-          <button 
+          <button
             className="px-4 py-2 rounded-lg text-black text-sm  bg-gradient-to-r from-yellow-400 to-yellow-600"
-            
+
           >
             View my Vault
           </button>
@@ -53,12 +53,12 @@ export default function ViewMyVault() {
               <h2 className="text-2xl lg:text-3xl text-gray-900 leading-tight mb-6">
                 Invest in a high-payoff digital gold. Buy, sell, or redeem your SonaSutra eGold in exchange for beautiful jewellery.
               </h2>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button 
+                <button
                   className="px-6 py-2.5 rounded-lg text-black text-base bg-gradient-to-r from-yellow-400 to-yellow-600"
-                 
-               onClick={()=>navigate('/buy-gold')} >
+
+                  onClick={() => navigate('/buy-gold')} >
                   Buy eGold Now
                 </button>
                 <button className="flex items-center justify-center lg:justify-start gap-2 text-gray-700 text-sm">
@@ -76,15 +76,13 @@ export default function ViewMyVault() {
             {/* Feature 1 */}
             <div className="flex flex-col items-center text-center lg:flex-row lg:text-left lg:items-start gap-4">
               <div className="flex-shrink-0">
-                <div 
-                  className="inline-block"
+                <div
+                  className="inline-block w-[89px] h-[92px]"
                   style={{
-                    backgroundImage: 'url(https://banner.caratlane.com/live-images/f82dda2c003a48a68be9093255020a08.png)',
+                    backgroundImage: 'url(/image/jewellery.png)',
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '-42px -52px',
-                    backgroundSize: '560px auto',
-                    width: '88px',
-                    height: '69px'
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                   }}
                 ></div>
               </div>
@@ -99,15 +97,13 @@ export default function ViewMyVault() {
             {/* Feature 2 */}
             <div className="flex flex-col items-center text-center lg:flex-row lg:text-left lg:items-start gap-4">
               <div className="flex-shrink-0">
-                <div 
-                  className="inline-block"
-                  style={{
-                    backgroundImage: 'url(https://banner.caratlane.com/live-images/f82dda2c003a48a68be9093255020a08.png)',
+                <div
+                 className="inline-block w-[89px] h-[92px]"
+                 style={{
+                    backgroundImage: 'url(/image/hand.png)',
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '-309px -43px',
-                    backgroundSize: '560px auto',
-                    width: '79px',
-                    height: '77px'
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                   }}
                 ></div>
               </div>
@@ -122,15 +118,13 @@ export default function ViewMyVault() {
             {/* Feature 3 */}
             <div className="flex flex-col items-center text-center lg:flex-row lg:text-left lg:items-start gap-4">
               <div className="flex-shrink-0">
-                <div 
-                  className="inline-block"
-                  style={{
-                    backgroundImage: 'url(https://banner.caratlane.com/live-images/f82dda2c003a48a68be9093255020a08.png)',
+                <div
+                   className="inline-block w-[89px] h-[92px]"
+                 style={{
+                    backgroundImage: 'url(/image/delivery.png)',
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '-309px -43px',
-                    backgroundSize: '560px auto',
-                    width: '79px',
-                    height: '77px'
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                   }}
                 ></div>
               </div>

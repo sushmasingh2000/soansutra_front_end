@@ -16,37 +16,37 @@ const TreasureChestFaqToggleComponent = () => {
     {
       id: 'cancel-plan',
       category: 'Cancellation/Refund',
-      question: 'Can I cancel my CaratLane Treasure Chest plan at any time?'
+      question: 'Can I cancel my SonaSutra Treasure Chest plan at any time?'
     },
     {
       id: 'what-is-edge',
-      category: 'CaratLane Treasure Chest Edge',
-      question: 'What is CaratLane Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Treasure Chest Edge',
+      question: 'What is SonaSutra Treasure Chest Edge Scheme?'
     },
     {
       id: 'edge-benefits',
-      category: 'CaratLane Treasure Chest Edge',
-      question: 'What are the benefits of the CaratLane Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Treasure Chest Edge',
+      question: 'What are the benefits of the SonaSutra Treasure Chest Edge Scheme?'
     },
     {
       id: 'switch-schemes',
-      category: 'CaratLane Treasure Chest Edge',
-      question: 'Can I switch between CaratLane Treasure Chest Schemes during the term?'
+      category: 'SonaSutra Treasure Chest Edge',
+      question: 'Can I switch between SonaSutra Treasure Chest Schemes during the term?'
     },
     {
       id: 'cancel-edge',
-      category: 'CaratLane Treasure Chest Edge',
-      question: 'Can I cancel my CaratLane Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Treasure Chest Edge',
+      question: 'Can I cancel my SonaSutra Treasure Chest Edge Scheme?'
     },
     {
       id: 'eligible-products',
-      category: 'CaratLane Treasure Chest Edge',
-      question: 'Which products are eligible for redemption under the CaratLane Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Treasure Chest Edge',
+      question: 'Which products are eligible for redemption under the SonaSutra Treasure Chest Edge Scheme?'
     },
     {
       id: 'redeem-gold',
-      category: 'CaratLane Treasure Chest Edge',
-      question: 'Can I redeem my CaratLane Treasure Chest Edge on 22KT/Gold Coin/ Unstudded designs?'
+      category: 'SonaSutra Treasure Chest Edge',
+      question: 'Can I redeem my SonaSutra Treasure Chest Edge on 22KT/Gold Coin/ Unstudded designs?'
     }
   ];
 
@@ -57,11 +57,11 @@ const TreasureChestFaqToggleComponent = () => {
     },
     {
       id: 2,
-      text: "Company or CaratLane means CaratLane Trading Private Limited."
+      text: "Company or SonaSutra means SonaSutra Trading Private Limited."
     },
     {
       id: 3,
-      text: "Scheme means CaratLane Treasure Chest Scheme."
+      text: "Scheme means SonaSutra Treasure Chest Scheme."
     },
     {
       id: 4,
@@ -95,13 +95,13 @@ const TreasureChestFaqToggleComponent = () => {
 
   const enrolmentTerms = [
     {
-      text: "Under the CaratLane Treasure Chest Scheme, the individual is required to make payment for nine fixed monthly instalments. After the payment of the ninth monthly instalment, CaratLane will offer a discount/ benefit as mentioned below:"
+      text: "Under the SonaSutra Treasure Chest Scheme, the individual is required to make payment for nine fixed monthly instalments. After the payment of the ninth monthly instalment, SonaSutra will offer a discount/ benefit as mentioned below:"
     },
     {
-      text: "In case of purchase of any Diamond / Gemstone / Platinum / Preset Solitaires / Shaya (Silver) Jewellery / loose solitaire, CaratLane will offer a discount equal to the amount of one month instalment."
+      text: "In case of purchase of any Diamond / Gemstone / Platinum / Preset Solitaires / Rupika (Silver) Jewellery / loose solitaire, SonaSutra will offer a discount equal to the amount of one month instalment."
     },
     {
-      text: "In case of purchase of Plain gold jewellery (unstudded), CaratLane will offer a discount equal to 30% of the amount of one month instalment."
+      text: "In case of purchase of Plain gold jewellery (unstudded), SonaSutra will offer a discount equal to 30% of the amount of one month instalment."
     },
     {
       text: "The date on which the first monthly instalment is paid by the customer shall be considered as enrolment date. For the purpose of this Scheme, the due date shall be same as the Enrolment Date for the subsequent months."
@@ -137,11 +137,11 @@ const TreasureChestFaqToggleComponent = () => {
         </div>
       </div>
 
-      {/* CaratLane Treasure Chest Edge Section */}
+      {/* SonaSutra Treasure Chest Edge Section */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">CaratLane Treasure Chest Edge</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">SonaSutra Treasure Chest Edge</h3>
         <div className="space-y-2">
-          {faqData.filter(item => item.category === 'CaratLane Treasure Chest Edge').map((item) => (
+          {faqData.filter(item => item.category === 'SonaSutra Treasure Chest Edge').map((item) => (
             <div key={item.id} className="border border-yellow-200 rounded-lg">
               <button
                 onClick={() => toggleItem(item.id)}
