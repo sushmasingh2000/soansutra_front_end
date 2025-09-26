@@ -52,6 +52,15 @@ const OrdersContent = () => {
     }
   }, [detail]);
 
+
+  const { data} = useQuery(
+    ["customer-review"], () =>
+    apiConnectorGet(endpoint.get_customer_review)
+  );
+
+  const reviews = data?.data?.result?.currentPage || [];
+  
+
   const handleViewDetails = (order) => {
     setSelectedOrderId(order.order_unique);  // here use the order_id from orders list
   };
@@ -353,18 +362,33 @@ const OrdersContent = () => {
               </div>
             </div>
           </div>
-          {detail.status === 'Confirmed' && (
-            <div className="m-4">
+          {detail.status !== 'Pending' && (
+            <div className="m-4" onClick={() => {
+              setSelectedProduct(detail.order_items[0]);
+              setShowReviewModal(true)
+            }}>
               <div className="flex justify-start cursor-pointer" onClick={() => setShowReviewModal(true)}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-gray-300" />
-                ))}
+                {[1, 2, 3, 4, 5].map((star) => {
+                    const avgRating = parseFloat(
+                      reviews?.[0]?.rating || 0
+                    );
+
+                    return (
+                      <Star
+                        key={star}
+                        className={`w-5 h-5 ${star <= Math.floor(avgRating)
+                          ? "fill-yellow-400 text-yellow-400"
+                          : star - 0.5 === avgRating
+                            ? "fill-yellow-400 text-yellow-200" // optional: lighter color for half
+                            : "text-gray-300"
+                          }`}
+                      />
+                    );
+                  })}
+                
               </div>
               <button className="bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-2 py-0.5 mt-2 mb-2 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
-                onClick={() => {
-                  setSelectedProduct(detail.order_items[0]);
-                  setShowReviewModal(true)
-                }}>
+                >
                 Add Review
               </button>
               <p className="text-xs text-gray-600">Tap on the stars to rate your experience</p>

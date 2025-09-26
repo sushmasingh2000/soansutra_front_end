@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Header from "../Header1";
 import Footer from "../Footer1";
 import NavigationBar from "../navigationbar";
+import { useQueryClient } from "react-query";
 
 const WishlistPage = () => {
     const [wishlist, setWishlist] = useState([]);
@@ -27,6 +28,7 @@ const WishlistPage = () => {
     useEffect(() => {
         fetchWishlist();
     }, []);
+    const queryClient = useQueryClient();
 
     const removeFromWishlist = async (wishlistItemId) => {
         try {
@@ -34,8 +36,8 @@ const WishlistPage = () => {
             toast(res?.data?.message || "Item removed");
 
             if (res?.data?.success) {
-                // Re-fetch wishlist to reflect changes
-                fetchWishlist();
+                queryClient.invalidateQueries(["get_wish"]);
+                fetchWishlist()
             }
         } catch {
             toast.error("Failed to remove item from wishlist");

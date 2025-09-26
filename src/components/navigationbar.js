@@ -7,7 +7,14 @@ import { endpoint } from "../utils/APIRoutes";
 import { apiConnectorGet, usequeryBoolean } from "../utils/ApiConnector";
 import SubcategoryView from "./SubcategoryView";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { ChevronLeftIcon, ChevronRightIcon, HeartIcon, Loader, ShoppingCartIcon, UserIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  HeartIcon,
+  Loader,
+  ShoppingCartIcon,
+  UserIcon,
+} from "lucide-react";
 import { useLoginModal } from "../context/Login";
 import { Skeleton } from "@mui/material";
 
@@ -23,7 +30,6 @@ const NavigationBar = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activecategoryId, setActivecategoryId] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-
 
   const categorySections = [
     {
@@ -168,7 +174,6 @@ const NavigationBar = () => {
     }
   );
 
-
   const sub_cate_product = data?.data?.result || [];
 
   const { data: cart } = useQuery(
@@ -181,8 +186,7 @@ const NavigationBar = () => {
 
   const { data: profile_user } = useQuery(
     ["profile_user"],
-    () =>
-      apiConnectorGet(endpoint?.get_customer_profile),
+    () => apiConnectorGet(endpoint?.get_customer_profile),
     usequeryBoolean
   );
 
@@ -190,8 +194,7 @@ const NavigationBar = () => {
 
   const { data: bannner } = useQuery(
     ["banner_data"],
-    () =>
-      apiConnectorGet(endpoint?.get_banner),
+    () => apiConnectorGet(endpoint?.get_banner),
     usequeryBoolean
   );
 
@@ -212,34 +215,34 @@ const NavigationBar = () => {
 
   const { setShowLoginModal } = useLoginModal();
 
-  const user = localStorage.getItem('token');
-
+  const user = localStorage.getItem("token");
 
   return (
     <nav className="bg-yellow-700 text-white ">
       <div className=" px-4 lg:block hidden">
         <div className="relative">
           <div className="flex space-x-10 py-3">
-            {isLoading ?
-              Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton variant="rectangular" className="w-16 h-10" />
-              ))
-              :
-              categories.map((cat) => (
-                <div
-                  key={cat.id}
-                  className="group"
-                  onMouseEnter={() => fetchSubcategories(cat.product_category_id)}
-                // onMouseLeave={() => {
-                //   setActiveCategoryId(null);
-                //   setSubcategories([]);
-                // }}
-                >
-                  <button className="text-sm font-semibold hover:text-yellow-300  hover:font-bold">
-                    {cat.name}
-                  </button>
-                </div>
-              ))}
+            {isLoading
+              ? Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton variant="rectangular" className="w-16 h-10" />
+                ))
+              : categories.map((cat) => (
+                  <div
+                    key={cat.id}
+                    className="group"
+                    onMouseEnter={() =>
+                      fetchSubcategories(cat.product_category_id)
+                    }
+                    // onMouseLeave={() => {
+                    //   setActiveCategoryId(null);
+                    //   setSubcategories([]);
+                    // }}
+                  >
+                    <button className="text-sm font-semibold hover:text-yellow-300  hover:font-bold">
+                      {cat.name}
+                    </button>
+                  </div>
+                ))}
           </div>
 
           {activeCategoryId && subcategories.length > 0 && (
@@ -260,53 +263,81 @@ const NavigationBar = () => {
                   By Style
                 </h3>
                 <ul className="space-y-1 text-sm text-gray-500 font-semibold">
-                  {loader ?
-                    Array.from({ length: 4 }).map((_, index) => (
-                      <Skeleton variant="rectangular" className="!w-16 !h-4 !rounded-lg" />
-                    ))
+                  {loader
+                    ? Array.from({ length: 4 }).map((_, index) => (
+                        <Skeleton
+                          variant="rectangular"
+                          className="!w-16 !h-4 !rounded-lg"
+                        />
+                      ))
                     : subcategories.map((sub) => (
-                      <li key={sub.product_subcategory_id}>
-                        <button
-                          className="text-sm hover:text-pink-600 transition"
-                          onClick={() =>
-                            handleSubcategoryClick(sub.product_subcategory_id)
-                          }
-                        >
-                          {sub.name}
-                        </button>
-                      </li>
-                    ))}
+                        <li key={sub.product_subcategory_id}>
+                          <button
+                            className="text-sm hover:text-pink-600 transition"
+                            onClick={() =>
+                              handleSubcategoryClick(sub.product_subcategory_id)
+                            }
+                          >
+                            {sub.name}
+                          </button>
+                        </li>
+                      ))}
                 </ul>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold  text-yellow-700 mb-2">
+                <h3 className="text-sm font-bold text-yellow-700 mb-2">
                   By Metal & Stone
                 </h3>
-                {loader ?
-                  Array.from({ length: 3 }).map((_, index) => (
-                    <Skeleton variant="rectangular" className="!w-16 !h-4 !my-1 !rounded-lg" />
-                  ))
+
+                {loader
+                  ? Array.from({ length: 3 }).map((_, index) => (
+                      <Skeleton
+                        key={index}
+                        variant="rectangular"
+                        className="!w-16 !h-4 !my-1 !rounded-lg"
+                      />
+                    ))
                   : (() => {
-                    const seen = new Set();
-                    return sub_cate_product?.map((item, index) => {
-                      if (seen.has(item?.master_mat_name)) return null; // Skip duplicates
-                      seen.add(item?.master_mat_name);
-                      return (
-                        <ul
-                          key={index}
-                          className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer"
-                        >
-                          <li onClick={() =>
-                            handleSubcategoryClick(item.product_subcategory_id)
-                          } >{item?.master_mat_name}</li>
-                          <li onClick={() =>
-                            handleSubcategoryClick(item.product_subcategory_id)
-                          } >{item?.material_name}</li>
-                        </ul>
-                      );
-                    });
-                  })()}
+                      const seen = new Set();
+                      return sub_cate_product?.map((item, index) => {
+                        const {
+                          master_mat_name,
+                          material_name,
+                          product_subcategory_id,
+                        } = item;
+
+                        if (seen.has(master_mat_name)) return null;
+                        seen.add(master_mat_name);
+
+                        return (
+                          <ul
+                            key={index}
+                            className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer"
+                          >
+                            {/* Master Material Name */}
+                            <li
+                              onClick={() =>
+                                handleSubcategoryClick(product_subcategory_id)
+                              }
+                            >
+                              {master_mat_name}
+                            </li>
+
+                            {/* Material Name — only if different */}
+                            {material_name !== master_mat_name && (
+                              <li
+                                onClick={() =>
+                                  handleSubcategoryClick(product_subcategory_id)
+                                }
+                              >
+                                {material_name}
+                              </li>
+                            )}
+                          </ul>
+                        );
+                      });
+                    })()}
               </div>
 
               <div>
@@ -314,67 +345,89 @@ const NavigationBar = () => {
                   By Price
                 </h3>
                 <div className="space-y-2">
-                  {loader ?
-                    Array.from({ length: 3 }).map((_, index) => (
-                      <Skeleton variant="rectangular" className="!w-16 !h-4 !rounded-lg" />
-                    ))
-                    : ([...new Set(sub_cate_product.map(item => item.price_group))]
-                      .sort((a, b) => {
-                        const getSortValue = (label) => {
-                          const match = label.match(/(\d+)(?!.*\d)/);
-                          return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
-                        };
-                        return getSortValue(a) - getSortValue(b);
-                      })
-                      .map((priceGroup, index) => {
-                        const item = sub_cate_product.find(p => p.price_group === priceGroup);
-                        return (
-                          <div
-                            key={index}
-                            onClick={() => item && handleSubcategoryClick(item.product_subcategory_id)}
-                            className="text-sm text-gray-600 font-semibold cursor-pointer hover:bg-gray-100 rounded transition-all duration-150 "
-                          >
-                            ₹ {priceGroup}
-                          </div>
-                        );
-                      }))}
+                  {loader
+                    ? Array.from({ length: 3 }).map((_, index) => (
+                        <Skeleton
+                          variant="rectangular"
+                          className="!w-16 !h-4 !rounded-lg"
+                        />
+                      ))
+                    : [
+                        ...new Set(
+                          sub_cate_product.map((item) => item.price_group)
+                        ),
+                      ]
+                        .sort((a, b) => {
+                          const getSortValue = (label) => {
+                            const match = label.match(/(\d+)(?!.*\d)/);
+                            return match
+                              ? parseInt(match[1])
+                              : Number.MAX_SAFE_INTEGER;
+                          };
+                          return getSortValue(a) - getSortValue(b);
+                        })
+                        .map((priceGroup, index) => {
+                          const item = sub_cate_product.find(
+                            (p) => p.price_group === priceGroup
+                          );
+                          return (
+                            <div
+                              key={index}
+                              onClick={() =>
+                                item &&
+                                handleSubcategoryClick(
+                                  item.product_subcategory_id
+                                )
+                              }
+                              className="text-sm text-gray-600 font-semibold cursor-pointer hover:bg-gray-100 rounded transition-all duration-150 "
+                            >
+                              ₹ {priceGroup}
+                            </div>
+                          );
+                        })}
                 </div>
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-yellow-700">Preview</h3>
-                {loader ?
+                {loader ? (
                   Array.from({ length: 1 }).map((_, index) => (
-                    <Skeleton variant="rectangular" className="!w-48 !h-48 !rounded" />
-                  ))
-                  : subcategories[0]?.subcat_image ? (
-                    <img
-                      src={subcategories[0].subcat_image}
-                      alt="Preview"
-                      className="w-48 h-48 rounded shadow"
+                    <Skeleton
+                      variant="rectangular"
+                      className="!w-48 !h-48 !rounded"
                     />
-                  ) : (
-                    <div className="text-sm text-gray-400">
-                      No image available
-                    </div>
-                  )}
+                  ))
+                ) : subcategories[0]?.subcat_image ? (
+                  <img
+                    src={subcategories[0].subcat_image}
+                    alt="Preview"
+                    className="w-48 h-48 rounded shadow"
+                  />
+                ) : (
+                  <div className="text-sm text-gray-400">
+                    No image available
+                  </div>
+                )}
               </div>
               <div>
                 <h3 className="text-sm font-bold  text-yellow-700">Preview</h3>
-                {loader ?
+                {loader ? (
                   Array.from({ length: 1 }).map((_, index) => (
-                    <Skeleton variant="rectangular" className="!w-48 !h-48  !rounded" />
-                  ))
-                  : subcategories[1]?.subcat_image ? (
-                    <img
-                      src={subcategories[1].subcat_image}
-                      alt="Preview"
-                      className="w-48 h-48 rounded shadow"
+                    <Skeleton
+                      variant="rectangular"
+                      className="!w-48 !h-48  !rounded"
                     />
-                  ) : (
-                    <div className="text-sm text-gray-400">
-                      No image available
-                    </div>
-                  )}
+                  ))
+                ) : subcategories[1]?.subcat_image ? (
+                  <img
+                    src={subcategories[1].subcat_image}
+                    alt="Preview"
+                    className="w-48 h-48 rounded shadow"
+                  />
+                ) : (
+                  <div className="text-sm text-gray-400">
+                    No image available
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -383,19 +436,19 @@ const NavigationBar = () => {
       <div className="lg:hidden bg-white shadow-md">
         <div className="px-4 py-2 relative">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
-            {
-              isLoading
-                ? Array.from({ length: 2 }).map((_, index) => (
+            {isLoading
+              ? Array.from({ length: 2 }).map((_, index) => (
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <div key={index} className="w-full h-full flex-shrink-0 relative">
-                      <img
-                        className="w-20 h-20 rounded-xl object-cover mb-2"
-                      />
+                    <div
+                      key={index}
+                      className="w-full h-full flex-shrink-0 relative"
+                    >
+                      <img className="w-20 h-20 rounded-xl object-cover mb-2" />
                       <span className="text-xs text-gray-800" />
                     </div>
                   </div>
                 ))
-                : categories.map((item) => (
+              : categories.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleMobileJewelryClick(item)}
@@ -445,14 +498,16 @@ const NavigationBar = () => {
                         alt="Indian Flag"
                         className="w-5 h-auto"
                       />
-                      <span className="font-medium text-sm text-gray-800">INDIA</span>
+                      <span className="font-medium text-sm text-gray-800">
+                        INDIA
+                      </span>
                     </div>
                   </div>
 
                   {/* Right side - Account, Heart, and Cart icons */}
                   <div className="flex items-center ">
                     {/* Account */}
-                    {user ?
+                    {user ? (
                       <>
                         <Link
                           to={"/myaccount/profile"}
@@ -473,22 +528,22 @@ const NavigationBar = () => {
                             {cartItems?.length}
                           </span>
                         </Link>
-                      </> :
+                      </>
+                    ) : (
                       <Link
                         className="flex items-center gap-1 p-1.5 text-gray-700 hover:text-yellow-600 transition-colors"
-                        onClick={() => { setShowLoginModal(true); setIsMenuOpen(false) }}
+                        onClick={() => {
+                          setShowLoginModal(true);
+                          setIsMenuOpen(false);
+                        }}
                       >
                         <UserIcon className="h-5 w-5" />
                         <span className="font-medium text-sm">Account</span>
                       </Link>
-                    }
-
+                    )}
 
                     {/* Wishlist (icon only) */}
-
                   </div>
-
-
                 </div>
                 {/* Jewelry Categories */}
                 <div className="px-4 py-2">
@@ -514,15 +569,19 @@ const NavigationBar = () => {
                         </div>
                       </div>
                     ))}
-
-
                   </div>
                   <button
                     onClick={() => setShowMoreJewellery(!showMoreJewellery)}
                     className="flex items-center justify-center space-x-2 w-full mt-4 py-3 text-yellow-600 font-medium text-sm hover:bg-yellow-50 rounded-lg transition-colors"
                   >
-                    <span>{showMoreJewellery ? 'Less Jewellery' : 'More Jewellery'}</span>
-                    <ChevronRightIcon className={`h-4 w-4 transition-transform ${showMoreJewellery ? 'rotate-90' : ''}`} />
+                    <span>
+                      {showMoreJewellery ? "Less Jewellery" : "More Jewellery"}
+                    </span>
+                    <ChevronRightIcon
+                      className={`h-4 w-4 transition-transform ${
+                        showMoreJewellery ? "rotate-90" : ""
+                      }`}
+                    />
                   </button>
                 </div>
 
@@ -557,8 +616,9 @@ const NavigationBar = () => {
                         <button
                           key={index}
                           onClick={() => setCurrentSlide(index)}
-                          className={`w-1.5 h-1.5 rounded-full transition-colors ${index === currentSlide ? 'bg-white' : 'bg-white/50'
-                            }`}
+                          className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                            index === currentSlide ? "bg-white" : "bg-white/50"
+                          }`}
                         />
                       ))}
                     </div>
@@ -600,7 +660,9 @@ const NavigationBar = () => {
                   <div className="text-center mb-3">
                     <div className="flex items-center justify-center space-x-2 mb-1">
                       <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
-                      <span className="text-sm font-semibold text-yellow-700 px-2">Products & Services</span>
+                      <span className="text-sm font-semibold text-yellow-700 px-2">
+                        Products & Services
+                      </span>
                       <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
                     </div>
                   </div>
@@ -638,15 +700,23 @@ const NavigationBar = () => {
                   <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-yellow-700 mb-1"> {profile?.name}</h3>
-                        <p className="text-gray-600 text-xs"> {profile?.cl_email}</p>
+                        <h3 className="text-sm font-semibold text-yellow-700 mb-1">
+                          {" "}
+                          {profile?.name}
+                        </h3>
+                        <p className="text-gray-600 text-xs">
+                          {" "}
+                          {profile?.cl_email}
+                        </p>
                       </div>
-                      <button className="bg-white text-yellow-700 px-4 py-2 rounded-lg text-sm font-medium
+                      <button
+                        className="bg-white text-yellow-700 px-4 py-2 rounded-lg text-sm font-medium
                        hover:bg-yellow-50 transition-colors"
                         onClick={() => {
                           localStorage.clear();
                           window.location.reload();
-                        }}>
+                        }}
+                      >
                         LOGOUT
                       </button>
                     </div>

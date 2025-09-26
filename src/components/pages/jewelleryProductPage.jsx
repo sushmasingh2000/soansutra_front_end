@@ -3,12 +3,17 @@ import { Heart, ChevronLeft, ChevronRight, Filter, X } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Footer from "../Footer1";
 import Header from "../Header1";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { endpoint } from "../../utils/APIRoutes";
 import axios from "axios";
-import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
+import {
+  apiConnectorGet,
+  apiConnectorPost,
+  usequeryBoolean,
+} from "../../utils/ApiConnector";
 import toast from "react-hot-toast";
 import { useLoginModal } from "../../context/Login";
+import { Skeleton } from "@mui/material";
 
 // Dynamic Filter Tabs Component
 const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
@@ -18,10 +23,11 @@ const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
         <button
           key={tab}
           onClick={() => onTabChange(tab)}
-          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${activeTab === tab
-            ? "bg-yellow-600 text-white"
-            : "bg-yellow-100 text-yellow-700 hover:bg-purple-200"
-            }`}
+          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${
+            activeTab === tab
+              ? "bg-yellow-600 text-white"
+              : "bg-yellow-100 text-yellow-700 hover:bg-purple-200"
+          }`}
         >
           {tab}
         </button>
@@ -118,7 +124,10 @@ const DynamicSidebarFilters = ({
   filters,
   onFilterChange,
   onClearAll,
+  isLoading, // <-- Add this prop
 }) => {
+  const filterCount = Object.values(filters || {}).flat().length;
+
   return (
     <div className="hidden lg:block w-64 bg-white p-4 border-r border-yellow-200">
       <div className="flex items-center justify-between mb-4">
@@ -126,7 +135,7 @@ const DynamicSidebarFilters = ({
           <Filter className="w-4 h-4" />
           FILTERS
           <span className="bg-gray-200 text-xs px-2 py-1 rounded">
-            {Object.values(filters).flat().length}
+            {filterCount}
           </span>
         </h3>
         <button
@@ -137,41 +146,65 @@ const DynamicSidebarFilters = ({
         </button>
       </div>
 
-      {Object.entries(categoryConfig.filters).map(
-        ([filterKey, filterConfig]) => (
-          <div key={filterKey} className="mb-6">
-            <h4 className="font-medium text-sm text-gray-800 mb-3">
-              {filterConfig.label}
-            </h4>
-            <div className="space-y-2">
-              {filterConfig.options.map((option) => (
-                <label
-                  key={option.value}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 text-yellow-600 rounded border-yellow-300"
-                    checked={
-                      filters[filterKey]?.includes(option.value) || false
-                    }
-                    onChange={(e) =>
-                      onFilterChange(filterKey, option.value, e.target.checked)
-                    }
-                  />
-                  <span className="text-xs text-gray-700">
-                    {option.label || option.value}
-                    {/* <span className="text-gray-400"> ({option.count})</span> */}
-                  </span>
-                </label>
-              ))}
+      {isLoading ? (
+        // ✅ Show Skeleton while loading
+        <>
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="mb-6">
+              <Skeleton variant="text" width={100} height={20} />
+              <div className="space-y-2 mt-2">
+                {[...Array(4)].map((__, j) => (
+                  <div key={j} className="flex items-center gap-2">
+                    <Skeleton variant="circular" width={16} height={16} />
+                    <Skeleton variant="text" width="80%" height={18} />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
+        </>
+      ) : (
+        // ✅ Real Filters
+        Object.entries(categoryConfig?.filters || {}).map(
+          ([filterKey, filterConfig]) => (
+            <div key={filterKey} className="mb-6">
+              <h4 className="font-medium text-sm text-gray-800 mb-3">
+                {filterConfig.label}
+              </h4>
+              <div className="space-y-2">
+                {filterConfig.options.map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 text-yellow-600 rounded border-yellow-300"
+                      checked={
+                        filters[filterKey]?.includes(option.value) || false
+                      }
+                      onChange={(e) =>
+                        onFilterChange(
+                          filterKey,
+                          option.value,
+                          e.target.checked
+                        )
+                      }
+                    />
+                    <span className="text-xs text-gray-700">
+                      {option.label || option.value}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )
         )
       )}
     </div>
   );
 };
+
 const ProductCardSkeleton = () => {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-yellow-200 overflow-hidden animate-pulse">
@@ -195,12 +228,12 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
     ?.map((img) => img.p_image_url)?.length
     ? product.product_images.map((img) => img.p_image_url)
     : [
-      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop",
-    ];
+        // "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
+        // "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop",
+        // "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop",
+        // "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
+        // "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop",
+      ];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -215,13 +248,11 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
         product: {
           product_id: product?.product_id,
           selected_variant_id: product?.selected_variant_id,
-          collectionId: collectionId
-
-        }
+          collectionId: collectionId,
+        },
       },
     });
   };
-
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-yellow-200 overflow-hidden hover:shadow-md transition-shadow">
@@ -298,7 +329,6 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
 const ProductList = ({ products, onWishlist, collectionId }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
-
       {products?.map((product) => (
         <ProductCard
           collectionId={collectionId}
@@ -330,8 +360,6 @@ const SortDropdown = ({ sortBy, onSortChange }) => {
   );
 };
 
-
-
 const DynamicProductListingPage = () => {
   // const { id } = useParams();
   const [searchParams] = useSearchParams();
@@ -352,14 +380,18 @@ const DynamicProductListingPage = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { setShowLoginModal } = useLoginModal();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleWishlist = async (productId, variantId) => {
     try {
       const response = await apiConnectorGet(
         `${endpoint?.create_wishlist}?product_id=${productId}&varient_id=${variantId}`
       );
+      if (response?.data?.success) {
+        queryClient.invalidateQueries(["get_wish"]);
+      }
       if (response?.data?.message !== "Unauthorised User!") {
-        toast(response?.data?.message, { id: 1 })
+        toast(response?.data?.message, { id: 1 });
       }
       if (response?.data?.message === "Unauthorised User!") {
         setShowLoginModal(true);
@@ -381,13 +413,17 @@ const DynamicProductListingPage = () => {
 
   const fetchProducts = async () => {
     if (subcategoryId) {
-      return axios.get(`${endpoint.get_product_user}?product_sub_cat_id=${subcategoryId}`);
-    }
-    else if (categoryId) {
-      return axios.get(`${endpoint.get_product_user}?product_cat_id=${categoryId}`);
-    }
-    else if (collectionId) {
-      return axios.get(`${endpoint.get_product_user}?product_coll_id=${collectionId}`);
+      return axios.get(
+        `${endpoint.get_product_user}?product_sub_cat_id=${subcategoryId}`
+      );
+    } else if (categoryId) {
+      return axios.get(
+        `${endpoint.get_product_user}?product_cat_id=${categoryId}`
+      );
+    } else if (collectionId) {
+      return axios.get(
+        `${endpoint.get_product_user}?product_coll_id=${collectionId}`
+      );
     }
     return { data: { result: [] } }; // fallback
   };
@@ -437,7 +473,6 @@ const DynamicProductListingPage = () => {
     setAllProducts(enhancedProducts);
     setProducts(enhancedProducts);
   }, [product]); // <-- Add `id` here
-
 
   // Filter and sort products
   useEffect(() => {
@@ -495,7 +530,7 @@ const DynamicProductListingPage = () => {
   const applyBackendFilters = async (newFilters) => {
     const payload = {
       isCollection,
-      product_sub_cat_id: Number(subcategoryId)
+      product_sub_cat_id: Number(subcategoryId),
     };
 
     if (newFilters.price) payload.price_group = newFilters.price;
@@ -504,7 +539,10 @@ const DynamicProductListingPage = () => {
     if (newFilters.metal) payload.ma_mat_name = newFilters.metal;
 
     try {
-      const response = await apiConnectorPost(endpoint.filter_u_filte_by, payload);
+      const response = await apiConnectorPost(
+        endpoint.filter_u_filte_by,
+        payload
+      );
       const filtered = response?.data?.result || [];
 
       // const transformed = filtered.map((item, i) => ({
@@ -516,7 +554,7 @@ const DynamicProductListingPage = () => {
       //   isNew: Math.random() > 0.7,
       // }));
 
-      const transformed = filtered.map(item => ({
+      const transformed = filtered.map((item) => ({
         ...item,
         product_name: item.product_details?.product_name || "Product",
         varient_id: item.varient_id,
@@ -527,11 +565,11 @@ const DynamicProductListingPage = () => {
           product_images: item.product_details?.product_images || [],
         },
         // Optionally add images array for UI if needed:
-        images: item.product_details?.product_images?.map(img => img.p_image_url) || [],
+        images:
+          item.product_details?.product_images?.map((img) => img.p_image_url) ||
+          [],
         isNew: Math.random() > 0.7,
       }));
-
-
 
       setAllProducts(transformed);
       setProducts(transformed);
@@ -540,7 +578,6 @@ const DynamicProductListingPage = () => {
       console.error(error);
     }
   };
-
 
   const handleFilterChange = (filterKey, value, isChecked) => {
     setFilters((prev) => {
@@ -583,44 +620,46 @@ const DynamicProductListingPage = () => {
   const dynamicFilters = {
     size: {
       label: "Size",
-      options: filterData.sizes?.map((s) => ({
-        value: s.size,
-        label: s.size,
-        // count: 0,
-      })) || [],
+      options:
+        filterData.sizes?.map((s) => ({
+          value: s.size,
+          label: s.size,
+          // count: 0,
+        })) || [],
     },
     price: {
       label: "Price Range",
-      options:
-        (filterData.price_groups || [])
-          .sort((a, b) => {
-            const getStart = (range) => {
-              const match = range.match(/(\d+)/);
-              return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
-            };
-            return getStart(a) - getStart(b);
-          })
-          .map((price) => ({
-            value: price,
-            label: price,
-          })),
+      options: (filterData.price_groups || [])
+        .sort((a, b) => {
+          const getStart = (range) => {
+            const match = range.match(/(\d+)/);
+            return match ? parseInt(match[1]) : Number.MAX_SAFE_INTEGER;
+          };
+          return getStart(a) - getStart(b);
+        })
+        .map((price) => ({
+          value: price,
+          label: price,
+        })),
     },
     metal: {
       label: "Metal",
-      options: filterData.master_materials?.map((material) => ({
-        value: material,
-        label: material,
-        // count: 0, // Update this with count from backend if available
-      })) || [],
+      options:
+        filterData.master_materials?.map((material) => ({
+          value: material,
+          label: material,
+          // count: 0, // Update this with count from backend if available
+        })) || [],
     },
     tags: {
       label: "Occassion",
-      options: filterData.product_tags_details?.map((tag) => ({
-        value: tag.product_tags,
-        label: tag.product_tags,
-        // count: 0,
-      })) || [],
-    }
+      options:
+        filterData.product_tags_details?.map((tag) => ({
+          value: tag.product_tags,
+          label: tag.product_tags,
+          // count: 0,
+        })) || [],
+    },
   };
 
   const CATEGORY_CONFIG = {
@@ -628,15 +667,13 @@ const DynamicProductListingPage = () => {
       title: "Rings Collection",
       breadcrumb: "RINGS",
       filters: {
-        ...dynamicFilters
+        ...dynamicFilters,
       },
       tabs: ["All", "New In"],
-    }
+    },
   };
 
   const categoryConfig = CATEGORY_CONFIG[currentCategory];
-
-
 
   if (loading) {
     return (
@@ -658,7 +695,11 @@ const DynamicProductListingPage = () => {
                 {subcategories.map((subcat) => (
                   <button
                     key={subcat.product_subcategory_id}
-                    onClick={() => navigate(`/products_web?subcategory=${subcat.product_subcategory_id}`)}
+                    onClick={() =>
+                      navigate(
+                        `/products_web?subcategory=${subcat.product_subcategory_id}`
+                      )
+                    }
                     className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-medium hover:bg-yellow-200 whitespace-nowrap"
                   >
                     {subcat.name}
@@ -690,6 +731,7 @@ const DynamicProductListingPage = () => {
             filters={filters}
             onFilterChange={handleFilterChange}
             onClearAll={handleClearAll}
+            isLoading={isLoading}
           />
 
           <MobileFilterModal
@@ -715,7 +757,11 @@ const DynamicProductListingPage = () => {
                 ))}
               </div>
             ) : products.length > 0 ? (
-              <ProductList products={products} onWishlist={handleWishlist} collectionId={collectionId} />
+              <ProductList
+                products={products}
+                onWishlist={handleWishlist}
+                collectionId={collectionId}
+              />
             ) : (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="text-gray-400 mb-4">
@@ -748,7 +794,6 @@ const DynamicProductListingPage = () => {
                 </button>
               </div>
             )}
-
           </div>
         </div>
       </div>

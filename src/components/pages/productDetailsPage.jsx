@@ -79,7 +79,6 @@ const ProductDetailWebPage = () => {
           setShowLoginModal(true);
         } else {
           toast(response?.data?.message, { id: 1 });
-          // invalidate get_cart query so count updates
           queryClient.invalidateQueries(["get_cart"]);
         }
       },
@@ -310,29 +309,38 @@ const image =
     }
     const { product_id } = product_id_and_variant_id_only;
     const { varient_id } = selectedVariant;
+  
     try {
       setIsLoadingCart(true);
       const response = await apiConnectorGet(
         `${endpoint.create_wishlist}?product_id=${product_id}&varient_id=${varient_id}`
       );
       setIsLoadingCart(false);
+  
       if (response?.data?.message !== "Unauthorised User!") {
-        toast(response?.data?.message, { id: 1 })
+        toast(response?.data?.message, { id: 1 });
       }
-
+  
       if (response?.data?.message === "Unauthorised User!") {
         setShowLoginModal(true);
+        return;
       }
+  
       if (response.data.success) {
-        setIsWishlisted(!isWishlisted);
+        setIsWishlisted(!isWishlisted); // Update local state
         toast.success(response.data.message, { id: 1 });
+  
+        // ✅ Refetch wishlist like we do for cart
+        queryClient.invalidateQueries(["get_wish"]);
       }
     } catch (error) {
       console.error("Wishlist error:", error);
       toast.error("Error updating wishlist");
     }
-      setIsLoadingCart(false);
+  
+    setIsLoadingCart(false);
   };
+  
   const groupedMaterials = {};
 
   if (Array.isArray(selectedVariant?.material_details)) {

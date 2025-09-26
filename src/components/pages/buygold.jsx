@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../../utils/ApiConnector';
-import { endpoint } from '../../utils/APIRoutes';
+import { endpoint, mode } from '../../utils/APIRoutes';
 import EgoldHeader from '../egoldheader';
 import FAQBuyGold from '../faqbuygold';
 import Footer from '../Footer1';
@@ -149,7 +149,17 @@ const BuyGold = () => {
   const gstAmount = basePrice * (gstPercent / 100);
   const total_price = (basePrice + gstAmount).toFixed(4);
 
+  const loadCashfreeSdk = () => {
+    return new Promise((resolve, reject) => {
+      if (window.Cashfree) return resolve(window.Cashfree);
 
+      const script = document.createElement("script");
+      script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+      script.onload = () => resolve(window.Cashfree);
+      script.onerror = (err) => reject(err);
+      document.body.appendChild(script);
+    });
+  };
   const buygoldFn = async (rcv_type) => {
     setLoading(true)
     try {
@@ -160,6 +170,27 @@ const BuyGold = () => {
         // receiving_type: rcv_type,
       });
       toast(res?.data?.message);
+      const payment_session_id = res?.data?.payment_session_id
+      let cashfree;
+      try {
+        cashfree = await loadCashfreeSdk();
+      } catch (err) {
+        console.error("Cannot load Cashfree SDK:", err);
+        alert("Payment SDK load failed");
+        return;
+      }
+
+      // 3️⃣ initiate checkout
+      try {
+        cashfree = cashfree({ mode: mode });
+        cashfree.checkout({
+          paymentSessionId: payment_session_id,
+          redirectTarget: "_self",
+        });
+      } catch (err) {
+        console.error("Checkout error:", err);
+        alert("Checkout failed");
+      }
       // if (res?.data?.message === "Your Shipping Address not found") {
       //   setShowShippingPopup(true);
       //   return;
@@ -185,7 +216,7 @@ const BuyGold = () => {
       <Header />
       <NavigationBar />
       <EgoldHeader />
-      <Loader isLoading={loader}/>
+      <Loader isLoading={loader} />
       <div className="w-full bg-white-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-7xl">
 
@@ -308,9 +339,9 @@ const BuyGold = () => {
             <div className="bg-white rounded-lg p-4 shadow mb-4">
               <h3 className="text-lg font-semibold mb-2">Buy Rate</h3>
               <p className="text-red-500"> ₹{(
-                  Number(get_price?.ma_price || 0) +
-                  (Number(get_price?.ma_price || 0) * Number(get_price?.ma_buy_tax_percentage || 0) / 100)
-                ).toFixed(2)} /gram</p>
+                Number(get_price?.ma_price || 0) +
+                (Number(get_price?.ma_price || 0) * Number(get_price?.ma_buy_tax_percentage || 0) / 100)
+              ).toFixed(2)} /gram</p>
               <p className="text-xs text-gray-500">(₹{Number(get_price?.ma_price || 0).toFixed(2)} + {Number(get_price?.ma_buy_tax_percentage || 0)?.toFixed(0, 2)}% GST)</p>
               <p className="text-xs text-gray-500">Priced fo valir {formatTime(timeLeft)} min</p>
               <p className="text-xs text-gray-500">24K 99.99% Purity</p>
