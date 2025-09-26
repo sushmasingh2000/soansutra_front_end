@@ -1264,10 +1264,11 @@ const image =
                   <div className="text-xs text-gray-500">Estimated price</div>
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-bold text-gray-900">
-                      ₹ {selectedVariant?.material_details?.reduce(
+                     ₹ { selectedVariant?.final_varient_price || 0}
+                       {/* {selectedVariant?.material_details?.reduce(
                         (acc, mat) => acc + (Number(mat?.sub_total_price || 0) || 0),
                         0
-                      ).toLocaleString()}
+                      ).toLocaleString()} */}
                     </span>
 
                   </div>
