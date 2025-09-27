@@ -1,9 +1,9 @@
-import React, { useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
-import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const AddPurchaseWallet = () => {
   const [loading, setLoading] = useState(false);
@@ -21,29 +21,55 @@ const AddPurchaseWallet = () => {
         const payload = {
           cust_id: values.userId,
           req_amount: Number(values.amount),
-           type: Number(values.orderType), // converting string to number (1 or 2)
+          type: Number(values.orderType), // converting string to number (1 or 2)
           discripton: values.description,
         };
 
-        const response = await apiConnectorPost(endpoint.creata_by_wallet, payload);
-        toast(response?.data?.message)
-        if (response?.success) {
-          toast.success("Transaction successful!");
+        const response = await apiConnectorPost(
+          endpoint.creata_by_wallet,
+          payload
+        );
+
+        Swal.fire({
+          title: response?.data?.success ? "Success" : "Error",
+          text: response?.data?.message,
+          icon: response?.data?.success ? "success" : "error", // ✅ lowercase
+        });
+
+        if (response?.data?.success) {
           formik.resetForm();
-        } 
+        }
       } catch (error) {
-        toast.error("API call failed: " + error.message);
+        Swal.fire({
+          title: "Error",
+          text: error?.message,
+          icon: "error", // ✅ lowercase
+        });
       } finally {
         setLoading(false);
       }
     },
   });
-
+  const handleSubmitClick = () => {
+    console.log("hdsaf");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to proceed with this transaction?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, proceed",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        formik.submitForm();
+      }
+    });
+  };
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
       <h2 className="text-xl font-semibold mb-4">Purchase Transaction</h2>
 
-      <form onSubmit={formik.handleSubmit} className="space-y-4">
+      <div className="space-y-4">
         <div>
           <label className="block mb-1 font-medium">User ID</label>
           <input
@@ -53,11 +79,12 @@ const AddPurchaseWallet = () => {
             onBlur={formik.handleBlur}
             value={formik.values.userId}
             className={`w-full border rounded px-3 py-2 ${
-              formik.touched.userId && formik.errors.userId ? "border-red-500" : ""
+              formik.touched.userId && formik.errors.userId
+                ? "border-red-500"
+                : ""
             }`}
             placeholder="Enter User ID"
           />
-        
         </div>
 
         <div>
@@ -69,13 +96,14 @@ const AddPurchaseWallet = () => {
             onBlur={formik.handleBlur}
             value={formik.values.amount}
             className={`w-full border rounded px-3 py-2 ${
-              formik.touched.amount && formik.errors.amount ? "border-red-500" : ""
+              formik.touched.amount && formik.errors.amount
+                ? "border-red-500"
+                : ""
             }`}
             placeholder="Enter Amount"
             min="0.01"
             step="0.01"
           />
-         
         </div>
 
         <div>
@@ -86,18 +114,20 @@ const AddPurchaseWallet = () => {
             onBlur={formik.handleBlur}
             value={formik.values.orderType}
             className={`w-full border rounded px-3 py-2 ${
-              formik.touched.orderType && formik.errors.orderType ? "border-red-500" : ""
+              formik.touched.orderType && formik.errors.orderType
+                ? "border-red-500"
+                : ""
             }`}
           >
             <option value="1">Credit (CR)</option>
             <option value="2">Debit (DR)</option>
           </select>
-         
         </div>
 
         <div>
           <label className="block mb-1 font-medium">Description</label>
-          <input
+          <textarea
+            rows={4}
             type="text"
             name="description"
             onChange={formik.handleChange}
@@ -109,7 +139,7 @@ const AddPurchaseWallet = () => {
         </div>
 
         <button
-          type="submit"
+          onClick={handleSubmitClick}
           disabled={loading}
           className={`w-full bg-blue-600 text-white py-2 rounded ${
             loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
@@ -117,7 +147,7 @@ const AddPurchaseWallet = () => {
         >
           {loading ? "Processing..." : "Submit"}
         </button>
-      </form>
+      </div>
     </div>
   );
 };

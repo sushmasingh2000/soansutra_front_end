@@ -1,18 +1,17 @@
 // export const domain = "http://192.168.99.149:2000";
 export const frontend = "https://sonasutra.in";
-// export const domain = "http://192.168.18.214:2000";
-export const domain = "https://backend.sonasutra.in";
+export const domain = "http://192.168.18.214:2000";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 export const mode = "production";
 // export const mode = "sandbox";
 
 export const endpoint = {
-
   email_insider: `${domain}/api/v1/insert-external-leads`,
   login: `${domain}/api/v1/login-user`,
   //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
-  //dashboard 
+  //dashboard
   get_dashboard_Count: `${domain}/api/v1/get-dashboard-details`,
   //store
   create_store: `${domain}/api/v1/create-store`,
@@ -95,22 +94,16 @@ export const endpoint = {
   update_video: `${domain}/api/v1/update-videos`,
   delete_video: `${domain}/api/v1/delete-videos`,
 
-
   release_income: `${domain}/api/v1/release-rank-income`,
-
-
 
   // address shipping
   add_shipping_Address: `${domain}/api/v1/add-shipping-address`,
   get_shipping_Address: `${domain}/api/v1/get-shipping-address`,
   set_shipping_Address: `${domain}/api/v1/set-shipping-address-as-default`,
 
-  //payment order 
+  //payment order
   create_order_payment: `${domain}/api/v1/creata-order-payment`,
   create_order_payment_wallet: `${domain}/api/v1/creata-order-payment-by-wallet`,
-
-
-
 
   // attribute
   create_product_attributes: `${domain}/api/v1/create-product-attributes`,
@@ -131,14 +124,13 @@ export const endpoint = {
   update_master_material: `${domain}/api/v1/update-master-materials`,
   delete_master_material: `${domain}/api/v1/delete-master-materials`,
 
-  //backup material 
+  //backup material
   get_master_material_backup: `${domain}/api/v1/get-master-material-backup`,
 
   //purity
   create_material_purity: `${domain}/api/v1/create-materials-purity`,
   update_material_purity: `${domain}/api/v1/update-materials-purity`,
   get_material_purity: `${domain}/api/v1/get-materials-purity`,
-
 
   //insider email
   get_external_leads: `${domain}/api/v1/get-external-leads`,
@@ -198,13 +190,13 @@ export const endpoint = {
   create_custom_order: `${domain}/api/v1/u-create-custom-order`,
   get_order_status: `${domain}/api/v1/update-order-status`,
 
-  //coupon 
+  //coupon
   create_coupon: `${domain}/api/v1/create-coupon`,
   get_coupon: `${domain}/api/v1/get-coupon`,
   update_coupon: `${domain}/api/v1/update-coupon`,
   update_coupon_status: `${domain}/api/v1/update-coupon-status`,
 
-  //range 
+  //range
   create_coupon_range: `${domain}/api/v1/create-coupon-range`,
   get_coupon_range: `${domain}/api/v1/get-coupon-range`,
   update_coupon_range: `${domain}/api/v1/update-coupon-range`,
@@ -222,34 +214,32 @@ export const endpoint = {
   update_customer_profile: `${domain}/api/v1/update-customer-profile`,
   creata_by_wallet: `${domain}/api/v1/handle-purchase-wallet`,
   get_leddger_report: `${domain}/api/v1/get-wallet-ledger-report`,
-  
- 
 
-  // user 
+  // payout
+  payout_released: `${domain}/api/v1/release-payout`,
+
+  // user
 
   //auth
   login_customer: `${domain}/api/v1/login-customer`,
-  //prduct 
+  //prduct
   get_categroy_user: `${domain}/api/v1/u-get-category`,
   get_sub_categroy_user: `${domain}/api/v1/u-get-sub-category`,
   get_product_user: `${domain}/api/v1/u-get-product`,
   u_get_variant: `${domain}/api/v1/u-get-varients`,
 
-
   u_filte_by: `${domain}/api/v1/u-filter-by`,
   filter_u_filte_by: `${domain}/api/v1/u-filtered-data`,
 
-
-  //wishlist 
+  //wishlist
   create_wishlist: `${domain}/api/v1/create-wish-list-items`,
   get_wishlist: `${domain}/api/v1/get-wish-list-items`,
   remove_wishlist: `${domain}/api/v1/remove-wish-list-items`,
 
-  //cart 
+  //cart
   create_cart: `${domain}/api/v1/create-cart-items`,
   get_cart: `${domain}/api/v1/get-cart-items`,
   remove_cart: `${domain}/api/v1/remove-from-cart-items`,
-
 
   change_password: `${domain}/api/v1/change-customer-password`,
   disable_customer_account: `${domain}/api/v1/dissable-customer-account`,
@@ -257,7 +247,6 @@ export const endpoint = {
   create_order: `${domain}/api/v1/create-order`,
   get_order: `${domain}/api/v1/get-order-details`,
   get_order_detail_by: `${domain}/api/v1/get-order-details-by-order-id`,
-
 
   //similar_items
   similar_items: `${domain}/api/v1/u-get-similar-items`,
@@ -281,7 +270,7 @@ export const endpoint = {
   //invoice
   get_invoice: `${domain}/api/v1/invoice-detils`,
 
-  //mlm api 
+  //mlm api
   get_distributor_name: `${domain}/api/v1/get-distributor-name`,
   distributor_registration: `${domain}/api/v1/distributor-registration`,
   get_profile_distributor: `${domain}/api/v1/get-distributor-profile`,
@@ -295,14 +284,10 @@ export const endpoint = {
   get_user_payout: `${domain}/api/v1/user-payout-report`,
   get_cashback_report: `${domain}/api/v1/get-income-details`,
 
-
   //rankmlm
   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
   update_rank_deatils: `${domain}/api/v1/update-rank-details-by-admin`,
   get_distributor_details: `${domain}/api/v1/get-distributer-details`,
   get_rank_achivers_details: `${domain}/api/v1/get-rank-achievers-details`,
   rank_relaese_request: `${domain}/api/v1/release-rank-request`,
-
-
-
 };
