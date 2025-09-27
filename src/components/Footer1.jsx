@@ -37,7 +37,7 @@ const Footer = () => {
               <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Jewellery guide</a></li>
               <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Gemstones guide</a></li>
               <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Gold rate</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Treasure chest</a></li>
+              <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Dazzle-12</a></li>
               <li><a href="#" className="text-gray-600 hover:text-black transition-colors text-sm">Glossary</a></li>
             </ul>
           </div>

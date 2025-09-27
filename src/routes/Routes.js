@@ -57,7 +57,6 @@ import OurStory from "../components/pages/ourstory.jsx";
 import ReturnPolicy from "../components/returnpolicy.jsx";
 import PrivacyPolicyComponent from "../components/privacypolicy.jsx";
 import ShippingPolicy from "../components/shippingpolicy.jsx";
-import DeliveryAdminPanel from "../components/deliverymangementadmin.jsx";
 import DeliveryApp from "../components/pages/deliveryadmin.jsx";
 
 

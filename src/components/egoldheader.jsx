@@ -23,7 +23,7 @@ const EgoldHeader = () => {
         <div className="flex-shrink-0 cursor-pointer" onClick={()=>navigate('/e-gold')}>
           <img 
             src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png" 
-            alt="eGold by CaratLane" 
+            alt="esuvarna by SonaSutra" 
             className="h-8"
           />
         </div>

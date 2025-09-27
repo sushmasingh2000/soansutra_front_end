@@ -126,7 +126,7 @@ export default function TreasureChestBanner() {
                     <div className="flex items-center mb-6">
                       <img
                         src="https://cdn.caratlane.com/media/static/images/web/Treasure%20Chest/Landing%20Page/LOGOstatic.png"
-                        alt="CaratLane Treasure Chest"
+                        alt="Dazzle-12"
                         className="h-16 w-auto"
                       />
                     </div>
@@ -199,7 +199,7 @@ export default function TreasureChestBanner() {
                 <div className="flex items-center mb-8 ml-20 mt-20">
                   <img
                     src="https://cdn.caratlane.com/media/static/images/web/Treasure%20Chest/Landing%20Page/LOGOstatic.png"
-                    alt="CaratLane Treasure Chest"
+                    alt="Dazzle-12"
                     className="h-12 w-auto"
                   />
                 </div>
@@ -315,7 +315,7 @@ export default function TreasureChestBanner() {
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                           </svg>
                         </div>
-                        <span className="text-gray-700 font-medium text-base md:text-lg">Treasure Chest</span>
+                        <span className="text-gray-700 font-medium text-base md:text-lg">Dazzle-12</span>
                       </div>
                     </div>
                     <div className="mb-6">
@@ -380,7 +380,7 @@ export default function TreasureChestBanner() {
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                           </svg>
                         </div>
-                        <span className="text-gray-700 font-medium text-base md:text-lg">Treasure Chest</span>
+                        <span className="text-gray-700 font-medium text-base md:text-lg">Dazzle-12 Chest</span>
                       </div>
                     </div>
                     <div className="mb-6">
@@ -517,7 +517,7 @@ export default function TreasureChestBanner() {
                     {/* Content based on active tab */}
                     {activeTab === 'comparison' ? (
                       <div className="flex flex-col space-y-6 max-w-4xl mx-auto">
-                        {/* Treasure Chest ICON Plan */}
+                        {/* Dazzle-12 ICON Plan */}
                         <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{ background: `#FFF5F5`, border: `1px solid #FFE5E5` }}>
                           <div className="flex items-center mb-6">
                             <div className="w-5 h-5 text-gray-600 mr-3 flex-shrink-0">
@@ -525,7 +525,7 @@ export default function TreasureChestBanner() {
                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                               </svg>
                             </div>
-                            <span className="font-medium text-gray-800 text-base md:text-lg mr-3">Treasure Chest</span>
+                            <span className="font-medium text-gray-800 text-base md:text-lg mr-3">Dazzle-12</span>
                             <span className=" text-white px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap" style={{background:'linear-gradient(90deg, rgb(255, 154, 158) 0%, rgb(255, 0, 0) 100%)',}}>
                               💎 ICON
                             </span>
@@ -577,7 +577,7 @@ export default function TreasureChestBanner() {
                           </div>
                         </div>
 
-                        {/* Treasure Chest EDGE Plan */}
+                        {/* Dazzle-12 EDGE Plan */}
                         <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{
                           background: `#FFF6EC66`,
                           border: `1px solid #F5EAA8`
@@ -588,7 +588,7 @@ export default function TreasureChestBanner() {
                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                               </svg>
                             </div>
-                            <span className="font-medium text-gray-800 text-base md:text-lg mr-3">Treasure Chest</span>
+                            <span className="font-medium text-gray-800 text-base md:text-lg mr-3">Dazzle-12 Chest</span>
                             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap">
                               ⭐ EDGE
                             </span>
@@ -666,7 +666,7 @@ export default function TreasureChestBanner() {
                     ) : (
                       <div className="p-4 sm:p-6 lg:p-8" >
                         <div className="max-w-4xl mx-auto space-y-2">
-                          {/* Treasure Chest ICON Card */}
+                          {/* Dazzle-12 Chest ICON Card */}
                           <div
                             className="rounded-lg p-6 sm:p-8 mb-5"
                             style={{
@@ -675,10 +675,10 @@ export default function TreasureChestBanner() {
                             }}
                           >
                             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
-                              Treasure Chest ICON
+                              Dazzle-12  ICON
                             </h2>
                             <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                              With the Treasure Chest plan, you save a fixed amount of ₹5,000 every
+                              With the Dazzle-12 Chest plan, you save a fixed amount of ₹5,000 every
                               month for 9 months, totaling ₹45,000. and SonaSutra pays your 10th
                               month contribution of ₹5,000.
                             </p>
@@ -687,7 +687,7 @@ export default function TreasureChestBanner() {
                             </p>
                           </div>
 
-                          {/* Treasure Chest EDGE Card */}
+                          {/* Dazzle-12 Chest EDGE Card */}
                           <div
                             className="rounded-lg p-6 sm:p-8"
                             style={{
@@ -696,10 +696,10 @@ export default function TreasureChestBanner() {
                             }}
                           >
                             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
-                              Treasure Chest EDGE
+                              Dazzle-12 EDGE
                             </h2>
                             <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                              With the Treasure Chest Edge plan, your monthly contribution
+                              With the Dazzle-12 Edge plan, your monthly contribution
                               of ₹5,000 is invested in the gold market. Based on the simulated market
                               performance of 5%, your investment grows to ₹55,133. SonaSutra adds a
                               bonus of ₹5,000 in the 10th month.

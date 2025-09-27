@@ -51,7 +51,7 @@ export default function ViewMyVault() {
             <div>
               <p className="text-yellow-500 text-sm mb-3">Know More</p>
               <h2 className="text-2xl lg:text-3xl text-gray-900 leading-tight mb-6">
-                Invest in a high-payoff digital gold. Buy, sell, or redeem your SonaSutra eGold in exchange for beautiful jewellery.
+                Invest in a high-payoff digital gold. Buy, sell, or redeem your SonaSutra esuvarna in exchange for beautiful jewellery.
               </h2>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -59,7 +59,7 @@ export default function ViewMyVault() {
                   className="px-6 py-2.5 rounded-lg text-black text-base bg-gradient-to-r from-yellow-400 to-yellow-600"
 
                   onClick={() => navigate('/buy-gold')} >
-                  Buy eGold Now
+                  Buy esuvarna Now
                 </button>
                 <button className="flex items-center justify-center lg:justify-start gap-2 text-gray-700 text-sm">
                   How to redeem?
@@ -110,7 +110,7 @@ export default function ViewMyVault() {
               <div>
                 <h3 className="text-lg text-gray-900 mb-2">What you buy is what you get</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  No carrying cost or hidden charges. Every gram of SonaSutra eGold you buy online is backed by real gold deposits worth the same.
+                  No carrying cost or hidden charges. Every gram of SonaSutra esuvarna you buy online is backed by real gold deposits worth the same.
                 </p>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function ViewMyVault() {
               <div>
                 <h3 className="text-lg text-gray-900 mb-2">100% guaranteed buyback</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Redeem your SonaSutra eGold balance across our 330+ online stores and physical outlets.
+                  Redeem your SonaSutra esuvarna balance across our 330+ online stores and physical outlets.
                 </p>
               </div>
             </div>

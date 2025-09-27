@@ -176,7 +176,7 @@ export default function Header() {
   // Products & Services
  const productsServices = [
   {
-    name: "Treasure Chest",
+    name: "Dazzle-12",
     description:
       "Pay 9 instalments, and get the 10th FREE as a SonaSutra Benefit!",
     image:
@@ -424,7 +424,7 @@ export default function Header() {
 
           {/* Right - Icons & Actions */}
           <div className="flex items-center space-x-3">
-            {/* Treasure Chest */}
+            {/* Dazzle-12*/}
             <button className="flex items-center px-3 py-1.5 text-sm rounded-md bg-gradient-to-r from-[#CDA035] to-[#FFF2A6] 
             border border-yellow-500 text-black hover:from-[#B8922E] hover:to-[#E6E599] transition-colors"
               onClick={() => {
@@ -435,7 +435,7 @@ export default function Header() {
                 }
               }}>
               <TreasureChestIcon className="h-5 w-5 mr-1 text-yellow-800" />
-              <span className="text-black">Treasure Chest</span>
+              <span className="text-black">Dazzle-12</span>
               <span className="ml-2 bg-yellow-800 text-white text-xs px-2 py-0.5 rounded-full">NEW</span>
             </button>
 

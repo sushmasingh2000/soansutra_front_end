@@ -464,7 +464,7 @@ const OrdersContent = () => {
           >
             <option>Select Order Type</option>
             <option value="PRODUCT">Product</option>
-            <option value="EGOLD">eGold</option>
+            <option value="EGOLD">esuvarna</option>
           </select>
         </div>
         {productType==="EGOLD" && (
