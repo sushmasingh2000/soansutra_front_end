@@ -53,10 +53,16 @@ const Distributor = () => {
             <tr>
               <th className="px-4 py-2 border-b">Unique ID</th>
               <th className="px-4 py-2 border-b">Name</th>
+              <th className="px-4 py-2 border-b">Email</th>
+              <th className="px-4 py-2 border-b">Phone No.</th>
               <th className="px-4 py-2 border-b">Current Level</th>
               <th className="px-4 py-2 border-b">Direct Members</th>
               <th className="px-4 py-2 border-b">Team Members</th>
               <th className="px-4 py-2 border-b">Team Business</th>
+              <th className="px-4 py-2 border-b">Spon ID</th>
+              <th className="px-4 py-2 border-b">Spon. Name</th>
+              <th className="px-4 py-2 border-b">Wallet </th>
+              <th className="px-4 py-2 border-b">E-Gold </th>
               <th className="px-4 py-2 border-b">Distributor Reg Date</th>
               <th className="px-4 py-2 border-b">Level Details</th>
             </tr>
@@ -74,10 +80,18 @@ const Distributor = () => {
                 <tr key={d.mlm_id}>
                   <td className="px-4 py-2 border-b">{d.mlm_unique_id}</td>
                   <td className="px-4 py-2 border-b">{d.name}</td>
+                  <td className="px-4 py-2 border-b">{d.cl_email}</td>
+                  <td className="px-4 py-2 border-b">{d.cl_phone}</td>
                   <td className="px-4 py-2 border-b">{d.mlm_curr_level}</td>
                   <td className="px-4 py-2 border-b">{d.mlm_direct_mem}</td>
                   <td className="px-4 py-2 border-b">{d.mlm_team_mem}</td>
                   <td className="px-4 py-2 border-b">{d.mlm_team_buss}</td>
+                  <td className="px-4 py-2 border-b">{d.spon_customer_id}</td>
+                  <td className="px-4 py-2 border-b">{d.spon_name}</td>
+                  <td className="px-4 py-2 border-b">{d.mlm_income_wallet}</td>
+                  <td className="px-4 py-2 border-b">{d.gold_wallet}</td>
+                  
+
                   <td className="px-4 py-2 border-b">
                     {d.mlm_dist_reg_date
                       ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
