@@ -219,6 +219,11 @@ export const endpoint = {
   get_all_customer: `${domain}/api/v1/get-all-customer`,
   get_customer_profile: `${domain}/api/v1/get-customer-profile`,
   update_customer_profile: `${domain}/api/v1/update-customer-profile`,
+  update_customer_profile: `${domain}/api/v1/update-customer-profile`,
+  creata_by_wallet: `${domain}/api/v1/handle-purchase-wallet`,
+  get_leddger_report: `${domain}/api/v1/get-wallet-ledger-report`,
+  
+ 
 
   // user 
 

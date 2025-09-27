@@ -40,6 +40,7 @@ import CommissionReport from './distributor/CommisionReport';
 import Withdrawalrequest from './distributor/WithdrawalRequest';
 import WithdrawalReport from './distributor/WithdrawalReport';
 import CashbackReport from './distributor/CashbackReport';
+import WalletLedgeUSER from '../WalletLedger';
 
 const ProfileDashboard = () => {
  const location = useLocation();
@@ -73,7 +74,9 @@ const ProfileDashboard = () => {
       items: [
         { id: 'ORDERS_EXCHANGE', label: 'ORDERS AND EXCHANGE', icon: Package },
         { id: 'PAYMENT', label: 'PAYMENT', icon: CreditCard },
-        { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw }
+        { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw },
+        { id: 'PURCHASE REPORT', label: 'PURCHASE REPORT', icon: RefreshCcw }
+        
       ]
     },
     ...(distri_pro?.mlm_is_distributor === 1
@@ -90,6 +93,7 @@ const ProfileDashboard = () => {
             { id: 'CASHBACK REPORT', label: 'CASHBACK REPORT', icon: Home },
             { id: 'PAYOUT REPORT', label: 'PAYOUT REPORT', icon: Home },
             { id: 'COMMISSION REPORT', label: 'COMMISSION REPORT', icon: Home },
+            
           ]
         }]
       : []),
@@ -142,6 +146,8 @@ const ProfileDashboard = () => {
         return <PaymentContent />;
       case 'MANAGE_REFUNDS':
         return <ManageRefundsContent />;
+         case 'PURCHASE REPORT':
+        return <WalletLedgeUSER />;
          case 'DISTRIBUTER':
         return <Distributer/>;
         case 'DIRECT DISTRIBUTER':

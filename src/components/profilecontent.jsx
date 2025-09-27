@@ -1051,6 +1051,9 @@ const ProfileContent = () => {
             { label: "MOBILE NO.", value: profileData?.cl_phone },
             { label: "PINCODE", value: profileData.pincode },
             { label: "DOB", value: profileData.spouse_birthday || "-" },
+            { label: "PURCHASE WALLET", value: `₹ ${Number(profileData.purchase_wallet || 0).toFixed(2)}` || "-" },
+            { label: "GOLD WALLET", value: profileData.gold_wallet || "-" },
+
             { label: "ANNIVERSARY", value: profileData.aniversary || "-" },
             { label: "OCCUPATION", value: profileData.occupation || "-" },
             {
@@ -1073,7 +1076,19 @@ const ProfileContent = () => {
               <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                 {item.label}
               </span>
-              <span className="text-xs text-gray-900 flex items-center gap-2">
+              <span
+                className={`text-xs flex items-center gap-2 ${item.label === "PURCHASE WALLET" ? "font-bold text-gray-900" : "text-gray-900"
+                  }`}
+              >
+                {item.value}
+                {item.label === "CUSTOMER ID" && item.value && (
+                  <ClipboardDocumentIcon
+                    className="text-gray-500 w-5 h-5 cursor-pointer hover:text-blue-600 transition"
+                    onClick={() => functionTOCopy(item?.value)}
+                  />
+                )}
+              </span>
+              {/* <span className="text-xs text-gray-900 flex items-center gap-2">
                 {item.value}
                 {item.label === "CUSTOMER ID" && item.value && (
                   <ClipboardDocumentIcon 
@@ -1081,7 +1096,7 @@ const ProfileContent = () => {
                      onClick={() => functionTOCopy(item?.value)}
                    />
                 )}
-              </span>
+              </span> */}
             </div>
           ))}
         </div>

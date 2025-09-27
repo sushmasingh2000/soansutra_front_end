@@ -58,6 +58,8 @@ import ReturnPolicy from "../components/returnpolicy.jsx";
 import PrivacyPolicyComponent from "../components/privacypolicy.jsx";
 import ShippingPolicy from "../components/shippingpolicy.jsx";
 import PayoutReport from "../components/admin/PayoutReport.js";
+import PurchaseWallet from "../components/admin/PurchaseWallet.js";
+import AddPurchaseWallet from "../components/admin/AddPurchaseWallet.js";
 
 
 
@@ -108,6 +110,22 @@ export const routes = [
     element: (
       <MainLayout>
         <PayoutReport />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/purchase_wallet",
+    element: (
+      <MainLayout>
+        <PurchaseWallet />{" "}
+      </MainLayout>
+    ),
+  },
+    {
+    path: "/add_purchase_wallet",
+    element: (
+      <MainLayout>
+        <AddPurchaseWallet />{" "}
       </MainLayout>
     ),
   },

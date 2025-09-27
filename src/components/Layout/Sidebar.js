@@ -205,6 +205,19 @@ const fullMenuItems = [
     icon: <Person />,
     path: "/order",
   },
+   {
+    id: "add purchase_wallet",
+    label: "Add Purchase Wallet",
+    icon: <Person />,
+    path: "/add_purchase_wallet",
+  },
+  {
+    id: "purchase_wallet",
+    label: "Wallet Ledger",
+    icon: <Person />,
+    path: "/purchase_wallet",
+  },
+  
   {
     id: "leads",
     label: "External Leads",
@@ -231,7 +244,7 @@ const fullMenuItems = [
   },
    {
     id: "payout_report",
-    label: "Payment Report",
+    label: "Payout Report",
     icon: <PaymentSharp />,
     path: "/payout_report",
   },
