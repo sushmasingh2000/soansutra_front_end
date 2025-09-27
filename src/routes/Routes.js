@@ -57,6 +57,8 @@ import OurStory from "../components/pages/ourstory.jsx";
 import ReturnPolicy from "../components/returnpolicy.jsx";
 import PrivacyPolicyComponent from "../components/privacypolicy.jsx";
 import ShippingPolicy from "../components/shippingpolicy.jsx";
+import DeliveryAdminPanel from "../components/deliverymangementadmin.jsx";
+import DeliveryApp from "../components/pages/deliveryadmin.jsx";
 
 
 
@@ -465,6 +467,10 @@ export const routes = [
   {
   path:"/shipping-policy",
   element:<ShippingPolicy/>
+ },
+ {
+  path:"/delivery-admin",
+  element:<DeliveryApp/>
  },
 
    
