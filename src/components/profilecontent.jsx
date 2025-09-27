@@ -1021,7 +1021,7 @@ const ProfileContent = () => {
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-base font-medium text-gray-900">Your Profile</h2>
-          <span className="text-yellow-600 text-sm">60% Complete</span>
+         
         </div>
         <button
           onClick={() => setIsEditing(true)}
@@ -1034,6 +1034,10 @@ const ProfileContent = () => {
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="divide-y divide-gray-200">
           {[
+              {
+              label: "CUSTOMER ID",
+              value: profileData?.cust_unique_id,
+            },
             {
               label: "NAME",
               value: profileData?.name,

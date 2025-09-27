@@ -15,6 +15,22 @@ import toast from "react-hot-toast";
 import { useLoginModal } from "../../context/Login";
 import { Skeleton } from "@mui/material";
 
+const addWishlistStatusToProducts = (products, wishlistItems) => {
+  return products.map((product) => {
+    const isWished = wishlistItems.some(
+      (item) =>
+        item.product_id === product.product_id &&
+        item.varient_id ===
+        (product.varient_id || product.selected_variant_id)
+    );
+
+    return {
+      ...product,
+      isWished,
+    };
+  });
+};
+
 // Dynamic Filter Tabs Component
 const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
   return (
@@ -23,11 +39,10 @@ const DynamicFilterTabs = ({ tabs, activeTab, onTabChange }) => {
         <button
           key={tab}
           onClick={() => onTabChange(tab)}
-          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${
-            activeTab === tab
-              ? "bg-yellow-600 text-white"
-              : "bg-yellow-100 text-yellow-700 hover:bg-purple-200"
-          }`}
+          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${activeTab === tab
+            ? "bg-yellow-600 text-white"
+            : "bg-yellow-100 text-yellow-700 hover:bg-purple-200"
+            }`}
         >
           {tab}
         </button>
@@ -228,12 +243,12 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
     ?.map((img) => img.p_image_url)?.length
     ? product.product_images.map((img) => img.p_image_url)
     : [
-        // "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
-        // "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop",
-        // "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop",
-        // "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
-        // "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop",
-      ];
+      // "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop",
+      // "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop",
+      // "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop",
+      // "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop",
+      // "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=400&h=400&fit=crop",
+    ];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -296,10 +311,15 @@ const ProductCard = ({ product, onWishlist, collectionId }) => {
             e.stopPropagation();
             onWishlist(product.product_id, product?.selected_variant_id);
           }}
-          className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-2 right-2 bg-white rounded-full p-2 shadow"
         >
-          <Heart className="w-4 h-4 text-yellow-500" />
+          <Heart
+            className="w-5 h-5"
+            fill={product.isWished ? "red" : "none"}
+            stroke={product.isWished ? "red" : "gray"}
+          />
         </button>
+
 
         {/* {product.isNew && (
           <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
@@ -400,6 +420,16 @@ const DynamicProductListingPage = () => {
       console.error("Wishlist API error:", error);
     }
   };
+  const { data: wishing } = useQuery(
+    ["get_wish"],
+    () =>
+      apiConnectorGet(endpoint?.get_wishlist),
+    usequeryBoolean
+  );
+
+  const wishingdata = wishing?.data?.result || [];
+
+  // wishingdata.wishlist_item_id
 
   useEffect(() => {
     const initialFilters = {};
@@ -462,17 +492,10 @@ const DynamicProductListingPage = () => {
   }, [cat_id]);
 
   useEffect(() => {
-    const enhancedProducts = (product || []).map((p, i) => ({
-      ...p,
-      images: [
-        `https://source.unsplash.com/random/400x400?sig=${i}&product`,
-        `https://source.unsplash.com/random/400x400?sig=${i + 100}&product`,
-      ],
-      isNew: Math.random() > 0.7,
-    }));
+    const enhancedProducts = addWishlistStatusToProducts(product || [], wishingdata);
     setAllProducts(enhancedProducts);
     setProducts(enhancedProducts);
-  }, [product]); // <-- Add `id` here
+  }, [product, wishingdata]);
 
   // Filter and sort products
   useEffect(() => {

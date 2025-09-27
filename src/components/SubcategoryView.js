@@ -478,6 +478,7 @@ const SubcategoryView = ({ category, onBack, onCloseDrawer }) => {
         items={subcategories}
         onClick={handleSubcategoryClick}
         isLoading={isSubcatLoading}
+        categoryId={category?.product_category_id}
       />
 
       {/* By Metal & Stone Section */}
