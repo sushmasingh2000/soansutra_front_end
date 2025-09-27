@@ -107,6 +107,7 @@ export const endpoint = {
 
   //payment order 
   create_order_payment: `${domain}/api/v1/creata-order-payment`,
+  create_order_payment_wallet: `${domain}/api/v1/creata-order-payment-by-wallet`,
 
 
 
@@ -285,6 +286,10 @@ export const endpoint = {
   create_egold_price_sell: `${domain}/api/v1/create-egold-sell-order`,
   get_team_details: `${domain}/api/v1/get-team-details`,
   get_income_details: `${domain}/api/v1/get-income-details`,
+  payout_req: `${domain}/api/v1/user-payout-req`,
+  get_user_payout: `${domain}/api/v1/user-payout-report`,
+  get_cashback_report: `${domain}/api/v1/get-income-details`,
+
 
   //rankmlm
   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { apiConnectorGet, apiConnectorPost } from '../utils/ApiConnector';
 import { endpoint, mode } from '../utils/APIRoutes';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Payment = ({ selectedOrderId }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(true);
   const [paymentlink, setPaymentLink] = useState("")
+  const [selectedPaymentId, setSelectedPaymentId] = useState('3');
   // Current address data
   const [currentAddress, setCurrentAddress] = useState({
     firstName: 'abhishek',
@@ -63,7 +65,7 @@ const Payment = ({ selectedOrderId }) => {
     setShowEditModal(false);
   };
   const [defaultAddress, setDefaultAddress] = useState(null);
-
+  const navigate = useNavigate();
   const addres_fn = async () => {
     try {
       const response = await apiConnectorGet(endpoint?.get_shipping_Address);
@@ -80,6 +82,11 @@ const Payment = ({ selectedOrderId }) => {
     addres_fn()
   }, [])
 
+  const paymentOptions = [
+    { id: '3', label: 'Pay Online' },
+    { id: '4', label: 'Pay E-Gold' },
+    { id: '6', label: 'Purchase Wallet' }
+  ];
   const loadCashfreeSdk = () => {
     return new Promise((resolve, reject) => {
       if (window.Cashfree) return resolve(window.Cashfree);
@@ -92,35 +99,82 @@ const Payment = ({ selectedOrderId }) => {
     });
   };
 
+  // const order_paymentFn = async () => {
+  //   try {
+  //     const response = await apiConnectorPost(endpoint?.create_order_payment, {
+  //       order_id: selectedOrderId,
+  //       payment_id: selectedPaymentId 
+  //     });
+  //     const payment_session_id = response?.data?.payment_session_id
+  //     let cashfree;
+  //     try {
+  //       cashfree = await loadCashfreeSdk();
+  //     } catch (err) {
+  //       console.error("Cannot load Cashfree SDK:", err);
+  //       alert("Payment SDK load failed");
+  //       return;
+  //     }
+
+  //     // 3️⃣ initiate checkout
+  //     try {
+  //       cashfree = cashfree({ mode: mode });
+  //       cashfree.checkout({
+  //         paymentSessionId: payment_session_id,
+  //         redirectTarget: "_self",
+  //       });
+  //     } catch (err) {
+  //       console.error("Checkout error:", err);
+  //       alert("Checkout failed");
+  //     }
+
+  //   } catch (e) {
+  //     console.log("Error fetching address:", e);
+  //   }
+  // };
+
   const order_paymentFn = async () => {
     try {
-      const response = await apiConnectorPost(endpoint?.create_order_payment, {
-        order_id: selectedOrderId
-      });
-      const payment_session_id = response?.data?.payment_session_id
-      let cashfree;
-      try {
-        cashfree = await loadCashfreeSdk();
-      } catch (err) {
-        console.error("Cannot load Cashfree SDK:", err);
-        alert("Payment SDK load failed");
-        return;
-      }
+      const paymentId = Number(selectedPaymentId);
+      let response;
 
-      // 3️⃣ initiate checkout
-      try {
-        cashfree = cashfree({ mode: mode });
-        cashfree.checkout({
-          paymentSessionId: payment_session_id,
-          redirectTarget: "_self",
+      if (paymentId === 3) {
+        response = await apiConnectorPost(endpoint?.create_order_payment, {
+          order_id: selectedOrderId,
+          payment_method: paymentId,
         });
-      } catch (err) {
-        console.error("Checkout error:", err);
-        alert("Checkout failed");
-      }
+        const payment_session_id = response?.data?.payment_session_id;
+        let cashfree;
+        try {
+          cashfree = await loadCashfreeSdk();
+        } catch (err) {
+          console.error("Cannot load Cashfree SDK:", err);
+          alert("Payment SDK load failed");
+          return;
+        }
 
+        try {
+          cashfree = cashfree({ mode: mode });
+          cashfree.checkout({
+            paymentSessionId: payment_session_id,
+            redirectTarget: "_self",
+          });
+        } catch (err) {
+          console.error("Checkout error:", err);
+          alert("Checkout failed");
+        }
+      } else if (paymentId === 4 || paymentId === 6) {
+        response = await apiConnectorPost(endpoint?.create_order_payment_wallet, {
+          order_id: selectedOrderId,
+          payment_method: paymentId,
+        });
+        toast(response?.data?.message);
+        if (response?.data?.success) {
+          navigate("/myaccount/profile")
+        }
+      }
     } catch (e) {
-      console.log("Error fetching address:", e);
+      console.log("Payment processing error:", e);
+      toast.error("Something went wrong while processing payment.");
     }
   };
 
@@ -159,30 +213,41 @@ const Payment = ({ selectedOrderId }) => {
           <div className="mb-6">
             <h3 className="text-base font-medium text-gray-700 mb-3">Payment Options</h3>
 
-            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-yellow-100 rounded-lg p-2 mr-3">
-                  <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
-                  </svg>
+            {paymentOptions.map(({ id, label }) => (
+              <div
+                key={id}
+                className={`border-2 mb-2 rounded-lg p-4 flex items-center justify-between cursor-pointer
+              ${selectedPaymentId === id
+                    ? 'bg-yellow-50 border-yellow-500'
+                    : 'bg-yellow-50 border-yellow-200 hover:border-yellow-400'
+                  }`}
+                onClick={() => setSelectedPaymentId(id)}
+              >
+                <div className="flex items-center">
+                  <div className="bg-yellow-100 rounded-lg p-2 mr-3">
+                    {/* You can customize icons per payment method */}
+                    <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800">{label}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-800">Pay Online</p>
-                  <p className="text-sm text-gray-600">Credit, Debit, Net Banking, UPI & More</p>
-                </div>
+                {selectedPaymentId === id && (
+                  <div className="bg-yellow-500 rounded-full p-1">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                  </div>
+                )}
               </div>
-              <div className="bg-yellow-500 rounded-full p-1">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                </svg>
-              </div>
-            </div>
+            ))}
           </div>
-
           <button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black 
           font-medium py-4 rounded-lg text-lg hover:from-yellow-600 hover:to-yellow-700 transition-all 
           duration-200 shadow-lg" onClick={order_paymentFn}>
-            PAY NOW .
+            PAY NOW
           </button>
         </div>
 

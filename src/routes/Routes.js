@@ -57,6 +57,7 @@ import OurStory from "../components/pages/ourstory.jsx";
 import ReturnPolicy from "../components/returnpolicy.jsx";
 import PrivacyPolicyComponent from "../components/privacypolicy.jsx";
 import ShippingPolicy from "../components/shippingpolicy.jsx";
+import PayoutReport from "../components/admin/PayoutReport.js";
 
 
 
@@ -99,6 +100,14 @@ export const routes = [
     element: (
       <MainLayout>
         <InsiderEmail />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/payout_report",
+    element: (
+      <MainLayout>
+        <PayoutReport />{" "}
       </MainLayout>
     ),
   },

@@ -38,7 +38,7 @@ const OrderDetails = () => {
         {/* <div><strong>Order ID:</strong> {getValue(order?.order_id)}</div> */}
         <div><strong>Status:</strong> {getValue(order?.status)}</div>
         <div><strong>Order Date:</strong> {formatDate(order?.order_date)}</div>
-        {/* <div><strong>Payment Method:</strong> {getValue(order?.payment_method)}</div> */}
+        <div><strong>Payment Method:</strong> {getValue(order?.pm_name)?.replace("_" , " ")}</div>
         {/* <div><strong>Customer ID:</strong> {getValue(order?.customer_id)}</div> */}
         {/* <div><strong>Store ID:</strong> {getValue(order?.store_id)}</div> */}
         <div><strong>Total Amount:</strong> ₹{getValue(order?.total_amount)}</div>

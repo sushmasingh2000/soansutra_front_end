@@ -229,6 +229,13 @@ const fullMenuItems = [
     icon: <PaymentSharp />,
     path: "/payment",
   },
+   {
+    id: "payout_report",
+    label: "Payment Report",
+    icon: <PaymentSharp />,
+    path: "/payout_report",
+  },
+  
   {
     id: "mlm",
     label: "MLM",

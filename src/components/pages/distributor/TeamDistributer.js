@@ -1,5 +1,5 @@
 import { Dialog } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { apiConnectorGet } from "../../../utils/ApiConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { useQuery } from "react-query";
@@ -37,9 +37,13 @@ const TeamDistributor = () => {
 
     const distributors = data?.data?.result || [];
 
-    const handleSearch = () => {
-        refetch(); // Manually fetch with current filters
-    };
+    useEffect(() => {
+           const delayDebounce = setTimeout(() => {
+               refetch();
+           }, 500); 
+   
+           return () => clearTimeout(delayDebounce);
+       }, [searchTerm]); 
 
     return (
         <div className="bg-white text-black p-4 rounded-lg shadow-lg w-full mx-auto text-sm">
@@ -68,12 +72,7 @@ const TeamDistributor = () => {
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                 />
-                <button
-                    onClick={handleSearch}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-                >
-                    Search
-                </button>
+                
             </div>
 
             {/* Table */}

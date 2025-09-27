@@ -7,50 +7,40 @@ import Loader from "../../../Shared/Loader";
 import CustomToPagination from "../../../Shared/Pagination";
 import moment from "moment";
 
-const DirectDistributor = () => {
+const CashbackReport = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
-
-    const {
-        data,
-        isLoading,
-        refetch,
-    } = useQuery(
-        ["direct_distributors", { searchTerm, startDate, endDate }],
+    const { data, isLoading, refetch } = useQuery(
+        ["cashback_report", { searchTerm, startDate, endDate }],
         () =>
-            apiConnectorGet(endpoint?.get_team_details, {
-
+            apiConnectorGet(endpoint?.get_cashback_report, {
                 search: searchTerm,
                 start_date: startDate,
                 end_date: endDate,
-                level_id: 1,
-                is_distributer: 1,
                 page: page,
-                count: 10
-
+                count: 10,
+                income_type: 4,
+                wallet_type: 3
             }),
-
     );
-
     const distributors = data?.data?.result || [];
 
     useEffect(() => {
-           const delayDebounce = setTimeout(() => {
-               refetch();
-           }, 500); 
-   
-           return () => clearTimeout(delayDebounce);
-       }, [searchTerm]); 
+        const delayDebounce = setTimeout(() => {
+            refetch();
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchTerm]);
 
     return (
         <div className="bg-white text-black p-4 rounded-lg shadow-lg w-full mx-auto text-sm">
             <Loader isLoading={isLoading} />
 
-            <h2 className="text-xl font-semibold mb-4">Direct Distributors</h2>
-
+            <h2 className="text-xl font-semibold mb-4">Cashback Report</h2>
             {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <input
@@ -72,7 +62,7 @@ const DirectDistributor = () => {
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                 />
-             
+
             </div>
 
             {/* Table */}
@@ -81,10 +71,9 @@ const DirectDistributor = () => {
                     <thead className="bg-yellow-100 text-left">
                         <tr>
                             <th className="border px-4 py-2">S.No</th>
-                            <th className="border px-4 py-2">Username</th>
-                            <th className="border px-4 py-2">Full Name</th>
+                            <th className="border px-4 py-2">TransID</th>
+                            <th className="border px-4 py-2">Amount</th>
                             <th className="border px-4 py-2">Date</th>
-                            <th className="border px-4 py-2">Reg. Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,18 +87,15 @@ const DirectDistributor = () => {
                             distributors?.data?.map((distributor, index) => (
                                 <tr key={index} className="hover:bg-yellow-50">
                                     <td className="border px-4 py-2">{index + 1}</td>
-                                    <td className="border px-4 py-2">{distributor?.mlm_unique_id || "--"}</td>
-                                    <td className="border px-4 py-2">{distributor?.name || "--"}</td>
+                                    <td className="border px-4 py-2">{distributor?.ldg_trans_id || "--"}</td>
                                     <td className="border px-4 py-2">
-                                        {distributor?.mlm_created_at ? moment(distributor?.mlm_created_at).format("DD-MM-YYYY")
-                                            : "--"}
-                                    </td>
+                                        ₹ {Number(distributor?.ldg_amount || 0)?.toFixed(2)}</td>
                                     <td className="border px-4 py-2">
-                                        {distributor?.mlm_dist_reg_date ? moment(distributor?.mlm_dist_reg_date).format("DD-MM-YYYY")
+                                        {distributor?.ldg_trans_date ? moment(distributor?.ldg_trans_date).format("DD-MM-YYYY")
                                             : "--"}
                                     </td>
 
-                                  
+
                                 </tr>
                             ))
                         )}
@@ -121,4 +107,4 @@ const DirectDistributor = () => {
     );
 };
 
-export default DirectDistributor;
+export default CashbackReport;
