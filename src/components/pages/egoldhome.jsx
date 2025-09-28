@@ -64,7 +64,7 @@ const SonaSutraDigitalGoldHome = () => {
     },
     {
       question: "What is the role of the “the external administrator”?",
-      answer: "SonaSutra has entered into a relationship with an external administrator to act as a the external administrator for all digital gold customers.The external administrator is entitled to act on your behalf and ensure that your interests are protected.The external administrator will have a charge on the gold associated with accumulations held by you.“Click here to find The eGold vault statement from the external administrator”"
+      answer: "SonaSutra has entered into a relationship with an external administrator to act as a the external administrator for all digital gold customers.The external administrator is entitled to act on your behalf and ensure that your interests are protected.The external administrator will have a charge on the gold associated with accumulations held by you.“Click here to find The esuvarna vault statement from the external administrator”"
     },
     {
       question: "What will happen to the gold associated with accumulations in my account, in the unlikely event of the SonaSutra going into liquidation?",
@@ -116,7 +116,7 @@ const SonaSutraDigitalGoldHome = () => {
     },
     {
       question:"How do I sell my gold?",
-      answer:"You can sell gold by clicking on the sell option on the top after logging in to your account.SonaSutra Digital Gold provides a live sell price.You can choose to sell any amount of eGold starting with a minimum of ₹100 to upto ₹50,000 per transaction.You can choose the bank account (previously saved) or enter a new bank account to get the money.The money will be credited to your bank account.For security reasons, newly added bank accounts will be verified by doing a penny drop bank verification—i.e., a small amount will be credited to your bank account for verification purposes."
+      answer:"You can sell gold by clicking on the sell option on the top after logging in to your account.SonaSutra Digital Gold provides a live sell price.You can choose to sell any amount of esuvarna starting with a minimum of ₹100 to upto ₹50,000 per transaction.You can choose the bank account (previously saved) or enter a new bank account to get the money.The money will be credited to your bank account.For security reasons, newly added bank accounts will be verified by doing a penny drop bank verification—i.e., a small amount will be credited to your bank account for verification purposes."
     },
     {
       question:"Is there any lock-in period to sell gold?",
@@ -143,24 +143,24 @@ const SonaSutraDigitalGoldHome = () => {
       answer:"As per taxation laws, the same physical gold has to be used to make the jewellery to avoid GST again.The same physical gold (stored via Digital Gold) is not used for making the actual jewellery. Hence, you have to pay a separate tax for the jewellery."
     },
     {
-      question:"Is there any lock-in period to exchange my SonaSutra eGold Digital Gold for Physical Jewellery?",
+      question:"Is there any lock-in period to exchange my SonaSutra esuvarna Digital Gold for Physical Jewellery?",
       answer:"Same-day exchange is restricted, so you can exchange for physical jwellery 24 hours after its purchase."
     },
     {
-      question:"What is the minimum gold amount I can use to exchange my SonaSutra eGold Digital Gold for Physical Jewellery",
-      answer:"You can choose to exchange any amount of eGold Digital Gold starting with a minimum of ₹10."
+      question:"What is the minimum gold amount I can use to exchange my SonaSutra esuvarna Digital Gold for Physical Jewellery",
+      answer:"You can choose to exchange any amount of esuvarna Digital Gold starting with a minimum of ₹10."
     },
     {
       question:"What can you do with your SonaSutra Digital Gold?",
-      answer:"Invest in 24K gold hassle-free with SonaSutra eGold.1.Convenient, 24x7 access and 100% safe      2.Celebrate your beautiful bond:3.Redeem your gold investment to buy beautiful jewellery for special occasions, such as your daughter's wedding or even grandkid’s milestone birthdays.4.Gift yourself:5.Sell anytime to achieve your personal goals such as travelling abroad or paying for any medical emergencies."
+      answer:"Invest in 24K gold hassle-free with SonaSutra esuvarna.1.Convenient, 24x7 access and 100% safe      2.Celebrate your beautiful bond:3.Redeem your gold investment to buy beautiful jewellery for special occasions, such as your daughter's wedding or even grandkid’s milestone birthdays.4.Gift yourself:5.Sell anytime to achieve your personal goals such as travelling abroad or paying for any medical emergencies."
     },
     {
-      question:"How can you buy eGold?",
+      question:"How can you buy esuvarna?",
       answer:"Buy digital gold in 3 easy steps:Step 1: Login and register with SonaSutra to complete your account setup with eKYC.Step 2: Enter the Amount in rupees or gold in grams to buy.Step 3: Make payment through UPI or even use PhonePe, Ausper and Khyaal as other applications to buy SonaSutra Digital Gold."
     },
     {
       question:"How to convert digital gold balance into jewellery?",
-      answer:"1.Shortlist your favourite designs on SonaSutra website / app or book Live Video Call or Try-At-Home appointment2.Visit the SonaSutra store /app /website to redeem your digital gold balance3.In addition to SonaSutra Digital Gold bought from SonaSutra, PhonePe, Ausper or Khyaal, you can also use your balance from digital gold service providers like Safegold and Augmont to buy beautiful SonaSutra jewellery."
+      answer:"1.Shortlist your favourite designs on SonaSutra website / app or book Live Video Call or Try-At-Home appointment2.Visit the SonaSutra store /app /website to redeem your digital gold balance3.In addition to SonaSutra Digital Gold bought from SonaSutra, PhonePe, Ausper or Khyaal, you can also use your balance from digital gold service providers like Safesuvarna and Augmont to buy beautiful SonaSutra jewellery."
     }
   ];
 
@@ -217,7 +217,7 @@ const SonaSutraDigitalGoldHome = () => {
       {/* FAQ Section */}
       <div className="bg-gray-50 py-16 ">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-2xl  text-center mb-5 ">Have questions about SonaSutra eGOLD? Share your number and we will call you back!</h2>
+          <h2 className="text-2xl  text-center mb-5 ">Have questions about SonaSutra esuvarna? Share your number and we will call you back!</h2>
           
           <div className="bg-white rounded-lg p-6 mb-8">
             <div className="flex gap-4 mb-4">

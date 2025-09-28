@@ -9,7 +9,7 @@ const HowToRedeem = () => {
         <div className="text-center mb-6 md:mb-8">
           <h2 className="text-yellow-500 text-xs md:text-sm mb-2">Redeem</h2>
           <h1 className="text-lg md:text-2xl text-gray-900">
-            eGold to jewellery, in a blink!
+            esuvarna to jewellery, in a blink!
           </h1>
         </div>
 
@@ -72,7 +72,7 @@ const HowToRedeem = () => {
                 <div className="absolute top-1/2 -right-2 w-1 h-1 bg-yellow-400 rounded-full"></div>
               </div>
               <h3 className="text-sm text-gray-900 mb-2">Redeem your</h3>
-              <h3 className="text-sm text-gray-900 mb-2">SonaSutra eGold at</h3>
+              <h3 className="text-sm text-gray-900 mb-2">SonaSutra esuvarna at</h3>
               <p className="text-gray-600">checkout</p>
             </div>
 
@@ -118,7 +118,7 @@ const HowToRedeem = () => {
                 </div>
                 <div>
                   <p className="text-gray-600 text-base leading-relaxed">
-                    You can redeem SonaSutra eGold online or offline through one of our many jewellery stores across India.
+                    You can redeem SonaSutra esuvarna online or offline through one of our many jewellery stores across India.
                   </p>
                 </div>
               </div>
@@ -196,7 +196,7 @@ const HowToRedeem = () => {
                 <div className="absolute top-1/2 -right-1 w-1 h-1 bg-yellow-400 rounded-full"></div>
               </div>
               <h3 className="text-base text-gray-900">Redeem your SonaSutra</h3>
-              <h3 className="text-base text-gray-900 mb-1">eGold at checkout</h3>
+              <h3 className="text-base text-gray-900 mb-1">esuvarna at checkout</h3>
 
               {/* Arrow down */}
               <div className="flex justify-center my-6">
@@ -239,7 +239,7 @@ const HowToRedeem = () => {
                 <span className="text-yellow-600 text-xs">!</span>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">
-                You can redeem SonaSutra eGold online or offline through one of our many jewellery stores across India.
+                You can redeem SonaSutra esuvarna online or offline through one of our many jewellery stores across India.
               </p>
             </div>
 

@@ -59,7 +59,7 @@ const NavigationBar = () => {
   ];
   const productsServices = [
     {
-      name: "Treasure Chest",
+      name: "Dazzle-12",
       description:
         "Pay 9 instalments, and get the 10th FREE as a SonaSutra Benefit!",
       image:

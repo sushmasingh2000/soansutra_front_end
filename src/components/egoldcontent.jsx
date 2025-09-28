@@ -14,12 +14,12 @@ const EGoldContent = () => {
 
   return (
     <div className="p-3 md:p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">SonaSutra eGold</h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">SonaSutra esuvarna</h2>
       
       {/* Balance Card */}
       <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-4 text-white mb-4">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-lg font-semibold">eGold Balance</h3>
+          <h3 className="text-lg font-semibold">esuvarna Balance</h3>
           <Gem className="w-6 h-6" />
         </div>
         <div className="text-2xl font-bold mb-1">{eGoldData.balance}g</div>
@@ -29,10 +29,10 @@ const EGoldContent = () => {
       {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <button className="bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium">
-          Buy eGold
+          Buy esuvarna
         </button>
         <button className="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium">
-          Redeem eGold
+          Redeem esuvarna
         </button>
       </div>
 

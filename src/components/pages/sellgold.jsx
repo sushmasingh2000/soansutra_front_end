@@ -201,7 +201,7 @@ const SellGold = () => {
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
                 </svg>
-                <span>The minimum Sell amount to purchase SonaSutra eGold is ₹10</span>
+                <span>The minimum Sell amount to purchase SonaSutra esuvarna is ₹10</span>
               </div>
               <div className="w-1/5 text-right pr-6">
                 <button className="text-yellow-500 text-sm">Check Sell History →</button>
@@ -253,7 +253,7 @@ const SellGold = () => {
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
             </svg>
-            <span>The minimum Sell amount to purchase SonaSutra eGold is ₹10</span>
+            <span>The minimum Sell amount to purchase SonaSutra esuvarna is ₹10</span>
           </div>
           <div className="bg-white rounded-lg p-4 shadow mb-4">
             <h3 className="text-lg font-semibold mb-2">Sell Rate</h3>

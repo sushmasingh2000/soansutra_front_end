@@ -117,7 +117,7 @@ const ShippingPolicy = () => {
         <div className="space-y-6 sm:space-y-8">
           <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
             In case your purchase is intended as a gift, we offer free gift packing at just $ 1000 charges, along with a gift message of your choice. 
-            Your gift will be delivered in distinctive CaratLane gift packing. So whether you order a gift to give to your loved ones personally, 
+            Your gift will be delivered in distinctive SonaSutra gift packing. So whether you order a gift to give to your loved ones personally, 
             or want us to deliver it, the recipient is sure to be impressed.
           </p>
           

@@ -397,8 +397,8 @@ const TermsAndConditions = () => {
         3. Only one unique entry per purchase will be considered for the giveaway.
       </p>
 
-      <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4">SonaSutra eGold</h1>
-      <h2 className="text-xl font-semibold text-gray-900 mb-2">eGold Gift Card</h2>
+      <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4">SonaSutra esuvarna</h1>
+      <h2 className="text-xl font-semibold text-gray-900 mb-2">esuvarna Gift Card</h2>
       <p className="text-gray-700 mb-2">
         1. This Gift Card, powered by SonaSutra Digital Gold, can be purchased at the SonaSutra Stores.
       </p>
@@ -412,10 +412,10 @@ const TermsAndConditions = () => {
         4. The receiver has the option either to redeem or sell it at the SonaSutra store or website.
       </p>
       <p className="text-gray-700 mb-2">
-        5. The SonaSutra digital Gold Gift Card shall be purchased at the prevailing rate mentioned at our eGold website at the time of purchase. The corresponding grams of gold shall be accumulated and stored in a secured vault.
+        5. The SonaSutra digital Gold Gift Card shall be purchased at the prevailing rate mentioned at our esuvarna website at the time of purchase. The corresponding grams of gold shall be accumulated and stored in a secured vault.
       </p>
       <p className="text-gray-700 mb-2">
-        6. SonaSutra eGold gift card does not have an expiry date, ensuring uninterrupted access to its benefits.
+        6. SonaSutra esuvarna gift card does not have an expiry date, ensuring uninterrupted access to its benefits.
       </p>
       <p className="text-gray-700 mb-2">
         7. This SonaSutra digital gold gift card shall be redeemed at the SonaSutra stores and/or through its website for any product except Shunya products at the prevailing digital gold price at the time of redemption.
@@ -442,7 +442,7 @@ const TermsAndConditions = () => {
         14. Terms and conditions of this gift card are subject to change and the updated Terms and Conditions are available on our website.
       </p>
       <p className="text-gray-700 mb-2">
-        15. The gift card value may be subject to change based on the prevailing rate of the eGold grams added to the gift card. Please visit the eGold Buy page to check the latest price
+        15. The gift card value may be subject to change based on the prevailing rate of the esuvarna grams added to the gift card. Please visit the esuvarna Buy page to check the latest price
       </p>
       <p className="text-gray-700 mb-2">
         16. For any queries related to this Gift Card, contact us at cs@sonasutra.in or call +91-44-4293-5000

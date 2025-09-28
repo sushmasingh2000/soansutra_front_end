@@ -62,6 +62,7 @@ import PurchaseWallet from "../components/admin/PurchaseWallet.js";
 import AddPurchaseWallet from "../components/admin/AddPurchaseWallet.js";
 import CreateBank from "../components/pages/distributor/CreateBank.js";
 import BankDetais from "../components/admin/Bankdetails.js";
+import DeliveryApp from "../components/pages/deliveryadmin.jsx";
 
 
 
@@ -503,6 +504,10 @@ export const routes = [
   {
   path:"/shipping-policy",
   element:<ShippingPolicy/>
+ },
+ {
+  path:"/delivery-admin",
+  element:<DeliveryApp/>
  },
 
    

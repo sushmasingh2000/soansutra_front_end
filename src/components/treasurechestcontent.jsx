@@ -17,7 +17,7 @@ const TreasureChestContent = () => {
 
   return (
     <div className="p-3 md:p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Treasure Chest</h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">Dazzle-12</h2>
       
       {/* Total Value */}
       <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg p-4 text-white mb-4">
@@ -31,7 +31,7 @@ const TreasureChestContent = () => {
 
       {/* Your Items */}
       <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
-        <h4 className="font-medium text-gray-900 mb-3">Your Treasures</h4>
+        <h4 className="font-medium text-gray-900 mb-3">Your Dazzle-12</h4>
         <div className="space-y-3">
           {treasureData.items.map((item, index) => (
             <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">

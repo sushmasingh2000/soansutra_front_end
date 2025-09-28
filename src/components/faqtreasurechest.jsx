@@ -16,37 +16,37 @@ const TreasureChestFaqToggleComponent = () => {
     {
       id: 'cancel-plan',
       category: 'Cancellation/Refund',
-      question: 'Can I cancel my SonaSutra Treasure Chest plan at any time?'
+      question: 'Can I cancel my SonaSutra Dazzle-12 plan at any time?'
     },
     {
       id: 'what-is-edge',
-      category: 'SonaSutra Treasure Chest Edge',
-      question: 'What is SonaSutra Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Dazzle-12  Edge',
+      question: 'What is SonaSutra Dazzle-12 Edge Scheme?'
     },
     {
       id: 'edge-benefits',
-      category: 'SonaSutra Treasure Chest Edge',
-      question: 'What are the benefits of the SonaSutra Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Dazzle-12 Edge',
+      question: 'What are the benefits of the SonaSutra Dazzle-12 Edge Scheme?'
     },
     {
       id: 'switch-schemes',
-      category: 'SonaSutra Treasure Chest Edge',
-      question: 'Can I switch between SonaSutra Treasure Chest Schemes during the term?'
+      category: 'SonaSutra Dazzle-12 Edge',
+      question: 'Can I switch between SonaSutra Dazzle-12 Schemes during the term?'
     },
     {
       id: 'cancel-edge',
-      category: 'SonaSutra Treasure Chest Edge',
-      question: 'Can I cancel my SonaSutra Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Dazzle-12 Edge',
+      question: 'Can I cancel my SonaSutra Dazzle-12 Edge Scheme?'
     },
     {
       id: 'eligible-products',
-      category: 'SonaSutra Treasure Chest Edge',
-      question: 'Which products are eligible for redemption under the SonaSutra Treasure Chest Edge Scheme?'
+      category: 'SonaSutra Dazzle-12  Edge',
+      question: 'Which products are eligible for redemption under the SonaSutra Dazzle-12  Edge Scheme?'
     },
     {
       id: 'redeem-gold',
-      category: 'SonaSutra Treasure Chest Edge',
-      question: 'Can I redeem my SonaSutra Treasure Chest Edge on 22KT/Gold Coin/ Unstudded designs?'
+      category: 'SonaSutra Dazzle-12  Edge',
+      question: 'Can I redeem my SonaSutra Dazzle-12  Edge on 22KT/Gold Coin/ Unstudded designs?'
     }
   ];
 
@@ -61,7 +61,7 @@ const TreasureChestFaqToggleComponent = () => {
     },
     {
       id: 3,
-      text: "Scheme means SonaSutra Treasure Chest Scheme."
+      text: "Scheme means SonaSutra Dazzle-12 Scheme."
     },
     {
       id: 4,
@@ -95,7 +95,7 @@ const TreasureChestFaqToggleComponent = () => {
 
   const enrolmentTerms = [
     {
-      text: "Under the SonaSutra Treasure Chest Scheme, the individual is required to make payment for nine fixed monthly instalments. After the payment of the ninth monthly instalment, SonaSutra will offer a discount/ benefit as mentioned below:"
+      text: "Under the SonaSutra Dazzle-12  Scheme, the individual is required to make payment for nine fixed monthly instalments. After the payment of the ninth monthly instalment, SonaSutra will offer a discount/ benefit as mentioned below:"
     },
     {
       text: "In case of purchase of any Diamond / Gemstone / Platinum / Preset Solitaires / Rupika (Silver) Jewellery / loose solitaire, SonaSutra will offer a discount equal to the amount of one month instalment."
@@ -137,9 +137,9 @@ const TreasureChestFaqToggleComponent = () => {
         </div>
       </div>
 
-      {/* SonaSutra Treasure Chest Edge Section */}
+      {/* SonaSutra Dazzle-12   Edge Section */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">SonaSutra Treasure Chest Edge</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">SonaSutra Dazzle-12  Edge</h3>
         <div className="space-y-2">
           {faqData.filter(item => item.category === 'SonaSutra Treasure Chest Edge').map((item) => (
             <div key={item.id} className="border border-yellow-200 rounded-lg">

@@ -124,8 +124,8 @@ const ProfileDashboard = () => {
       category: 'CREDITS',
       items: [
         { id: 'XCLUSIVE', label: 'XCLUSIVE', icon: Award },
-        { id: 'SonaSutra_EGOLD', label: 'SonaSutra eGold', icon: Gem },
-        { id: 'SonaSutra_TREASURE_CHEST', label: 'SonaSutra TREASURE CHEST', icon: Star }
+        { id: 'SonaSutra_E-SUVARNA', label: 'SonaSutra e-Suvarna', icon: Gem },
+        { id: 'SonaSutra_Dazzle-12', label: 'SonaSutra Dazzle-12', icon: Star }
       ]
     }
   ];
@@ -180,9 +180,9 @@ const ProfileDashboard = () => {
         return <CouponsContent />;
       case 'XCLUSIVE':
         return <XclusiveContent />;
-      case 'CARATLANE_EGOLD':
+      case 'SONASUTRA_ESUVARNA':
         return <EGoldContent />;
-      case 'CARATLANE_TREASURE_CHEST':
+      case 'SONASUTRA_DAZZLE-12':
         return <TreasureChestContent />;
       default:
         return (

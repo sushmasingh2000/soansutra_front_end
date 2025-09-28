@@ -20,7 +20,7 @@ export default function FAQSellGold() {
         { 
           id: 'sell-gold', 
           question: "How do I sell my gold?", 
-          answer: "You can sell gold by clicking on the sell option on the top after logging in to your account.\nSonaSutra Digital Gold provides a live sell price.\nYou can choose to sell any amount of eGold starting with a minimum of ₹100 to up to ₹50,000 per transaction.\nYou can choose the bank account (previously saved) or enter a new bank account to get the money.\nThe money will be credited to your bank account.\nFor security reasons, newly added bank accounts will be verified by doing a penny drop bank verification—i.e., a small amount will be credited to your bank account for verification purposes."
+          answer: "You can sell gold by clicking on the sell option on the top after logging in to your account.\nSonaSutra Digital Gold provides a live sell price.\nYou can choose to sell any amount of esuvarna starting with a minimum of ₹100 to up to ₹50,000 per transaction.\nYou can choose the bank account (previously saved) or enter a new bank account to get the money.\nThe money will be credited to your bank account.\nFor security reasons, newly added bank accounts will be verified by doing a penny drop bank verification—i.e., a small amount will be credited to your bank account for verification purposes."
         },
         { 
           id: 'lock-period', 
@@ -40,17 +40,17 @@ export default function FAQSellGold() {
       ]
     },
     {
-      title: "eGold for Senior Citizens",
+      title: "esuvarna for Senior Citizens",
       hasLinks: true,
       items: [
         { 
           id: 'digital-gold', 
           question: "What can you do with your SonaSutra Digital Gold?", 
-          answer: "Invest in 24K gold hassle-free with SonaSutra eGold.\n1. Convenient, 24x7 access and 100% safe.\n2. Celebrate your beautiful bond: Redeem your gold investment to buy beautiful jewellery for special occasions, such as your daughter's wedding or even grandkid’s milestone birthdays.\n3. Gift yourself: Sell anytime to achieve your personal goals such as travelling abroad or paying for any medical emergencies."
+          answer: "Invest in 24K gold hassle-free with SonaSutra esuvarna.\n1. Convenient, 24x7 access and 100% safe.\n2. Celebrate your beautiful bond: Redeem your gold investment to buy beautiful jewellery for special occasions, such as your daughter's wedding or even grandkid’s milestone birthdays.\n3. Gift yourself: Sell anytime to achieve your personal goals such as travelling abroad or paying for any medical emergencies."
         },
         { 
-          id: 'buy-egold', 
-          question: "How can you buy eGold?", 
+          id: 'buy-esuvarna', 
+          question: "How can you buy esuvarna?", 
           answer: "Buy digital gold in 3 easy steps:\n1. Login and register with SonaSutra to complete your account setup with eKYC.\n2. Enter the Amount in rupees or gold in grams to buy.\n3. Make payment through UPI or even use PhonePe, Ausper and Khyaal as other applications to buy SonaSutra Digital Gold."
         },
         { 
