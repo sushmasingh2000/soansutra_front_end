@@ -291,4 +291,9 @@ export const endpoint = {
   get_distributor_details: `${domain}/api/v1/get-distributer-details`,
   get_rank_achivers_details: `${domain}/api/v1/get-rank-achievers-details`,
   rank_relaese_request: `${domain}/api/v1/release-rank-request`,
+  bank_create: `${domain}/api/v1/create-customer-bank`,
+  bank_get_all: `${domain}/api/v1/get-customer-bank-details`,
+  update_customer_bank: `${domain}/api/v1/update-customer-bank-by-admin`,
+  
+  
 };

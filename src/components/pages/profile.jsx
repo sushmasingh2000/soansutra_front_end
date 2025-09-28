@@ -16,9 +16,11 @@ import React, { useState } from 'react';
 
 // Import your separate components here
 import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
 import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
 import { endpoint } from '../../utils/APIRoutes';
 import CouponsContent from '../coupnscontent';
+import Distributer from '../distributer';
 import EGoldContent from '../egoldcontent';
 import Footer from '../Footer1';
 import Header1 from '../Header1';
@@ -27,20 +29,18 @@ import OrdersContent from '../orderscomponent';
 import PaymentContent from '../paymentcontent';
 import ProfileContent from '../profilecontent';
 import TreasureChestContent from '../treasurechestcontent';
-import TryAtHomeContent from '../tryathomecontent';
-import XclusiveContent from '../xclusivecontent';
-import Distributer from '../distributer';
-import { useLocation } from 'react-router-dom';
-import DirectDistributor from './distributor/DirectDistributor';
-import TeamDistributor from './distributor/TeamDistributer';
-import DirectCustomer from './distributor/DirectCustomer';
-import TeamCustomer from './distributor/TeamCustomer';
-import PayoutReport from './distributor/PayoutReport';
-import CommissionReport from './distributor/CommisionReport';
-import Withdrawalrequest from './distributor/WithdrawalRequest';
-import WithdrawalReport from './distributor/WithdrawalReport';
-import CashbackReport from './distributor/CashbackReport';
 import WalletLedgeUSER from '../WalletLedger';
+import XclusiveContent from '../xclusivecontent';
+import Bank from './distributor/Bank';
+import CashbackReport from './distributor/CashbackReport';
+import CommissionReport from './distributor/CommisionReport';
+import DirectCustomer from './distributor/DirectCustomer';
+import DirectDistributor from './distributor/DirectDistributor';
+import PayoutReport from './distributor/PayoutReport';
+import TeamCustomer from './distributor/TeamCustomer';
+import TeamDistributor from './distributor/TeamDistributer';
+import WithdrawalReport from './distributor/WithdrawalReport';
+import Withdrawalrequest from './distributor/WithdrawalRequest';
 
 const ProfileDashboard = () => {
  const location = useLocation();
@@ -93,6 +93,7 @@ const ProfileDashboard = () => {
             { id: 'CASHBACK REPORT', label: 'CASHBACK REPORT', icon: Home },
             { id: 'PAYOUT REPORT', label: 'PAYOUT REPORT', icon: Home },
             { id: 'COMMISSION REPORT', label: 'COMMISSION REPORT', icon: Home },
+            { id: 'BANK', label: 'BANK', icon: Home },
             
           ]
         }]
@@ -166,8 +167,10 @@ const ProfileDashboard = () => {
       return <TeamDistributor />;
     case 'DIRECT CUSTOMER':
       return <DirectCustomer />;
-       case 'TEAM CUSTOMER':
+      case 'TEAM CUSTOMER':
       return <TeamCustomer />;
+       case 'BANK':
+      return <Bank />;
       case 'COUPONS':
         return <CouponsContent />;
       case 'XCLUSIVE':

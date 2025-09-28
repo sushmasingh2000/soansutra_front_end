@@ -60,6 +60,8 @@ import ShippingPolicy from "../components/shippingpolicy.jsx";
 import PayoutReport from "../components/admin/PayoutReport.js";
 import PurchaseWallet from "../components/admin/PurchaseWallet.js";
 import AddPurchaseWallet from "../components/admin/AddPurchaseWallet.js";
+import CreateBank from "../components/pages/distributor/CreateBank.js";
+import BankDetais from "../components/admin/Bankdetails.js";
 
 
 
@@ -102,6 +104,14 @@ export const routes = [
     element: (
       <MainLayout>
         <InsiderEmail />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/bank_detail",
+    element: (
+      <MainLayout>
+        <BankDetais />{" "}
       </MainLayout>
     ),
   },
@@ -489,6 +499,7 @@ export const routes = [
   path:"/privacy-policy",
   element:<PrivacyPolicyComponent/>
  },
+
   {
   path:"/shipping-policy",
   element:<ShippingPolicy/>

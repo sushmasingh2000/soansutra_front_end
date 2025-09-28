@@ -21,6 +21,7 @@ import {
   RollerShadesClosed,
 } from "@mui/icons-material";
 import {
+  BanknoteIcon,
   CornerUpLeftIcon,
   Disc2Icon,
   Eye,
@@ -269,6 +270,13 @@ const fullMenuItems = [
 
     ],
   },
+  {
+    id: "bank_detail",
+    label: "BankDetail",
+    icon: <BanknoteIcon />,
+    path: "/bank_detail",
+  },
+  
   {
     id: "logout",
     label: "LogOut",
