@@ -46,46 +46,6 @@ const WithdrawalReport = () => {
 
   const records = data?.data?.result?.data || [];
 
-  async function handlePayout(transId, status_type) {
-    try {
-      const payload = {
-        trans_id: transId,
-        payout_stauts: status_type,
-      };
-      const response = await apiConnectorPost(
-        endpoint.payout_released,
-        payload
-      );
-      Swal.fire({
-        title: response?.data?.success ? "Success" : "Error",
-        text: response?.data?.message,
-        icon: response?.data?.success ? "success" : "error",
-      });
-      if (response?.data?.success) refetch();
-    } catch (e) {
-      Swal.fire({
-        title: "Error",
-        text: e?.message,
-        icon: "error",
-      });
-    }
-  }
-
-  const handleSubmitClick = (transId, status_type) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to proceed with this transaction?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, proceed",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handlePayout(transId, status_type);
-      }
-    });
-  };
-
   // Status buttons array
   const statuses = [
     { label: "All", value: "ALL" },
@@ -155,12 +115,6 @@ const WithdrawalReport = () => {
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Req Date</th>
               <th className="px-4 py-2 text-left">Success Date</th>
-              <th className="px-4 py-2 text-left">Customer ID</th>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Email</th>
-              <th className="px-4 py-2 text-left">Phone</th>
-              <th className="px-4 py-2 text-left">Address</th>
-              <th className="px-4 py-2 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -220,31 +174,6 @@ const WithdrawalReport = () => {
                     {item.pay_success_date
                       ? moment(item.pay_success_date)?.format("DD-MM-YYYY")
                       : "--"}
-                  </td>
-                  <td className="px-4 py-2">{item.cust_unique_id}</td>
-                  <td className="px-4 py-2">{item.name}</td>
-                  <td className="px-4 py-2">{item.cl_email}</td>
-                  <td className="px-4 py-2">{item.cl_phone}</td>
-                  <td className="px-4 py-2">{item.address}</td>
-                  <td className="px-4 py-2">
-                    {item.pay_status === "Success" ? (
-                      <Lock />
-                    ) : (
-                      <>
-                        <CheckCircleOutlineIcon
-                          onClick={() =>
-                            handleSubmitClick(item.pay_trans_id, 2)
-                          }
-                          className="cursor-pointer text-green-600 mr-2"
-                        />
-                        <Cancel
-                          onClick={() =>
-                            handleSubmitClick(item.pay_trans_id, 5)
-                          }
-                          className="cursor-pointer text-red-600"
-                        />
-                      </>
-                    )}
                   </td>
                 </tr>
               ))

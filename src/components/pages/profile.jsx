@@ -41,6 +41,7 @@ import TeamCustomer from './distributor/TeamCustomer';
 import TeamDistributor from './distributor/TeamDistributer';
 import WithdrawalReport from './distributor/WithdrawalReport';
 import Withdrawalrequest from './distributor/WithdrawalRequest';
+import Fundrequest from './distributor/Transfer';
 
 const ProfileDashboard = () => {
  const location = useLocation();
@@ -94,6 +95,8 @@ const ProfileDashboard = () => {
             { id: 'PAYOUT REPORT', label: 'PAYOUT REPORT', icon: Home },
             { id: 'COMMISSION REPORT', label: 'COMMISSION REPORT', icon: Home },
             { id: 'BANK', label: 'BANK', icon: Home },
+            { id: 'FUND TRANSFER', label: 'FUND TRANSFER', icon: Home },
+            
             
           ]
         }]
@@ -171,6 +174,8 @@ const ProfileDashboard = () => {
       return <TeamCustomer />;
        case 'BANK':
       return <Bank />;
+      case 'FUND TRANSFER':
+      return <Fundrequest />;
       case 'COUPONS':
         return <CouponsContent />;
       case 'XCLUSIVE':

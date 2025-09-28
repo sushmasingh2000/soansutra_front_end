@@ -4,11 +4,11 @@ import { apiConnectorPost } from "../../../utils/ApiConnector";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
-const Withdrawalrequest = () => {
+const Fundrequest = () => {
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const WithdrawalFn = async () => {
+    const FundFn = async () => {
         if (!amount || isNaN(amount)) {
             toast.error("Please enter a valid amount");
             return;
@@ -30,7 +30,7 @@ const Withdrawalrequest = () => {
     
         setLoading(true);
         try {
-            const response = await apiConnectorPost(endpoint?.payout_req, {
+            const response = await apiConnectorPost(endpoint?.fund_transfer, {
                 req_amount: Number(amount),
             });
     
@@ -57,13 +57,12 @@ const Withdrawalrequest = () => {
             setLoading(false);
         }
     };
-    
 
     return (
         <div className="lg:mt-32 mt-10 flex items-center justify-center  px-4">
             <div className="bg-yellow-100 shadow-md rounded-lg w-full max-w-md p-6">
                 <h2 className="text-2xl font-semibold text-center mb-6 text-[#dbb855]">
-                    Withdrawal Request
+                    Fund Transfer
                 </h2>
 
                 <div className="flex flex-col gap-3">
@@ -77,7 +76,7 @@ const Withdrawalrequest = () => {
                     />
 
                     <button
-                        onClick={WithdrawalFn}
+                        onClick={FundFn}
                         disabled={loading}
                         className="bg-yellow-950 w-full text-white p-2 mt-4 rounded hover:bg-yellow-900 disabled:opacity-50 transition"
                     >
@@ -89,4 +88,4 @@ const Withdrawalrequest = () => {
     );
 };
 
-export default Withdrawalrequest;
+export default Fundrequest;

@@ -297,6 +297,7 @@ export const endpoint = {
   bank_create: `${domain}/api/v1/create-customer-bank`,
   bank_get_all: `${domain}/api/v1/get-customer-bank-details`,
   update_customer_bank: `${domain}/api/v1/update-customer-bank-by-admin`,
+  fund_transfer: `${domain}/api/v1/fund-transfer`,
   
   
 };
