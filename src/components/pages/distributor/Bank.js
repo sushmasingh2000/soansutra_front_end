@@ -1,12 +1,11 @@
 import { Dialog } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet } from "../../../utils/ApiConnector";
+import { apiConnectorGet, usequeryBoolean } from "../../../utils/ApiConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { useQuery } from "react-query";
 import Loader from "../../../Shared/Loader";
 import CustomToPagination from "../../../Shared/Pagination";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
 import CreateBank from "./CreateBank";
 
 const Bank = () => {
@@ -16,7 +15,6 @@ const Bank = () => {
   const [endDate, setEndDate] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
-  const navigate = useNavigate();
 
   const { data, isLoading, refetch } = useQuery(
     ["bank_deatil", { searchTerm, startDate, endDate }],
@@ -27,7 +25,8 @@ const Bank = () => {
         end_date: endDate,
         page: page,
         count: 10,
-      })
+      }),
+      usequeryBoolean,
   );
   const distributors = data?.data?.result || [];
 
@@ -86,7 +85,7 @@ const Bank = () => {
         <th className="border px-4 py-2">IFSC Code</th>
         <th className="border px-4 py-2">Bank Name</th>
         <th className="border px-4 py-2">Branch Name</th>
-        <th className="border px-4 py-2">Added On</th>
+        <th className="border px-4 py-2">Date</th>
       </tr>
     </thead>
     <tbody>

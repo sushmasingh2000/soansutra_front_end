@@ -45,6 +45,7 @@ const CreateBank = ({ onClose }) => {
     setLoading(true);
     try {
       const response = await apiConnectorPost(endpoint?.bank_create, formData);
+      toast(response?.data?.message)
 
       if (response?.data?.success) {
         Swal.fire({

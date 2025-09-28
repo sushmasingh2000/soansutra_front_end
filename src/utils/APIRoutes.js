@@ -284,6 +284,9 @@ export const endpoint = {
   payout_req: `${domain}/api/v1/user-payout-req`,
   get_user_payout: `${domain}/api/v1/user-payout-report`,
   get_cashback_report: `${domain}/api/v1/get-income-details`,
+  get_team_admin: `${domain}/api/v1/get-team-by-admin`,
+  get_upline_team_admin: `${domain}/api/v1/get-upline-team-by-admin`,
+  
 
   //rankmlm
   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,

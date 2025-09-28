@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import CustomToPagination from "../../Shared/Pagination";
 import { useQuery } from "react-query";
 import moment from "moment";
 import { Dialog } from "@mui/material";
+import { Edit } from "lucide-react";
 
 const BankDetais = () => {
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const count = 10;
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -22,25 +26,53 @@ const BankDetais = () => {
     branch_name: "",
   });
 
-  const fetchBankData = async () => {
-    const res = await apiConnectorGet(endpoint.bank_get_all, {
-      page,
-      count,
-    });
-    return res?.data?.result;
-  };
-
-  const { data, isLoading , refetch } = useQuery(["bankList", page], fetchBankData, {
-    keepPreviousData: true,
-    onError: () => toast.error("Failed to fetch Bank list"),
-  });
-
+  const { data, isLoading, refetch } = useQuery(
+    ["bank_deatil_admin", { searchTerm, startDate, endDate }],
+    () =>
+      apiConnectorGet(endpoint?.bank_get_all, {
+        search: searchTerm,
+        start_date: startDate,
+        end_date: endDate,
+        page: page,
+        count: 10,
+      }),
+      usequeryBoolean,
+  );
   const bankList = data?.data?.result || [];
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      refetch();
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Bank List</h1>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <input
+          type="text"
+          placeholder="Search by username"
+          className="border px-3 py-2 rounded"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border px-3 py-2 rounded"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border px-3 py-2 rounded"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
       </div>
 
       <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -107,7 +139,7 @@ const BankDetais = () => {
                       }}
                       className="text-blue-600 hover:underline"
                     >
-                      Edit
+                      <Edit/>
                     </button>
                   </td>
                 </tr>
@@ -164,10 +196,10 @@ const BankDetais = () => {
             <button
               onClick={async () => {
                 try {
-                  const res = await apiConnectorGet(
-                    endpoint.update_bank_by_admin,
+                  const res = await apiConnectorPost(
+                    endpoint.update_customer_bank,
                     formData
-                  ); // Or use `apiConnectorPost`
+                  ); 
                   if (res?.data?.success) {
                     toast.success("Bank details updated successfully");
                     setEditModalOpen(false);

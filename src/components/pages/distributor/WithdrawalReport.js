@@ -1,137 +1,263 @@
-import { Dialog } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet } from "../../../utils/ApiConnector";
-import { endpoint } from "../../../utils/APIRoutes";
 import { useQuery } from "react-query";
-import Loader from "../../../Shared/Loader";
+import { apiConnectorGet, apiConnectorPost } from "../../../utils/ApiConnector";
+import { endpoint } from "../../../utils/APIRoutes";
 import CustomToPagination from "../../../Shared/Pagination";
 import moment from "moment";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { Cancel } from "@mui/icons-material";
+import Swal from "sweetalert2";
+import { Lock } from "lucide-react";
 
 const WithdrawalReport = () => {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [page, setPage] = useState(1);
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const {
-        data,
-        isLoading,
-        refetch
-    } = useQuery(
-        ["withdrawal_report", { startDate, endDate }],
-        () =>
-            apiConnectorGet(endpoint?.get_user_payout, {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL"); // NEW: status filter state
+  const count = 10;
 
-                search: searchTerm,
-                start_date: startDate,
-                end_date: endDate,
-                page: page,
-                count: 10
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
 
-            }),
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
-    );
+  const { data, isLoading, error, refetch } = useQuery(
+    ["withdrawal_report", { debouncedSearchTerm, startDate, endDate, page, statusFilter }],
+    () =>
+      apiConnectorGet(endpoint?.get_user_payout, {
+        search: debouncedSearchTerm,
+        start_date: startDate,
+        end_date: endDate,
+        page: page,
+        count: count,
+        status: statusFilter,
+      }),
+    {
+      keepPreviousData: true,
+    }
+  );
 
-    const distributors = data?.data?.result || [];
+  const records = data?.data?.result?.data || [];
 
+  async function handlePayout(transId, status_type) {
+    try {
+      const payload = {
+        trans_id: transId,
+        payout_stauts: status_type,
+      };
+      const response = await apiConnectorPost(
+        endpoint.payout_released,
+        payload
+      );
+      Swal.fire({
+        title: response?.data?.success ? "Success" : "Error",
+        text: response?.data?.message,
+        icon: response?.data?.success ? "success" : "error",
+      });
+      if (response?.data?.success) refetch();
+    } catch (e) {
+      Swal.fire({
+        title: "Error",
+        text: e?.message,
+        icon: "error",
+      });
+    }
+  }
 
-    useEffect(() => {
-        const delayDebounce = setTimeout(() => {
-            refetch();
-        }, 500); 
+  const handleSubmitClick = (transId, status_type) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to proceed with this transaction?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, proceed",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handlePayout(transId, status_type);
+      }
+    });
+  };
 
-        return () => clearTimeout(delayDebounce);
-    }, [searchTerm]); 
+  // Status buttons array
+  const statuses = [
+    { label: "All", value: "ALL" },
+    { label: "Pending", value: "Pending" },
+    { label: "Success", value: "Success" },
+    { label: "Failed", value: "Failed" },
+    { label: "Processing", value: "Processing" },
+    { label: "Reject", value: "Reject" },
+  ];
 
-    return (
-        <div className="bg-white text-black p-4 rounded-lg shadow-lg w-full mx-auto text-sm">
-            <Loader isLoading={isLoading} />
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Withdrawal Report</h1>
 
-            <h2 className="text-xl font-semibold mb-4">Withdrawal Report</h2>
+      {/* Status filter buttons */}
+      <div className="flex gap-2 mb-4">
+        {statuses.map((status) => (
+          <button
+            key={status.value}
+            onClick={() => {
+              setStatusFilter(status.value);
+              setPage(1); // Reset page on filter change
+            }}
+            className={`px-4 py-2 rounded font-semibold ${
+              statusFilter === status.value
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            {status.label}
+          </button>
+        ))}
+      </div>
 
-            {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <input
-                    type="text"
-                    placeholder="Search by username"
-                    className="border px-3 py-2 rounded"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+      {/* Existing search and date filters */}
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Search by name or ID"
+          className="border px-3 py-2 rounded"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border px-3 py-2 rounded"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border px-3 py-2 rounded"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
+      </div>
 
-                <input
-                    type="date"
-                    className="border px-3 py-2 rounded"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                />
-                <input
-                    type="date"
-                    className="border px-3 py-2 rounded"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                />
+      <div className="bg-white shadow rounded-lg overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-2 text-left">S.No</th>
+              <th className="px-4 py-2 text-left">TransID</th>
+              <th className="px-4 py-2 text-left">Req Amount</th>
+              <th className="px-4 py-2 text-left">Charges</th>
+              <th className="px-4 py-2 text-left">Net Amount</th>
+              <th className="px-4 py-2 text-left">Status</th>
+              <th className="px-4 py-2 text-left">Req Date</th>
+              <th className="px-4 py-2 text-left">Success Date</th>
+              <th className="px-4 py-2 text-left">Customer ID</th>
+              <th className="px-4 py-2 text-left">Name</th>
+              <th className="px-4 py-2 text-left">Email</th>
+              <th className="px-4 py-2 text-left">Phone</th>
+              <th className="px-4 py-2 text-left">Address</th>
+              <th className="px-4 py-2 text-left">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan={14} className="py-4 text-center text-gray-500">
+                  Loading...
+                </td>
+              </tr>
+            ) : records.length === 0 ? (
+              <tr>
+                <td colSpan={14} className="py-4 text-center text-gray-500">
+                  No records found.
+                </td>
+              </tr>
+            ) : (
+              records.map((item, idx) => (
+                <tr
+                  key={item.cus_pay_id}
+                  className="border-t hover:bg-gray-50"
+                >
+                  <td className="px-4 py-2">{(page - 1) * count + idx + 1}</td>
+                  <td className="px-4 py-2">{item.pay_trans_id}</td>
+                  <td className="px-4 py-2">
+                    ₹ {Number(item.pay_req_amount)?.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2">
+                    ₹ {Number(item.pay_charges)?.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2">
+                    ₹ {Number(item.pay_net_amount)?.toFixed(2)}
+                  </td>
 
-            </div>
+                  <td
+                    className={`${
+                      item?.pay_status === "Success"
+                        ? "text-green-400"
+                        : item?.pay_status === "Failed"
+                        ? "text-red-500"
+                        : item?.pay_status === "Reject"
+                        ? "text-red-400"
+                        : item?.pay_status === "Processing"
+                        ? "text-yellow-500"
+                        : item?.pay_status === "Pending"
+                        ? "text-yellow-600"
+                        : "text-gray-600"
+                    } px-4 py-2`}
+                  >
+                    {item.pay_status}
+                  </td>
+                  <td className="px-4 py-2">
+                    {item.pay_req_date
+                      ? moment(item.pay_req_date)?.format("DD-MM-YYYY")
+                      : "--"}
+                  </td>
+                  <td className="px-4 py-2">
+                    {item.pay_success_date
+                      ? moment(item.pay_success_date)?.format("DD-MM-YYYY")
+                      : "--"}
+                  </td>
+                  <td className="px-4 py-2">{item.cust_unique_id}</td>
+                  <td className="px-4 py-2">{item.name}</td>
+                  <td className="px-4 py-2">{item.cl_email}</td>
+                  <td className="px-4 py-2">{item.cl_phone}</td>
+                  <td className="px-4 py-2">{item.address}</td>
+                  <td className="px-4 py-2">
+                    {item.pay_status === "Success" ? (
+                      <Lock />
+                    ) : (
+                      <>
+                        <CheckCircleOutlineIcon
+                          onClick={() =>
+                            handleSubmitClick(item.pay_trans_id, 2)
+                          }
+                          className="cursor-pointer text-green-600 mr-2"
+                        />
+                        <Cancel
+                          onClick={() =>
+                            handleSubmitClick(item.pay_trans_id, 5)
+                          }
+                          className="cursor-pointer text-red-600"
+                        />
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full border text-sm">
-                    <thead className="bg-yellow-100 text-left">
-                        <tr>
-                            <th className="border px-4 py-2">S.No</th>
-                            <th className="border px-4 py-2">TransID</th>
-                            <th className="border px-4 py-2">Amount charge</th>
-                            <th className="border px-4 py-2">Net Amount </th>
-                            <th className="border px-4 py-2">Amount</th>
-                            <th className="border px-4 py-2">Status</th>
-                            <th className="border px-4 py-2">Req. Date</th>
-                            <th className="border px-4 py-2">Succ. Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {distributors?.data?.length === 0 ? (
-                            <tr>
-                                <td colSpan="5" className="text-center py-4">
-                                    No records found.
-                                </td>
-                            </tr>
-                        ) : (
-                            distributors?.data?.map((distributor, index) => (
-                                <tr key={index} className="hover:bg-yellow-50">
-                                    <td className="border px-4 py-2">{index + 1}</td>
-                                    <td className="border px-4 py-2">{distributor?.pay_trans_id || "--"}</td>
-                                    <td className="border px-4 py-2">
-                                        ₹ {Number(distributor?.pay_charges || 0)?.toFixed(2)}</td>
-                                    <td className="border px-4 py-2">
-                                        ₹ {Number(distributor?.pay_net_amount || 0)?.toFixed(2)}
-                                    </td>
-                                    <td className="border px-4 py-2">
-                                        ₹ {Number(distributor?.pay_req_amount || 0)?.toFixed(2)}
-                                    </td>
-                                    <td className={`${distributor?.pay_status === "Success" ? "text-green-400" : "text-yellow-500"} border px-4 py-2`} >
-                                        {distributor?.pay_status || 0}
-                                    </td>
-                                    <td className="border px-4 py-2">
-                                        {distributor?.pay_req_date ? moment(distributor?.pay_req_date).format("DD-MM-YYYY")
-                                            : "--"}
-                                    </td>
-
-                                    <td className="border px-4 py-2">
-                                        {distributor?.pay_success_date ? moment(distributor?.pay_success_date).format("DD-MM-YYYY")
-                                            : "--"}
-                                    </td>
-
-
-
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
-            <CustomToPagination data={distributors} setPage={setPage} page={page} />
-        </div>
-    );
+      <div className="mt-4">
+        <CustomToPagination data={records} setPage={setPage} page={page} />
+      </div>
+    </div>
+  );
 };
 
 export default WithdrawalReport;
