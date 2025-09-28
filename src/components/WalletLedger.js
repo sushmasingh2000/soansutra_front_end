@@ -68,6 +68,8 @@ const WalletLedgeUSER = () => {
                 >
                     <option value="1">Gold Wallet</option>
                     <option value="2">Purchase Wallet</option>
+                    <option value="3">Income Wallet</option>
+
                 </select>
 
                 <select
