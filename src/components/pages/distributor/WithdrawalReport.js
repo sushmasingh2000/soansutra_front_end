@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/ApiConnector";
+import { apiConnectorGet } from "../../../utils/ApiConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import CustomToPagination from "../../../Shared/Pagination";
+import CustomTable from "../../../Shared/CustomTable";
 import moment from "moment";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { Cancel } from "@mui/icons-material";
-import Swal from "sweetalert2";
-import { Lock } from "lucide-react";
 
 const WithdrawalReport = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +12,7 @@ const WithdrawalReport = () => {
   const [page, setPage] = useState(1);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [statusFilter, setStatusFilter] = useState("ALL"); // NEW: status filter state
+  const [statusFilter, setStatusFilter] = useState("ALL"); // Status filter state
   const count = 10;
 
   useEffect(() => {
@@ -23,9 +20,7 @@ const WithdrawalReport = () => {
       setDebouncedSearchTerm(searchTerm);
     }, 500);
 
-    return () => {
-      clearTimeout(handler);
-    };
+    return () => clearTimeout(handler);
   }, [searchTerm]);
 
   const { data, isLoading, error, refetch } = useQuery(
@@ -44,9 +39,9 @@ const WithdrawalReport = () => {
     }
   );
 
-  const records = data?.data?.result?.data || [];
+  const withdrawal_report = data?.data?.result || [];
 
-  // Status buttons array
+ 
   const statuses = [
     { label: "All", value: "ALL" },
     { label: "Pending", value: "Pending" },
@@ -56,23 +51,68 @@ const WithdrawalReport = () => {
     { label: "Reject", value: "Reject" },
   ];
 
+  const tablehead = [
+    <div className="text-left px-4 py-2 w-full">S.No</div>,
+    <div className="text-left px-4 py-2 w-full">TransID</div>,
+    <div className="text-left px-4 py-2 w-full">Req Amount</div>,
+    <div className="text-left px-4 py-2 w-full">Charges</div>,
+    <div className="text-left px-4 py-2 w-full">Net Amount</div>,
+    <div className="text-left px-4 py-2 w-full">Status</div>,
+    <div className="text-left px-4 py-2 w-full">Req Date</div>,
+    <div className="text-left px-4 py-2 w-full">Success Date</div>,
+  ];
+
+  
+  const tablerow =
+    withdrawal_report?.data?.length > 0
+      ? withdrawal_report?.data?.map((item, idx) => [
+          <div className="px-4 py-2">{(page - 1) * count + idx + 1}</div>,
+          <div className="px-4 py-2">{item.pay_trans_id}</div>,
+          <div className="px-4 py-2">₹ {Number(item.pay_req_amount)?.toFixed(2)}</div>,
+          <div className="px-4 py-2">₹ {Number(item.pay_charges)?.toFixed(2)}</div>,
+          <div className="px-4 py-2">₹ {Number(item.pay_net_amount)?.toFixed(2)}</div>,
+          <div
+            className={`px-4 py-2 ${
+              item?.pay_status === "Success"
+                ? "text-green-600"
+                : item?.pay_status === "Failed"
+                ? "text-red-600"
+                : item?.pay_status === "Reject"
+                ? "text-red-500"
+                : item?.pay_status === "Processing"
+                ? "text-yellow-500"
+                : item?.pay_status === "Pending"
+                ? "text-yellow-600"
+                : "text-gray-600"
+            }`}
+          >
+            {item.pay_status}
+          </div>,
+          <div className="px-4 py-2">
+            {item.pay_req_date ? moment(item.pay_req_date).format("DD-MM-YYYY") : "--"}
+          </div>,
+          <div className="px-4 py-2">
+            {item.pay_success_date ? moment(item.pay_success_date).format("DD-MM-YYYY") : "--"}
+          </div>,
+        ])
+      : [["No withdrawal_report found"]];
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Withdrawal Report</h1>
 
-      {/* Status filter buttons */}
-      <div className="flex gap-2 mb-4">
-        {statuses.map((status) => (
+      <div className="flex flex-wrap gap-2 mb-4 ">
+        {statuses?.map((status) => (
           <button
             key={status.value}
             onClick={() => {
               setStatusFilter(status.value);
-              setPage(1); // Reset page on filter change
+              setPage(1); 
             }}
             className={`px-4 py-2 rounded font-semibold ${
               statusFilter === status.value
                 ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                : "bg-yellow-200 text-yellow-700 hover:bg-yellow-300"
             }`}
           >
             {status.label}
@@ -80,8 +120,7 @@ const WithdrawalReport = () => {
         ))}
       </div>
 
-      {/* Existing search and date filters */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 flex-wrap">
         <input
           type="text"
           placeholder="Search by name or ID"
@@ -104,86 +143,11 @@ const WithdrawalReport = () => {
       </div>
 
       <div className="bg-white shadow rounded-lg overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-2 text-left">S.No</th>
-              <th className="px-4 py-2 text-left">TransID</th>
-              <th className="px-4 py-2 text-left">Req Amount</th>
-              <th className="px-4 py-2 text-left">Charges</th>
-              <th className="px-4 py-2 text-left">Net Amount</th>
-              <th className="px-4 py-2 text-left">Status</th>
-              <th className="px-4 py-2 text-left">Req Date</th>
-              <th className="px-4 py-2 text-left">Success Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={14} className="py-4 text-center text-gray-500">
-                  Loading...
-                </td>
-              </tr>
-            ) : records.length === 0 ? (
-              <tr>
-                <td colSpan={14} className="py-4 text-center text-gray-500">
-                  No records found.
-                </td>
-              </tr>
-            ) : (
-              records.map((item, idx) => (
-                <tr
-                  key={item.cus_pay_id}
-                  className="border-t hover:bg-gray-50"
-                >
-                  <td className="px-4 py-2">{(page - 1) * count + idx + 1}</td>
-                  <td className="px-4 py-2">{item.pay_trans_id}</td>
-                  <td className="px-4 py-2">
-                    ₹ {Number(item.pay_req_amount)?.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">
-                    ₹ {Number(item.pay_charges)?.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">
-                    ₹ {Number(item.pay_net_amount)?.toFixed(2)}
-                  </td>
-
-                  <td
-                    className={`${
-                      item?.pay_status === "Success"
-                        ? "text-green-400"
-                        : item?.pay_status === "Failed"
-                        ? "text-red-500"
-                        : item?.pay_status === "Reject"
-                        ? "text-red-400"
-                        : item?.pay_status === "Processing"
-                        ? "text-yellow-500"
-                        : item?.pay_status === "Pending"
-                        ? "text-yellow-600"
-                        : "text-gray-600"
-                    } px-4 py-2`}
-                  >
-                    {item.pay_status}
-                  </td>
-                  <td className="px-4 py-2">
-                    {item.pay_req_date
-                      ? moment(item.pay_req_date)?.format("DD-MM-YYYY")
-                      : "--"}
-                  </td>
-                  <td className="px-4 py-2">
-                    {item.pay_success_date
-                      ? moment(item.pay_success_date)?.format("DD-MM-YYYY")
-                      : "--"}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <CustomTable tablehead={tablehead} tablerow={tablerow} isLoading={isLoading} />
       </div>
 
       <div className="mt-4">
-        <CustomToPagination data={records} setPage={setPage} page={page} />
+        <CustomToPagination data={withdrawal_report} setPage={setPage} page={page} />
       </div>
     </div>
   );

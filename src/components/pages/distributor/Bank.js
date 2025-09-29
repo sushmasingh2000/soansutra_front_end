@@ -1,11 +1,11 @@
 import { Dialog } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import CustomTable from "../../../Shared/CustomTable";
+import CustomToPagination from "../../../Shared/Pagination";
 import { apiConnectorGet, usequeryBoolean } from "../../../utils/ApiConnector";
 import { endpoint } from "../../../utils/APIRoutes";
-import { useQuery } from "react-query";
-import Loader from "../../../Shared/Loader";
-import CustomToPagination from "../../../Shared/Pagination";
-import moment from "moment";
 import CreateBank from "./CreateBank";
 
 const Bank = () => {
@@ -15,9 +15,8 @@ const Bank = () => {
   const [endDate, setEndDate] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
-
   const { data, isLoading, refetch } = useQuery(
-    ["bank_deatil", { searchTerm, startDate, endDate }],
+    ["bank_detail", { searchTerm, startDate, endDate, page }],
     () =>
       apiConnectorGet(endpoint?.bank_get_all, {
         search: searchTerm,
@@ -26,9 +25,10 @@ const Bank = () => {
         page: page,
         count: 10,
       }),
-      usequeryBoolean,
+    usequeryBoolean
   );
-  const distributors = data?.data?.result || [];
+
+  const bankdatas = data?.data?.result || [];
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -36,12 +36,32 @@ const Bank = () => {
     }, 500);
 
     return () => clearTimeout(delayDebounce);
-  }, [searchTerm]);
+  }, [searchTerm, startDate, endDate]);
+
+  const tablehead = [
+    <div className="text-center w-full">S.No</div>,
+    <div className="text-center w-full">Account Holder</div>,
+    <div className="text-center w-full">Account Number</div>,
+    <div className="text-center w-full">IFSC Code</div>,
+    <div className="text-center w-full">Bank Name</div>,
+    <div className="text-center w-full">Branch Name</div>,
+    <div className="text-center w-full">Date</div>,
+  ];
+  
+  const tablerow = bankdatas?.data?.map((item, index) => [
+    <div className="text-center w-full">{(page - 1) * 10 + index + 1}</div>,
+    <div className="text-center w-full">{item?.account_holder_name || "--"}</div>,
+    <div className="text-center w-full">{item?.account_number || "--"}</div>,
+    <div className="text-center w-full">{item?.ifsc_code || "--"}</div>,
+    <div className="text-center w-full">{item?.bank_name || "--"}</div>,
+    <div className="text-center w-full">{item?.branch_name || "--"}</div>,
+    <div className="text-center w-full">
+      {item?.created_at ? moment(item.created_at).format("DD-MM-YYYY") : "--"}
+    </div>,
+  ]);
 
   return (
     <div className="bg-white text-black p-4 rounded-lg shadow-lg w-full mx-auto text-sm">
-      <Loader isLoading={isLoading} />
-
       <div className="flex justify-between">
         <h2 className="text-xl font-semibold mb-4">Bank Detail</h2>
         <p
@@ -51,7 +71,7 @@ const Bank = () => {
           + Add Bank
         </p>
       </div>
-      {/* Filters */}
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <input
           type="text"
@@ -74,51 +94,19 @@ const Bank = () => {
         />
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-  <table className="min-w-full border text-sm">
-    <thead className="bg-yellow-100 text-left">
-      <tr>
-        <th className="border px-4 py-2">S.No</th>
-        <th className="border px-4 py-2">Account Holder</th>
-        <th className="border px-4 py-2">Account Number</th>
-        <th className="border px-4 py-2">IFSC Code</th>
-        <th className="border px-4 py-2">Bank Name</th>
-        <th className="border px-4 py-2">Branch Name</th>
-        <th className="border px-4 py-2">Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {distributors?.data?.length === 0 ? (
-        <tr>
-          <td colSpan="7" className="text-center py-4">
-            No records found.
-          </td>
-        </tr>
-      ) : (
-        distributors?.data?.map((bank, index) => (
-          <tr key={index} className="hover:bg-yellow-50">
-            <td className="border px-4 py-2">{index + 1}</td>
-            <td className="border px-4 py-2">{bank?.account_holder_name || "--"}</td>
-            <td className="border px-4 py-2">{bank?.account_number || "--"}</td>
-            <td className="border px-4 py-2">{bank?.ifsc_code || "--"}</td>
-            <td className="border px-4 py-2">{bank?.bank_name || "--"}</td>
-            <td className="border px-4 py-2">{bank?.branch_name || "--"}</td>
-            <td className="border px-4 py-2">
-              {bank?.created_at ? moment(bank.created_at).format("DD-MM-YYYY") : "--"}
-            </td>
-          </tr>
-        ))
-      )}
-    </tbody>
-  </table>
-</div>
+      <div className="w-full overflow-x-auto">
+        <CustomTable
+          tablehead={tablehead}
+          tablerow={tablerow?.length ? tablerow : [["No records found"]]}
+          isLoading={isLoading}
+        />
+      </div>
 
-      <CustomToPagination data={distributors} setPage={setPage} page={page} />
+      <CustomToPagination data={bankdatas} setPage={setPage} page={page} />
+
       <Dialog open={openCreateModal} onClose={() => setOpenCreateModal(false)} fullWidth maxWidth="sm">
-    <CreateBank onClose={() => setOpenCreateModal(false)} />
-</Dialog>
-
+        <CreateBank onClose={() => setOpenCreateModal(false)} />
+      </Dialog>
     </div>
   );
 };
