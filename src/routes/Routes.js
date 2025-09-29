@@ -60,7 +60,6 @@ import ShippingPolicy from "../components/shippingpolicy.jsx";
 import PayoutReport from "../components/admin/PayoutReport.js";
 import PurchaseWallet from "../components/admin/PurchaseWallet.js";
 import AddPurchaseWallet from "../components/admin/AddPurchaseWallet.js";
-import CreateBank from "../components/pages/distributor/CreateBank.js";
 import BankDetais from "../components/admin/Bankdetails.js";
 import DeliveryApp from "../components/pages/deliveryadmin.jsx";
 

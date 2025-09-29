@@ -18,6 +18,7 @@ const Distributor = () => {
   const [name, setName] = useState("");
   const [customer, setCustomer] = useState("");
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem("token")
 
   const handleClose = () => {
     setOpen(false);
@@ -61,8 +62,9 @@ const Distributor = () => {
   const { data: get_didtri_dash } = useQuery(
     ["dashbooard_get"],
     () => apiConnectorGet(endpoint.get_distributor_dashboard),
-    {
-      ...usequeryBoolean,
+   {
+      ...usequeryBoolean,     
+      enabled: !!token    
     }
   );
 
@@ -71,19 +73,25 @@ const Distributor = () => {
   const { data, isLoading: profile } = useQuery(
     ["profile_distributor"],
     () => apiConnectorGet(endpoint.get_profile_distributor),
-    usequeryBoolean
+   {
+       ...usequeryBoolean,
+       enabled: !!token 
+     }
   );
 
   const distri_pro = data?.data?.result?.[0] || {};
 
-    const { data: profile_user } = useQuery(
-      ["profile_user"],
-      () =>
-        apiConnectorGet(endpoint?.get_customer_profile),
-      usequeryBoolean
-    );
-  
-    const profile_cust = profile_user?.data?.result || [];
+  const { data: profile_user } = useQuery(
+    ["profile_user"],
+    () =>
+      apiConnectorGet(endpoint?.get_customer_profile),
+    {
+    ...usequeryBoolean,
+    enabled: !!token 
+  }
+  );
+
+  const profile_cust = profile_user?.data?.result || [];
 
   return (
     <>

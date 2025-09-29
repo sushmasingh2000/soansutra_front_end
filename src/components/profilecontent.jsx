@@ -26,11 +26,14 @@ const ProfileContent = () => {
   const [showChangePassword, setShowChangePassword] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = React.useRef(null);
-
+const token = localStorage.getItem("token")
   const { data } = useQuery(
     ["profile"],
     () => apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
+     {
+        ...usequeryBoolean,
+        enabled: !!token 
+      }
   );
 
   const profileData = data?.data?.result || [];

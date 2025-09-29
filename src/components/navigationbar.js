@@ -30,7 +30,7 @@ const NavigationBar = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activecategoryId, setActivecategoryId] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const token = localStorage.getItem("token");
   const categorySections = [
     {
       name: "Best Sellers",
@@ -179,7 +179,10 @@ const NavigationBar = () => {
   const { data: cart } = useQuery(
     ["get_cart"],
     () => apiConnectorGet(endpoint.get_cart),
-    usequeryBoolean
+    {
+      ...usequeryBoolean,
+      enabled: !!token
+    }
   );
 
   const cartItems = cart?.data?.result || [];
@@ -187,7 +190,10 @@ const NavigationBar = () => {
   const { data: profile_user } = useQuery(
     ["profile_user"],
     () => apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
+     {
+        ...usequeryBoolean,
+        enabled: !!token 
+      }
   );
 
   const profile = profile_user?.data?.result || [];
@@ -224,25 +230,25 @@ const NavigationBar = () => {
           <div className="flex space-x-10 py-3">
             {isLoading
               ? Array.from({ length: 6 }).map((_, index) => (
-                  <Skeleton variant="rectangular" className="w-16 h-10" />
-                ))
+                <Skeleton variant="rectangular" className="w-16 h-10" />
+              ))
               : categories.map((cat) => (
-                  <div
-                    key={cat.id}
-                    className="group"
-                    onMouseEnter={() =>
-                      fetchSubcategories(cat.product_category_id)
-                    }
-                    // onMouseLeave={() => {
-                    //   setActiveCategoryId(null);
-                    //   setSubcategories([]);
-                    // }}
-                  >
-                    <button className="text-sm font-semibold hover:text-yellow-300  hover:font-bold">
-                      {cat.name}
-                    </button>
-                  </div>
-                ))}
+                <div
+                  key={cat.id}
+                  className="group"
+                  onMouseEnter={() =>
+                    fetchSubcategories(cat.product_category_id)
+                  }
+                // onMouseLeave={() => {
+                //   setActiveCategoryId(null);
+                //   setSubcategories([]);
+                // }}
+                >
+                  <button className="text-sm font-semibold hover:text-yellow-300  hover:font-bold">
+                    {cat.name}
+                  </button>
+                </div>
+              ))}
           </div>
 
           {activeCategoryId && subcategories.length > 0 && (
@@ -265,23 +271,23 @@ const NavigationBar = () => {
                 <ul className="space-y-1 text-sm text-gray-500 font-semibold">
                   {loader
                     ? Array.from({ length: 4 }).map((_, index) => (
-                        <Skeleton
-                          variant="rectangular"
-                          className="!w-16 !h-4 !rounded-lg"
-                        />
-                      ))
+                      <Skeleton
+                        variant="rectangular"
+                        className="!w-16 !h-4 !rounded-lg"
+                      />
+                    ))
                     : subcategories.map((sub) => (
-                        <li key={sub.product_subcategory_id}>
-                          <button
-                            className="text-sm hover:text-pink-600 transition"
-                            onClick={() =>
-                              handleSubcategoryClick(sub.product_subcategory_id)
-                            }
-                          >
-                            {sub.name}
-                          </button>
-                        </li>
-                      ))}
+                      <li key={sub.product_subcategory_id}>
+                        <button
+                          className="text-sm hover:text-pink-600 transition"
+                          onClick={() =>
+                            handleSubcategoryClick(sub.product_subcategory_id)
+                          }
+                        >
+                          {sub.name}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               </div>
 
@@ -292,52 +298,52 @@ const NavigationBar = () => {
 
                 {loader
                   ? Array.from({ length: 3 }).map((_, index) => (
-                      <Skeleton
-                        key={index}
-                        variant="rectangular"
-                        className="!w-16 !h-4 !my-1 !rounded-lg"
-                      />
-                    ))
+                    <Skeleton
+                      key={index}
+                      variant="rectangular"
+                      className="!w-16 !h-4 !my-1 !rounded-lg"
+                    />
+                  ))
                   : (() => {
-                      const seen = new Set();
-                      return sub_cate_product?.map((item, index) => {
-                        const {
-                          master_mat_name,
-                          material_name,
-                          product_subcategory_id,
-                        } = item;
+                    const seen = new Set();
+                    return sub_cate_product?.map((item, index) => {
+                      const {
+                        master_mat_name,
+                        material_name,
+                        product_subcategory_id,
+                      } = item;
 
-                        if (seen.has(master_mat_name)) return null;
-                        seen.add(master_mat_name);
+                      if (seen.has(master_mat_name)) return null;
+                      seen.add(master_mat_name);
 
-                        return (
-                          <ul
-                            key={index}
-                            className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer"
+                      return (
+                        <ul
+                          key={index}
+                          className="space-y-1 text-sm text-gray-500 font-semibold cursor-pointer"
+                        >
+                          {/* Master Material Name */}
+                          <li
+                            onClick={() =>
+                              handleSubcategoryClick(product_subcategory_id)
+                            }
                           >
-                            {/* Master Material Name */}
+                            {master_mat_name}
+                          </li>
+
+                          {/* Material Name — only if different */}
+                          {material_name !== master_mat_name && (
                             <li
                               onClick={() =>
                                 handleSubcategoryClick(product_subcategory_id)
                               }
                             >
-                              {master_mat_name}
+                              {material_name}
                             </li>
-
-                            {/* Material Name — only if different */}
-                            {material_name !== master_mat_name && (
-                              <li
-                                onClick={() =>
-                                  handleSubcategoryClick(product_subcategory_id)
-                                }
-                              >
-                                {material_name}
-                              </li>
-                            )}
-                          </ul>
-                        );
-                      });
-                    })()}
+                          )}
+                        </ul>
+                      );
+                    });
+                  })()}
               </div>
 
               <div>
@@ -347,44 +353,44 @@ const NavigationBar = () => {
                 <div className="space-y-2">
                   {loader
                     ? Array.from({ length: 3 }).map((_, index) => (
-                        <Skeleton
-                          variant="rectangular"
-                          className="!w-16 !h-4 !rounded-lg"
-                        />
-                      ))
+                      <Skeleton
+                        variant="rectangular"
+                        className="!w-16 !h-4 !rounded-lg"
+                      />
+                    ))
                     : [
-                        ...new Set(
-                          sub_cate_product.map((item) => item.price_group)
-                        ),
-                      ]
-                        .sort((a, b) => {
-                          const getSortValue = (label) => {
-                            const match = label.match(/(\d+)(?!.*\d)/);
-                            return match
-                              ? parseInt(match[1])
-                              : Number.MAX_SAFE_INTEGER;
-                          };
-                          return getSortValue(a) - getSortValue(b);
-                        })
-                        .map((priceGroup, index) => {
-                          const item = sub_cate_product.find(
-                            (p) => p.price_group === priceGroup
-                          );
-                          return (
-                            <div
-                              key={index}
-                              onClick={() =>
-                                item &&
-                                handleSubcategoryClick(
-                                  item.product_subcategory_id
-                                )
-                              }
-                              className="text-sm text-gray-600 font-semibold cursor-pointer hover:bg-gray-100 rounded transition-all duration-150 "
-                            >
-                              ₹ {priceGroup}
-                            </div>
-                          );
-                        })}
+                      ...new Set(
+                        sub_cate_product.map((item) => item.price_group)
+                      ),
+                    ]
+                      .sort((a, b) => {
+                        const getSortValue = (label) => {
+                          const match = label.match(/(\d+)(?!.*\d)/);
+                          return match
+                            ? parseInt(match[1])
+                            : Number.MAX_SAFE_INTEGER;
+                        };
+                        return getSortValue(a) - getSortValue(b);
+                      })
+                      .map((priceGroup, index) => {
+                        const item = sub_cate_product.find(
+                          (p) => p.price_group === priceGroup
+                        );
+                        return (
+                          <div
+                            key={index}
+                            onClick={() =>
+                              item &&
+                              handleSubcategoryClick(
+                                item.product_subcategory_id
+                              )
+                            }
+                            className="text-sm text-gray-600 font-semibold cursor-pointer hover:bg-gray-100 rounded transition-all duration-150 "
+                          >
+                            ₹ {priceGroup}
+                          </div>
+                        );
+                      })}
                 </div>
               </div>
               <div>
@@ -438,30 +444,30 @@ const NavigationBar = () => {
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {isLoading
               ? Array.from({ length: 2 }).map((_, index) => (
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div
-                      key={index}
-                      className="w-full h-full flex-shrink-0 relative"
-                    >
-                      <img className="w-20 h-20 rounded-xl object-cover mb-2" />
-                      <span className="text-xs text-gray-800" />
-                    </div>
-                  </div>
-                ))
-              : categories.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleMobileJewelryClick(item)}
-                    className="flex flex-col items-center w-24 flex-shrink-0"
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div
+                    key={index}
+                    className="w-full h-full flex-shrink-0 relative"
                   >
-                    <img
-                      src={item.cat_image}
-                      alt={item.name}
-                      className="w-20 h-20 rounded-xl object-cover mb-2"
-                    />
-                    <span className="text-xs text-gray-800">{item.name}</span>
-                  </button>
-                ))}
+                    <img className="w-20 h-20 rounded-xl object-cover mb-2" />
+                    <span className="text-xs text-gray-800" />
+                  </div>
+                </div>
+              ))
+              : categories.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleMobileJewelryClick(item)}
+                  className="flex flex-col items-center w-24 flex-shrink-0"
+                >
+                  <img
+                    src={item.cat_image}
+                    alt={item.name}
+                    className="w-20 h-20 rounded-xl object-cover mb-2"
+                  />
+                  <span className="text-xs text-gray-800">{item.name}</span>
+                </button>
+              ))}
           </div>
         </div>
       </div>
@@ -578,9 +584,8 @@ const NavigationBar = () => {
                       {showMoreJewellery ? "Less Jewellery" : "More Jewellery"}
                     </span>
                     <ChevronRightIcon
-                      className={`h-4 w-4 transition-transform ${
-                        showMoreJewellery ? "rotate-90" : ""
-                      }`}
+                      className={`h-4 w-4 transition-transform ${showMoreJewellery ? "rotate-90" : ""
+                        }`}
                     />
                   </button>
                 </div>
@@ -616,9 +621,8 @@ const NavigationBar = () => {
                         <button
                           key={index}
                           onClick={() => setCurrentSlide(index)}
-                          className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                            index === currentSlide ? "bg-white" : "bg-white/50"
-                          }`}
+                          className={`w-1.5 h-1.5 rounded-full transition-colors ${index === currentSlide ? "bg-white" : "bg-white/50"
+                            }`}
                         />
                       ))}
                     </div>

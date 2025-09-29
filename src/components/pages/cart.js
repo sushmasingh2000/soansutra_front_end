@@ -189,14 +189,8 @@ export default function ResponsiveCart() {
   };
 
   const handleApplyCoupon = async () => {
-    // if (!code.trim()) {
-    //   toast.error('Please enter a coupon code');
-    //   return;
-    // }
-
     const variantIds = cartItems.map((item) => item.varient_id);
     const productAmount = subtotal;
-
     try {
       const response = await apiConnectorPost(endpoint.get_coupon_varient, {
         v_id: JSON.stringify(variantIds || []),
@@ -208,8 +202,6 @@ export default function ResponsiveCart() {
         return;
       }
       setCoupon(response?.data?.result || []);
-      // setAppliedCoupon(coupon_details);
-      // setCouponDiscount(discount_amount);
     } catch (error) {
       console.error("Error applying coupon:", error);
       toast.error("Something went wrong while applying the coupon");

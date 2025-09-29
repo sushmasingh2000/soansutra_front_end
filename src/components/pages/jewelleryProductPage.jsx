@@ -399,6 +399,7 @@ const DynamicProductListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { setShowLoginModal } = useLoginModal();
+  const token = localStorage.getItem("token")
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -424,7 +425,10 @@ const DynamicProductListingPage = () => {
     ["get_wish"],
     () =>
       apiConnectorGet(endpoint?.get_wishlist),
-    usequeryBoolean
+   {
+    ...usequeryBoolean,     
+    enabled: !!token    
+  }
   );
 
   const wishingdata = wishing?.data?.result || [];

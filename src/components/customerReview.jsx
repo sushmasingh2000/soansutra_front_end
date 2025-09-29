@@ -194,7 +194,11 @@ const CustomerReviewSection = ({ productId }) => {
   const currPage = data?.data?.result?.currPage || 1;
   const { data: order_check, } = useQuery(
     ["order_check", page], () =>
-    apiConnectorGet(endpoint.checkd_order_placed)
+    apiConnectorGet(endpoint.checkd_order_placed),
+    {
+    ...usequeryBoolean,     
+    enabled: !!user    
+  }
   );
 
 
