@@ -114,8 +114,9 @@ const SonasutraInvoice = () => {
 
               <div className="flex-1 text-[10px] leading-[1.3]">
                 <div className="font-bold mb-[2px]">
-                  Sonasutra TRADING PRIVATE LIMITED - Subsidiary of Titan
-                  Company Limited
+                    {store?.name}
+                  {/* Sonasutra TRADING PRIVATE LIMITED - Subsidiary of Titan
+                  Company Limited */}
                 </div>
                 <div>
                   {store?.address}
@@ -158,7 +159,7 @@ const SonasutraInvoice = () => {
                 </div>
               <div>
                   <strong>Doc No :</strong> {invoice_detail?.doc_id}{" "}
-                  <strong>Today Date :</strong> {moment(invoice_detail?.today_date)?.format("DD-MM-YYYY")}
+                  <strong> Dated :</strong> {moment(invoice_detail?.today_date)?.format("DD-MM-YYYY")}
                 </div>
               </div>
             </div>
@@ -225,12 +226,12 @@ const SonasutraInvoice = () => {
                     </span>{" "}
                     {ship?.name}
                   </div>
-                  <div className="mb-[2px]">
+                  {/* <div className="mb-[2px]">
                     <span className="font-bold inline-block min-w-[60px]">
                       Number :
                     </span>{" "}
                     +91 7307515355
-                  </div>
+                  </div> */}
                   <div className="mb-[2px]">
                     <span className="font-bold inline-block min-w-[60px]">
                       Address :

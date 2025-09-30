@@ -1,19 +1,30 @@
 import React, { useState } from "react";
 import { endpoint } from "../../../utils/APIRoutes";
-import { apiConnectorPost } from "../../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../../utils/ApiConnector";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import { useQuery } from "react-query";
 
 const Fundrequest = () => {
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const { data: distri } = useQuery(
+           ["profile_distributor"],
+           () => apiConnectorGet(endpoint.get_profile_distributor),
+           {
+               ...usequeryBoolean,
+           }
+       );
+   
+       const distri_pro = distri?.data?.result?.[0] || [];
 
     const FundFn = async () => {
         if (!amount || isNaN(amount)) {
             toast.error("Please enter a valid amount");
             return;
         }
-    
+
         const confirm = await Swal.fire({
             title: "Are you sure?",
             text: `You are requesting a withdrawal of ₹${amount}`,
@@ -23,17 +34,17 @@ const Fundrequest = () => {
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, submit request",
         });
-    
+
         if (!confirm.isConfirmed) {
             return; // User cancelled
         }
-    
+
         setLoading(true);
         try {
             const response = await apiConnectorPost(endpoint?.fund_transfer, {
                 req_amount: Number(amount),
             });
-    
+
             if (response?.data?.success) {
                 Swal.fire({
                     icon: "success",
@@ -65,6 +76,10 @@ const Fundrequest = () => {
                     Fund Transfer
                 </h2>
 
+                <div className="flex justify-between text-xs pb-8">
+                    <p>Purchase Wallet : ₹ {Number(distri_pro?.purchase_wallet)?.toFixed(2)} </p>
+                    <p>Income Wallet : ₹ {Number(distri_pro?.mlm_income_wallet)?.toFixed(2)}</p>
+                </div>
                 <div className="flex flex-col gap-3">
                     <label className="text-sm font-medium text-gray-700">Amount</label>
                     <input
