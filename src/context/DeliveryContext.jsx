@@ -1,9 +1,9 @@
-// DeliveryManagement.jsx
-import React, { useState } from 'react';
-import DeliveryAdminPanel from '../deliverymangementadmin';
-import DeliveryBoyPanel from '../deliveryboy';
+// src/context/DeliveryContext.jsx
+import React, { createContext, useState } from 'react';
 
-const DeliveryManagement = () => {
+export const DeliveryContext = createContext();
+
+export const DeliveryProvider = ({ children }) => {
   const [orders, setOrders] = useState([
     {
       id: "1234",
@@ -149,34 +149,23 @@ const DeliveryManagement = () => {
     setDeliveryBoys(deliveryBoys.filter(b => b.id !== boyId));
   };
 
-  // Render both panels for data sharing demonstration, as toggle is removed
   return (
-    <div className="container mx-auto p-4">
-      <DeliveryAdminPanel
-        orders={orders}
-        setOrders={setOrders}
-        deliveryBoys={deliveryBoys}
-        setDeliveryBoys={setDeliveryBoys}
-        notifications={notifications}
-        addNotification={addNotification}
-        dismissNotification={dismissNotification}
-        statuses={statuses}
-        updateOrder={updateOrder}
-        addBoy={addBoy}
-        updateBoy={updateBoy}
-        deleteBoy={deleteBoy}
-      />
-      <DeliveryBoyPanel
-        orders={orders}
-        setOrders={setOrders}
-        currentBoy={currentBoy}
-        notifications={notifications}
-        addNotification={addNotification}
-        statuses={statuses}
-        updateOrder={updateOrder}
-      />
-    </div>
+    <DeliveryContext.Provider value={{
+      orders,
+      setOrders,
+      deliveryBoys,
+      setDeliveryBoys,
+      notifications,
+      addNotification,
+      dismissNotification,
+      currentBoy,
+      statuses,
+      updateOrder,
+      addBoy,
+      updateBoy,
+      deleteBoy
+    }}>
+      {children}
+    </DeliveryContext.Provider>
   );
 };
-
-export default DeliveryManagement;
