@@ -9,7 +9,7 @@ const ShopByProducts = () => {
   
   const navigate = useNavigate();
   const { data } = useQuery(
-    ["category_user_shop_by_products"],
+    ["get_product_category"],
     () => apiConnectorGet(endpoint.get_categroy_user),
     usequeryBoolean
   );

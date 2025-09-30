@@ -1,6 +1,6 @@
 
 import { useFormik } from "formik";
-import { Gift, Trash2, X } from "lucide-react";
+import { Copy, CopyIcon, Gift, Trash2, X } from "lucide-react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useQuery, useQueryClient } from "react-query";
@@ -12,6 +12,8 @@ import {
 import { endpoint } from "../utils/APIRoutes";
 import Swal from "sweetalert2";
 import { Download } from "@mui/icons-material";
+import copy from "copy-to-clipboard";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 
 const ProfileContent = () => {
   const [isEditing, setIsEditing] = React.useState(false);
@@ -24,11 +26,14 @@ const ProfileContent = () => {
   const [showChangePassword, setShowChangePassword] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = React.useRef(null);
-
+const token = localStorage.getItem("token")
   const { data } = useQuery(
     ["profile"],
     () => apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
+     {
+        ...usequeryBoolean,
+        enabled: !!token 
+      }
   );
 
   const profileData = data?.data?.result || [];
@@ -854,7 +859,7 @@ const ProfileContent = () => {
                       <button
                         onClick={handleUploadClick}
                         className="w-full py-3 text-black bg-gradient-to-r from-yellow-400 to-yellow-600 font-medium rounded-lg flex items-center justify-center text-sm hover:bg-yellow-50 transition-colors"
-                        
+
                       >
                         <svg
                           className="w-4 h-4 mr-2"
@@ -998,7 +1003,10 @@ const ProfileContent = () => {
       </div>
     );
   }
-
+  const functionTOCopy = (value) => {
+    copy(value);
+    toast.success("Copied to clipboard!", { id: 1 });
+  };
   return (
     <div className="p-3 md:p-6">
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 flex items-center">
@@ -1021,7 +1029,7 @@ const ProfileContent = () => {
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-base font-medium text-gray-900">Your Profile</h2>
-         
+
         </div>
         <button
           onClick={() => setIsEditing(true)}
@@ -1034,7 +1042,7 @@ const ProfileContent = () => {
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="divide-y divide-gray-200">
           {[
-              {
+            {
               label: "CUSTOMER ID",
               value: profileData?.cust_unique_id,
             },
@@ -1046,6 +1054,9 @@ const ProfileContent = () => {
             { label: "MOBILE NO.", value: profileData?.cl_phone },
             { label: "PINCODE", value: profileData.pincode },
             { label: "DOB", value: profileData.spouse_birthday || "-" },
+            { label: "PURCHASE WALLET", value: `₹ ${Number(profileData.purchase_wallet || 0).toFixed(2)}` || "-" },
+            { label: "GOLD WALLET", value: profileData.gold_wallet || "-" },
+
             { label: "ANNIVERSARY", value: profileData.aniversary || "-" },
             { label: "OCCUPATION", value: profileData.occupation || "-" },
             {
@@ -1068,7 +1079,27 @@ const ProfileContent = () => {
               <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                 {item.label}
               </span>
-              <span className="text-xs text-gray-900">{item.value}</span>
+              <span
+                className={`text-xs flex items-center gap-2 ${item.label === "PURCHASE WALLET" ? "font-bold text-gray-900" : "text-gray-900"
+                  }`}
+              >
+                {item.value}
+                {item.label === "CUSTOMER ID" && item.value && (
+                  <ClipboardDocumentIcon
+                    className="text-gray-500 w-5 h-5 cursor-pointer hover:text-blue-600 transition"
+                    onClick={() => functionTOCopy(item?.value)}
+                  />
+                )}
+              </span>
+              {/* <span className="text-xs text-gray-900 flex items-center gap-2">
+                {item.value}
+                {item.label === "CUSTOMER ID" && item.value && (
+                  <ClipboardDocumentIcon 
+                    className="text-gray-500 w-5 h-5 cursor-pointer hover:text-blue-600 transition"
+                     onClick={() => functionTOCopy(item?.value)}
+                   />
+                )}
+              </span> */}
             </div>
           ))}
         </div>

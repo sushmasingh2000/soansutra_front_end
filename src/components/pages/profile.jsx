@@ -16,9 +16,11 @@ import React, { useState } from 'react';
 
 // Import your separate components here
 import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
 import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
 import { endpoint } from '../../utils/APIRoutes';
 import CouponsContent from '../coupnscontent';
+import Distributer from '../distributer';
 import EGoldContent from '../egoldcontent';
 import Footer from '../Footer1';
 import Header1 from '../Header1';
@@ -27,38 +29,49 @@ import OrdersContent from '../orderscomponent';
 import PaymentContent from '../paymentcontent';
 import ProfileContent from '../profilecontent';
 import TreasureChestContent from '../treasurechestcontent';
-import TryAtHomeContent from '../tryathomecontent';
+import WalletLedgeUSER from '../WalletLedger';
 import XclusiveContent from '../xclusivecontent';
-import Distributer from '../distributer';
-import { useLocation } from 'react-router-dom';
-import DirectDistributor from './distributor/DirectDistributor';
-import TeamDistributor from './distributor/TeamDistributer';
-import DirectCustomer from './distributor/DirectCustomer';
-import TeamCustomer from './distributor/TeamCustomer';
-import PayoutReport from './distributor/PayoutReport';
+import Bank from './distributor/Bank';
+import CashbackReport from './distributor/CashbackReport';
 import CommissionReport from './distributor/CommisionReport';
+import DirectCustomer from './distributor/DirectCustomer';
+import DirectDistributor from './distributor/DirectDistributor';
+import PayoutReport from './distributor/PayoutReport';
+import TeamCustomer from './distributor/TeamCustomer';
+import TeamDistributor from './distributor/TeamDistributer';
+import WithdrawalReport from './distributor/WithdrawalReport';
+import Withdrawalrequest from './distributor/WithdrawalRequest';
+import Fundrequest from './distributor/Transfer';
 
 const ProfileDashboard = () => {
- const location = useLocation();
+  const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const hasTxnParams = searchParams.has('client_txn_id') && searchParams.has('txn_id');
   const defaultTab = hasTxnParams ? 'ORDERS_EXCHANGE' : 'PROFILE';
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const token = localStorage.getItem("token")
 
   const { data } = useQuery(
     ['profile'],
     () =>
       apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
+     {
+        ...usequeryBoolean,
+        enabled: !!token 
+      }
   );
 
   const profileData = data?.data?.result || [];
 
-  const { data:distri } = useQuery(
+
+  const { data: distri } = useQuery(
     ["profile_distributor"],
     () => apiConnectorGet(endpoint.get_profile_distributor),
-    usequeryBoolean
+    {
+      ...usequeryBoolean,
+      enabled: !!token
+    }
   );
 
   const distri_pro = distri?.data?.result?.[0] || [];
@@ -70,24 +83,33 @@ const ProfileDashboard = () => {
       items: [
         { id: 'ORDERS_EXCHANGE', label: 'ORDERS AND EXCHANGE', icon: Package },
         { id: 'PAYMENT', label: 'PAYMENT', icon: CreditCard },
-        { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw }
+        { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw },
+        { id: 'PURCHASE REPORT', label: 'PURCHASE REPORT', icon: RefreshCcw }
+
       ]
     },
     ...(distri_pro?.mlm_is_distributor === 1
       ? [{
-          category: 'DISTRIBUTER',
-          items: [
-            { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home },
-            { id: 'DIRECT DISTRIBUTER', label: 'DIRECT DISTRIBUTER', icon: Home },
-            { id: 'TEAM DISTRIBUTER', label: 'TEAM DISTRIBUTER', icon: Home },
-            { id: 'DIRECT CUSTOMER', label: 'DIRECT CUSTOMER', icon: Home },
-            { id: 'TEAM CUSTOMER', label: 'TEAM CUSTOMER', icon: Home },
-            { id: 'PAYOUT REPORT', label: 'PAYOUT REPORT', icon: Home },
-            { id: 'COMMISSION REPORT', label: 'COMMISSION REPORT', icon: Home },
-          ]
-        }]
+        category: 'DISTRIBUTER',
+        items: [
+          { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home },
+          { id: 'DIRECT DISTRIBUTER', label: 'DIRECT DISTRIBUTER', icon: Home },
+          { id: 'TEAM DISTRIBUTER', label: 'TEAM DISTRIBUTER', icon: Home },
+          { id: 'DIRECT CUSTOMER', label: 'DIRECT CUSTOMER', icon: Home },
+          { id: 'TEAM CUSTOMER', label: 'TEAM CUSTOMER', icon: Home },
+          { id: 'WITHDRAWAL REQUEST', label: 'WITHDRAWAL REQUEST', icon: Home },
+          { id: 'WITHDRAWAL REPORT', label: 'WITHDRAWAL REPORT', icon: Home },
+          { id: 'CASHBACK REPORT', label: 'CASHBACK REPORT', icon: Home },
+          { id: 'PAYOUT REPORT', label: 'PAYOUT REPORT', icon: Home },
+          { id: 'COMMISSION REPORT', label: 'COMMISSION REPORT', icon: Home },
+          { id: 'BANK', label: 'BANK', icon: Home },
+          { id: 'FUND TRANSFER', label: 'FUND TRANSFER', icon: Home },
+
+
+        ]
+      }]
       : []),
-   
+
     {
       category: 'APPOINTMENTS',
       items: [
@@ -116,7 +138,7 @@ const ProfileDashboard = () => {
     }
   ];
 
-  
+
 
 
   // Handle navigation click for mobile
@@ -136,20 +158,32 @@ const ProfileDashboard = () => {
         return <PaymentContent />;
       case 'MANAGE_REFUNDS':
         return <ManageRefundsContent />;
-         case 'DISTRIBUTER':
-        return <Distributer/>;
-        case 'DIRECT DISTRIBUTER':
-      return <DirectDistributor/>;
-       case 'PAYOUT REPORT':
-      return <PayoutReport/>;
-       case 'COMMISSION REPORT':
-      return <CommissionReport/>;
-    case 'TEAM DISTRIBUTER':
-      return <TeamDistributor />;
-    case 'DIRECT CUSTOMER':
-      return <DirectCustomer />;
-       case 'TEAM CUSTOMER':
-      return <TeamCustomer />;
+      case 'PURCHASE REPORT':
+        return <WalletLedgeUSER />;
+      case 'DISTRIBUTER':
+        return <Distributer />;
+      case 'DIRECT DISTRIBUTER':
+        return <DirectDistributor />;
+      case 'WITHDRAWAL REQUEST':
+        return <Withdrawalrequest />;
+      case 'WITHDRAWAL REPORT':
+        return <WithdrawalReport />;
+      case 'CASHBACK REPORT':
+        return <CashbackReport />;
+      case 'PAYOUT REPORT':
+        return <PayoutReport />;
+      case 'COMMISSION REPORT':
+        return <CommissionReport />;
+      case 'TEAM DISTRIBUTER':
+        return <TeamDistributor />;
+      case 'DIRECT CUSTOMER':
+        return <DirectCustomer />;
+      case 'TEAM CUSTOMER':
+        return <TeamCustomer />;
+      case 'BANK':
+        return <Bank />;
+      case 'FUND TRANSFER':
+        return <Fundrequest />;
       case 'COUPONS':
         return <CouponsContent />;
       case 'XCLUSIVE':
@@ -218,11 +252,10 @@ const ProfileDashboard = () => {
                       <button
                         key={item.id}
                         onClick={() => handleNavClick(item.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${
-                          activeTab === item.id
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${activeTab === item.id
                             ? 'bg-yellow-50 text-yellow-900 border-r-2 border-yellow-700'
                             : 'text-gray-700 hover:bg-yellow-50 hover:text-gray-900'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center">
                           <Icon className="w-3 h-3 mr-2" />

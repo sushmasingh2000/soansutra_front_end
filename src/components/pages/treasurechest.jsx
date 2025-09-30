@@ -1,11 +1,10 @@
 
 
-import React, { useState, useEffect } from 'react';
-import Header from '../Header1';
-import NavigationBar from '../navigationbar';
-import Footer from '../Footer1';
 import { Check } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import TreasureChestFaqToggleComponent from '../faqtreasurechest';
+import Footer from '../Footer1';
+import Header from '../Header1';
 
 export default function TreasureChestBanner() {
   const [sliderPosition, setSliderPosition] = useState(0); // 0 = closed, 100 = fully open
@@ -774,3 +773,4 @@ export default function TreasureChestBanner() {
 }
 
 export { TreasureChestBanner };
+

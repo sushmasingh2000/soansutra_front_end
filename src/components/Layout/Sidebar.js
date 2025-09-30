@@ -21,6 +21,7 @@ import {
   RollerShadesClosed,
 } from "@mui/icons-material";
 import {
+  BanknoteIcon,
   CornerUpLeftIcon,
   Disc2Icon,
   Eye,
@@ -205,6 +206,19 @@ const fullMenuItems = [
     icon: <Person />,
     path: "/order",
   },
+   {
+    id: "add purchase_wallet",
+    label: "Add Purchase Wallet",
+    icon: <Person />,
+    path: "/add_purchase_wallet",
+  },
+  {
+    id: "purchase_wallet",
+    label: "Wallet Ledger",
+    icon: <Person />,
+    path: "/purchase_wallet",
+  },
+  
   {
     id: "leads",
     label: "External Leads",
@@ -229,6 +243,13 @@ const fullMenuItems = [
     icon: <PaymentSharp />,
     path: "/payment",
   },
+   {
+    id: "payout_report",
+    label: "Payout Report",
+    icon: <PaymentSharp />,
+    path: "/payout_report",
+  },
+  
   {
     id: "mlm",
     label: "MLM",
@@ -249,6 +270,13 @@ const fullMenuItems = [
 
     ],
   },
+  {
+    id: "bank_detail",
+    label: "BankDetail",
+    icon: <BanknoteIcon />,
+    path: "/bank_detail",
+  },
+  
   {
     id: "logout",
     label: "LogOut",

@@ -39,14 +39,13 @@ export default function Header() {
   const [showMoreJewellery, setShowMoreJewellery] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
-  const [categories, setCategories] = useState([]);
   const [showSubcategory, setShowSubcategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const searchRef = useRef(null);
-
   const placeholders = ["Search Relationship", "Search Price"];
+  const user = localStorage.getItem("token");
 
   useEffect(() => {
     const placeholderInterval = setInterval(() => {
@@ -55,43 +54,35 @@ export default function Header() {
 
     return () => clearInterval(placeholderInterval);
   }, []);
-  const [loading, setLoading] = useState(false);
 
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await apiConnectorGet(endpoint.get_categroy_user);
-      setCategories(response?.data?.result || []);
-    } catch (err) {
-      toast.error("Failed to fetch categories.");
-    } finally {
-      setLoading(false);
-    }
-  };
+   const { data:category_data , loading } = useQuery(
+      ["get_product_category"],
+      () => apiConnectorGet(endpoint.get_categroy_user),
+      usequeryBoolean
+    );
+    const categories = category_data?.data?.result || []
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-
   const { data: profile_user } = useQuery(
-    ["profile_user"],
-    () =>
-      apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
-  );
+  ["profile_user"],
+  () => apiConnectorGet(endpoint?.get_customer_profile),
+  {
+    ...usequeryBoolean,
+    enabled: !!user 
+  }
+);
+
 
   const profile = profile_user?.data?.result || [];
 
@@ -198,7 +189,7 @@ export default function Header() {
     description:
       "Invest in 24K gold hassle-free with SonaSutra's Digital Gold.",
     image:
-      "https://cdn.caratlane.com/media/static/images/discovery/responsive-hamburger-menu/egold-1x.png",
+      "/image/esuvarna1-80.jpg",
     icon: "🥇",
     path: "/e-gold",   // 👈 Add path
   },
@@ -220,11 +211,13 @@ export default function Header() {
   const prevSlide = () =>
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
-  const user = localStorage.getItem("token");
   const { data: cart } = useQuery(
     ["get_cart"],
     () => apiConnectorGet(endpoint.get_cart),
-    usequeryBoolean
+   {
+    ...usequeryBoolean,     
+    enabled: !!user    
+  }
   );
 
   const cartItems = cart?.data?.result || [];
@@ -232,7 +225,10 @@ export default function Header() {
   const { data: wish } = useQuery(
     ["get_wish"],
     () => apiConnectorGet(endpoint.get_wishlist),
-    usequeryBoolean
+    {
+       ...usequeryBoolean,     
+       enabled: !!user    
+     }
   );
 
   const wishlistitems = wish?.data?.result || [];
@@ -240,7 +236,10 @@ export default function Header() {
   const { data: distri } = useQuery(
     ["profile_distributor"],
     () => apiConnectorGet(endpoint.get_profile_distributor),
-    usequeryBoolean
+    {
+       ...usequeryBoolean,     
+       enabled: !!user    
+     }
   );
   const distri_pro = distri?.data?.result?.[0] || [];
 
@@ -457,7 +456,7 @@ export default function Header() {
                 }
               }}>
               <img
-                src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png"
+                src="/image/esuvarna1-80.jpg"
                 alt="e-Gold"
                 className="h-6"
               />

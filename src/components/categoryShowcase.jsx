@@ -9,7 +9,7 @@ const JewelryCategories = () => {
   const navigate = useNavigate();
 
   const { data } = useQuery(
-    ["category_user"],
+    ["get_product_category"],
     () => apiConnectorGet(endpoint.get_categroy_user),
     usequeryBoolean
   );

@@ -29,7 +29,7 @@ const BuyGold = () => {
   const [showShippingPopup, setShowShippingPopup] = useState(false);
   const [showPaymentMethodPopup, setShowPaymentMethodPopup] = useState(false);
   const [loader, setLoading] = useState(false);
-
+ const token = localStorage.getItem("token")
   // Update timer countdown
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -129,7 +129,10 @@ const BuyGold = () => {
     ['profile'],
     () =>
       apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
+     {
+        ...usequeryBoolean,
+        enabled: !!token 
+      }
   );
 
   const profileData = profile?.data?.result || [];

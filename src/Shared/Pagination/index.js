@@ -8,12 +8,12 @@ const CustomToPagination = ({ setPage, page, data }) => {
   const currentPage = data?.currPage || 1;
 
   return (
-    <div className="bg-gray-200 w-full flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-2 sm:gap-4  rounded mt-4">
+    <div className="bg-yellow-100 w-full flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-2 sm:gap-4  rounded mt-4">
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base text-black">
-        <span className="font-semibold text-blue-500 ">
+        <span className="font-semibold text-yellow-500 ">
           Total Pages: <span className="text-black">{totalPages}</span>
         </span>
-        <span className="font-semibold text-blue-500">
+        <span className="font-semibold text-yellow-500">
           Current Page: <span className="text-black">{currentPage}</span>
         </span>
       </div>

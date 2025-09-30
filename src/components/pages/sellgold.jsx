@@ -95,7 +95,7 @@ const SellGold = () => {
   const basePrice = unitPrice * weightNum;
   const gstAmount = basePrice * (gstPercent / 100);
   const total_price = (basePrice + gstAmount).toFixed(4);
-
+  const token = localStorage.getItem("toekn")
   const SellgoldFn = async () => {
     setLoading(true)
     try {
@@ -119,7 +119,10 @@ const SellGold = () => {
     ['profile'],
     () =>
       apiConnectorGet(endpoint?.get_customer_profile),
-    usequeryBoolean
+    {
+      ...usequeryBoolean,
+      enabled: !!token
+    }
   );
 
   const profileData = profile?.data?.result || [];
@@ -171,7 +174,7 @@ const SellGold = () => {
                   <span className="text-sm text-gray-600 ml-2">gms</span>
                   <button
                     className={`bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-4 rounded ml-2 ${!isAmountValid ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => isAmountValid && SellgoldFn()}
+                    onClick={() => isAmountValid && SellgoldFn()}
                     disabled={!isAmountValid}
                   >
                     Proceed to Sell
@@ -247,37 +250,37 @@ const SellGold = () => {
               >
                 Proceed to Sell
               </button>
-            <p className="text-xs text-gray-500 mb-2">Inclusive of {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST</p>
-          </div>
-          <div className="flex items-center bg-yellow-100 rounded p-2 text-yellow-800 mt-4 mb-4">
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
-            </svg>
-            <span>The minimum Sell amount to purchase SonaSutra esuvarna is ₹10</span>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow mb-4">
-            <h3 className="text-lg font-semibold mb-2">Sell Rate</h3>
-            <p className="text-red-500">
-              ₹{(
-                Number(get_price?.ma_price || 0) +
-                (Number(get_price?.ma_price || 0) * Number(get_price?.ma_sell_tax_percentage || 0) / 100)
-              ).toFixed(2)} /gram
-            </p>
+              <p className="text-xs text-gray-500 mb-2">Inclusive of {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST</p>
+            </div>
+            <div className="flex items-center bg-yellow-100 rounded p-2 text-yellow-800 mt-4 mb-4">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1zm0 6a1 1 0 100 2 1 1 0 000-2z" />
+              </svg>
+              <span>The minimum Sell amount to purchase SonaSutra esuvarna is ₹10</span>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow mb-4">
+              <h3 className="text-lg font-semibold mb-2">Sell Rate</h3>
+              <p className="text-red-500">
+                ₹{(
+                  Number(get_price?.ma_price || 0) +
+                  (Number(get_price?.ma_price || 0) * Number(get_price?.ma_sell_tax_percentage || 0) / 100)
+                ).toFixed(2)} /gram
+              </p>
 
-            <p className="text-xs text-gray-500">(₹{Number(get_price?.ma_price || 0).toFixed(2)} + {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST)</p>
-            <p className="text-xs text-gray-500">Price valid for {formatTime(timeLeft)} min</p>
-            <p className="text-xs text-gray-500">24K 99.99% Purity</p>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow mb-4">
-            <div className="vault-icon w-12 h-12 bg-[url('https://assets.cltstatic.com/images/responsive/spriteImage1.png?v2.0')] bg-no-repeat bg-[position:-343px_-1273px] bg-[size:832px_auto] cursor-default mb-2 mx-auto"></div>
-            <h3 className="text-lg font-semibold mb-2 text-yellow-600">Gold Balance</h3>
-            <p className="text-lg">{profileData?.gold_wallet} gms</p>
-            <button className="text-yellow-500 text-sm mt-2">Redeem Gold →</button>
-            <button className="text-yellow-500 text-sm mt-2 ml-4">Check Sell History →</button>
+              <p className="text-xs text-gray-500">(₹{Number(get_price?.ma_price || 0).toFixed(2)} + {Number(get_price?.ma_sell_tax_percentage || 0)?.toFixed(0, 2)}% GST)</p>
+              <p className="text-xs text-gray-500">Price valid for {formatTime(timeLeft)} min</p>
+              <p className="text-xs text-gray-500">24K 99.99% Purity</p>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow mb-4">
+              <div className="vault-icon w-12 h-12 bg-[url('https://assets.cltstatic.com/images/responsive/spriteImage1.png?v2.0')] bg-no-repeat bg-[position:-343px_-1273px] bg-[size:832px_auto] cursor-default mb-2 mx-auto"></div>
+              <h3 className="text-lg font-semibold mb-2 text-yellow-600">Gold Balance</h3>
+              <p className="text-lg">{profileData?.gold_wallet} gms</p>
+              <button className="text-yellow-500 text-sm mt-2">Redeem Gold →</button>
+              <button className="text-yellow-500 text-sm mt-2 ml-4">Check Sell History →</button>
+            </div>
           </div>
         </div>
-      </div>
-    </div >
+      </div >
       <FAQSellGold />
       <Footer />
     </>

@@ -57,8 +57,10 @@ import OurStory from "../components/pages/ourstory.jsx";
 import ReturnPolicy from "../components/returnpolicy.jsx";
 import PrivacyPolicyComponent from "../components/privacypolicy.jsx";
 import ShippingPolicy from "../components/shippingpolicy.jsx";
-import DeliveryAdminPanel from "../components/deliverymangementadmin.jsx";
-import DeliveryBoyPanel from "../components/deliveryboy.jsx";
+import PayoutReport from "../components/admin/PayoutReport.js";
+import PurchaseWallet from "../components/admin/PurchaseWallet.js";
+import AddPurchaseWallet from "../components/admin/AddPurchaseWallet.js";
+import BankDetais from "../components/admin/Bankdetails.js";
 
 
 
@@ -102,6 +104,38 @@ export const routes = [
     element: (
       <MainLayout>
         <InsiderEmail />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/bank_detail",
+    element: (
+      <MainLayout>
+        <BankDetais />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/payout_report",
+    element: (
+      <MainLayout>
+        <PayoutReport />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/purchase_wallet",
+    element: (
+      <MainLayout>
+        <PurchaseWallet />{" "}
+      </MainLayout>
+    ),
+  },
+    {
+    path: "/add_purchase_wallet",
+    element: (
+      <MainLayout>
+        <AddPurchaseWallet />{" "}
       </MainLayout>
     ),
   },
@@ -465,18 +499,11 @@ export const routes = [
   path:"/privacy-policy",
   element:<PrivacyPolicyComponent/>
  },
+
   {
   path:"/shipping-policy",
   element:<ShippingPolicy/>
  },
-  {
-  path:"/delivery-admin",
-  element:<DeliveryAdminPanel/>
- },
- {
-  path:"/delivery-boy",
-  element:<DeliveryBoyPanel/>
- }
 
    
 ];

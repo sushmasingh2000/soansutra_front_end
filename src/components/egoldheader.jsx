@@ -22,9 +22,9 @@ const EgoldHeader = () => {
         {/* Logo */}
         <div className="flex-shrink-0 cursor-pointer" onClick={()=>navigate('/e-gold')}>
           <img 
-            src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png" 
+            src="/image/esuvarna1-80.jpg" 
             alt="esuvarna by SonaSutra" 
-            className="h-8"
+            className="h-6"
           />
         </div>
         
@@ -53,7 +53,7 @@ const EgoldHeader = () => {
       <div className="md:hidden">
         <div className="flex justify-center py-4 px-4 border-b border-gray-200 cursor-pointer" onClick={()=>navigate('/e-gold')}>
           <img 
-            src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png" 
+            src="/image/esuvarna1-80.jpg" 
             alt="eGold by sonasutra" 
             className="h-8"
           />
