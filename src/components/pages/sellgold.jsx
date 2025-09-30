@@ -9,6 +9,7 @@ import { endpoint } from '../../utils/APIRoutes';
 import { useQuery } from 'react-query';
 import toast from 'react-hot-toast';
 import Loader from '../../Shared/Loader';
+import { useNavigate } from 'react-router-dom';
 
 const SellGold = () => {
   const [amount, setAmount] = useState('');
@@ -17,7 +18,7 @@ const SellGold = () => {
   const [paymentlink, setPaymentLink] = useState("")
   const [SellRate, setSellRate] = useState(11311.47); // Price per gram including GST
   const [timeLeft, setTimeLeft] = useState(4 * 60 + 54); // 4 minutes 54 seconds in seconds
-
+ const navigate = useNavigate();
   // Update timer countdown
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -207,7 +208,7 @@ const SellGold = () => {
                 <span>The minimum Sell amount to purchase SonaSutra esuvarna is ₹10</span>
               </div>
               <div className="w-1/5 text-right pr-6">
-                <button className="text-yellow-500 text-sm">Check Sell History →</button>
+                <button className="text-yellow-500 text-sm"   onClick={() => navigate('/egold_sell')}>Check Sell History →</button>
               </div>
               <div className="w-1/5 text-right">
                 <button className="text-yellow-500 text-sm">Redeem Gold →</button>
@@ -276,7 +277,7 @@ const SellGold = () => {
               <h3 className="text-lg font-semibold mb-2 text-yellow-600">Gold Balance</h3>
               <p className="text-lg">{profileData?.gold_wallet} gms</p>
               <button className="text-yellow-500 text-sm mt-2">Redeem Gold →</button>
-              <button className="text-yellow-500 text-sm mt-2 ml-4">Check Sell History →</button>
+              <button className="text-yellow-500 text-sm mt-2 ml-4"  onClick={() => navigate('/egold_sell')}>Check Sell History →</button>
             </div>
           </div>
         </div>

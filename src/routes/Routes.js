@@ -62,6 +62,8 @@ import PurchaseWallet from "../components/admin/PurchaseWallet.js";
 import AddPurchaseWallet from "../components/admin/AddPurchaseWallet.js";
 import BankDetais from "../components/admin/Bankdetails.js";
 import DeliveryApp from "../components/pages/deliveryadmin.jsx";
+import EgoldBuyHistoryModal from "../components/pages/goldhistory/E-goldBuyorder.js";
+import EgoldSELLHistoryModal from "../components/pages/goldhistory/E-goldSellHistory.js";
 
 
 
@@ -507,6 +509,14 @@ export const routes = [
  {
   path:"/delivery-admin",
   element:<DeliveryApp/>
+ },
+ {
+  path:"/egold_buy",
+  element:<EgoldBuyHistoryModal/>
+ },
+ {
+  path:"/egold_sell",
+  element:<EgoldSELLHistoryModal/>
  },
 
    

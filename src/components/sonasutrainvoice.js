@@ -20,7 +20,6 @@ const SonasutraInvoice = () => {
   const ship = invoice_detail?.shipping_details || []
   const order = invoice_detail?.order_items || []
   const payment = invoice_detail?.payment_details || []
-  const discount = order?.[0]?.discount_details || []
 
   const totals = order?.reduce(
     (acc, item) => {
@@ -125,7 +124,7 @@ const SonasutraInvoice = () => {
                   {/* Shop No 11, Ground Floor, Tower A, Vinayak Plaza, Maldahiya
                   Crossing, Varanasi- 221001, Varanasi - 221001 */}
                 </div>
-                <div>,{store?.state} ,{store?.country}</div>
+                <div> {store?.state}  {store?.country}</div>
                 <div>
                   <strong>Store Contact Details:</strong> {store?.phone}
                   & {store?.email}
@@ -154,12 +153,12 @@ const SonasutraInvoice = () => {
               </div>
               <div className="flex-1 text-right text-[10px]">
                 <div>
-                  <strong>Order No :</strong> {bill?.order_id}{" "}
-                  <strong>Dated :</strong> 01/01/2025
+                  <strong>Order No :</strong> {invoice_detail?.certificate_no}{" "}
+                  <strong>Dated :</strong> {moment(bill?.order_date)?.format("DD-MM-YYYY")}
                 </div>
-                <div>
-                  <strong>Doc No :</strong> SA223-0125-00003{" "}
-                  <strong>Dated :</strong> 01/01/2025
+              <div>
+                  <strong>Doc No :</strong> {invoice_detail?.doc_id}{" "}
+                  <strong>Today Date :</strong> {moment(invoice_detail?.today_date)?.format("DD-MM-YYYY")}
                 </div>
               </div>
             </div>
@@ -174,12 +173,12 @@ const SonasutraInvoice = () => {
                   </span>{" "}
                   {bill?.name || "--"}
                 </div>
-                <div className="mb-[2px]">
+                {/* <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     Number :
                   </span>{" "}
                   +91 7398307284
-                </div>
+                </div> */}
                 <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     Address :
@@ -217,239 +216,329 @@ const SonasutraInvoice = () => {
                   {invoice_detail?.profile_id}
                 </div>
               </div>
-              <div className="flex-1 pr-[15px] text-[10px]">
-                <div className="font-bold text-[12px] mb-[5px]">Ship to</div>
-                <div className="mb-[2px]">
-                  <span className="font-bold inline-block min-w-[60px]">
-                    Name :
-                  </span>{" "}
-                  {ship?.name}
-                </div>
-                <div className="mb-[2px]">
-                  <span className="font-bold inline-block min-w-[60px]">
-                    Number :
-                  </span>{" "}
-                  +91 7307515355
-                </div>
-                <div className="mb-[2px]">
-                  <span className="font-bold inline-block min-w-[60px]">
-                    Address :
-                  </span>{" "}
-                  {ship?.address}
-                </div>
-                <div className="mb-[2px]">
-                  <span className="font-bold inline-block min-w-[60px]">
-                    PIN :
-                  </span>{" "}
-                  {ship?.postal_code}
-                </div>
-                <div className="mb-[2px]">
-                  <span className="font-bold inline-block min-w-[60px]">
-                    State :
-                  </span>{" "}
-                  {ship?.state}
-                </div>
-                {/* <div className="mb-[2px]">
+              {invoice_detail?.product_type === "PRODUCT" && (
+                <div className="flex-1 pr-[15px] text-[10px]">
+                  <div className="font-bold text-[12px] mb-[5px]">Ship to</div>
+                  <div className="mb-[2px]">
+                    <span className="font-bold inline-block min-w-[60px]">
+                      Name :
+                    </span>{" "}
+                    {ship?.name}
+                  </div>
+                  <div className="mb-[2px]">
+                    <span className="font-bold inline-block min-w-[60px]">
+                      Number :
+                    </span>{" "}
+                    +91 7307515355
+                  </div>
+                  <div className="mb-[2px]">
+                    <span className="font-bold inline-block min-w-[60px]">
+                      Address :
+                    </span>{" "}
+                    {ship?.address}
+                  </div>
+                  <div className="mb-[2px]">
+                    <span className="font-bold inline-block min-w-[60px]">
+                      PIN :
+                    </span>{" "}
+                    {ship?.postal_code}
+                  </div>
+                  <div className="mb-[2px]">
+                    <span className="font-bold inline-block min-w-[60px]">
+                      State :
+                    </span>{" "}
+                    {ship?.state}
+                  </div>
+                  {/* <div className="mb-[2px]">
                   <span className="font-bold inline-block min-w-[60px]">
                     Place of Supply :
                   </span>{" "}
                   09
                 </div> */}
-              </div>
+                </div>
+              )}
+
             </div>
 
             {/* Products Section */}
-            <div className="p-[0_15px]">
-              <table className="w-full border-collapse text-[9px] mb-[10px]">
-                <thead>
-                  <tr>
-                    <th
-                      className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]"
-                      rowSpan="2"
-                    >
-                      Sr No.
-                    </th>
-                    <th
-                      className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]"
-                      rowSpan="2"
-                    >
-                      Product Code
-                    </th>
-                    <th
-                      className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]"
-                      rowSpan="2"
-                    >
-                      Description of Goods
-                    </th>
-                    <th
-                      className="bg-[#666] text-white border border-black p-[8px_5px] text-center font-bold text-[8px]"
-                      colSpan="9"
-                    >
-                      Certificate No - {invoice_detail?.certificate_no}
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      Purity
-                      <br />
-                      (Karat)
-                    </th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      HSN
-                      <br />
-                      Codes
-                    </th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      Net
-                      <br />
-                      Qty
-                    </th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      Gross
-                      <br />
-                      WT (g)
-                    </th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      {order?.[0]?.material_details?.[0]?.master_mat_name}
-                      <br />
-                      WT (CT/g)
-                    </th>
-                    {order?.[1]?.material_details?.[1]?.master_mat_name && (
+            {invoice_detail?.product_type === "PRODUCT" ?
+              <div className="p-[0_15px]">
+                <table className="w-full border-collapse text-[9px] mb-[10px]">
+                  <thead>
+                    <tr>
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]"
+                        rowSpan="2"
+                      >
+                        Sr No.
+                      </th>
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]"
+                        rowSpan="2"
+                      >
+                        Product Code
+                      </th>
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]"
+                        rowSpan="2"
+                      >
+                        Description of Goods
+                      </th>
+                      <th
+                        className="bg-[#666] text-white border border-black p-[8px_5px] text-center font-bold text-[8px]"
+                        colSpan="9"
+                      >
+                        Certificate No - {invoice_detail?.certificate_no}
+                      </th>
+                    </tr>
+                    <tr>
                       <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                        {order?.[1]?.material_details?.[1]?.master_mat_name}
+                        Purity
+                        <br />
+                        (Karat)
+                      </th>
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        HSN
+                        <br />
+                        Codes
+                      </th>
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        Net
+                        <br />
+                        Qty
+                      </th>
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        Gross
+                        <br />
+                        WT (g)
+                      </th>
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        {order?.[0]?.material_details?.[0]?.master_mat_name}
                         <br />
                         WT (CT/g)
                       </th>
-                    )}
-                    {order?.[2]?.material_details?.[2]?.master_mat_name && (
-                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                        {order?.[2]?.material_details?.[2]?.master_mat_name}
-                        <br />
-                        WT (CT/g)
-                      </th>
-                    )}
-                    {/* <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                      {order?.[1]?.material_details?.[1]?.master_mat_name && (
+                        <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                          {order?.[1]?.material_details?.[1]?.master_mat_name}
+                          <br />
+                          WT (CT/g)
+                        </th>
+                      )}
+                      {order?.[2]?.material_details?.[2]?.master_mat_name && (
+                        <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                          {order?.[2]?.material_details?.[2]?.master_mat_name}
+                          <br />
+                          WT (CT/g)
+                        </th>
+                      )}
+                      {/* <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
                       Gemstone
                       <br />
                       WT (CT/g)
                     </th> */}
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      Net WT
-                      <br />
-                      (g)
-                    </th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      Making
-                      <br />
-                      Charges (₹)
-                    </th>
-                    <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
-                      Price
-                      <br />
-                      (₹)
-                    </th>
-                  </tr>
-                </thead>
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        Net WT
+                        <br />
+                        (g)
+                      </th>
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        Making
+                        <br />
+                        Charges (₹)
+                      </th>
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold text-[8px]">
+                        Price
+                        <br />
+                        (₹)
+                      </th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  {order?.map((item, index) => {
-                    return <>
-                      <tr>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {index + 1}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px] bg-[#e5e5e5] font-bold">
-                          {item?.varient_sku}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-left text-[9px] relative">
-                          {item?.product_name}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {item?.material_details?.[0]?.pur_stamp_name}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {item?.batch_no}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {item?.qnty}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {item?.varient_weight}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {item?.material_details?.[0]?.weight}
-                        </td>
-                        {item?.material_details?.[1]?.weight && (
+                  <tbody>
+                    {order?.map((item, index) => {
+                      return <>
+                        <tr>
                           <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.material_details?.[1]?.weight}
+                            {index + 1}
                           </td>
-                        )}
-                        {item?.material_details?.[2]?.weight && (
+                          <td className="border border-black p-[8px_5px] text-center text-[9px] bg-[#e5e5e5] font-bold">
+                            {item?.varient_sku}
+                          </td>
+                          <td className="border border-black p-[8px_5px] text-left text-[9px] relative">
+                            {item?.product_name}
+                          </td>
                           <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.material_details?.[2]?.weight}
+                            {item?.material_details?.[0]?.pur_stamp_name}
                           </td>
-                        )}
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.batch_no}
+                          </td>
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.qnty}
+                          </td>
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.varient_weight}
+                          </td>
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.material_details?.[0]?.weight}
+                          </td>
+                          {item?.material_details?.[1]?.weight && (
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.material_details?.[1]?.weight}
+                            </td>
+                          )}
+                          {item?.material_details?.[2]?.weight && (
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.material_details?.[2]?.weight}
+                            </td>
+                          )}
 
-                        {/* <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                          {/* <td className="border border-black p-[8px_5px] text-center text-[9px]">
                           0.000/0.000
                         </td> */}
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {([0, 1, 2].reduce((sum, i) => sum + (item?.material_details?.[i]?.weight || 0), 0))}
-                        </td>
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {([0, 1, 2].reduce((sum, i) => sum + (item?.material_details?.[i]?.weight || 0), 0))}
+                          </td>
 
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {item?.making_price}
-                        </td>
-                        <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                          {item?.total_price}
-                        </td>
-                      </tr>
-                    </>
-                  })}
-                  <tr className="bg-[#e5e5e5] font-bold">
-                    <td
-                      className="border border-black p-[8px_5px] text-center"
-                      colSpan="5"
-                    >
-                      <strong>TOTAL</strong>
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center">
-                      {totals.qnty}
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center">
-                      {totals.grossWeight.toFixed(3)}
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center">
-                      {totals.mat0.toFixed(3)}
-                    </td>
-                    {totals.mat1 > 0 && (
-                      <td className="border border-black p-[8px_5px] text-center">
-                        {totals.mat1.toFixed(3)}
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.making_price}
+                          </td>
+                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {item?.total_price}
+                          </td>
+                        </tr>
+                      </>
+                    })}
+                    <tr className="bg-[#e5e5e5] font-bold">
+                      <td
+                        className="border border-black p-[8px_5px] text-center"
+                        colSpan="5"
+                      >
+                        <strong>TOTAL</strong>
                       </td>
-                    )}
-                    {totals.mat2 > 0 && (
                       <td className="border border-black p-[8px_5px] text-center">
-                        {totals.mat2.toFixed(3)}
+                        {totals.qnty}
                       </td>
-                    )}
-                    {/* <td className="border border-black p-[8px_5px] text-center">
+                      <td className="border border-black p-[8px_5px] text-center">
+                        {totals.grossWeight.toFixed(3)}
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        {totals.mat0.toFixed(3)}
+                      </td>
+                      {totals.mat1 > 0 && (
+                        <td className="border border-black p-[8px_5px] text-center">
+                          {totals.mat1.toFixed(3)}
+                        </td>
+                      )}
+                      {totals.mat2 > 0 && (
+                        <td className="border border-black p-[8px_5px] text-center">
+                          {totals.mat2.toFixed(3)}
+                        </td>
+                      )}
+                      {/* <td className="border border-black p-[8px_5px] text-center">
                       0.000/0.000
                     </td> */}
-                    <td className="border border-black p-[8px_5px] text-center">
-                      {netWeight.toFixed(3)}
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center">
-                      ₹ {totals.making.toFixed(2)}
-                    </td>
-                    <td className="border border-black p-[8px_5px] text-center">
-                      ₹ {totals.price.toFixed(2)}
-                    </td>
-                  </tr>
-                </tbody>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        {netWeight.toFixed(3)}
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        ₹ {totals.making.toFixed(2)}
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        ₹ {totals.price.toFixed(2)}
+                      </td>
+                    </tr>
+                  </tbody>
 
 
-              </table>
-            </div>
+                </table>
+              </div> :
+              <div className="p-[0_15px]">
+                <table className="w-full border-collapse text-[9px] mb-[10px]">
+                  <thead>
+                    <tr>
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
+                      >
+                        Sr No.
+                      </th>
+                      <th
+                        className="bg-[#e5e5e5]  border border-black p-[8px_5px] text-center font-bold"
+                      >
+                        Order ID
+                      </th>
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
+                      >
+                        Product Type
+                      </th>
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
+                      >
+                        Weight
+                      </th>
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
+                      >
+                        Material Cost /gm
+                      </th>
+                      <th
+                        className="bg-[#e5e5e5]  border border-black p-[8px_5px] text-center font-bold"
+                      >
+                        Order Type
+                      </th>
+
+                      <th
+                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
+                      >
+                        Price (₹)
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td className="border border-black p-[8px_5px] text-center">1</td>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        {invoice_detail?.certificate_no || "N/A"}
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center font-bold">
+                        {invoice_detail?.product_type}
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center font-bold">
+                        {invoice_detail?.total_weight}
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center font-bold">
+                        {invoice_detail?.material_cost_per_unit}
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        {invoice_detail?.order_type || "N/A"}
+                      </td>
+
+
+                      <td className="border border-black p-[8px_5px] text-center">
+                        ₹ {invoice_detail?.total_amount || "0.00"}
+                      </td>
+                    </tr>
+
+                    {/* Optional: Total row (if needed) */}
+                    {/* <tr className="bg-[#e5e5e5] font-bold">
+                      <td
+                        className="border border-black p-[8px_5px] text-center"
+                        colSpan="4"
+                      >
+                        TOTAL
+                      </td>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        ₹ {invoice_detail?.grand_total || "0.00"}
+                      </td>
+                    </tr> */}
+                  </tbody>
+                </table>
+              </div>
+
+            }
+
 
             {/* Lower Section */}
             <div className="flex p-[15px] gap-5">
@@ -515,64 +604,63 @@ const SonasutraInvoice = () => {
                     </tbody>
                   </table>
                 </div>
-                <div>
-                  <div className="font-bold text-[12px] mb-[5px]">
-                    *Discount Details
+                {invoice_detail?.product_type === "PRODUCT" && (
+                  <div>
+                    <div className="font-bold text-[12px] mb-[5px]">
+                      *Discount Details
+                    </div>
+                    <table className="w-full border-collapse text-[9px] mb-[15px]">
+                      <thead>
+                        <tr>
+                          <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">
+                            Product
+                          </th>
+
+                          <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">
+                            Coupon Discount / xCLusive Points
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <tr>
+                          <td className="border border-black p-[4px] text-center">
+
+                            {invoice_detail?.coupon_discount}
+                          </td>
+
+                          <td className="border border-black p-[4px] text-center">
+
+                            {invoice_detail?.coupon_discount}
+                          </td>
+                        </tr>
+
+
+                      </tbody>
+                    </table>
+                    <div className="text-[8px] mt-[5px]">
+                      (Note : The figures for Coupon Discount & xCLusive Points
+                      are Net of Taxes)
+                    </div>
                   </div>
-                  <table className="w-full border-collapse text-[9px] mb-[15px]">
-                    <thead>
-                      <tr>
-                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">
-                          Product
-                        </th>
+                )}
 
-                        <th className="bg-[#e5e5e5] border border-black p-[4px] text-center font-bold">
-                          Coupon Discount / xCLusive Points
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                      <tr>
-                        <td className="border border-black p-[4px] text-center">
-
-                          {invoice_detail?.coupon_discount}
-                        </td>
-
-                        <td className="border border-black p-[4px] text-center">
-
-                          {invoice_detail?.coupon_discount}
-                        </td>
-                      </tr>
-                    
-
-                    </tbody>
-                  </table>
-                  <div className="text-[8px] mt-[5px]">
-                    (Note : The figures for Coupon Discount & xCLusive Points
-                    are Net of Taxes)
-                  </div>
-                </div>
               </div>
               <div className="w-[300px]">
                 <table className="w-full border-collapse text-[10px] mt-[10px]">
                   <tbody>
-                    <tr>
-                      <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
-                        Pre-Discount Value ₹
-                      </td>
-                      <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        {invoice_detail?.total_discount}
-                      </td>
-                    </tr>
-                    {/* <tr>
-                      <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
-                        Strike-Through Discount* ₹
-                      </td>
-                      <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        - 2689.83
-                      </td>
-                    </tr> */}
+                    {invoice_detail?.product_type === "PRODUCT" && (
+                      <>
+                      <tr>
+                        <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
+                          Pre-Discount Value ₹
+                        </td>
+                        <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
+                          {invoice_detail?.total_discount}
+                        </td>
+                      </tr>
+                   
+
                     <tr>
                       <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
                         Coupon Discount/xCLusive Points* ₹
@@ -581,6 +669,8 @@ const SonasutraInvoice = () => {
                         {invoice_detail?.coupon_discount}
                       </td>
                     </tr>
+                      </>
+                     )}
                     <tr>
                       <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
                         <strong>Taxable Value ₹</strong>
