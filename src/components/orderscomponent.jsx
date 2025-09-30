@@ -138,15 +138,22 @@ const OrdersContent = () => {
                 View Details
               </button>
             </div> :
-            <div className="flex flex-col md:flex-row gap-2 md:ml-4">
-              <button
-                className="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
-                onClick={() => {
-                  navigate(`/invoice/${order?.order_unique}`);
-                }} >
-                View / Download Invoice
-              </button>
+            <div>
+              {
+                detail?.status !== "Pending" && detail?.status !== "Failed" && (
+                  <div className="flex flex-col md:flex-row gap-2 md:ml-4">
+                    <button
+                      className="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+                      onClick={() => {
+                        navigate(`/invoice/${order?.order_unique}`);
+                      }} >
+                      View / Download Invoice
+                    </button>
+                  </div>
+                )
+              }
             </div>
+
         }
 
       </div>
@@ -430,7 +437,7 @@ const OrdersContent = () => {
                 <h3 className="font-semibold text-gray-900 mb-2 text-sm">Payment Method</h3>
                 <div className="flex items-start gap-1">
                   <CreditCard className="w-3 h-3 text-gray-500 mt-1" />
-                  <p className="text-xs text-gray-600">{detail?.payment_method === 1 ? 'Paid via Credit Card' : 'Other'}</p>
+                  <p className="text-xs text-gray-600">Paid via Credit Card</p>
                 </div>
               </div>
             </div>
@@ -441,16 +448,21 @@ const OrdersContent = () => {
               </div>
             )}
           </div>
-          <div className="p-4">
-            <button
-              className="text-sm font-medium text-blue-600 underline"
-              onClick={() => {
-                navigate(`/invoice/${detail?.order_unique}`);
-              }}
-            >
-              View / Download Invoice
-            </button>
-          </div>
+          {
+            detail?.status !== "Pending" && detail?.status !== "Failed" && (
+              <div className="p-4">
+                <button
+                  className="text-sm font-medium text-blue-600 underline"
+                  onClick={() => {
+                    navigate(`/invoice/${detail?.order_unique}`);
+                  }}
+                >
+                  View / Download Invoice
+                </button>
+              </div>
+            )
+          }
+
 
           {/* Actions etc. */}
           <div className="p-4 border-t border-gray-200">

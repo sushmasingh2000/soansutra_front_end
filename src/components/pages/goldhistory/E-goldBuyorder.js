@@ -33,21 +33,27 @@ const EgoldBuyHistoryModal = () => {
         "Action"
     ];
 
-    const tablerow = orders.map((order, index) => [
+   const tablerow = orders.map((order, index) => {
+      const showInvoice = order?.status !== "Pending" && order?.status !== "Failed";
+      return [
         index + 1,
         order.order_unique,
-
         order.total_weight,
         `₹ ${order.grand_total}`,
         order.status,
-        moment.utc(order.order_date).format("DD-MM-YYYY "),
-        < button
+        moment.utc(order.order_date).format("DD-MM-YYYY"),
+        showInvoice ? (
+          <button
             onClick={() => navigate(`/invoice/${order.order_unique}`)}
             className="text-blue-600 hover:underline text-sm"
-        >
+          >
             View Invoice
-        </button >,
-    ]);
+          </button>
+        ) : (
+          <span className="text-gray-400 text-sm">N/A</span>
+        )
+      ];
+    });
 
     return (
 
