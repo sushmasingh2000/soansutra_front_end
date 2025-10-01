@@ -14,7 +14,7 @@ import AdminLogIn from './components/admin/Authentication/Login';
 
 function App() {
   const admin = localStorage.getItem("token");
-  const user = localStorage.getItem("token");
+  // const user = localStorage.getItem("token");
   const { showLoginModal, setShowLoginModal } = useLoginModal();
   return (
     <BrowserRouter>
