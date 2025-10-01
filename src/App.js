@@ -7,6 +7,8 @@ import { default as LoginModal, default as LoginPage } from './components/pages/
 import { useLoginModal } from './context/Login';
 import { routes } from './routes/Routes';
 import Test from './Test';
+import { adminroutes } from './components/admin/AdminRoutes';
+import AdminLayout from './components/admin/Layout';
 
 
 function App() {
@@ -19,6 +21,24 @@ function App() {
         {/* <Route path="/" element={<Test />} /> */}
         <Route path="/" element={<HomePage />} />
         <Route path="/admin-login" element={<Login />} />
+         {user ? (
+          adminroutes.map((route, i) => (
+            <Route
+              key={i}
+              path={route.path}
+              element={
+                <AdminLayout
+                  id={route.id}
+                  navLink={route.path}
+                  navItem={route.navItem}
+                  component={route.component}
+                />
+              }
+            />
+          ))
+        ) : (
+          <Route path="*" element={<Login />} />
+        )}
         {admin ? (
           routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />

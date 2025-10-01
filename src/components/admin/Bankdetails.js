@@ -10,7 +10,6 @@ import CustomToPagination from "../../Shared/Pagination";
 import { useQuery } from "react-query";
 import moment from "moment";
 import { Dialog } from "@mui/material";
-import { Edit } from "lucide-react";
 
 const BankDetails = () => {
   const [page, setPage] = useState(1);
@@ -151,6 +150,7 @@ const BankDetails = () => {
               <th className="px-4 py-3 text-left">S.No</th>
               <th className="px-4 py-3 text-left">Acc. Holder Name</th>
               <th className="px-4 py-3 text-left">Acc. No.</th>
+              <th className="px-4 py-3 text-left">Beneficery ID</th>
                   <th className="px-4 py-3 text-left"> Email</th>
               <th className="px-4 py-3 text-left"> Phone</th>
               <th className="px-4 py-3 text-left"> VPA</th>
@@ -172,6 +172,7 @@ const BankDetails = () => {
                 <td className="px-4 py-2">{(page - 1) * count + index + 1}</td>
                 <td className="px-4 py-2">{item?.account_holder_name || "--"}</td>
                 <td className="px-4 py-2">{item?.account_number || "--"}</td>
+                <td className="px-4 py-2">{item?.bene_id || "--"}</td>
                 <td className="px-4 py-2">{item?.bene_email || "--"}</td>
                 <td className="px-4 py-2">{item?.bene_phone || "--"}</td>
                 <td className="px-4 py-2">{item?.bene_vpa || "--"}</td>
