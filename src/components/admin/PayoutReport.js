@@ -55,7 +55,6 @@ const WithdrawalReport = () => {
     }
   );
 
-  // The API returns: result.data → array of records
   const records = data?.data?.result?.data || [];
 
   async function handlePayout(transId, status_type) {
@@ -180,9 +179,11 @@ const WithdrawalReport = () => {
                   </td>
 
                   <td
-                    className={`${item?.pay_status === "Success"
-                      ? "text-green-400"
-                      : "text-yellow-500"
+                    className={`${item.pay_status === "Reject"
+                      ? "text-red-800"
+                      : item.pay_status === "Success"
+                        ? "text-green-700"
+                          : "text-yellow-600"
                       } px-4 py-2`}
                   >
                     {item.pay_status}
@@ -203,7 +204,7 @@ const WithdrawalReport = () => {
                   <td className="px-4 py-2">{item.cl_phone}</td>
                   <td className="px-4 py-2">{item.address}</td>
                   <td className="px-4 py-2">
-                    {item.pay_status === "Success" ? (
+                    {item.pay_status !== "Pending" ? (
                       <>
                         <Lock />
                       </>
