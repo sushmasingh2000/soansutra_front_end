@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import Loader from '../../Shared/Loader';
+import { useNavigate } from 'react-router-dom';
 
 const BuyGold = () => {
   const [amount, setAmount] = useState('');
@@ -30,6 +31,7 @@ const BuyGold = () => {
   const [showPaymentMethodPopup, setShowPaymentMethodPopup] = useState(false);
   const [loader, setLoading] = useState(false);
  const token = localStorage.getItem("token")
+ const navigate = useNavigate();
   // Update timer countdown
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -209,6 +211,16 @@ const BuyGold = () => {
     }
     setLoading(false)
   };
+
+     const { data:cat } = useQuery(
+        ["get_product_category"],
+        () => apiConnectorGet(endpoint.get_categroy_user),
+        usequeryBoolean
+      );
+    
+      const category = cat?.data?.result || [];
+
+
   if (paymentlink) {
     return (
       document.location.href = paymentlink
@@ -287,10 +299,10 @@ const BuyGold = () => {
                 <span>The minimum buy amount to purchase SonaSutra esuvarna is ₹10</span>
               </div>
               <div className="w-1/5 text-right pr-6">
-                <button className="text-yellow-500 text-sm">Check Buy History →</button>
+                <button className="text-yellow-500 text-sm" onClick={() => navigate('/egold_buy')}>Check Buy History →</button>
               </div>
               <div className="w-1/5 text-right">
-                <button className="text-yellow-500 text-sm">Redeem Gold →</button>
+                <button className="text-yellow-500 text-sm" onClick={() => navigate(`/products_web?category=${category?.[0]?.product_category_id}`)}>Redeem Gold →</button>
               </div>
             </div>
           </div>
@@ -353,8 +365,8 @@ const BuyGold = () => {
               <div className="vault-icon w-12 h-12 bg-[url('https://assets.cltstatic.com/images/responsive/spriteImage1.png?v2.0')] bg-no-repeat bg-[position:-343px_-1273px] bg-[size:832px_auto] cursor-default mb-2 mx-auto"></div>
               <h3 className="text-lg font-semibold mb-2 text-yellow-600">Gold Balance</h3>
               <p className="text-lg">{profileData?.gold_wallet} gms</p>
-              <button className="text-yellow-500 text-sm mt-2">Redeem Gold →</button>
-              <button className="text-yellow-500 text-sm mt-2 ml-4">Check Buy History →</button>
+              <button className="text-yellow-500 text-sm mt-2" onClick={() => navigate(`/products_web?category=${category?.[0]?.product_category_id}`)}>Redeem Gold →</button>
+              <button className="text-yellow-500 text-sm mt-2 ml-4" onClick={() => navigate('/egold_buy')}>Check Buy History →</button>
             </div>
           </div>
         </div>

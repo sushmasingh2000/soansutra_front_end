@@ -51,7 +51,6 @@ const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const token = localStorage.getItem("token")
-
   const { data } = useQuery(
     ['profile'],
     () =>
@@ -78,6 +77,12 @@ const ProfileDashboard = () => {
 
   // Sidebar navigation items
   const navigationItems = [
+     {
+      category: 'ACCOUNTS',
+      items: [
+        { id: 'PROFILE', label: 'PROFILE', icon: User }
+      ]
+    },
     {
       category: 'ORDERS',
       items: [
@@ -122,12 +127,7 @@ const ProfileDashboard = () => {
         { id: 'COUPONS', label: 'COUPONS', icon: Ticket }
       ]
     },
-    {
-      category: 'ACCOUNTS',
-      items: [
-        { id: 'PROFILE', label: 'PROFILE', icon: User }
-      ]
-    },
+   
     {
       category: 'CREDITS',
       items: [
@@ -232,10 +232,9 @@ const ProfileDashboard = () => {
           </div>
 
           {/* User Info */}
-          <div className="p-3 border-b border-yellow-200">
+          <div className="p-3 border-b border-yellow-200" onClick={()=>setActiveTab("PROFILE")}>
             <h3 className="font-semibold text-gray-900 text-base">{profileData.name}</h3>
             <p className="text-xs text-gray-500">{profileData.cl_email}</p>
-
           </div>
 
           {/* Navigation */}

@@ -136,9 +136,9 @@ const WalletLedge = () => {
                                     <td className="px-4 py-2">{item.wh_trans_id}</td>
                                     <td className="px-4 py-2">{item.wh_wallet_type}</td>
                                     <td className="px-4 py-2">{item.wh_trans_type}</td>
-                                    <td className="px-4 py-2">₹ {Number(item.wh_req_bal).toFixed(2)}</td>
-                                    <td className="px-4 py-2">₹ {Number(item.wh_open_bal).toFixed(2)}</td>
-                                    <td className="px-4 py-2">₹ {Number(item.wh_closing_bal).toFixed(2)}</td>
+                                    <td className="px-4 py-2">₹ {Number(item.wh_req_bal).toFixed(4)}</td>
+                                    <td className="px-4 py-2">₹ {Number(item.wh_open_bal).toFixed(4)}</td>
+                                    <td className="px-4 py-2">₹ {Number(item.wh_closing_bal).toFixed(4)}</td>
                                     <td className="px-4 py-2">{item.wh_descripton}</td>
                                     <td className="px-4 py-2">
                                         {item.wh_created_at

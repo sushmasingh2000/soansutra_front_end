@@ -10,101 +10,83 @@ import CreateBank from "./CreateBank";
 
 const Bank = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
+  // Debounce search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
   const { data, isLoading, refetch } = useQuery(
-    ["bank_detail", { searchTerm, startDate, endDate, page }],
+    ["bank_detail", { debouncedSearch, startDate, endDate, page }],
     () =>
       apiConnectorGet(endpoint?.bank_get_all, {
-        search: searchTerm,
+        search: debouncedSearch,
         start_date: startDate,
         end_date: endDate,
-        page: page,
+        page,
         count: 10,
       }),
     usequeryBoolean
   );
 
-  const bankdatas = data?.data?.result || [];
+  const bankdatas = data?.data?.result?.data?.[0] || [];
 
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      refetch();
-    }, 500);
+    refetch();
+  }, [debouncedSearch, startDate, endDate, page]);
 
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm, startDate, endDate]);
-
-  const tablehead = [
-    <div className="text-center w-full">S.No</div>,
-    <div className="text-center w-full">Account Holder</div>,
-    <div className="text-center w-full">Account Number</div>,
-    <div className="text-center w-full">IFSC Code</div>,
-    <div className="text-center w-full">Bank Name</div>,
-    <div className="text-center w-full">Branch Name</div>,
-    <div className="text-center w-full">Date</div>,
-  ];
-  
-  const tablerow = bankdatas?.data?.map((item, index) => [
-    <div className="text-center w-full">{(page - 1) * 10 + index + 1}</div>,
-    <div className="text-center w-full">{item?.account_holder_name || "--"}</div>,
-    <div className="text-center w-full">{item?.account_number || "--"}</div>,
-    <div className="text-center w-full">{item?.ifsc_code || "--"}</div>,
-    <div className="text-center w-full">{item?.bank_name || "--"}</div>,
-    <div className="text-center w-full">{item?.branch_name || "--"}</div>,
-    <div className="text-center w-full">
-      {item?.created_at ? moment(item.created_at).format("DD-MM-YYYY") : "--"}
-    </div>,
-  ]);
 
   return (
     <div className="bg-white text-black p-4 rounded-lg shadow-lg w-full mx-auto text-sm">
-      <div className="flex justify-between">
+      <div className="my-5 flex justify-between items-center">
         <h2 className="text-xl font-semibold mb-4">Bank Detail</h2>
-        <p
-          className="text-xl font-semibold bg-yellow-400 text-white p-2 mb-4 cursor-pointer rounded hover:bg-yellow-500 transition"
+        <button
+          className="text-sm font-semibold bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
           onClick={() => setOpenCreateModal(true)}
         >
           + Add Bank
-        </p>
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search by username"
-          className="border px-3 py-2 rounded"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <input
-          type="date"
-          className="border px-3 py-2 rounded"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        <input
-          type="date"
-          className="border px-3 py-2 rounded"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
-      </div>
+
 
       <div className="w-full overflow-x-auto">
-        <CustomTable
-          tablehead={tablehead}
-          tablerow={tablerow?.length ? tablerow : [["No records found"]]}
-          isLoading={isLoading}
-        />
+        <div className="border rounded-lg p-4 shadow-sm bg-gray-50 text-sm">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><strong>Account Holder:</strong> {bankdatas?.account_holder_name || "--"}</div>
+            <div><strong>Account Number:</strong> {bankdatas?.account_number || "--"}</div>
+            <div><strong>IFSC Code:</strong> {bankdatas?.ifsc_code || "--"}</div>
+            <div><strong>Bank Name:</strong> {bankdatas?.bank_name || "--"}</div>
+            <div><strong>Branch Name:</strong> {bankdatas?.branch_name || "--"}</div>
+            <div><strong>VPA:</strong> {bankdatas?.bene_vpa || "--"}</div>
+            <div><strong>Phone:</strong> +{bankdatas?.country_code || ""} {bankdatas?.bene_phone || "--"}</div>
+            <div><strong>Email:</strong> {bankdatas?.bene_email || "--"}</div>
+            <div><strong>Address:</strong> {bankdatas?.bene_address || "--"}</div>
+            <div><strong>City:</strong> {bankdatas?.bene_city || "--"}</div>
+            <div><strong>State:</strong> {bankdatas?.bene_state || "--"}</div>
+            <div><strong>Postal Code:</strong> {bankdatas?.bene_postal_code || "--"}</div>
+            <div><strong>Date:</strong> {bankdatas?.created_at ? moment(bankdatas.created_at).format("DD-MM-YYYY") : "--"}</div>
+          </div>
+        </div>
       </div>
 
-      <CustomToPagination data={bankdatas} setPage={setPage} page={page} />
 
-      <Dialog open={openCreateModal} onClose={() => setOpenCreateModal(false)} fullWidth maxWidth="sm">
+      <Dialog
+        open={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
+        fullWidth
+        maxWidth="md"
+      >
         <CreateBank onClose={() => setOpenCreateModal(false)} />
       </Dialog>
     </div>

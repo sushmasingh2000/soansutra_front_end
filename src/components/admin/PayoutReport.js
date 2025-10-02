@@ -9,6 +9,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { Cancel } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { Lock } from "lucide-react";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 const WithdrawalReport = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -16,6 +17,18 @@ const WithdrawalReport = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const count = 10;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+
+  const handleOpenDialog = (record) => {
+    setSelectedRecord(record);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedRecord(null);
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -27,7 +40,7 @@ const WithdrawalReport = () => {
     };
   }, [searchTerm]);
 
-  const { data, isLoading, error,refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     ["withdrawal_report", { debouncedSearchTerm, startDate, endDate, page }],
     () =>
       apiConnectorGet(endpoint?.get_user_payout, {
@@ -42,7 +55,6 @@ const WithdrawalReport = () => {
     }
   );
 
-  // The API returns: result.data → array of records
   const records = data?.data?.result?.data || [];
 
   async function handlePayout(transId, status_type) {
@@ -60,7 +72,7 @@ const WithdrawalReport = () => {
         text: response?.data?.message,
         icon: response?.data?.success ? "success" : "error", // ✅ lowercase
       });
-      if(response?.data?.success)
+      if (response?.data?.success)
         refetch()
     } catch (e) {
       Swal.fire({
@@ -149,7 +161,13 @@ const WithdrawalReport = () => {
               records.map((item, idx) => (
                 <tr key={item.cus_pay_id} className="border-t hover:bg-gray-50">
                   <td className="px-4 py-2">{(page - 1) * count + idx + 1}</td>
-                  <td className="px-4 py-2">{item.pay_trans_id}</td>
+                  <td
+                    className="px-4 py-2 text-blue-600 cursor-pointer underline"
+                    onClick={() => handleOpenDialog(item)}
+                  >
+                    {item.pay_trans_id}
+                  </td>
+
                   <td className="px-4 py-2">
                     ₹ {Number(item.pay_req_amount)?.toFixed(2)}
                   </td>
@@ -161,11 +179,12 @@ const WithdrawalReport = () => {
                   </td>
 
                   <td
-                    className={`${
-                      item?.pay_status === "Success"
-                        ? "text-green-400"
-                        : "text-yellow-500"
-                    } px-4 py-2`}
+                    className={`${item.pay_status === "Reject"
+                      ? "text-red-800"
+                      : item.pay_status === "Success"
+                        ? "text-green-700"
+                          : "text-yellow-600"
+                      } px-4 py-2`}
                   >
                     {item.pay_status}
                   </td>
@@ -185,7 +204,7 @@ const WithdrawalReport = () => {
                   <td className="px-4 py-2">{item.cl_phone}</td>
                   <td className="px-4 py-2">{item.address}</td>
                   <td className="px-4 py-2">
-                    {item.pay_status === "Success" ? (
+                    {item.pay_status !== "Pending" ? (
                       <>
                         <Lock />
                       </>
@@ -210,6 +229,32 @@ const WithdrawalReport = () => {
           </tbody>
         </table>
       </div>
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>Beneficiary Details</DialogTitle>
+        <DialogContent dividers>
+          {selectedRecord ? (
+            <div className="space-y-2">
+              <Typography><strong>Name:</strong> {selectedRecord?.beneficiary_details?.account_holder_name || selectedRecord?.name}</Typography>
+              <Typography><strong>Account Number:</strong> {selectedRecord?.beneficiary_details?.account_number}</Typography>
+              <Typography><strong>IFSC:</strong> {selectedRecord?.beneficiary_details?.ifsc_code}</Typography>
+              <Typography><strong>Bank:</strong> {selectedRecord?.beneficiary_details?.bank_name}</Typography>
+              <Typography><strong>Branch:</strong> {selectedRecord?.beneficiary_details?.branch_name}</Typography>
+              <Typography><strong>VPA:</strong> {selectedRecord?.beneficiary_details?.bene_vpa}</Typography>
+              <Typography><strong>Email:</strong> {selectedRecord?.beneficiary_details?.bene_email}</Typography>
+              <Typography><strong>Phone:</strong> {selectedRecord?.beneficiary_details?.bene_phone}</Typography>
+              <Typography><strong>Address:</strong> {selectedRecord?.beneficiary_details?.bene_address}</Typography>
+              <Typography><strong>City:</strong> {selectedRecord?.beneficiary_details?.bene_city}</Typography>
+              <Typography><strong>State:</strong> {selectedRecord?.beneficiary_details?.bene_state}</Typography>
+              <Typography><strong>Postal Code:</strong> {selectedRecord?.beneficiary_details?.bene_postal_code}</Typography>
+            </div>
+          ) : (
+            <Typography>No data available.</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
 
       <div className="mt-4">
         <CustomToPagination data={records} setPage={setPage} page={page} />

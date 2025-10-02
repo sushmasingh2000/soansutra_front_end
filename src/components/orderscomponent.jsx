@@ -1,6 +1,7 @@
 import {
   Calendar,
   CreditCard,
+  Download,
   ImagePlus,
   MapPin,
   Package,
@@ -13,6 +14,8 @@ import { useQuery } from 'react-query';
 import { endpoint } from '../utils/APIRoutes';
 import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from '../utils/ApiConnector';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment/moment';
+import Loader from '../Shared/Loader';
 
 const OrdersContent = () => {
   const [activeTab, setActiveTab] = useState('myOrders');
@@ -24,8 +27,8 @@ const OrdersContent = () => {
   const [egoldType, setEgoldType] = useState('Buy');
 
 
-  const { data: listData } = useQuery(
-    ['orders_list', productType , egoldType], // Add productType as a key
+  const { data: listData, isLoading } = useQuery(
+    ['orders_list', productType, egoldType], // Add productType as a key
     () => apiConnectorGet(`${endpoint.get_order}?product_type=${productType}&order_type=${egoldType}`),
     usequeryBoolean
   );
@@ -53,13 +56,13 @@ const OrdersContent = () => {
   }, [detail]);
 
 
-  const { data} = useQuery(
+  const { data } = useQuery(
     ["customer-review"], () =>
     apiConnectorGet(endpoint.get_customer_review)
   );
 
   const reviews = data?.data?.result?.currentPage || [];
-  
+
 
   const handleViewDetails = (order) => {
     setSelectedOrderId(order.order_unique);  // here use the order_id from orders list
@@ -73,11 +76,11 @@ const OrdersContent = () => {
   // Helper for status badge color
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Processing':
+      case 'Pending':
         return 'bg-yellow-100 text-yellow-800';
-      case 'Shipped':
-        return 'bg-blue-100 text-blue-800';
-      case 'Delivered':
+      case 'Cancelled':
+        return 'bg-blue-100 text-red-800';
+      case 'Confirmed':
         return 'bg-green-100 text-green-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -85,18 +88,20 @@ const OrdersContent = () => {
   };
 
   // Order card component
-  const OrderCard = ({ order }) => (
+  const OrderCard = ({ order, productType }) => (
     <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <img
-            src={order.order_items?.[0]?.p_image_url || ''}
-            alt="Order item"
-            className="w-16 h-16 md:w-20 md:h-20 rounded-lg object-cover flex-shrink-0"
-          />
+          {productType === "PRODUCT" ?
+            <img
+              src={order.order_items?.[0]?.p_image_url || ''}
+              alt="Order item"
+              className="w-16 h-16 md:w-20 md:h-20 rounded-lg object-cover flex-shrink-0"
+            /> : <p className='text-red-500 font-semibold'>{order?.order_type}</p>
+          }
           <div className="flex-1 min-w-0">
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
-              <h3 className="font-semibold text-gray-900">Order #{order.order_unique}</h3>
+              <h3 className="font-semibold text-xs text-gray-900">Order #{order.order_unique}</h3>
               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)} w-fit`}>
                 {order.status}
               </span>
@@ -104,31 +109,53 @@ const OrdersContent = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{new Date(order.order_date).toLocaleDateString()}</span>
+                <span>{moment?.utc(order.order_date).format("DD-MM-YYYY HH:mm:ss")}</span>
               </div>
-              <div className="flex items-center gap-1">
-                <Package className="w-4 h-4" />
-                <span>{order.order_items?.length || 0} item{(order.order_items?.length || 0) > 1 ? 's' : ''}</span>
-              </div>
+              {productType === "PRODUCT" && (
+                <div className="flex items-center gap-1">
+                  <Package className="w-4 h-4" />
+                  <span>{order.order_items?.length || 0} item{(order.order_items?.length || 0) > 1 ? 's' : ''}</span>
+                </div>)}
               <div className="flex items-center gap-1">
                 <CreditCard className="w-4 h-4" />
-                <span>{order.grand_total}</span>
+                <span>₹ {order.grand_total}</span>
               </div>
             </div>
-            <div className="flex items-start gap-1 mt-2 text-sm text-gray-600">
-              <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span className="line-clamp-1">{order.shipping_details?.address || 'No Address'}</span>
-            </div>
+            {productType === "PRODUCT" ?
+              <div className="flex items-start gap-1 mt-2 text-sm text-gray-600">
+                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span className="line-clamp-1">{order.shipping_details?.address || 'No Address'}</span>
+              </div> : <p className='text-sm '>Weight   :  <span className='text-blue-600'>{order?.total_weight}</span></p>}
           </div>
         </div>
-        <div className="flex flex-col md:flex-row gap-2 md:ml-4">
-          <button
-            onClick={() => handleViewDetails(order)}
-            className="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
-          >
-            View Details
-          </button>
-        </div>
+        {
+          productType === "PRODUCT" ?
+            <div className="flex flex-col md:flex-row gap-2 md:ml-4">
+              <button
+                onClick={() => handleViewDetails(order)}
+                className="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+              >
+                View Details
+              </button>
+            </div> :
+            <div>
+              {
+                detail?.status !== "Pending" && detail?.status !== "Failed" && (
+                  <div className="flex flex-col md:flex-row gap-2 md:ml-4">
+                    <button
+                      className="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+                      onClick={() => {
+                        navigate(`/invoice/${order?.order_unique}`);
+                      }} >
+                      View / Download Invoice
+                    </button>
+                  </div>
+                )
+              }
+            </div>
+
+        }
+
       </div>
     </div>
   );
@@ -306,13 +333,13 @@ const OrdersContent = () => {
       );
     }
     if (!detail) return null;
-    const products = detail.order_items.map((item, idx) => ({
+    const products = detail.order_items?.map((item, idx) => ({
       name: item.sku || 'Unknown',
-      quantity: item.quantity,
+      quantity: item?.quantity,
       price: parseFloat(item.unit_price || 0),
-      image: item.p_image_url || '',
+      image: item?.p_image_url || '',
     }));
-    const addressParts = detail.shipping_details || {};
+    const addressParts = detail?.shipping_details || {};
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 z-50">
         <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto text-sm">
@@ -320,7 +347,7 @@ const OrdersContent = () => {
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Order Details</h2>
-              <p className="text-xs text-gray-600">Order #{detail.order_unique}</p>
+              <p className="text-xs text-gray-600">Order #{detail?.order_unique}</p>
             </div>
             <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
               <X className="w-4 h-4 text-gray-500" />
@@ -331,25 +358,25 @@ const OrdersContent = () => {
           <div className="p-4 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-3 text-sm">Items in this order</h3>
             <div className="space-y-3">
-              {products.map((prod, i) => (
+              {products?.map((prod, i) => (
                 <div key={i} className="flex flex-col border p-3 rounded-lg shadow-sm bg-gray-50">
                   <div className="flex items-center gap-3 mb-2">
-                    <img src={prod.image} alt={prod.name} className="w-12 h-12 rounded-lg object-cover" />
+                    <img src={prod?.image} alt={prod?.name} className="w-12 h-12 rounded-lg object-cover" />
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 text-sm">{prod.name}</h4>
-                      <p className="text-xs text-gray-600">Quantity: {prod.quantity}</p>
+                      <h4 className="font-medium text-gray-900 text-sm">{prod?.name}</h4>
+                      <p className="text-xs text-gray-600">Quantity: {prod?.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-sm text-gray-900">₹{prod.price}</p>
+                      <p className="font-bold text-sm text-gray-900">₹{prod?.price}</p>
                     </div>
                   </div>
 
                   {/* New: Breakdown of product financials */}
                   <div className="text-xs text-gray-700 pl-1">
-                    <p>Discount: ₹{detail.order_items[i].discount}</p>
-                    <p>Tax Amount: ₹{detail.order_items[i].tax_amount}</p>
-                    <p>Total Price: ₹{detail.order_items[i].total_price}</p>
-                    <p className="font-semibold text-gray-900">Grand Total: ₹{detail.order_items[i].grand_total}</p>
+                    <p>Discount: ₹{detail?.order_items[i]?.discount}</p>
+                    <p>Tax Amount: ₹{detail?.order_items[i]?.tax_amount}</p>
+                    <p>Total Price: ₹{detail?.order_items[i]?.total_price}</p>
+                    <p className="font-semibold text-gray-900">Grand Total: ₹{detail?.order_items[i]?.grand_total}</p>
                   </div>
                 </div>
               ))}
@@ -358,37 +385,37 @@ const OrdersContent = () => {
             <div className="border-t border-gray-200 mt-3 pt-3">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-900 text-sm">Total</span>
-                <span className="font-bold text-md text-gray-900">₹{detail.grand_total}</span>
+                <span className="font-bold text-md text-gray-900">₹{detail?.grand_total}</span>
               </div>
             </div>
           </div>
-          {detail.status !== 'Pending' && (
+          {detail?.status !== 'Pending' && (
             <div className="m-4" onClick={() => {
-              setSelectedProduct(detail.order_items[0]);
+              setSelectedProduct(detail?.order_items[0]);
               setShowReviewModal(true)
             }}>
               <div className="flex justify-start cursor-pointer" onClick={() => setShowReviewModal(true)}>
-                {[1, 2, 3, 4, 5].map((star) => {
-                    const avgRating = parseFloat(
-                      reviews?.[0]?.rating || 0
-                    );
+                {[1, 2, 3, 4, 5]?.map((star) => {
+                  const avgRating = parseFloat(
+                    reviews?.[0]?.rating || 0
+                  );
 
-                    return (
-                      <Star
-                        key={star}
-                        className={`w-5 h-5 ${star <= Math.floor(avgRating)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : star - 0.5 === avgRating
-                            ? "fill-yellow-400 text-yellow-200" // optional: lighter color for half
-                            : "text-gray-300"
-                          }`}
-                      />
-                    );
-                  })}
-                
+                  return (
+                    <Star
+                      key={star}
+                      className={`w-5 h-5 ${star <= Math.floor(avgRating)
+                        ? "fill-yellow-400 text-yellow-400"
+                        : star - 0.5 === avgRating
+                          ? "fill-yellow-400 text-yellow-200" // optional: lighter color for half
+                          : "text-gray-300"
+                        }`}
+                    />
+                  );
+                })}
+
               </div>
               <button className="bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-2 py-0.5 mt-2 mb-2 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
-                >
+              >
                 Add Review
               </button>
               <p className="text-xs text-gray-600">Tap on the stars to rate your experience</p>
@@ -402,7 +429,7 @@ const OrdersContent = () => {
                 <div className="flex items-start gap-1">
                   <MapPin className="w-3 h-3 text-gray-500 mt-1" />
                   <p className="text-xs text-gray-600">
-                    {addressParts.address}, {addressParts.city}, {addressParts.state}, {addressParts.country} - {addressParts.postal_code}
+                    {addressParts?.address}, {addressParts?.city}, {addressParts?.state}, {addressParts?.country} - {addressParts?.postal_code}
                   </p>
                 </div>
               </div>
@@ -410,27 +437,32 @@ const OrdersContent = () => {
                 <h3 className="font-semibold text-gray-900 mb-2 text-sm">Payment Method</h3>
                 <div className="flex items-start gap-1">
                   <CreditCard className="w-3 h-3 text-gray-500 mt-1" />
-                  <p className="text-xs text-gray-600">{detail.payment_method === 1 ? 'Paid via Credit Card' : 'Other'}</p>
+                  <p className="text-xs text-gray-600">Paid via Credit Card</p>
                 </div>
               </div>
             </div>
-            {detail.notes && (
+            {detail?.notes && (
               <div className="mt-4">
                 <h3 className="font-semibold text-gray-900 mb-2 text-sm">Order Notes</h3>
-                <p className="text-xs text-gray-600 bg-gray-50 rounded-lg p-2">{detail.notes}</p>
+                <p className="text-xs text-gray-600 bg-gray-50 rounded-lg p-2">{detail?.notes}</p>
               </div>
             )}
           </div>
-          <div className="p-4">
-          <button
-            className="text-sm font-medium text-blue-600 underline"
-            onClick={() => {
-              navigate(`/invoice/${detail.order_unique}`); 
-            }}
-          >
-            View / Download Invoice
-          </button>
-        </div>
+          {
+            detail?.status !== "Pending" && detail?.status !== "Failed" && (
+              <div className="p-4">
+                <button
+                  className="text-sm font-medium text-blue-600 underline"
+                  onClick={() => {
+                    navigate(`/invoice/${detail?.order_unique}`);
+                  }}
+                >
+                  View / Download Invoice
+                </button>
+              </div>
+            )
+          }
+
 
           {/* Actions etc. */}
           <div className="p-4 border-t border-gray-200">
@@ -455,6 +487,7 @@ const OrdersContent = () => {
 
   return (
     <div className="min-h-screen bg-white-50 p-4 md:p-6 lg:p-8">
+      <Loader isLoading={isLoading} />
       <div className="max-w-6xl mx-auto">
         <div className="mb-4 flex flex-col justify-end items-end gap-2">
           <select
@@ -464,21 +497,20 @@ const OrdersContent = () => {
           >
             <option>Select Order Type</option>
             <option value="PRODUCT">Product</option>
-            <option value="EGOLD">esuvarna</option>
+            <option value="EGOLD">E-GOLD</option>
           </select>
         </div>
-        {productType==="EGOLD" && (
+        {productType === "EGOLD" && (
           <div className="mb-4 flex flex-col justify-end items-end gap-2">
-          <select
-            value={egoldType}
-            onChange={(e) => setEgoldType(e.target.value)}
-            className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
-          >
-            <option>Select E-Gold Type</option>
-            <option value="BUY">Buy</option>
-            <option value="SELL">Sell</option>
-          </select>
-        </div>
+            <select
+              value={egoldType}
+              onChange={(e) => setEgoldType(e.target.value)}
+              className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+            >
+              <option value="BUY">Buy</option>
+              <option value="SELL">Sell</option>
+            </select>
+          </div>
         )}
         {/* Header */}
         <div className="mb-6 md:mb-8">
@@ -487,7 +519,7 @@ const OrdersContent = () => {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-lg shadow-sm mb-6">
+        {/* <div className="bg-white rounded-lg shadow-sm mb-6">
           <div className="flex">
             <button
               onClick={() => setActiveTab('myOrders')}
@@ -518,7 +550,7 @@ const OrdersContent = () => {
               )}
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Orders List */}
         <div className="bg-white rounded-lg shadow-sm min-h-96">
@@ -533,7 +565,7 @@ const OrdersContent = () => {
           ) : (
             <div className="p-4 md:p-6 space-y-4">
               {currentOrders.map(order => (
-                <OrderCard key={order.order_id} order={order} />
+                <OrderCard key={order?.order_id} order={order} productType={productType} />
               ))}
             </div>
           )}
