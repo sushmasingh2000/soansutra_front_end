@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import ReactModal from "react-modal";
-import { Trash2, Edit, Plus } from "lucide-react";
 import { useQuery, useQueryClient } from "react-query";
-import { Add } from "@mui/icons-material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { Plus } from "lucide-react";
+import { Edit, Lock } from "@mui/icons-material";
 
 const ProductInventory = () => {
   const [searchParams] = useSearchParams();
@@ -28,16 +38,39 @@ const ProductInventory = () => {
   });
 
   const { data } = useQuery(
-    ['get_inventory', defaultVariantId],
-    () => apiConnectorGet(`${endpoint.get_product_inventory}?varient_id=${defaultVariantId}`),
+    ["get_inventory", defaultVariantId],
+    () =>
+      apiConnectorGet(
+        `${endpoint.get_product_inventory}?varient_id=${defaultVariantId}`
+      ),
     { refetchOnMount: false }
   );
   const inventory = data?.data?.result?.[0] || [];
+  const [storeDialogOpen, setStoreDialogOpen] = useState(false);
+  const [storeInventory, setStoreInventory] = useState([]);
+
+  const handleQuantityClick = async () => {
+    try {
+      const res = await apiConnectorGet(
+        `${endpoint.product_quantity}?inv_id=${inventory.inventory_id}`
+      );
+      const result = res?.data?.result || [];
+      setStoreInventory(result);
+      console.log(storeInventory?.[0]?.swi_id);
+      setStoreDialogOpen(true);
+    } catch (err) {
+      toast.error("Failed to fetch store inventory.");
+    }
+  };
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (defaultVariantId) {
       const findProductForVariant = async () => {
-        const res = await apiConnectorGet(`${endpoint.get_product_variant}?variant_id=${defaultVariantId}`);
+        const res = await apiConnectorGet(
+          `${endpoint.get_product_variant}?variant_id=${defaultVariantId}`
+        );
         setVariant(res?.data?.result?.[0] || []);
       };
       findProductForVariant();
@@ -54,7 +87,7 @@ const ProductInventory = () => {
       reserved_quantity: Number(inv.reserved_quantity) || "",
       minimum_quantity: Number(inv.minimum_quantity) || "",
       batch_number: inv.batch_number || "",
-      expiry_date:  "",
+      expiry_date: "",
       barcode: inv.barcode || "",
     });
     setModalOpen(true);
@@ -63,11 +96,16 @@ const ProductInventory = () => {
   const handleSubmit = async () => {
     const payload = { ...formData, varient_id: defaultVariantId };
     try {
-      const res = await apiConnectorPost(formData.inventory_id ? endpoint.update_product_inventory : endpoint.create_product_inventory, payload);
+      const res = await apiConnectorPost(
+        formData.inventory_id
+          ? endpoint.update_product_inventory
+          : endpoint.create_product_inventory,
+        payload
+      );
       toast(res?.data?.message);
       if (res?.data?.success) {
         setModalOpen(false);
-        client.refetchQueries("get_inventory")
+        client.refetchQueries("get_inventory");
       }
     } catch {
       toast.error("Failed to submit inventory.");
@@ -79,7 +117,7 @@ const ProductInventory = () => {
   };
 
   return (
-    <div className="p-6  mx-auto">
+    <div className="">
       <h1 className="text-2xl font-bold mb-6">Product Inventory</h1>
 
       {/* Product Select */}
@@ -122,7 +160,6 @@ const ProductInventory = () => {
               )}
             </div>
           )}
-
         </div>
       </div>
 
@@ -147,18 +184,31 @@ const ProductInventory = () => {
               </tr>
             ) : (
               <tr className="text-sm">
-                <td className="py-2 px-4 border-b">{inventory.stock_in_store}</td>
-                <td className="py-2 px-4 border-b">{inventory.reserved_quantity}</td>
-                <td className="py-2 px-4 border-b">{inventory.minimum_quantity}</td>
-                <td className="py-2 px-4 border-b">{inventory.batch_number || "N/A"}</td>
+                <td
+                  className="py-2 px-4 border-b text-blue-700 underline cursor-pointer"
+                  onClick={handleQuantityClick}
+                >
+                  {inventory.stock_in_store}
+                </td>
+
+                <td className="py-2 px-4 border-b">
+                  {inventory.reserved_quantity}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  {inventory.minimum_quantity}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  {inventory.batch_number || "N/A"}
+                </td>
                 {/* <td className="py-2 px-4 border-b">{inventory.expiry_date?.split("T")[0] || "N/A"}</td> */}
-                <td className="py-2 px-4 border-b">{inventory.barcode || "N/A"}</td>
+                <td className="py-2 px-4 border-b">
+                  {inventory.barcode || "N/A"}
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-
 
       {/* Modal */}
       <ReactModal
@@ -251,6 +301,59 @@ const ProductInventory = () => {
           </button>
         </div>
       </ReactModal>
+      <Dialog
+        open={storeDialogOpen}
+        onClose={() => setStoreDialogOpen(false)}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle>Store-wise Inventory</DialogTitle>
+        <DialogContent>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>S No.</TableCell>
+                <TableCell>Store Name</TableCell>
+                <TableCell>Quantity</TableCell>
+                <TableCell>Updated At</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {storeInventory.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    No Data Available
+                  </TableCell>
+                </TableRow>
+              ) : (
+                storeInventory.map((store, index) => (
+                  <TableRow>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{store.name || "N/A"}</TableCell>
+                    <TableCell>{store.swi_qnty || 0}</TableCell>
+                    <TableCell>
+                      {store.isUpdated ? (
+                        <span
+                        className="text-blue-600 underline cursor-pointer"
+                        onClick={() => {
+                          setStoreDialogOpen(false);
+                          openModalForAddUpdate();
+                        }}
+                      >
+                        <Edit/>
+                      </span>
+                      
+                      ) : (
+                        <Lock />
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

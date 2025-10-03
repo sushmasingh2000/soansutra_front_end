@@ -1,7 +1,7 @@
-export const domain = "http://192.168.248.149:2000";
+// export const domain = "http://192.168.248.149:2000";
 export const frontend = "https://sonasutra.in";
 // export const domain = "http://192.168.18.214:2000";
-// export const domain = "https://backend.sonasutra.in";
+export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 export const mode = "production";
 // export const mode = "sandbox";
@@ -11,6 +11,7 @@ export const endpoint = {
   login: `${domain}/api/v1/login-user`,
   //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
+  product_quantity: `${domain}/api/v1/get-inventory-store-wise`,
   //dashboard
   get_dashboard_Count: `${domain}/api/v1/get-dashboard-details`,
   //store
