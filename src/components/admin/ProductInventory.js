@@ -50,7 +50,7 @@ const ProductInventory = () => {
       product_id: variant?.product_id || null,
       inventory_id: inv.inventory_id || null,
       warehouse_id: "1",
-      quantity: Number(inv.quantity) || "",
+      quantity: Number(inv.stock_in_store) || "",
       reserved_quantity: Number(inv.reserved_quantity) || "",
       minimum_quantity: Number(inv.minimum_quantity) || "",
       batch_number: inv.batch_number || "",
@@ -147,7 +147,7 @@ const ProductInventory = () => {
               </tr>
             ) : (
               <tr className="text-sm">
-                <td className="py-2 px-4 border-b">{inventory.quantity}</td>
+                <td className="py-2 px-4 border-b">{inventory.stock_in_store}</td>
                 <td className="py-2 px-4 border-b">{inventory.reserved_quantity}</td>
                 <td className="py-2 px-4 border-b">{inventory.minimum_quantity}</td>
                 <td className="py-2 px-4 border-b">{inventory.batch_number || "N/A"}</td>
