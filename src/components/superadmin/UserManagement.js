@@ -143,7 +143,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role *
+               Store *
             </label>
             <select
               name="roleId"
@@ -152,7 +152,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option value="">Select Role</option>
+              <option value="">Select Store</option>
               {roles.map((role) => (
                 <option key={role.roleId} value={role.roleId}>
                   {role.roleName}
@@ -162,7 +162,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
           </div>
 
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Store *
             </label>
@@ -180,7 +180,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, notifications }) => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           <div className="flex justify-end space-x-2 pt-4">
             <button
@@ -352,7 +352,7 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }) => {
           {/* Role dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role *
+              Select Store *
             </label>
             <select
               name="roleId"
@@ -361,7 +361,8 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }) => {
               required
               className="w-full px-3 py-2 border rounded-md"
             >
-              <option value="">Select Role</option>
+              {/* by anand told this store hi role hoga and store comment */}
+              <option value="">Select Store</option>
               {roles.map((role) => (
                 <option key={role.roleId} value={role.roleId}>
                   {role.roleName}
@@ -371,7 +372,7 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }) => {
           </div>
 
           {/* Store dropdown */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Store *
             </label>
@@ -389,7 +390,7 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }) => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           <div className="flex justify-end space-x-2 pt-4">
             <button
@@ -522,9 +523,9 @@ const UserManagement = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Email
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Role
-              </th>
+              </th> */}
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Store
               </th>
@@ -552,9 +553,9 @@ const UserManagement = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {user.email}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {user.roleName}
-                  </td>
+                  </td> */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {user.storeName}
                   </td>

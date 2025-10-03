@@ -75,7 +75,7 @@ const StatCard = ({ color, label, value }) => (
     <div className="flex items-center justify-between">
       <div>
         <p className={`text-${color}-600 text-sm font-medium`}>{label}</p>
-        <p className={`text-3xl font-bold text-${color}-700`}>{value}</p>
+        <p className={`text-xl font-bold text-${color}-700`}>{value}</p>
       </div>
     </div>
   </div>

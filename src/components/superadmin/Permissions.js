@@ -120,7 +120,7 @@ const Permissions = () => {
                   ? "Assign Permissions"
                   : tab === "remove"
                     ? "Remove Permissions"
-                    : "View Role Permissions"}
+                    : "View Store Permissions"}
               </button>
             ))}
           </nav>
@@ -132,7 +132,7 @@ const Permissions = () => {
           {activeTab === "assign" && (
             <div>
               <h2 className="text-lg font-medium mb-4">
-                Assign Permission to Role
+                Assign Permission to Store
               </h2>
               <div className="space-y-4 max-w-md">
                 <select
@@ -140,7 +140,7 @@ const Permissions = () => {
                   onChange={(e) => setSelectedRole(e.target.value)}
                   className="w-full border rounded p-2"
                 >
-                  <option value="">Select a role</option>
+                  <option value="">Select a Store</option>
                   {roles.map((role) => (
                     <option key={role.roleId} value={role.roleId}>
                       {role.roleName}
@@ -174,7 +174,7 @@ const Permissions = () => {
           {activeTab === "remove" && (
             <div>
               <h2 className="text-lg font-medium mb-4">
-                Remove Permission from Role
+                Remove Permission from Store
               </h2>
               <div className="space-y-4 max-w-md">
                 <select
@@ -182,7 +182,7 @@ const Permissions = () => {
                   onChange={(e) => setSelectedRole(e.target.value)}
                   className="w-full border rounded p-2"
                 >
-                  <option value="">Select a role</option>
+                  <option value="">Select a Store</option>
                   {roles.map((role) => (
                     <option key={role.roleId} value={role.roleId}>
                       {role.roleName}
@@ -216,7 +216,7 @@ const Permissions = () => {
           {activeTab === "view" && (
             <div>
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-medium">Role Permissions</h2>
+                <h2 className="text-lg font-medium">Store Permissions</h2>
                 <select
                   onChange={(e) => {
                     setSelectedRole(e.target.value);
@@ -224,7 +224,7 @@ const Permissions = () => {
                   }}
                   className="border px-2 py-1 rounded"
                 >
-                  <option>Select Role</option>
+                  <option>Select Store</option>
                   {roles.map((role) => (
                     <option key={role.roleId} value={role.roleId}>
                       {role.roleName}

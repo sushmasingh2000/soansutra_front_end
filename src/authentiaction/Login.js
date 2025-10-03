@@ -23,22 +23,23 @@ const Login = () => {
     const req =
       loginType === "superadmin"
         ? {
-            su_email: email,
-            su_pass: password,
-          }
+          su_email: email,
+          su_pass: password,
+        }
         : {
-            username: email,
-            password: password,
-          };
+          username: email,
+          password: password,
+        };
     try {
       const res = await axios.post(url, { payload: enCryptData(req) });
       toast(res?.data?.message);
-      if(res?.data?.success){
+      localStorage.clear();
+      if (res?.data?.success) {
         localStorage.setItem("token", res?.data?.result?.token);
-      localStorage.setItem("role", res?.data?.result?.role);
-       navigate('/dashboard');
+        localStorage.setItem("role", res?.data?.result?.role);
+        navigate('/dashboard');
       }
-      
+
     } catch (error) {
       toast.error("something went wrong ");
     } finally {
@@ -79,11 +80,10 @@ const Login = () => {
                     key={type}
                     type="button"
                     onClick={() => setLoginType(type)}
-                    className={`p-3 rounded-lg border text-sm font-medium transition-colors disabled:cursor-not-allowed ${
-                      loginType === type
+                    className={`p-3 rounded-lg border text-sm font-medium transition-colors disabled:cursor-not-allowed ${loginType === type
                         ? "bg-blue-50 border-blue-500 text-blue-700"
                         : "bg-gray-50 border-gray-300 text-gray-600 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {type === "user" ? "👤 Staff Login" : "🔐 Super Admin"}
                   </button>
@@ -158,8 +158,7 @@ const Login = () => {
                   Signing in...
                 </span>
               ) : (
-                `Sign in as ${
-                  loginType === "superadmin" ? "Super Admin" : "Staff"
+                `Sign in as ${loginType === "superadmin" ? "Super Admin" : "Staff"
                 }`
               )}
             </button>

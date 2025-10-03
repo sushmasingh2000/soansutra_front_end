@@ -60,10 +60,10 @@ const AdminLayout = ({ component, navItem, navLink, id }) => {
         backgroundImage: `url(${color})`,
         backgroundSize: 'cover',
       }}
-      className={`!bg-white lg:flex lg:h-screen h-[110vh] !w-[100vw] !overflow-x-hidden`}
+      className={`!bg-white lg:flex lg:h-screen h-[110vh] !w-[100vw] !overflow-x-hidden example`}
     >
       {!isMediumScreen ? <Sidebar /> : <MobileNavigation />}
-      <div className="flex flex-col gap-3 h-screen lg:!w-[calc(100vw-16vw)] w-full !overflow-x-auto  lg:p-5 !bg-white !bg-opacity-50">
+      <div className="flex flex-col gap-3 h-screen lg:!w-[calc(120vw-16vw)] w-full !overflow-x-auto example  lg:p-5 !bg-white !bg-opacity-50">
         {!isMediumScreen && (
           <div className="flex flex-col h-[24vh] w-full">
             <div className="flex w-full mb-4 items-center rounded justify-between">
@@ -93,14 +93,14 @@ const AdminLayout = ({ component, navItem, navLink, id }) => {
               </div>
             </div>
             {!isMediumScreen && (
-              <div className=" w-[95%] overflow-x-hidden">
+              <div className=" w-[95%] overflow-x-hidden example" >
                 <BreadCrumbs navItem={navItem} navLink={navLink} id={id} />
               </div>
             )}
           </div>
         )}
 
-        <div className="flex flex-col overflow-y-auto w-full lg:h-[83vh] !h-[100vh] glass lg:!p-1 !rounded-md">
+        <div className="flex flex-col overflow-y-auto example w-full lg:h-[83vh] !h-[100vh] glass lg:!p-1 !rounded-md">
           {component}
         </div>
 

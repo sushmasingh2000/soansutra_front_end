@@ -1,9 +1,11 @@
 import {
   AppBar,
   Collapse,
+  Divider,
   Drawer,
   IconButton,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Toolbar,
@@ -14,7 +16,8 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import React, { useState } from "react";
-import { all_Data } from "../../mockdata/MockData";
+import { filtered_Data } from "../../mockdata/MockData";
+import logo from "../../../../assets/desklogo.png"
 
 export default function MobileNavigation() {
   const navigate = useNavigate();
@@ -61,12 +64,18 @@ export default function MobileNavigation() {
         anchor="left"
         open={drawerOpen}
         onClose={handleToggleDrawer}
-        
-          className= "!w-[150px] glass !bg-white !bg-opacity-50 backdrop-blur-lg"
-      
+        PaperProps={{
+          className: "w-[250px] bg-white bg-opacity-70 backdrop-blur-md",
+        }}
       >
+
         <List className="!p-6">
-          {all_Data?.map((nav) => (
+          <ListItem className="!py-3 !flex !justify-center">
+            <img alt="logo" className="Capture w-32" src={logo} />
+          </ListItem>
+          <Divider />
+
+          {filtered_Data?.map((nav) => (
             <React.Fragment key={nav.id}>
               <ListItemButton
                 onClick={() => {
@@ -82,11 +91,11 @@ export default function MobileNavigation() {
                   window.location.pathname === nav.navLink && "!text-[#0561FC]"
                 )}
               >
-                <ListItemText primary={nav.navItem} />
+                <ListItemText primary={nav.label} />
                 {nav.subcomponent?.length > 0 &&
                   (openCollapse[nav.navLink] ? <ExpandLess /> : <ExpandMore />)}
               </ListItemButton>
-              {/* Submenu */}
+
               <Collapse in={openCollapse[nav.navLink]} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {nav.subcomponent?.map((subNav) => (
@@ -98,12 +107,11 @@ export default function MobileNavigation() {
                       }}
                       className={classNames(
                         "!rounded-lg",
-                        window.location.pathname === subNav.navLink &&
-                          "!text-[#0561FC]"
+                        window.location.pathname === subNav.navLink && "!text-[#0561FC]"
                       )}
                       sx={{ pl: 4 }}
                     >
-                      <ListItemText primary={subNav.navItem} />
+                      <ListItemText primary={subNav.label} />
                     </ListItemButton>
                   ))}
                 </List>
@@ -111,7 +119,8 @@ export default function MobileNavigation() {
             </React.Fragment>
           ))}
 
-          {/* Logout Button */}
+          <Divider className="my-2" />
+
           <ListItemButton
             onClick={() => {
               localStorage.clear();
@@ -122,7 +131,8 @@ export default function MobileNavigation() {
             <ListItemText primary={"Logout"} />
           </ListItemButton>
         </List>
-      </Drawer>
+
+      </Drawer >
     </>
   );
 }

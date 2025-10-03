@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { enCryptData } from '../../../../utils/Secret';
 import { endpoint } from '../../../../utils/APIRoutes';
-import { FiUser,  FiShield } from 'react-icons/fi';
+import { FiUser, FiShield } from 'react-icons/fi';
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -33,11 +33,12 @@ const LogIn = () => {
     try {
       const res = await axios.post(url, { payload: enCryptData(req) });
       toast(res?.data?.message);
-
+      localStorage.clear();
       if (res?.data?.success) {
+        navigate("/admin-dashboard");
+        window.location.reload();
         localStorage.setItem("token", res?.data?.result?.token);
         localStorage.setItem("role", res?.data?.result?.role);
-        navigate("/admin-dashboard");
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -60,14 +61,13 @@ const LogIn = () => {
               key={type}
               type="button"
               onClick={() => setLoginType(type)}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                loginType === type
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${loginType === type
                   ? "bg-green-500 text-white shadow-md"
                   : "text-gray-600 hover:bg-gray-100"
-              }`}
+                }`}
             >
-               {type === "user" ? "👤 Staff Login" : "🔐 Super Admin"}
-               {/* {type === "user" ? <FiUser size={18} /> : <FiShield size={18} />}
+              {type === "user" ? "👤 Staff Login" : "🔐 Super Admin"}
+              {/* {type === "user" ? <FiUser size={18} /> : <FiShield size={18} />}
               {type === "user" ?  "Staff Login" : "Super Admin"} */}
             </button>
           ))}
@@ -111,11 +111,10 @@ const LogIn = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full text-white py-2 rounded-full font-semibold shadow-md transition-all duration-200 ${
-              loading
+            className={`w-full text-white py-2 rounded-full font-semibold shadow-md transition-all duration-200 ${loading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-gradient-to-t from-[#1E3C94] to-[#7D85FE] hover:from-[#1E3C94]"
-            }`}
+              }`}
           >
             {loading ? "Logging in..." : "Login Now"}
           </button>

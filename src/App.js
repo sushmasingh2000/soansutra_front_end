@@ -14,16 +14,16 @@ import AdminLogIn from './components/admin/Authentication/Login';
 
 function App() {
   const admin = localStorage.getItem("token");
-  // const user = localStorage.getItem("token");
+  const user = localStorage.getItem("token");
   const { showLoginModal, setShowLoginModal } = useLoginModal();
   return (
     <BrowserRouter>
       <Routes>
         {/* <Route path="/" element={<Test />} /> */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/admin-login" element={<Login />} />
-        {/* <Route path="/adminLogin" element={<AdminLogIn />} /> */}
-         {/* {user ? (
+        {/* <Route path="/admin-login" element={<Login />} /> */}
+        <Route path="/admin-Login" element={<AdminLogIn />} />
+         {user ? (
           adminroutes.map((route, i) => (
             <Route
               key={i}
@@ -39,8 +39,8 @@ function App() {
             />
           ))
         ) : (
-          <Route path="*" element={<Login />} />
-        )} */}
+          <Route path="*" element={<AdminLogIn />} />
+        )}
         {admin ? (
           routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />

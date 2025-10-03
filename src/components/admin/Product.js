@@ -6,11 +6,10 @@ import ProductImageManager from "./ProductImage";
 import { useNavigate } from "react-router-dom";
 import { Edit, Eye, View } from "lucide-react";
 import { Delete } from "@mui/icons-material";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+import CustomToPagination from "../../Shared/Pagination";
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [createModal, setCreateModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -19,8 +18,12 @@ const Products = () => {
   const [isCollection, setisCollection] = useState(false);
   const [viewData, setViewData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [showCollectionField, setShowCollectionField] = useState(false);
-
+  const client = useQueryClient();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -32,17 +35,20 @@ const Products = () => {
     file: null,
   });
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await apiConnectorGet(endpoint.get_product_all, { isCollection: isCollection });
-      setProducts(response?.data?.result?.data || []);
-    } catch (err) {
-      toast.error("Failed to fetch products.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: prod } = useQuery(
+    ["get_products_admin", { searchTerm, startDate, endDate, page }, isCollection],
+    () => apiConnectorGet(endpoint.get_product_all, {
+      isCollection: isCollection,
+      search: searchTerm,
+      start_date: startDate,
+      end_date: endDate,
+      page: page,
+      count: 10,
+    }),
+    usequeryBoolean
+  );
+  const products = prod?.data?.result?.data || [];
+
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -61,18 +67,13 @@ const Products = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+  const { data: categ } = useQuery(
+    ["get_categ_admin"],
+    () => apiConnectorGet(endpoint.get_product_categroy),
+    usequeryBoolean
+  );
+  const categories = categ?.data?.result || [];
 
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await apiConnectorGet(endpoint.get_product_categroy); // fix typo if any
-      setCategories(response?.data?.result || []);
-    } catch (err) {
-      toast.error("Failed to fetch categories.");
-    } finally {
-      setLoading(false);
-    }
-  };
   const fetchSubcategories = async (categoryId) => {
     if (!categoryId) {
       setSubcategories([]);
@@ -90,11 +91,6 @@ const Products = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, []);
 
   const resetForm = () => {
     setFormData({
@@ -127,7 +123,7 @@ const Products = () => {
       toast.success(res?.data?.message || "Product created");
       setCreateModal(false);
       resetForm();
-      fetchProducts();
+      client.refetchQueries("get_products_admin")
     } catch (err) {
       toast.error("Error creating product.");
     } finally {
@@ -165,7 +161,7 @@ const Products = () => {
       setEditModal(false);
       setSelectedProduct(null);
       resetForm();
-      fetchProducts();
+      client.refetchQueries("get_products_admin")
     } catch (err) {
       toast.error("Error updating product.");
     } finally {
@@ -180,7 +176,7 @@ const Products = () => {
         `${endpoint.delete_product}?product_id=${product.product_id}`
       );
       toast.success(res?.data?.message || "Product deleted");
-      fetchProducts();
+      client.refetchQueries("get_products_admin")
     } catch (err) {
       toast.error("Error deleting product.");
     } finally {
@@ -226,11 +222,6 @@ const Products = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, [isCollection]);
-
-
   const { data } = useQuery(
     ["collection_get"],
     () => apiConnectorGet(endpoint.get_collection),
@@ -254,6 +245,27 @@ const Products = () => {
           <span>Add New Product</span>
         </button>
       </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <input
+          type="text"
+          placeholder="Search by username"
+          className="border px-3 py-2 rounded"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border px-3 py-2 rounded"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          className="border px-3 py-2 rounded"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
+      </div>
       <div className="flex justify-start gap-5 mb-2">
         <button
           onClick={() => setisCollection(false)}
@@ -275,6 +287,9 @@ const Products = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                S.No
+              </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Product Name & Image
               </th>
@@ -304,7 +319,7 @@ const Products = () => {
                 </td>
               </tr>
             ) : (
-              products.map((product) => {
+              products.map((product, index) => {
                 // Parse product images JSON safely
                 let images = [];
                 try {
@@ -329,6 +344,8 @@ const Products = () => {
 
                 return (
                   <tr key={product.product_id}>
+                    <td className="px-6 py-4">{((page - 1) * 10) + index + 1}</td>
+
                     <td className="px-6 py-4 flex items-center space-x-3">
                       {firstImageUrl && (
                         <img
@@ -594,7 +611,7 @@ const Products = () => {
                   </select>
                 </div>
               )}
-          
+
               <div className="flex flex-col gap-1  justify-start">
                 <label>Product Name</label>
                 <input
@@ -840,6 +857,7 @@ const Products = () => {
           </div>
         </div>
       )}
+      <CustomToPagination data={prod?.data?.result} setPage={setPage} page={page} />
     </div>
   );
 };

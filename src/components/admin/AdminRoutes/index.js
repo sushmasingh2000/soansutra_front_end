@@ -60,7 +60,11 @@ export const adminroutes = [
     navItem: "Role",
 
   },
-
+ {
+    path: "/permissions",
+    component: <Permissions />,
+    navItem: "Permissions",
+  },
 
   //admin
   {
@@ -104,11 +108,7 @@ export const adminroutes = [
     component: <AddPurchaseWallet />,
     navItem: "Add Purchase Wallet",
   },
-  {
-    path: "/permissions",
-    component: <Permissions />,
-    navItem: "Permissions",
-  },
+ 
   {
     path: "/Collection",
     component: <Collection />,

@@ -5,13 +5,13 @@ import { apiConnectorGet, apiConnectorPost } from '../../utils/ApiConnector';
 import { endpoint } from '../../utils/APIRoutes';
 import { enCryptData } from '../../utils/Secret';
 
-const StoreManagement= () => {
+const StoreManagement = () => {
   const [stores, setStores] = useState([]);
   const [createStoreModal, setCreateStoreModal] = useState(false);
   const [editStoreModal, setEditStoreModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +22,9 @@ const StoreManagement= () => {
     country: '',
     phone: '',
     email: '',
+    pin_code: '',
+    gstin_no: '',
+    pan_no: '',
     status: true
   });
 
@@ -50,9 +53,12 @@ const StoreManagement= () => {
         country: formData.country,
         phone: formData.phone,
         email: formData.email,
+        pin_code: formData.pin_code,
+        gstin_no: formData.gstin_no,
+        pan_no: formData.pan_no,
       };
 
-   const response = await apiConnectorPost(endpoint?.create_store,{
+      const response = await apiConnectorPost(endpoint?.create_store, {
         payload: enCryptData(storeData)
       });
       setCreateStoreModal(false);
@@ -80,10 +86,14 @@ const StoreManagement= () => {
         country: formData.country,
         phone: formData.phone,
         email: formData.email,
+        pin_code: formData.pin_code,
+        gstin_no: formData.gstin_no,
+        pan_no: formData.pan_no,
       };
-  const response =  await apiConnectorPost(endpoint?.update_store, {
-    payload:enCryptData(storeData)
-  });
+
+      const response = await apiConnectorPost(endpoint?.update_store, {
+        payload: enCryptData(storeData)
+      });
       setEditStoreModal(false);
       setSelectedStore(null);
       resetForm();
@@ -104,9 +114,9 @@ const StoreManagement= () => {
       const deleteData = {
         store_id: store.store_id
       };
-    const res =   await apiConnectorPost(endpoint?.delete_store, {
-      payload: enCryptData(deleteData ),
-    });
+      const res = await apiConnectorPost(endpoint?.delete_store, {
+        payload: enCryptData(deleteData),
+      });
       fetchStores();
       toast(res?.data?.message);
     } catch (err) {
@@ -127,6 +137,9 @@ const StoreManagement= () => {
       country: '',
       phone: '',
       email: '',
+      pin_code: '',
+      gstin_no: '',
+      pan_no: '',
       status: true
     });
   };
@@ -150,6 +163,9 @@ const StoreManagement= () => {
       country: store.country || '',
       phone: store.phone || store.contact || '',
       email: store.email || '',
+      pin_code: store.pin_code || '',
+      gstin_no: store.gstin_no || '',
+      pan_no: store.pan_no || '',
       status: store.status === 'Active' || store.status === true || store.status === 1
     });
     setEditStoreModal(true);
@@ -163,7 +179,7 @@ const StoreManagement= () => {
   // Form validation
   const isFormValid = () => {
     return formData.name && formData.address && formData.phone && formData.email &&
-           formData.city && formData.state && formData.country;
+      formData.city && formData.state && formData.country && formData.pin_code && formData.gstin_no && formData.pan_no;
   };
 
   return (
@@ -187,7 +203,7 @@ const StoreManagement= () => {
           <p className="mt-2 text-gray-600">Loading...</p>
         </div>
       )}
-      
+
       {/* Desktop Table View */}
       <div className="hidden lg:block bg-white rounded-lg shadow-sm border overflow-hidden">
         <div className="overflow-x-auto">
@@ -200,6 +216,9 @@ const StoreManagement= () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GST No.</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PIN Code</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PAN No.</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -220,18 +239,20 @@ const StoreManagement= () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{store.city || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{store.phone || store.contact}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{store.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{store.gstin_no}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{store.pin_code}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{store.pan_no}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        store.status === 'Active' || store.status === true
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className={`px-2 py-1 text-xs rounded-full ${store.status === 'Active' || store.status === true
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                        }`}>
                         {store.status === 'Active' || store.status === true ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       <div className="flex space-x-2">
-                        <button 
+                        <button
                           onClick={() => openEditModal(store)}
                           className="text-green-600 hover:text-green-800 p-1"
                           disabled={loading}
@@ -239,7 +260,7 @@ const StoreManagement= () => {
                         >
                           ✏️
                         </button>
-                        <button 
+                        <button
                           onClick={() => deleteStore(store)}
                           className="text-red-600 hover:text-red-800 p-1"
                           disabled={loading}
@@ -275,7 +296,7 @@ const StoreManagement= () => {
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{store.name}</h3>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
                     {store.description && (
                       <div className="sm:col-span-2">
@@ -295,20 +316,19 @@ const StoreManagement= () => {
                       <span className="font-medium text-gray-700">Email:</span> {store.email}
                     </div>
                   </div>
-                  
+
                   <div className="mt-3 flex items-center justify-between">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      store.status === 'Active' || store.status === true
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
+                    <span className={`px-2 py-1 text-xs rounded-full ${store.status === 'Active' || store.status === true
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                      }`}>
                       {store.status === 'Active' || store.status === true ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                 </div>
-                
+
                 <div className="flex flex-row sm:flex-col gap-2 justify-end">
-                  <button 
+                  <button
                     onClick={() => openEditModal(store)}
                     className="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-800 p-2 rounded-lg transition-colors"
                     disabled={loading}
@@ -316,7 +336,7 @@ const StoreManagement= () => {
                   >
                     ✏️
                   </button>
-                  <button 
+                  <button
                     onClick={() => deleteStore(store)}
                     className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 p-2 rounded-lg transition-colors"
                     disabled={loading}
@@ -405,14 +425,35 @@ const StoreManagement= () => {
                 placeholder="Email Address *"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+              <input
+                name="gstin_no"
+                value={formData.gstin_no}
+                onChange={handleInputChange}
+                placeholder="GSTIN No. *"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <input
+                name="pin_code"
+                value={formData.pin_code}
+                onChange={handleInputChange}
+                placeholder="PIN Code *"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <input
+                name="pan_no"
+                value={formData.pan_no}
+                onChange={handleInputChange}
+                placeholder="PAN No  *"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
               <div className="flex items-center space-x-3 md:col-span-2">
-                <input 
-                  type="checkbox" 
-                  id="status" 
+                <input
+                  type="checkbox"
+                  id="status"
                   name="status"
                   checked={formData.status}
                   onChange={handleInputChange}
-                  className="rounded" 
+                  className="rounded"
                 />
                 <label htmlFor="status" className="text-sm text-gray-700">Active Status</label>
               </div>
@@ -428,7 +469,7 @@ const StoreManagement= () => {
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={createStore}
                 disabled={!isFormValid() || loading}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
@@ -510,14 +551,35 @@ const StoreManagement= () => {
                 placeholder="Email Address *"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+              <input
+                name="gstin_no"
+                value={formData.gstin_no}
+                onChange={handleInputChange}
+                placeholder="GSTIN No. *"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <input
+                name="pin_code"
+                value={formData.pin_code}
+                onChange={handleInputChange}
+                placeholder="PIN Code *"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <input
+                name="pan_no"
+                value={formData.pan_no}
+                onChange={handleInputChange}
+                placeholder="PAN No  *"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
               <div className="flex items-center space-x-3 md:col-span-2">
-                <input 
-                  type="checkbox" 
-                  id="editStatus" 
+                <input
+                  type="checkbox"
+                  id="editStatus"
                   name="status"
                   checked={formData.status}
                   onChange={handleInputChange}
-                  className="rounded" 
+                  className="rounded"
                 />
                 <label htmlFor="editStatus" className="text-sm text-gray-700">Active Status</label>
               </div>
@@ -534,7 +596,7 @@ const StoreManagement= () => {
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={updateStore}
                 disabled={!isFormValid() || loading}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"

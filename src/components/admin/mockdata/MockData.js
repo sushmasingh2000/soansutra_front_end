@@ -7,22 +7,59 @@ import {
   ProductionQuantityLimitsOutlined,
   PublishRounded,
   RollerShadesClosed,
-  Store
+  Store,
+  AddShoppingCart,
+  Paid,
+  AccountBalance,
+  CurrencyExchange,
+  LocalMall,
+  ShoppingCart,
+  Inventory,
+  Category,
+  Discount,
+  Sell,
+  VideoLibrary,
+  SupervisorAccount,
+  Backup,
+  LocalAtm,
+  RequestPage,
+  AssignmentTurnedIn,
+  ConfirmationNumber,
+  ViewTimeline,
+  SettingsApplications,
+  ImageAspectRatio,
+  ManageAccountsRounded,
+  PaymentSharp,
+  DirectionsTransit,
 } from "@mui/icons-material";
 
-import {
-  Eye,
-  User2Icon
-} from "lucide-react";
+import { Eye, Image, LucideAmpersands, User2Icon } from "lucide-react";
 
 const superAdminAccess = [
   "dashboard",
   "stores",
   "users",
-  "roles",
   "permissions",
-  "logout",
 ];
+
+const AdminAccess = [
+  "dashboard",
+  "customer",
+  "banner",
+  "collection",
+  "product-management",
+  "utils",
+  "order-management",
+  "coupon-management",
+  "wallet",
+  "finance",
+  "demo-call",
+  "video",
+  "mlm",
+  "leads"
+
+];
+
 
 export const all_Data = [
   {
@@ -44,16 +81,55 @@ export const all_Data = [
     navLink: "/users",
   },
   {
-    id: "roles",
-    label: "Role",
-    icon: <RollerShadesClosed />,
-    navLink: "/roles",
-  },
-  {
     id: "permissions",
     label: "Permissions",
     icon: <PermScanWifi />,
     navLink: "/permissions",
+  },
+
+  //admin
+  {
+    id: "banner",
+    label: "Banner",
+    icon: <Image />,
+    navLink: "/banner",
+  },
+  {
+    id: "collection",
+    label: "Collection",
+    icon: <ImageAspectRatio />,
+    navLink: "/collection",
+  },
+  {
+    id: "product-management",
+    label: "Product Management",
+    icon: <LocalMall />,
+    subcomponent: [
+      {
+        id: "categories",
+        label: "Categories",
+        icon: <Category />,
+        navLink: "/categories",
+      },
+      {
+        id: "sub_categories",
+        label: "Sub Categories",
+        icon: <Category />,
+        navLink: "/sub_categories",
+      },
+      {
+        id: "products",
+        label: "Products",
+        icon: <ShoppingCart />,
+        navLink: "/products",
+      },
+      {
+        id: "product-inventory",
+        label: "Inventory",
+        icon: <Inventory />,
+        navLink: "/inventory",
+      },
+    ],
   },
   {
     id: "utils",
@@ -83,25 +159,184 @@ export const all_Data = [
             icon: <PublishRounded />,
             navLink: "/purity",
           },
+          {
+            id: "sub-material",
+            label: "Sub Material",
+            icon: <ManageAccountsRounded />,
+            navLink: "/product-material",
+          },
+          {
+            id: "backup-material",
+            label: "Backup Materials",
+            icon: <Backup />,
+            navLink: "/backup_materials",
+          },
         ],
+      },
+      {
+        id: "tax",
+        label: "Tax",
+        icon: <CurrencyExchange />,
+        navLink: "/tax",
+      },
+
+      {
+        id: "discount",
+        label: "Discount",
+        icon: <Discount />,
+        navLink: "/discount",
+      },
+
+    ]
+  },
+  {
+    id: "coupon-management",
+    label: "Coupon",
+    icon: <ConfirmationNumber />,
+    subcomponent: [
+      {
+        id: "coupon",
+        label: "Coupon List",
+        icon: <ConfirmationNumber />,
+        navLink: "/coupon",
+      },
+      {
+        id: "price-range",
+        label: "Coupon Price Range",
+        icon: <ViewTimeline />,
+        navLink: "/price_range",
       },
     ],
   },
+  {
+    id: "order-management",
+    label: "Order Management",
+    icon: <Sell />,
+    subcomponent: [
+      {
+        id: "order",
+        label: "Order",
+        icon: <ShoppingCart />,
+        navLink: "/order",
+      },
+      {
+        id: "custom-order",
+        label: "Custom Order",
+        icon: <AssignmentTurnedIn />,
+        navLink: "/custom",
+      },
+
+    ],
+  },
+  {
+    id: "wallet",
+    label: "Wallet Management",
+    icon: <Paid />,
+    subcomponent: [
+      {
+        id: "purchase-wallet",
+        label: "Purchase Wallet",
+        icon: <AddShoppingCart />,
+        navLink: "/purchase_wallet",
+      },
+      {
+        id: "add-purchase-wallet",
+        label: "Add Purchase Wallet",
+        icon: <AddShoppingCart />,
+        navLink: "/add_purchase_wallet",
+      },
+    ],
+  },
+  {
+    id: "finance",
+    label: "Financials",
+    icon: <AccountBalance />,
+    subcomponent: [
+      {
+        id: "bank-detail",
+        label: "Bank Details",
+        icon: <AccountBalance />,
+        navLink: "/bank_detail",
+      },
+      {
+          id: "payment",
+          label: "Payment",
+          icon: <PaymentSharp />,
+          navLink: "/payment",
+        },
+      {
+        id: "payout-report",
+        label: "Payout Report",
+        icon: <CurrencyExchange />,
+        navLink: "/payout_report",
+      },
+    ],
+  },
+  {
+      id: "leads",
+      label: "External Leads",
+      icon: <LucideAmpersands />,
+      navLink: "/leads",
+    },
+  {
+    id: "video",
+    label: "Videos",
+    icon: <VideoLibrary />,
+    navLink: "/video",
+  },
+  {
+    id: "demo-call",
+    label: "Request Demo",
+    icon: <RequestPage />,
+    navLink: "/demo-call",
+  },
+  {
+    id: "customer",
+    label: "Customer",
+    icon: <SupervisorAccount />,
+    navLink: "/customer",
+  },
+
+   {
+      id: "mlm",
+      label: "MLM",
+      icon: <Eye />,
+      subcomponent: [
+        {
+            id: "distributor",
+            label: "Distributor",
+            icon: <DirectionsTransit />,
+            navLink: "/distributor",
+          },
+        {
+          id: "rank",
+          label: "Master Rank",
+          icon: <PermScanWifi />,
+          navLink: "/rank",
+        },
+        {
+          id: "rank_achivers",
+          label: "Rank Achiever",
+          icon: <PermScanWifi />,
+          navLink: "/rankachiver",
+        },
+  
+      ],
+    },
   {
     id: "logout",
     label: "Logout",
     icon: <Logout />,
     navLink: "/",
   },
-]
+];
+
 const userRole = localStorage.getItem("role");
 
-// Determine allowed IDs based on role
 const allowedIds = userRole === "superuser"
   ? superAdminAccess
-  : ["dashboard", "logout"]; // only always visible ones for non-superuser
+  : AdminAccess;
 
-// Final filtered navigation data
 export const filtered_Data = all_Data.filter((item) =>
   allowedIds.includes(item.id)
 );

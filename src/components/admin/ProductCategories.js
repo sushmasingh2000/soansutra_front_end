@@ -1,36 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../utils/ApiConnector";
 import { domain, endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { Delete, Edit, Eye } from "lucide-react";
 import { DeleteForever } from "@mui/icons-material";
+import { useQuery, useQueryClient } from "react-query";
+import CustomTable from "./Shared/CustomTable";
 
 const ProductCategories = () => {
-  const [categories, setCategories] = useState([]);
   const [createCategoryModal, setCreateCategoryModal] = useState(false);
   const [editCategoryModal, setEditCategoryModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [viewCategoryModal, setViewCategoryModal] = useState(false);
   const [viewCategoryData, setViewCategoryData] = useState(null);
-
   const [loading, setLoading] = useState(false);
+  const client = useQueryClient();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     file: null,
   });
 
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await apiConnectorGet(endpoint.get_product_categroy);
-      setCategories(response?.data?.result || []);
-    } catch (err) {
-      toast.error("Failed to fetch categories.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: categ , isLoading } = useQuery(
+    ["get_categ_admin"],
+    () => apiConnectorGet(endpoint.get_product_categroy),
+    usequeryBoolean
+  );
+  const categories = categ?.data?.result || [];
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -66,25 +62,13 @@ const ProductCategories = () => {
       toast.success(res?.data?.message || "Category created");
       setCreateCategoryModal(false);
       resetForm();
-      fetchCategories();
+      client.refetchQueries("get_categ_admin")
     } catch (err) {
       toast.error("Error creating category.");
     } finally {
       setLoading(false);
     }
   };
-  const fetchCategoryById = async (categoryId) => {
-    try {
-      const res = await apiConnectorGet(
-        `${endpoint.get_product_categroy_by_id}?product_category_id=${categoryId}`
-      );
-      return res?.data?.result;
-    } catch (err) {
-      toast.error("Failed to fetch category by ID.");
-      return null;
-    }
-  };
-
   const updateCategory = async () => {
     try {
       setLoading(true);
@@ -104,7 +88,7 @@ const ProductCategories = () => {
       setEditCategoryModal(false);
       setSelectedCategory(null);
       resetForm();
-      fetchCategories();
+      client.refetchQueries("get_categ_admin")
     } catch (err) {
       toast.error("Error updating category.");
     } finally {
@@ -118,7 +102,7 @@ const ProductCategories = () => {
       const payload = { product_category_id: category.product_category_id };
       const res = await apiConnectorPost(endpoint.delete_product_category, payload);
       toast.success(res?.data?.message || "Category deleted");
-      fetchCategories();
+      client.refetchQueries("get_categ_admin")
     } catch (err) {
       toast.error("Error deleting category.");
     } finally {
@@ -135,17 +119,36 @@ const ProductCategories = () => {
     });
     setEditCategoryModal(true);
   };
+  const tablehead = ["S.No." , "Category Name", "Description", "Image", "Actions"];
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-  const handleViewCategory = async (category) => {
-    const data = await fetchCategoryById(category.product_category_id);
-    if (data) {
-      setViewCategoryData(data);
-      setViewCategoryModal(true);
-    }
-  };
+  const tablerow = categories?.map((category , index) => [
+    <span >{index + 1} </span>,
+    <span >{category.name} </span>,
+    <span  className=" whitespace-pre-wrap break-words max-w-xs">  {category.description}  </span>,
+    <img
+      src={category.cat_image || "--"}
+      alt=""
+      className="w-16 h-16 object-cover rounded"
+    />,
+
+    <div  className="flex space-x-2">
+      <button
+        onClick={() => openEditModal(category)}
+        className="text-green-600 hover:text-green-800"
+        title="Edit"
+      >
+        <Edit size={18} />
+      </button>
+      <button
+        onClick={() => deleteCategory(category)}
+        className="text-red-600 hover:text-red-800"
+        title="Delete"
+      >
+        <DeleteForever fontSize="small" />
+      </button>
+    </div>,
+  ]);
+
 
   return (
     <>
@@ -163,154 +166,7 @@ const ProductCategories = () => {
           </button>
         </div>
 
-        <div className="hidden lg:block bg-white rounded-lg shadow-sm border overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Image Category
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {categories.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="text-center py-6 text-gray-500">
-                    No categories found.
-                  </td>
-                </tr>
-              ) : (
-                categories.map((category) => (
-                  <tr
-                    key={category.product_category_id}
-                    className="hover:bg-gray-50"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {category.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {category.description}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      <img
-                        src={
-                          category.cat_image ||
-                          "https://via.placeholder.com/80?text=No+Image"
-                        }
-                        alt={category.name}
-                        className="w-20 h-20 object-cover rounded"
-                      />
-                    </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      <div className="flex space-x-2">
-                        {/* <button
-                          onClick={() => handleViewCategory(category)}
-                          className="text-blue-600 hover:text-blue-800"
-                          title="View"
-                        >
-                         <Eye/>
-                        </button> */}
-
-                        <button
-                          onClick={() => openEditModal(category)}
-                          className="text-green-600 hover:text-green-800"
-                          title="Edit"
-                        >
-                          <Edit />
-                        </button>
-                        <button
-                          onClick={() => deleteCategory(category)}
-                          className="text-red-600 hover:text-red-800"
-                          title="Delete"
-                        >
-                          <DeleteForever />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-        {/* Mobile/Tablet Card View */}
-        <div className="lg:hidden space-y-4">
-          {Array.isArray(categories) && categories.length === 0 && !loading ? (
-            <div className="bg-white rounded-lg shadow-sm border p-6 text-center text-gray-500">
-              No categories found. Click "Add New Store" to create one.
-            </div>
-          ) : Array.isArray(categories) ? (
-            categories.map((store) => (
-              <div
-                key={store.id}
-                className="bg-white rounded-lg shadow-sm border p-4"
-              >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {store.name}
-                    </h3>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
-                      {store.description && (
-                        <div className="sm:col-span-2">
-                          <span className="font-medium text-gray-700">
-                            Description:
-                          </span>{" "}
-                          {store.description}
-                        </div>
-                      )}
-                      <div className="sm:col-span-2">
-                        <span className="font-medium text-gray-700">Img:</span>{" "}
-                        <img
-                          src={
-                            store.cat_image ||
-                            "https://via.placeholder.com/80?text=No+Image"
-                          }
-                          alt={store.name}
-                          className="w-20 h-20 object-cover rounded"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row sm:flex-col gap-2 justify-end">
-                    <button
-                      onClick={() => openEditModal(store)}
-                      className="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-800 p-2 rounded-lg transition-colors"
-                      disabled={loading}
-                      title="Edit Store"
-                    >
-                      <Edit />
-                    </button>
-                    <button
-                      onClick={() => deleteCategory(store)}
-                      className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 p-2 rounded-lg transition-colors"
-                      disabled={loading}
-                      title="Delete Store"
-                    >
-                      <DeleteForever />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="bg-white rounded-lg shadow-sm border p-6 text-center text-red-500">
-              Error: Invalid data format received from server
-            </div>
-          )}
-        </div>
         {/* view modal */}
         {viewCategoryModal && viewCategoryData && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -471,6 +327,8 @@ const ProductCategories = () => {
             </div>
           </div>
         )}
+        <CustomTable tablehead={tablehead} tablerow={tablerow} isLoading={isLoading} />
+
       </div>
     </>
   );
