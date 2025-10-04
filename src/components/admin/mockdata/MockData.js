@@ -41,6 +41,13 @@ const superAdminAccess = [
   "users",
   "permissions",
 ];
+const ManagerAccess = [
+  "dashboard",
+  "collection",
+  "product-management",
+  "order-management",
+  "demo-call",
+];
 
 const AdminAccess = [
   "dashboard",
@@ -57,7 +64,6 @@ const AdminAccess = [
   "video",
   "mlm",
   "leads"
-
 ];
 
 
@@ -123,12 +129,12 @@ export const all_Data = [
         icon: <ShoppingCart />,
         navLink: "/products",
       },
-      {
-        id: "product-inventory",
-        label: "Inventory",
-        icon: <Inventory />,
-        navLink: "/inventory",
-      },
+      // {
+      //   id: "product-inventory",
+      //   label: "Inventory",
+      //   icon: <Inventory />,
+      //   navLink: "/inventory",
+      // },
     ],
   },
   {
@@ -333,10 +339,15 @@ export const all_Data = [
 
 const userRole = localStorage.getItem("role");
 
-const allowedIds = userRole === "superuser"
-  ? superAdminAccess
-  : AdminAccess;
+let allowedIds = [];
 
-export const filtered_Data = all_Data.filter((item) =>
-  allowedIds.includes(item.id)
-);
+if (userRole === "superuser") {
+  allowedIds = superAdminAccess;
+} else if (userRole === "Manager") {
+  allowedIds = ManagerAccess;
+} else {
+  allowedIds = AdminAccess;
+}
+
+export const filtered_Data = all_Data.filter((item) => allowedIds.includes(item.id));
+

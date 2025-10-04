@@ -11,6 +11,7 @@ export const endpoint = {
   login: `${domain}/api/v1/login-user`,
   //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
+  product_quantity: `${domain}/api/v1/get-inventory-store-wise`,
   //dashboard
   get_dashboard_Count: `${domain}/api/v1/get-dashboard-details`,
   //store
