@@ -64,6 +64,9 @@ import BankDetais from "../components/admin/Bankdetails.js";
 // import DeliveryApp from "../components/pages/deliveryadmin.jsx";
 import EgoldBuyHistoryModal from "../components/pages/goldhistory/E-goldBuyorder.js";
 import EgoldSELLHistoryModal from "../components/pages/goldhistory/E-goldSellHistory.js";
+import { elements } from "chart.js";
+import DeliveryAdminPanel from "../components/deliveryadminpanel.jsx";
+import DeliveryBoyDashboard from "../components/deliveryboydashboard.jsx";
 
 
 
@@ -518,7 +521,15 @@ export const routes = [
   path:"/egold_sell",
   element:<EgoldSELLHistoryModal/>
  },
+ {
+  path:"/delivery-admin",
+  element:<DeliveryAdminPanel/>
+ },
 
+ {
+  path:"/delivery-boy",
+  element:<DeliveryBoyDashboard/>
+ }
    
 ];
 

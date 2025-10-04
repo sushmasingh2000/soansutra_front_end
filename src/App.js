@@ -10,6 +10,7 @@ import Test from './Test';
 import { adminroutes } from './components/admin/AdminRoutes';
 import AdminLayout from './components/admin/Layout';
 import AdminLogIn from './components/admin/Authentication/Login';
+import { DeliveryProvider } from './context/DeliveryContext';
 
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
   const { showLoginModal, setShowLoginModal } = useLoginModal();
   return (
     <BrowserRouter>
-      <Routes>
+    <DeliveryProvider>
+ <Routes>
         {/* <Route path="/" element={<Test />} /> */}
         <Route path="/" element={<HomePage />} />
         <Route path="/admin-login" element={<Login />} />
@@ -60,6 +62,8 @@ function App() {
           onClose={() => setShowLoginModal(false)}
         />
       )}
+    </DeliveryProvider>
+     
     </BrowserRouter>
 
   );
