@@ -1,17 +1,19 @@
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css';
-import Login from './authentiaction/Login';
-import HomePage from './components/pages/homePage';
-import { default as LoginModal, default as LoginPage } from './components/pages/LoginPage';
-import { useLoginModal } from './context/Login';
-import { routes } from './routes/Routes';
-import Test from './Test';
-import { adminroutes } from './components/admin/AdminRoutes';
-import AdminLayout from './components/admin/Layout';
-import AdminLogIn from './components/admin/Authentication/Login';
-import { DeliveryProvider } from './context/DeliveryContext';
-
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Login from "./authentiaction/Login";
+import HomePage from "./components/pages/homePage";
+import {
+  default as LoginModal,
+  default as LoginPage,
+} from "./components/pages/LoginPage";
+import { useLoginModal } from "./context/Login";
+import { routes } from "./routes/Routes";
+import Test from "./Test";
+import { adminroutes } from "./components/admin/AdminRoutes";
+import AdminLayout from "./components/admin/Layout";
+import AdminLogIn from "./components/admin/Authentication/Login";
+import { DeliveryProvider } from "./context/DeliveryContext";
 
 function App() {
   const admin = localStorage.getItem("token");
@@ -19,13 +21,13 @@ function App() {
   const { showLoginModal, setShowLoginModal } = useLoginModal();
   return (
     <BrowserRouter>
-    <DeliveryProvider>
- <Routes>
-        {/* <Route path="/" element={<Test />} /> */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/admin-login" element={<Login />} />
-        {/* <Route path="/adminLogin" element={<AdminLogIn />} /> */}
-         {/* {user ? (
+      <DeliveryProvider>
+        <Routes>
+          {/* <Route path="/" element={<Test />} /> */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/admin-login" element={<Login />} />
+          {/* <Route path="/adminLogin" element={<AdminLogIn />} /> */}
+          {/* {user ? (
           adminroutes.map((route, i) => (
             <Route
               key={i}
@@ -43,29 +45,27 @@ function App() {
         ) : (
           <Route path="*" element={<Login />} />
         )} */}
-        {admin ? (
-          routes.map((route, i) => (
+          {admin ? (
+            routes.map((route, i) => (
+              <Route key={i} path={route.path} element={route.element} />
+            ))
+          ) : (
+            <Route path="*" element={<Login />} />
+          )}
+
+          {routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />
-          ))
-        ) : (
-          <Route path="*" element={<Login />} />
+          ))}
+          <Route path="*" element={<LoginPage />} />
+        </Routes>
+        {showLoginModal && (
+          <LoginModal
+            isOpen={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+          />
         )}
-
-        {routes.map((route, i) => (
-          <Route key={i} path={route.path} element={route.element} />
-        ))}
-        <Route path="*" element={<LoginPage />} />
-      </Routes>
-      {showLoginModal && (
-        <LoginModal
-          isOpen={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-        />
-      )}
-    </DeliveryProvider>
-     
+      </DeliveryProvider>
     </BrowserRouter>
-
   );
 }
 
