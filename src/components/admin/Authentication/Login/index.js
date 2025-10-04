@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { AiFillLock, AiOutlineMail } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { enCryptData } from "../../../../utils/Secret";
 import { endpoint } from "../../../../utils/APIRoutes";
-import { FiUser, FiShield } from "react-icons/fi";
+import { enCryptData } from "../../../../utils/Secret";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -78,6 +77,7 @@ const LogIn = () => {
               {type === "user" ?  "Staff Login" : "Super Admin"} */}
             </button>
           ))}
+          
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">

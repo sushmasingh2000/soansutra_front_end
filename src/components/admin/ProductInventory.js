@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
-import { endpoint } from "../../utils/APIRoutes";
+import { Edit } from "@mui/icons-material";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ReactModal from "react-modal";
 import { useQuery, useQueryClient } from "react-query";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import { Plus } from "lucide-react";
-import { Edit, Lock } from "@mui/icons-material";
+import { useSearchParams } from "react-router-dom";
+import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
+import { endpoint } from "../../utils/APIRoutes";
 
 const ProductInventory = () => {
   const [searchParams] = useSearchParams();
@@ -46,25 +36,6 @@ const ProductInventory = () => {
     { refetchOnMount: false }
   );
   const inventory = data?.data?.result?.[0] || [];
-  const [storeDialogOpen, setStoreDialogOpen] = useState(false);
-  const [storeInventory, setStoreInventory] = useState([]);
-
-  const handleQuantityClick = async () => {
-    try {
-      const res = await apiConnectorGet(
-        `${endpoint.product_quantity}?inv_id=${inventory.inventory_id}`
-      );
-      const result = res?.data?.result || [];
-      setStoreInventory(result);
-      console.log(storeInventory?.[0]?.swi_id);
-      setStoreDialogOpen(true);
-    } catch (err) {
-      toast.error("Failed to fetch store inventory.");
-    }
-  };
-  const navigate = useNavigate();
-
-
   useEffect(() => {
     if (defaultVariantId) {
       const findProductForVariant = async () => {
@@ -184,10 +155,7 @@ const ProductInventory = () => {
               </tr>
             ) : (
               <tr className="text-sm">
-                <td
-                  className="py-2 px-4 border-b text-blue-700 underline cursor-pointer"
-                  onClick={handleQuantityClick}
-                >
+                <td className="py-2 px-4 border-b text-blue-700 underline cursor-pointer">
                   {inventory.stock_in_store}
                 </td>
 
@@ -301,59 +269,6 @@ const ProductInventory = () => {
           </button>
         </div>
       </ReactModal>
-      <Dialog
-        open={storeDialogOpen}
-        onClose={() => setStoreDialogOpen(false)}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle>Store-wise Inventory</DialogTitle>
-        <DialogContent>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>S No.</TableCell>
-                <TableCell>Store Name</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Updated At</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {storeInventory.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4} align="center">
-                    No Data Available
-                  </TableCell>
-                </TableRow>
-              ) : (
-                storeInventory.map((store, index) => (
-                  <TableRow>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{store.name || "N/A"}</TableCell>
-                    <TableCell>{store.swi_qnty || 0}</TableCell>
-                    <TableCell>
-                      {store.isUpdated ? (
-                        <span
-                        className="text-blue-600 underline cursor-pointer"
-                        onClick={() => {
-                          setStoreDialogOpen(false);
-                          openModalForAddUpdate();
-                        }}
-                      >
-                        <Edit/>
-                      </span>
-                      
-                      ) : (
-                        <Lock />
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

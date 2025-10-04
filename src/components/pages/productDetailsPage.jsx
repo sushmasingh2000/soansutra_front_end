@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Copy, Heart, Share2, ShoppingCart, Star } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
@@ -29,12 +29,6 @@ const GoldIcon = () => (
   </svg>
 );
 
-const DiamondIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M6 2L12 8L18 2L22 6L12 22L2 6L6 2Z" />
-  </svg>
-);
-
 const ProductDetailWebPage = () => {
   const queryClient = useQueryClient();
   const location = useLocation();
@@ -57,8 +51,7 @@ const ProductDetailWebPage = () => {
   const { setShowLoginModal } = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
   const [loadercart, setIsLoadingCart] = useState(false);
-  const token = localStorage.getItem("token")
-
+  const token = localStorage.getItem("token");
   const addToCartMutation = useMutation(
     (payload) => apiConnectorPost(endpoint.create_cart, payload),
     {
@@ -103,13 +96,13 @@ const ProductDetailWebPage = () => {
         if (!token) {
           return;
         }
-        const response = await apiConnectorGet(endpoint.get_wishlist , {}, token);
+        const response = await apiConnectorGet(
+          endpoint.get_wishlist,
+          {},
+          token
+        );
         if (response?.data?.success) {
           const wishlistItems = response?.data?.result || [];
-          console.log(
-            "Wishlist Items to store in localStorage:",
-            wishlistItems
-          );
           localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
           const isInWishlist = wishlistItems.some(
             (item) =>
@@ -141,7 +134,6 @@ const ProductDetailWebPage = () => {
           setVariants([]);
         }
       } catch (error) {
-        console.error("Error fetching variants:", error);
         setVariants([]);
       }
       setIsLoading(false);
@@ -624,10 +616,11 @@ const ProductDetailWebPage = () => {
                         <button
                           key={index}
                           onClick={() => handleDotClick(index)}
-                          className={`w-2 h-2 rounded-full transition-all duration-200 ${index === selectedImage
+                          className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                            index === selectedImage
                               ? "bg-yellow-500 shadow-lg"
                               : "bg-gray-300 bg-opacity-70 hover:bg-yellow-300"
-                            }`}
+                          }`}
                         />
                       ))}
                     </div>
@@ -655,10 +648,11 @@ const ProductDetailWebPage = () => {
                       <div
                         key={index}
                         onClick={() => setSelectedImage(index % images.length)}
-                        className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${selectedImage === index % images.length
+                        className={`relative bg-white rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                          selectedImage === index % images.length
                             ? "border-yellow-500 shadow-md"
                             : "border-gray-200 hover:border-yellow-300"
-                          }`}
+                        }`}
                       >
                         <div className="w-full h-100 overflow-hidden">
                           <img
@@ -671,8 +665,9 @@ const ProductDetailWebPage = () => {
                           <div className="absolute top-2 right-2">
                             <button
                               onClick={handleWishlist}
-                              className={`p-1.5 rounded-full bg-white shadow-md ${isWishlisted ? "text-red-500" : "text-gray-400"
-                                } hover:text-red-500 transition-colors`}
+                              className={`p-1.5 rounded-full bg-white shadow-md ${
+                                isWishlisted ? "text-red-500" : "text-gray-400"
+                              } hover:text-red-500 transition-colors`}
                             >
                               <Heart
                                 className="w-4 h-4"
@@ -865,10 +860,11 @@ const ProductDetailWebPage = () => {
                         )
                       }
                       disabled={quantity >= availableStock}
-                      className={`px-3 py-1 font-bold text-lg ${quantity >= availableStock
+                      className={`px-3 py-1 font-bold text-lg ${
+                        quantity >= availableStock
                           ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                           : "bg-yellow-200 hover:bg-yellow-300"
-                        }`}
+                      }`}
                       aria-label="Increase quantity"
                     >
                       +
@@ -883,37 +879,39 @@ const ProductDetailWebPage = () => {
                 <div className="flex flex-wrap gap-3">
                   {variants.length
                     ? variants.map((variant) => (
-                      <button
-                        key={variant.varient_id}
-                        onClick={() => setSelectedVariant(variant)}
-                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                            ? "border-yellow-700 bg-yellow-100 text-yellow-700 font-semibold"
-                            : "border-gray-300 hover:border-yellow-500 hover:bg-yellow-50"
+                        <button
+                          key={variant.varient_id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
+                            selectedVariant?.varient_id === variant.varient_id
+                              ? "border-yellow-700 bg-yellow-100 text-yellow-700 font-semibold"
+                              : "border-gray-300 hover:border-yellow-500 hover:bg-yellow-50"
                           }`}
-                      >
-                        SKU: {variant.varient_sku}
-                      </button>
-                    ))
+                        >
+                          SKU: {variant.varient_sku}
+                        </button>
+                      ))
                     : [
-                      {
-                        varient_id: "default",
-                        varient_sku: "Default",
-                        varient_price: selectedVariant?.price,
-                        varient_weight: selectedVariant.weight || "",
-                        unit_name: selectedVariant.unit_name || "",
-                      },
-                    ].map((variant) => (
-                      <button
-                        key={variant.varient_id}
-                        onClick={() => setSelectedVariant(variant)}
-                        className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${selectedVariant?.varient_id === variant.varient_id
-                            ? "border-yellow-700 bg-yellow-100 text-yellow-700 font-semibold"
-                            : "border-yellow-300 hover:border-yellow-500 hover:bg-yellow-50"
+                        {
+                          varient_id: "default",
+                          varient_sku: "Default",
+                          varient_price: selectedVariant?.price,
+                          varient_weight: selectedVariant.weight || "",
+                          unit_name: selectedVariant.unit_name || "",
+                        },
+                      ].map((variant) => (
+                        <button
+                          key={variant.varient_id}
+                          onClick={() => setSelectedVariant(variant)}
+                          className={`px-5 py-2 rounded-lg border transition-colors whitespace-nowrap ${
+                            selectedVariant?.varient_id === variant.varient_id
+                              ? "border-yellow-700 bg-yellow-100 text-yellow-700 font-semibold"
+                              : "border-yellow-300 hover:border-yellow-500 hover:bg-yellow-50"
                           }`}
-                      >
-                        SKU: {variant.varient_sku}
-                      </button>
-                    ))}
+                        >
+                          SKU: {variant.varient_sku}
+                        </button>
+                      ))}
                 </div>
               </div>
               <div className="hidden md:block px-1 md:px-0">
@@ -921,10 +919,11 @@ const ProductDetailWebPage = () => {
                   <button
                     onClick={availableStock > 0 ? handleAddToCart : undefined}
                     disabled={availableStock <= 0}
-                    className={`flex-1 text-black py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2 ${availableStock <= 0
+                    className={`flex-1 text-black py-3 px-6 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center space-x-2 ${
+                      availableStock <= 0
                         ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                         : "bg-gradient-to-r from-yellow-400 to-yellow-600"
-                      }`}
+                    }`}
                   >
                     <ShoppingCart className="w-4 h-4" />
                     <span>
@@ -951,7 +950,7 @@ const ProductDetailWebPage = () => {
                 </div>
               </div>
               <div id="delivery-stores" className="w-full px-1 md:px-0">
-                <DeliveryStoresUI />
+                <DeliveryStoresUI selected_v={selectedVariant?.inventory_id} />
               </div>
               <FeaturesComponent />
               <div
@@ -1000,10 +999,11 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showPriceBreakupModal
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+              showPriceBreakupModal
                 ? "translate-y-0 md:translate-x-0"
                 : "translate-y-full md:translate-x-full"
-              }`}
+            }`}
           >
             <div className="sticky top-0 bg-white border-b border-yellow-200 p-4">
               <div className="flex items-center justify-between">
@@ -1162,8 +1162,8 @@ const ProductDetailWebPage = () => {
                               totalMaterialValue +
                               (selectedVariant?.mak_price_type === "Percent"
                                 ? (Number(selectedVariant?.making_price || 0) /
-                                  100) *
-                                totalMaterialValue
+                                    100) *
+                                  totalMaterialValue
                                 : Number(selectedVariant?.making_price || 0))
                             ).toFixed(2) // Ensures the final number has 2 decimal places
                           }
@@ -1192,8 +1192,8 @@ const ProductDetailWebPage = () => {
                             const makingCharge =
                               selectedVariant?.mak_price_type === "Percent"
                                 ? (Number(selectedVariant?.making_price || 0) /
-                                  100) *
-                                totalMaterialValue
+                                    100) *
+                                  totalMaterialValue
                                 : Number(selectedVariant?.making_price || 0);
 
                             const total = totalMaterialValue + makingCharge;
@@ -1238,8 +1238,8 @@ const ProductDetailWebPage = () => {
                             const makingCharge =
                               selectedVariant?.mak_price_type === "Percent"
                                 ? (Number(selectedVariant?.making_price || 0) /
-                                  100) *
-                                totalMaterialValue
+                                    100) *
+                                  totalMaterialValue
                                 : Number(selectedVariant?.making_price || 0);
 
                             const total = totalMaterialValue + makingCharge;
@@ -1332,10 +1332,11 @@ const ProductDetailWebPage = () => {
           onClick={handleBackdropClick}
         >
           <div
-            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${showCustomizationModal
+            className={`bg-white w-full md:max-w-lg md:mx-0 h-auto md:h-full max-h-[80vh] md:max-h-full rounded-t-3xl md:rounded-none md:rounded-l-lg overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+              showCustomizationModal
                 ? "translate-y-0 md:translate-x-0"
                 : "translate-y-full md:translate-x-full"
-              }`}
+            }`}
           >
             <div className="sticky top-0 bg-white border-b border-yellow-200 p-3 rounded-t-3xl md:rounded-t-lg">
               <div className="flex items-start justify-between">
@@ -1383,10 +1384,11 @@ const ProductDetailWebPage = () => {
                         <button
                           key={index}
                           onClick={() => setSelectedMetal(metal)}
-                          className={`p-2 rounded-lg border-2 text-center transition-all ${selectedMetal === metal
+                          className={`p-2 rounded-lg border-2 text-center transition-all ${
+                            selectedMetal === metal
                               ? "border-yellow-300 bg-yellow-50"
                               : "border-yellow-200 hover:border-yellow-300"
-                            }`}
+                          }`}
                         >
                           <div className="text-xs font-medium text-gray-900">
                             {metal.material_name}
@@ -1454,22 +1456,23 @@ const ProductDetailWebPage = () => {
 
                       const stockStatus =
                         isSizeMatch &&
-                          selectedVariant?.inventory_details?.stock_status &&
-                          selectedVariant?.inventory_details?.stock_status !==
+                        selectedVariant?.inventory_details?.stock_status &&
+                        selectedVariant?.inventory_details?.stock_status !==
                           "OK"
                           ? selectedVariant.inventory_details.stock_status
                           : isSizeMatch
-                            ? "Made to Order"
-                            : staticSize.status;
+                          ? "Made to Order"
+                          : staticSize.status;
 
                       return (
                         <button
                           key={index}
                           onClick={() => setSelectedSize(staticSize.size)}
-                          className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-24 ${isSizeMatch || selectedSize === staticSize.size
+                          className={`p-2 rounded-lg border-2 text-center transition-all flex-shrink-0 w-24 ${
+                            isSizeMatch || selectedSize === staticSize.size
                               ? "border-yellow-300 bg-yellow-50"
                               : "border-yellow-200 hover:border-yellow-300"
-                            }`}
+                          }`}
                         >
                           <div className="text-sm font-bold text-gray-900">
                             {staticSize.size}
@@ -1482,10 +1485,11 @@ const ProductDetailWebPage = () => {
                           </div>
 
                           <div
-                            className={`text-xs mt-1 ${stockStatus?.toLowerCase().includes("made")
+                            className={`text-xs mt-1 ${
+                              stockStatus?.toLowerCase().includes("made")
                                 ? "text-yellow-600"
                                 : "text-red-600"
-                              }`}
+                            }`}
                           >
                             {stockStatus}
                           </div>
@@ -1500,10 +1504,11 @@ const ProductDetailWebPage = () => {
               <button
                 onClick={handleConfirmCustomization}
                 disabled={availableStock}
-                className={`w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2.5 rounded-lg font-semibold transition-colors text-sm ${availableStock
+                className={`w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2.5 rounded-lg font-semibold transition-colors text-sm ${
+                  availableStock
                     ? "hover:bg-yellow-900"
                     : "opacity-50 cursor-not-allowed"
-                  }`}
+                }`}
               >
                 {availableStock ? "CONFIRM CUSTOMISATION" : "OUT OF STOCK"}
               </button>
