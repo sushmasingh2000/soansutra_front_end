@@ -1,7 +1,7 @@
-// export const domain = "http://192.168.99.149:2000";
+export const domain = "http://192.168.248.149:2000";
 export const frontend = "https://sonasutra.in";
 // export const domain = "http://192.168.18.214:2000";
-export const domain = "https://backend.sonasutra.in";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 export const mode = "production";
 // export const mode = "sandbox";
@@ -286,7 +286,6 @@ export const endpoint = {
   get_cashback_report: `${domain}/api/v1/get-income-details`,
   get_team_admin: `${domain}/api/v1/get-team-by-admin`,
   get_upline_team_admin: `${domain}/api/v1/get-upline-team-by-admin`,
-  
 
   //rankmlm
   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
@@ -298,6 +297,4 @@ export const endpoint = {
   bank_get_all: `${domain}/api/v1/get-customer-bank-details`,
   update_customer_bank: `${domain}/api/v1/update-customer-bank-by-admin`,
   fund_transfer: `${domain}/api/v1/fund-transfer`,
-  
-  
 };
