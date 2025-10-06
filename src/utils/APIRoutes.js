@@ -299,6 +299,13 @@ export const endpoint = {
   bank_get_all: `${domain}/api/v1/get-customer-bank-details`,
   update_customer_bank: `${domain}/api/v1/update-customer-bank-by-admin`,
   fund_transfer: `${domain}/api/v1/fund-transfer`,
+  //
+  create_delivery: `${domain}/api/v1/create-delivery-boy`,
+  get_delivery_boy: `${domain}/api/v1/get-delivry-boy-list`,
+  get_delivery: `${domain}/api/v1/get-dlv-dropdown`,
+  update_delivery: `${domain}/api/v1/update-status-of-delivey-boy`,
+  
+  
   
   
 };

@@ -39,6 +39,8 @@ import Collection from "../Collection";
 import ProductVariant from "../ProductVariant";
 import CouponPriceRange from "../CouponPriceRange.";
 import UserManagement from "../../superadmin/UserManagement";
+import DeliveryAdd from "../deliveryboy/Adddelivery.js";
+import DeliveryList from "../deliveryboy/Listdeliveryboy.js";
 
 export const adminroutes = [
 
@@ -259,5 +261,15 @@ export const adminroutes = [
     path: "/customer",
     component: <Customer />,
     navItem: "Customer",
+  },
+  {
+    path: "/crete_delivery",
+    component: <DeliveryAdd />,
+     navItem: "Create Delivery Boy",
+  },
+  {
+    path: "/get_delivery",
+    component: <DeliveryList />,
+     navItem: " Delivery Boy",
   },
 ];

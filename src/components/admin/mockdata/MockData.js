@@ -31,6 +31,7 @@ import {
   ManageAccountsRounded,
   PaymentSharp,
   DirectionsTransit,
+  Boy,
 } from "@mui/icons-material";
 
 import { Eye, Image, LucideAmpersands, User2Icon } from "lucide-react";
@@ -329,6 +330,20 @@ export const all_Data = [
   
       ],
     },
+    
+    {
+      id: "del",
+      label: "Create Delivery Boy",
+      icon: <Boy />,
+      navLink: "/crete_delivery",
+    },
+    {
+      id: "delcr",
+      label: " Delivery Boy",
+      icon: <Boy />,
+      navLink: "/get_delivery",
+    },
+    
   {
     id: "logout",
     label: "Logout",
