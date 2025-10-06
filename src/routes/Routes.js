@@ -40,7 +40,7 @@ import ExchangeRedeemComponent from "../components/pages/exchangeegold";
 import TreasureChestBanner from "../components/pages/treasurechest";
 import InsiderEmail from "../components/admin/InsiderEmail.js";
 import Collection from "../components/admin/Collection.js";
-import Termscondition from "../components/pages/termscondition.jsx"
+import Termscondition from "../components/pages/termscondition.jsx";
 import Video from "../components/admin/Video.js";
 import MasterMaterialBackup from "../components/admin/MaterialBackup.js";
 import Coupon from "../components/admin/Coupon.js";
@@ -64,8 +64,6 @@ import BankDetais from "../components/admin/Bankdetails.js";
 import DeliveryApp from "../components/pages/deliveryadmin.jsx";
 import EgoldBuyHistoryModal from "../components/pages/goldhistory/E-goldBuyorder.js";
 import EgoldSELLHistoryModal from "../components/pages/goldhistory/E-goldSellHistory.js";
-
-
 
 export const routes = [
   {
@@ -133,7 +131,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-    {
+  {
     path: "/add_purchase_wallet",
     element: (
       <MainLayout>
@@ -159,7 +157,7 @@ export const routes = [
     element: <SignUpPage />,
   },
 
-   {
+  {
     path: "/Collection",
     element: (
       <MainLayout>
@@ -183,8 +181,8 @@ export const routes = [
       </MainLayout>
     ),
   },
- 
-   {
+
+  {
     path: "/rank",
     element: (
       <MainLayout>
@@ -192,7 +190,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-   {
+  {
     path: "/distributor",
     element: (
       <MainLayout>
@@ -248,7 +246,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-   {
+  {
     path: "/product-master-material",
     element: (
       <MainLayout>
@@ -264,7 +262,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-    {
+  {
     path: "/coupon",
     element: (
       <MainLayout>
@@ -280,7 +278,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-   {
+  {
     path: "/price_range",
     element: (
       <MainLayout>
@@ -296,7 +294,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-   {
+  {
     path: "/custom",
     element: (
       <MainLayout>
@@ -304,7 +302,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-  
+
   {
     path: "/discount",
     element: (
@@ -345,7 +343,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-   {
+  {
     path: "/attribute",
     element: (
       <MainLayout>
@@ -385,7 +383,7 @@ export const routes = [
       </MainLayout>
     ),
   },
-    {
+  {
     path: "/demo-call",
     element: (
       <MainLayout>
@@ -435,7 +433,7 @@ export const routes = [
   },
   {
     path: "/checkout",
-    element: <CheckoutPage/>,
+    element: <CheckoutPage />,
   },
   {
     path: "/admin",
@@ -455,70 +453,67 @@ export const routes = [
   },
   {
     path: "/invoice/:orderId",
-    element: <SonasutraInvoice/>,
+    element: <SonasutraInvoice />,
   },
-    {
+  {
     path: "/wish",
     element: <WishlistPage />,
   },
-    {
+  {
     path: "/e-gold",
-    element: <SonaSutraDigitalGoldHome/>,
+    element: <SonaSutraDigitalGoldHome />,
   },
   {
     path: "/buy-gold",
-    element: <BuyGold/>,
+    element: <BuyGold />,
   },
   {
     path: "/sell-gold",
-    element: <SellGold/>,
+    element: <SellGold />,
   },
   {
     path: "/exchange-redeem",
-    element: <ExchangeRedeemComponent/>,
+    element: <ExchangeRedeemComponent />,
   },
-    {
+  {
     path: "/treasure-chest",
-    element: <TreasureChestBanner/>,
+    element: <TreasureChestBanner />,
   },
-   {
+  {
     path: "/terms-and-conditions",
-    element: <Termscondition/>,
+    element: <Termscondition />,
   },
   {
-    path:"/invoice",
-    element:<SonasutraInvoice/>
+    path: "/invoice",
+    element: <SonasutraInvoice />,
   },
-   {
-    path:"/our-story",
-    element:<OurStory/>
+  {
+    path: "/our-story",
+    element: <OurStory />,
   },
-   {
-    path:"/return-policy",
-    element:<ReturnPolicy/>
+  {
+    path: "/return-policy",
+    element: <ReturnPolicy />,
   },
- {
-  path:"/privacy-policy",
-  element:<PrivacyPolicyComponent/>
- },
+  {
+    path: "/privacy-policy",
+    element: <PrivacyPolicyComponent />,
+  },
 
   {
-  path:"/shipping-policy",
-  element:<ShippingPolicy/>
- },
- {
-  path:"/delivery-admin",
-  element:<DeliveryApp/>
- },
- {
-  path:"/egold_buy",
-  element:<EgoldBuyHistoryModal/>
- },
- {
-  path:"/egold_sell",
-  element:<EgoldSELLHistoryModal/>
- },
-
-   
+    path: "/shipping-policy",
+    element: <ShippingPolicy />,
+  },
+  {
+    path: "/delivery-admin",
+    element: <DeliveryApp />,
+  },
+  {
+    path: "/egold_buy",
+    element: <EgoldBuyHistoryModal />,
+  },
+  {
+    path: "/egold_sell",
+    element: <EgoldSELLHistoryModal />,
+  },
 ];
-

@@ -6,19 +6,22 @@ import CustomToPagination from "../../Shared/Pagination";
 import { useNavigate } from "react-router-dom";
 
 const Order = () => {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState({});
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [productType, setProductType] = useState('PRODUCT');
-  const [egoldType, setEgoldType] = useState('Buy');
+  const [productType, setProductType] = useState("PRODUCT");
+  const [egoldType, setEgoldType] = useState("Buy");
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
       const res = await apiConnectorGet(
-        `${endpoint.get_order}?page=${page}&count=${10}&product_type=${productType}&order_type=${egoldType}`
+        `${
+          endpoint.get_order
+        }?page=${page}&count=${10}&product_type=${productType}&order_type=${egoldType}`
       );
-      setOrders(res?.data?.result || []);
+      console.log(res.data.result);
+      setOrders(res?.data?.result || {});
     } catch (err) {
       toast.error("Failed to fetch orders.");
     } finally {
@@ -50,7 +53,7 @@ const Order = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [page , productType , egoldType]);
+  }, [page, productType, egoldType]);
 
   const statusButtons = [
     {
@@ -121,9 +124,11 @@ const Order = () => {
             <tr>
               <th className="px-4 py-3 text-left">S.No</th>
               <th className="px-4 py-3 text-left">Order ID</th>
-              {productType === "EGOLD" ? 
-              <th className="px-4 py-3 text-left">Reciving Type</th> :
-               <th className="px-4 py-3 text-left">Products</th>}
+              {productType === "EGOLD" ? (
+                <th className="px-4 py-3 text-left">Reciving Type</th>
+              ) : (
+                <th className="px-4 py-3 text-left">Products</th>
+              )}
               <th className="px-4 py-3 text-left">Status</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
@@ -141,34 +146,37 @@ const Order = () => {
                   >
                     {order.order_unique}
                   </td>
-                   {productType === "EGOLD" ? 
-                  <td className="px-4 py-2 space-y-2">
-                          <p className="font-semibold">{order.receiving_type}</p>
-                  </td> :<td className="px-4 py-2 space-y-2">
-                    {order.order_items.map((item, i) => (
-                      <div key={i} className="flex items-center gap-2">
-                        <img
-                          src={item.p_image_url}
-                          alt="Product"
-                          className="w-8 h-8 rounded-full object-cover"
-                        />
-                        <div>
-                          <p className="font-semibold">{item.sku}</p>
+                  {productType === "EGOLD" ? (
+                    <td className="px-4 py-2 space-y-2">
+                      <p className="font-semibold">{order.receiving_type}</p>
+                    </td>
+                  ) : (
+                    <td className="px-4 py-2 space-y-2">
+                      {order?.order_items?.map((item, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <img
+                            src={item.p_image_url}
+                            alt="Product"
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                          <div>
+                            <p className="font-semibold">{item.sku}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </td>
-}
+                      ))}
+                    </td>
+                  )}
                   <td className="px-4 py-2">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${order.status === "Pending"
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        order.status === "Pending"
                           ? "bg-yellow-100 text-yellow-700"
                           : order.status === "Confirmed"
-                            ? "bg-green-100 text-green-700"
-                            : order.status === "Cancelled"
-                              ? "bg-red-100 text-red-700"
-                              : "bg-gray-100 text-gray-700"
-                        }`}
+                          ? "bg-green-100 text-green-700"
+                          : order.status === "Cancelled"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
                     >
                       {order.status}
                     </span>
@@ -216,7 +224,7 @@ const Order = () => {
             )}
           </tbody>
         </table>
-        <CustomToPagination data={orders} page={page} setPage={setPage} />
+        <CustomToPagination setPage={setPage} page={page} data={orders} />
       </div>
     </div>
   );
