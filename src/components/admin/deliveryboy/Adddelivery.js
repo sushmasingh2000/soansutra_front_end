@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { DeleteForever, Edit, ToggleOn, ToggleOff } from "@mui/icons-material";
 import CustomTable from "../Shared/CustomTable";
 import { useQuery, useQueryClient } from "react-query";
+import { Switch } from "@mui/material";
 
 const DeliveryBoy = () => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,7 @@ const DeliveryBoy = () => {
 
   const { data: boysData, isLoading } = useQuery(
     ["get_delivery_boys"],
-    () => apiConnectorGet(endpoint.get_delivery_boys),
+    () => apiConnectorGet(endpoint.get_delivery_boy),
     usequeryBoolean
   );
   const deliveryBoys = boysData?.data?.result || [];
@@ -63,13 +64,17 @@ const DeliveryBoy = () => {
     try {
       const url = selectedBoy
         ? endpoint.update_delivery_boy
-        : endpoint.create_delivery_boy;
+        : endpoint.create_delivery;
 
       const res = await apiConnectorPost(url, payload);
-      toast.success(res?.data?.message || "Delivery Boy saved.");
-      client.refetchQueries("get_delivery_boys");
-      setModalOpen(false);
-      resetForm();
+      toast(res?.data?.message);
+
+      if(res?.data?.success){
+        client.refetchQueries("get_delivery_boys");
+        setModalOpen(false);
+        resetForm();
+      }
+      
     } catch {
       toast.error("Operation failed.");
     } finally {
@@ -92,43 +97,63 @@ const DeliveryBoy = () => {
       toast.error("Delete failed.");
     }
   };
-
-  const toggleAvailability = async (id) => {
+  const toggleAvailability = async (dl_dlv_unique, status_type = "login") => {
     try {
-      const res = await apiConnectorGet(`${endpoint.toggle_delivery_boy}?id=${id}`);
-      toast.success(res?.data?.message || "Availability toggled.");
-      client.refetchQueries("get_delivery_boys");
-    } catch {
-      toast.error("Failed to toggle availability.");
+      const payload = {
+        dl_dlv_unique,
+        status_type, // can be 'login' or 'availibility'
+      };
+  
+      const res = await apiConnectorPost(endpoint.update_delivery, payload);
+      if (res?.data?.success) {
+        toast.success(res?.data?.message );
+        client.refetchQueries("get_delivery_boys");
+      } else {
+        toast.error(res?.data?.message || "Failed to update status.");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while updating status.");
     }
   };
+  
 
-  const tablehead = ["S.No", "Name", "Email", "Mobile", "Available", "Actions"];
+  const tablehead = ["S.No", "Name", "Email", "Mobile", "Store", "City" , "Available", 
+    // "Actions"
+];
 
-  const tablerow = deliveryBoys.map((boy, index) => [
+
+  const tablerow = deliveryBoys.data?.map((boy, index) => [
     index + 1,
-    boy.name,
-    boy.email,
-    boy.mob,
-    <button onClick={() => toggleAvailability(boy.id)}>
-      {boy.is_available ? (
-        <ToggleOn className="text-green-500" />
-      ) : (
-        <ToggleOff className="text-gray-400" />
-      )}
-    </button>,
-    <div className="flex gap-2">
-      <button onClick={() => handleEdit(boy)} className="text-blue-600 hover:underline">
-        <Edit />
-      </button>
-      <button
-        onClick={() => handleDelete(boy.id)}
-        className="text-red-600 hover:underline"
-      >
-        <DeleteForever />
-      </button>
-    </div>,
+    boy.dl_dlv_name,
+    boy.dl_email,
+    boy.dl_mob,
+    boy.store_details?.name || "N/A",
+    boy.store_details?.city || "N/A",
+<Switch
+    checked={boy.dl_lgn_status === 1} // or whatever status you're toggling
+    onChange={() =>
+        toggleAvailability(boy.dl_dlv_unique, "login") // or "availibility"
+    }
+    color="primary"
+  />,
+
+    // <div className="flex gap-2">
+    //   <button
+    //     onClick={() => handleEdit(boy)}
+    //     className="text-blue-600 hover:underline"
+    //   >
+    //     <Edit />
+    //   </button>
+    //   <button
+    //     onClick={() => handleDelete(boy.dl_reg_id)}
+    //     className="text-red-600 hover:underline"
+    //   >
+    //     <DeleteForever />
+    //   </button>
+    // </div>,
   ]);
+  
+  
 
   return (
     <div className="p-6">

@@ -44,6 +44,7 @@ const ManagerAccess = [
   "product-management",
   "order-management",
   "demo-call",
+  "del"
 ];
 
 const AdminAccess = [
@@ -60,7 +61,8 @@ const AdminAccess = [
   "demo-call",
   "video",
   "mlm",
-  "leads"
+  "leads",
+  "del"
 ];
 
 
@@ -333,12 +335,7 @@ export const all_Data = [
       icon: <Boy />,
       navLink: "/crete_delivery",
     },
-    {
-      id: "delcr",
-      label: " Delivery Boy",
-      icon: <Boy />,
-      navLink: "/get_delivery",
-    },
+   
     
   {
     id: "logout",
