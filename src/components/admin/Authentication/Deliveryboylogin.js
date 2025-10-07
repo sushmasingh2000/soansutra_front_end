@@ -29,7 +29,7 @@ const DeliveryBoyLogIn = () => {
             toast(res?.data?.message);
             localStorage.clear();
             if (res?.data?.success) {
-                navigate("/admin-dashboard");
+                navigate("/profile_delivery");
                 window.location.reload();
                 localStorage.setItem("token", res?.data?.result?.token);
                 localStorage.setItem("role", res?.data?.result?.role);
