@@ -316,6 +316,7 @@ export const endpoint = {
   update_order_location: `${domain}/api/v1/update-order-location`,
   get_order_location: `${domain}/api/v1/get-order-location`,
   get_all_dlv_profile_by : `${domain}/api/v1/get-dlv-profile-by-id`,
+  get_dlv_dashboard : `${domain}/api/v1/delivery-boy-dashboard`,
   
 
   // location related api's

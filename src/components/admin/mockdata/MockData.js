@@ -67,7 +67,8 @@ const AdminAccess = [
 ];
 const deliveryboy = [
   "pro",
-  "assign"
+  "assign",
+  "deldashboard"
 ];
 
 export const all_Data = [
@@ -76,6 +77,12 @@ export const all_Data = [
     label: "Dashboard",
     icon: <DashboardCustomizeOutlined />,
     navLink: "/admin-dashboard",
+  },
+  {
+    id: "deldashboard",
+    label: "Dashboard",
+    icon: <DashboardCustomizeOutlined />,
+    navLink: "/deliveryboy_dashboard",
   },
   {
     id: "stores",
@@ -347,7 +354,7 @@ export const all_Data = [
     },
      {
       id: "assign",
-      label: "Assign Order",
+      label: "My Order",
       icon: <BoySharp />,
       navLink: "/assign_order",
     },

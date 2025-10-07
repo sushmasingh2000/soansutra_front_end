@@ -42,6 +42,7 @@ import UserManagement from "../../superadmin/UserManagement";
 import DeliveryAdd from "../deliveryboy/Adddelivery.js";
 import DeliveryBoyProfile from "../deliveryboy/deliveryPanel/Profile.js";
 import AssignOrder from "../deliveryboy/deliveryPanel/AssignOrder.js";
+import DeliveryDashboard from "../deliveryboy/Deliverydashboard.js";
 
 export const adminroutes = [
 
@@ -269,7 +270,11 @@ export const adminroutes = [
      navItem: "Create Delivery Boy",
   },
   //deliveryboy
-  
+  {
+    path: "/deliveryboy_dashboard",
+    component: <DeliveryDashboard />,
+     navItem: " Dashboard",
+  },
    {
     path: "/profile_delivery",
     component: <DeliveryBoyProfile />,
