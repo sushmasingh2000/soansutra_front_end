@@ -224,7 +224,7 @@ const AssignOrder = () => {
 
             // Order Status control
             <div className="flex flex-col justify-center gap-2" key={`order-status-${order.otd_id}`}>
-                {order?.otd_status !== "Reject" ? (
+                {order?.otd_status !== "Reject" && order?.status!=="Delivered" ? (
                     <><select
                         value={currentStatus}
                         onChange={(e) =>
@@ -249,13 +249,13 @@ const AssignOrder = () => {
                             Update
                         </button></>
                 ) : (
-                    <Lock />
+                   <p> {order?.status === "Delivered" ?"Delivered"  :<Lock />}</p>
                 )}
             </div>,
 
             // Location button (opens modal)
             <div className="text-center" key={`loc-btn-${order.otd_id}`}>
-                {order?.otd_status !== "Reject" ? (
+                {order?.otd_status !== "Reject" && order?.status !== "Delivered" ? (
                     <button
                         onClick={() => {
                             setSelectedLocationOrder(order);
@@ -266,7 +266,7 @@ const AssignOrder = () => {
                         <LocationOn />
                     </button>
                 ) : (
-                    <Lock />
+                    <span>{order?.status === "Delivered" ? "Delivered" : <Lock />}</span>
                 )}
             </div>,
 

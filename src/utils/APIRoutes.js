@@ -1,7 +1,7 @@
 // export const domain = "http://192.168.248.149:2000";
 export const frontend = "https://sonasutra.in";
-export const domain = "http://192.168.18.214:2000";
-// export const domain = "https://backend.sonasutra.in";
+// export const domain = "http://192.168.18.214:2000";
+export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 export const mode = "production";
 // export const mode = "sandbox";
@@ -315,6 +315,7 @@ export const endpoint = {
   update_cust_order_status: `${domain}/api/v1/update-cust-order-status-by-dlv`,
   update_order_location: `${domain}/api/v1/update-order-location`,
   get_order_location: `${domain}/api/v1/get-order-location`,
+  get_all_dlv_profile_by : `${domain}/api/v1/get-dlv-profile-by-id`,
   
 
   // location related api's

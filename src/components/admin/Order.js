@@ -130,6 +130,22 @@ const Order = () => {
   ];
 
   const navigate = useNavigate();
+  const [viewDeliveryModalOpen, setViewDeliveryModalOpen] = useState(false);
+  const [deliveryBoyDetails, setDeliveryBoyDetails] = useState(null);
+
+  const fetchDeliveryBoyDetails = async (dlvId) => {
+    try {
+      const res = await apiConnectorGet(`${endpoint.get_all_dlv_profile_by}?dlv_unique_id=${dlvId}`);
+      if (res?.data?.success) {
+        setDeliveryBoyDetails(res.data.result);
+        setViewDeliveryModalOpen(true);
+      } else {
+        toast.error(res?.data?.message || "Failed to fetch delivery boy details.");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while fetching details.");
+    }
+  };
 
   return (
     <div className="p-6">
@@ -175,6 +191,7 @@ const Order = () => {
                 <th className="px-4 py-3 text-left">Products</th>
               )}
               <th className="px-4 py-3 text-left">Status</th>
+              <th className="px-4 py-3 text-left">DeliveryID</th>
               <th className="px-4 py-3 text-left">Assigned</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
@@ -224,15 +241,28 @@ const Order = () => {
                       {order.status}
                     </span>
                   </td>
+
                   <td className="px-4 py-2">
-                    {(order.is_assigned_status === "Pending" || order.is_assigned_status === "Rejected") ?
+                    <span
+                      className="text-blue-600 underline cursor-pointer"
+                      onClick={() => fetchDeliveryBoyDetails(order?.dlv_id)}
+                    >
+                      {order?.dlv_id || "--"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    {(order.is_assigned_status === "Pending" || order.is_assigned_status === "Reject") ?
+                      <div className="flex flex-col items-center">
                       <button
                         onClick={() => openAssignModal(order)}
                         className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
                       >
                         Assign
-                      </button> : 
-                     order?.is_assigned_status}
+                      </button> 
+                     <p>{ order?.is_assigned_status}</p></div>
+                      :
+                      order?.is_assigned_status
+                      }
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex flex-wrap gap-2">
@@ -321,6 +351,56 @@ const Order = () => {
           </div>
         </div>
       )}
+      {viewDeliveryModalOpen && deliveryBoyDetails && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-lg space-y-4 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold text-blue-600">Delivery Boy Details</h2>
+
+            <div className="text-sm text-gray-700 space-y-3">
+              <p><strong>Unique ID:</strong> {deliveryBoyDetails?.dl_dlv_unique}</p>
+              <p><strong>Name:</strong> {deliveryBoyDetails?.dl_dlv_name}</p>
+              <p><strong>Email:</strong> {deliveryBoyDetails?.dl_email}</p>
+              <p><strong>Mobile:</strong> {deliveryBoyDetails?.dl_mob}</p>
+              <p><strong>Date of Birth:</strong> {deliveryBoyDetails?.dl_dob}</p>
+              <p><strong>Address:</strong> {deliveryBoyDetails?.dl_address}</p>
+              <p><strong>Pin Code:</strong> {deliveryBoyDetails?.dl_pin_code}</p>
+              <p><strong>Latitude:</strong> {deliveryBoyDetails?.dl_lat}</p>
+              <p><strong>Longitude:</strong> {deliveryBoyDetails?.dl_lng}</p>
+              <p><strong>Is Available:</strong> {deliveryBoyDetails?.dl_is_available === 1 ? "Yes" : " No"}</p>
+              <p><strong>Login Status:</strong> {deliveryBoyDetails?.dl_lgn_status === 1 ? " Logged In" : " Logged Out"}</p>
+              <p><strong>Registered On:</strong> {new Date(deliveryBoyDetails?.dl_created_at).toLocaleString("en-IN")}</p>
+            </div>
+
+            <hr className="my-4" />
+
+            <h3 className="text-lg font-semibold text-gray-800">Store Details</h3>
+            <div className="text-sm text-gray-700 space-y-2">
+              <p><strong>Store Name:</strong> {deliveryBoyDetails?.store_details?.name}</p>
+              <p><strong>Phone:</strong> {deliveryBoyDetails?.store_details?.phone}</p>
+              <p><strong>Email:</strong> {deliveryBoyDetails?.store_details?.email}</p>
+              <p><strong>Address:</strong> {deliveryBoyDetails?.store_details?.address}</p>
+              <p><strong>City:</strong> {deliveryBoyDetails?.store_details?.city}</p>
+              <p><strong>State:</strong> {deliveryBoyDetails?.store_details?.state}</p>
+              <p><strong>Country:</strong> {deliveryBoyDetails?.store_details?.country}</p>
+              <p><strong>Pin Code:</strong> {deliveryBoyDetails?.store_details?.pin_code}</p>
+            </div>
+
+            <div className="flex justify-end pt-4">
+              <button
+                onClick={() => {
+                  setViewDeliveryModalOpen(false);
+                  setDeliveryBoyDetails(null);
+                }}
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </div>
   );
 };
