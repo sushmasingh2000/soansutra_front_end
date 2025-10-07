@@ -66,7 +66,6 @@ const AdminAccess = [
   "del"
 ];
 const deliveryboy = [
-  "dashboard",
   "pro",
   "assign"
 ];
