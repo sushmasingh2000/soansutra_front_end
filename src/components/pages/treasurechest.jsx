@@ -124,7 +124,7 @@ export default function TreasureChestBanner() {
                   <div className="flex-1 max-w-1xl pt-28">
                     <div className="flex items-center mb-6">
                       <img
-                        src="https://cdn.caratlane.com/media/static/images/web/Treasure%20Chest/Landing%20Page/LOGOstatic.png"
+                        src="/image/Dazzle-12.jpeg"
                         alt="Dazzle-12"
                         className="h-16 w-auto"
                       />
@@ -165,7 +165,7 @@ export default function TreasureChestBanner() {
                             <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                         </div>
-                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Trust of TATA</h3>
+                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Trust of SonaSutra</h3>
                         <p className="text-gray-600 text-xs">Spirit of SonaSutra.<br />3,00,270+ enrolments.</p>
                       </div>
                       <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
@@ -197,7 +197,7 @@ export default function TreasureChestBanner() {
               <div className="px-6 py-8 min-h-screen flex flex-col">
                 <div className="flex items-center mb-8 ml-20 mt-20">
                   <img
-                    src="https://cdn.caratlane.com/media/static/images/web/Treasure%20Chest/Landing%20Page/LOGOstatic.png"
+                    src="/image/Dazzle-12.jpeg"
                     alt="Dazzle-12"
                     className="h-12 w-auto"
                   />

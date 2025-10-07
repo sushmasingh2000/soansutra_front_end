@@ -189,7 +189,7 @@ export default function Header() {
     description:
       "Invest in 24K gold hassle-free with SonaSutra's Digital Gold.",
     image:
-      "https://cdn.caratlane.com/media/static/images/discovery/responsive-hamburger-menu/egold-1x.png",
+      "/image/esuvarna1-80.jpg",
     icon: "🥇",
     path: "/e-gold",   // 👈 Add path
   },
@@ -456,7 +456,7 @@ export default function Header() {
                 }
               }}>
               <img
-                src="https://cdn.caratlane.com/static/images/discovery/responsive-hamburger-menu/egold-1x.png"
+                src="/image/esuvarna1-80.jpg"
                 alt="e-Gold"
                 className="h-6"
               />
