@@ -40,6 +40,8 @@ import ProductVariant from "../ProductVariant";
 import CouponPriceRange from "../CouponPriceRange.";
 import UserManagement from "../../superadmin/UserManagement";
 import DeliveryAdd from "../deliveryboy/Adddelivery.js";
+import DeliveryBoyProfile from "../deliveryboy/deliveryPanel/Profile.js";
+import AssignOrder from "../deliveryboy/deliveryPanel/AssignOrder.js";
 
 export const adminroutes = [
 
@@ -265,6 +267,18 @@ export const adminroutes = [
     path: "/crete_delivery",
     component: <DeliveryAdd />,
      navItem: "Create Delivery Boy",
+  },
+  //deliveryboy
+  
+   {
+    path: "/profile_delivery",
+    component: <DeliveryBoyProfile />,
+     navItem: " Profile",
+  },
+     {
+    path: "/assign_order",
+    component: <AssignOrder />,
+     navItem: " Assign Order",
   },
   
 ];

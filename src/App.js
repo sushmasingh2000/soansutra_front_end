@@ -13,6 +13,7 @@ import Test from "./Test";
 import { adminroutes } from "./components/admin/AdminRoutes";
 import AdminLayout from "./components/admin/Layout";
 import AdminLogIn from "./components/admin/Authentication/Login";
+import DeliveryBoyLogIn from "./components/admin/Authentication/Deliveryboylogin";
 
 function App() {
   const admin = localStorage.getItem("token");
@@ -25,6 +26,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         {/* <Route path="/admin-login" element={<Login />} /> */}
         <Route path="/admin-Login" element={<AdminLogIn />} />
+        <Route path="/delivery-Login" element={<DeliveryBoyLogIn />} />
+
         {user ? (
           adminroutes.map((route, i) => (
             <Route

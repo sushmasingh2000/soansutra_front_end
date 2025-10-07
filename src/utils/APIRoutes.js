@@ -1,17 +1,20 @@
 // export const domain = "http://192.168.248.149:2000";
 export const frontend = "https://sonasutra.in";
-// export const domain = "http://192.168.18.214:2000";
-export const domain = "https://backend.sonasutra.in";
+export const domain = "http://192.168.18.214:2000";
+// export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 export const mode = "production";
 // export const mode = "sandbox";
 
 export const endpoint = {
   email_insider: `${domain}/api/v1/insert-external-leads`,
+
   login: `${domain}/api/v1/login-user`,
-  //admin
   login_super_user: `${domain}/api/v1/login-super-user`,
+  delivery_boy_login: `${domain}/api/v1/delivery-boy-login`,
+
   product_quantity: `${domain}/api/v1/get-inventory-store-wise`,
+
   //dashboard
   get_dashboard_Count: `${domain}/api/v1/get-dashboard-details`,
   //store
@@ -298,15 +301,22 @@ export const endpoint = {
   bank_get_all: `${domain}/api/v1/get-customer-bank-details`,
   update_customer_bank: `${domain}/api/v1/update-customer-bank-by-admin`,
   fund_transfer: `${domain}/api/v1/fund-transfer`,
-  //
+
+  //deliveryboy
+  get_div_profile: `${domain}/api/v1/get-dlv-profile`,
   create_delivery: `${domain}/api/v1/create-delivery-boy`,
   get_delivery_boy: `${domain}/api/v1/get-delivry-boy-list`,
-  get_delivery: `${domain}/api/v1/get-dlv-dropdown`,
+  get_delivery_dropdown: `${domain}/api/v1/get-dlv-dropdown`,
   update_delivery: `${domain}/api/v1/update-status-of-delivey-boy`,
+  update_div_profile: `${domain}/api/v1/update-delivery-boy-profile`,
+  get_assign_order: `${domain}/api/v1/get-assigned-orders`,
+  status_assign_order: `${domain}/api/v1/change-assigned-order-status`,
+  order_assign_to_dlvb: `${domain}/api/v1/order-assign-to-dlvb`,
+  update_cust_order_status: `${domain}/api/v1/update-cust-order-status-by-dlv`,
+  update_order_location: `${domain}/api/v1/update-order-location`,
+  get_order_location: `${domain}/api/v1/get-order-location`,
   
-  
-  
-  
+
   // location related api's
-  get_nearest_store : `${domain}/api/v1/get-nearest-store`
+  get_nearest_store: `${domain}/api/v1/get-nearest-store`
 };

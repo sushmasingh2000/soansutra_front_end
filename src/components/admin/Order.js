@@ -12,20 +12,61 @@ const Order = () => {
   const [productType, setProductType] = useState("PRODUCT");
   const [egoldType, setEgoldType] = useState("Buy");
 
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [deliveryBoys, setDeliveryBoys] = useState([]);
+  const [selectedBoyId, setSelectedBoyId] = useState("");
+
   const fetchOrders = async () => {
     try {
       setLoading(true);
       const res = await apiConnectorGet(
-        `${
-          endpoint.get_order
-        }?page=${page}&count=${10}&product_type=${productType}&order_type=${egoldType}`
+        `${endpoint.get_order}?page=${page}&count=10&product_type=${productType}&order_type=${egoldType}`
       );
-      console.log(res.data.result);
       setOrders(res?.data?.result || {});
     } catch (err) {
       toast.error("Failed to fetch orders.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchDeliveryBoyDropdown = async () => {
+    try {
+      const res = await apiConnectorGet(endpoint.get_delivery_dropdown);
+      setDeliveryBoys(res?.data?.result || []);
+    } catch (err) {
+      toast.error("Failed to fetch delivery boys.");
+    }
+  };
+
+  const openAssignModal = (order) => {
+    setSelectedOrder(order);
+    setSelectedBoyId("");
+    setAssignModalOpen(true);
+    fetchDeliveryBoyDropdown();
+  };
+
+  const handleAssign = async () => {
+    if (!selectedBoyId) {
+      toast.error("Please select a delivery boy.");
+      return;
+    }
+    try {
+      const payload = {
+        order_id: selectedOrder.order_unique,
+        dlv_id: selectedBoyId,
+      };
+      const res = await apiConnectorPost(endpoint.order_assign_to_dlvb, payload);
+      if (res?.data?.success) {
+        toast.success(res?.data?.message);
+        setAssignModalOpen(false);
+        fetchOrders();
+      } else {
+        toast.error(res?.data?.message || "Failed to assign order.");
+      }
+    } catch (err) {
+      toast.error("Something went wrong.");
     }
   };
 
@@ -42,7 +83,7 @@ const Order = () => {
       const res = await apiConnectorPost(endpoint?.get_order_status, payload);
       if (res?.data?.success) {
         toast(res?.data?.message);
-        fetchOrders(); // Refresh after update
+        fetchOrders();
       } else {
         toast.error(res?.data?.message || "Status update failed");
       }
@@ -87,6 +128,7 @@ const Order = () => {
       hoverColor: "hover:bg-gray-700",
     },
   ];
+
   const navigate = useNavigate();
 
   return (
@@ -94,6 +136,7 @@ const Order = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Product Orders</h1>
       </div>
+
       <div className="mb-4 flex flex-col justify-end items-end gap-2">
         <select
           value={productType}
@@ -105,6 +148,7 @@ const Order = () => {
           <option value="EGOLD">eGold</option>
         </select>
       </div>
+
       {productType === "EGOLD" && (
         <div className="mb-4 flex flex-col justify-end items-end gap-2">
           <select
@@ -118,6 +162,7 @@ const Order = () => {
           </select>
         </div>
       )}
+
       <div className="bg-white shadow rounded-lg overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50">
@@ -125,11 +170,12 @@ const Order = () => {
               <th className="px-4 py-3 text-left">S.No</th>
               <th className="px-4 py-3 text-left">Order ID</th>
               {productType === "EGOLD" ? (
-                <th className="px-4 py-3 text-left">Reciving Type</th>
+                <th className="px-4 py-3 text-left">Receiving Type</th>
               ) : (
                 <th className="px-4 py-3 text-left">Products</th>
               )}
               <th className="px-4 py-3 text-left">Status</th>
+              <th className="px-4 py-3 text-left">Assigned</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
           </thead>
@@ -140,16 +186,13 @@ const Order = () => {
                   <td className="px-4 py-2">{index + 1}</td>
                   <td
                     className="px-4 py-2 text-blue-600 hover:underline cursor-pointer"
-                    onClick={() =>
-                      navigate(`/order-details/${order.order_unique}`)
-                    }
+                    onClick={() => navigate(`/order-details/${order.order_unique}`)}
                   >
                     {order.order_unique}
                   </td>
+
                   {productType === "EGOLD" ? (
-                    <td className="px-4 py-2 space-y-2">
-                      <p className="font-semibold">{order.receiving_type}</p>
-                    </td>
+                    <td className="px-4 py-2">{order.receiving_type}</td>
                   ) : (
                     <td className="px-4 py-2 space-y-2">
                       {order?.order_items?.map((item, i) => (
@@ -166,20 +209,30 @@ const Order = () => {
                       ))}
                     </td>
                   )}
+
                   <td className="px-4 py-2">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        order.status === "Pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : order.status === "Confirmed"
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${order.status === "Pending"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : order.status === "Confirmed"
                           ? "bg-green-100 text-green-700"
                           : order.status === "Cancelled"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-gray-100 text-gray-700"
-                      }`}
+                            ? "bg-red-100 text-red-700"
+                            : "bg-gray-100 text-gray-700"
+                        }`}
                     >
                       {order.status}
                     </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    {(order.is_assigned_status === "Pending" || order.is_assigned_status === "Rejected") ?
+                      <button
+                        onClick={() => openAssignModal(order)}
+                        className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+                      >
+                        Assign
+                      </button> : 
+                     order?.is_assigned_status}
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex flex-wrap gap-2">
@@ -190,9 +243,7 @@ const Order = () => {
                         const buttonIndex = statusButtons.findIndex(
                           (btn) => btn.status === status
                         );
-
                         const isDisabled = buttonIndex <= currentIndex;
-
                         return (
                           <button
                             key={status}
@@ -201,11 +252,8 @@ const Order = () => {
                               handleStatusChange(order.order_unique, status)
                             }
                             disabled={isDisabled}
-                            className={`
-            px-3 py-1 text-white rounded
-            ${bgColor} ${hoverColor}
-            ${isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-          `}
+                            className={`px-3 py-1 text-white rounded ${bgColor} ${hoverColor} ${isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                              }`}
                           >
                             {status}
                           </button>
@@ -226,6 +274,53 @@ const Order = () => {
         </table>
         <CustomToPagination setPage={setPage} page={page} data={orders} />
       </div>
+
+      {/* Assign Modal */}
+      {assignModalOpen && selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md space-y-4">
+            <h2 className="text-xl font-bold">Assign Delivery Boy</h2>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Product(s):</label>
+              <div className="bg-gray-100 p-2 rounded text-sm">
+                {selectedOrder.order_items?.map((item) => item.sku).join(", ")}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Select Delivery Boy:</label>
+              <select
+                value={selectedBoyId}
+                onChange={(e) => setSelectedBoyId(e.target.value)}
+                className="w-full border px-3 py-2 rounded"
+              >
+                <option value="">-- Select --</option>
+                {deliveryBoys.map((boy) => (
+                  <option key={boy.dl_reg_id} value={boy.dl_reg_id}>
+                    {boy.dl_dlv_name} ({boy.store_name})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setAssignModalOpen(false)}
+                className="px-4 py-2 border rounded hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAssign}
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              >
+                Assign
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -28,6 +28,7 @@ import {
   VideoLibrary,
   ViewTimeline,
   PermScanWifi,
+  BoySharp,
 } from "@mui/icons-material";
 
 import { Eye, Image, LucideAmpersands, User2Icon } from "lucide-react";
@@ -64,7 +65,11 @@ const AdminAccess = [
   "leads",
   "del"
 ];
-
+const deliveryboy = [
+  "dashboard",
+  "pro",
+  "assign"
+];
 
 export const all_Data = [
   {
@@ -335,7 +340,18 @@ export const all_Data = [
       icon: <Boy />,
       navLink: "/crete_delivery",
     },
-   
+    {
+      id: "pro",
+      label: "Profile",
+      icon: <BoySharp />,
+      navLink: "/profile_delivery",
+    },
+     {
+      id: "assign",
+      label: "Assign Order",
+      icon: <BoySharp />,
+      navLink: "/assign_order",
+    },
     
   {
     id: "logout",
@@ -353,7 +369,10 @@ if (userRole === "superuser") {
   allowedIds = superAdminAccess;
 } else if (userRole === "Manager") {
   allowedIds = ManagerAccess;
-} else {
+} else if (userRole === "deliveryboy") {
+  allowedIds = deliveryboy;
+}
+ else {
   allowedIds = AdminAccess;
 }
 
