@@ -190,7 +190,7 @@ const OrderDetails = () => {
                 return (
                   <Step
                     key={idx}
-                    completed={idx < order.status_dates.length - 1}
+                    completed={idx < order.status_dates.length}
                     expanded={true} 
                   >
                     <StepLabel

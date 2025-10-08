@@ -304,11 +304,10 @@ const OrdersContent = () => {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`w-6 h-6 cursor-pointer ${
-                    i < rating
+                  className={`w-6 h-6 cursor-pointer ${i < rating
                       ? "text-yellow-400 fill-yellow-400"
                       : "text-gray-300"
-                  }`}
+                    }`}
                   onClick={() => setRating(i + 1)}
                 />
               ))}
@@ -332,11 +331,10 @@ const OrdersContent = () => {
                   {options.map((opt) => (
                     <button
                       key={opt}
-                      className={`py-1 px-2 border rounded text-xs ${
-                        improveSelected.includes(opt)
+                      className={`py-1 px-2 border rounded text-xs ${improveSelected.includes(opt)
                           ? "bg-yellow-100 text-yellow-800"
                           : "text-gray-600"
-                      }`}
+                        }`}
                       onClick={() =>
                         toggleOption(setImproveSelected, improveSelected, opt)
                       }
@@ -358,11 +356,10 @@ const OrdersContent = () => {
               {options.map((opt) => (
                 <button
                   key={opt}
-                  className={`py-1 px-2 border rounded text-xs ${
-                    impressSelected.includes(opt)
+                  className={`py-1 px-2 border rounded text-xs ${impressSelected.includes(opt)
                       ? "bg-yellow-100 text-yellow-800"
                       : "text-gray-600"
-                  }`}
+                    }`}
                   onClick={() =>
                     toggleOption(setImpressSelected, impressSelected, opt)
                   }
@@ -527,13 +524,12 @@ const OrdersContent = () => {
                   return (
                     <Star
                       key={star}
-                      className={`w-5 h-5 ${
-                        star <= Math.floor(avgRating)
+                      className={`w-5 h-5 ${star <= Math.floor(avgRating)
                           ? "fill-yellow-400 text-yellow-400"
                           : star - 0.5 === avgRating
-                          ? "fill-yellow-400 text-yellow-200" // optional: lighter color for half
-                          : "text-gray-300"
-                      }`}
+                            ? "fill-yellow-400 text-yellow-200" // optional: lighter color for half
+                            : "text-gray-300"
+                        }`}
                     />
                   );
                 })}
@@ -573,59 +569,66 @@ const OrdersContent = () => {
               </div>
             </div>
             <div className="mt-6">
-          <h2 className="text-lg font-semibold mb-4">Status History</h2>
-          {detail?.status_dates?.length > 0 ? (
-            <Stepper
-              orientation="vertical"
-              nonLinear
-              activeStep={detail.status_dates.length - 1}
-            >
-              {detail.status_dates.map((status, idx) => {
-                const statusText = getValue(status?.od_status);
-                const statusDate = formatDate(status?.od_date);
-                // const orderId = getValue(status?.od_order_id);
+              <h2 className="text-lg font-semibold mb-4">Status Track</h2>
+              {detail?.status_dates?.length > 0 ? (
+                <Stepper
+                  orientation="vertical"
+                  nonLinear
+                  activeStep={
+                    detail.status_dates.filter(
+                      (s) =>
+                        getValue(s?.od_status) !== "Pending" &&
+                        getValue(s?.od_status) !== "Confirmed"
+                    ).length - 1
+                  }
+                >
+                  {detail.status_dates
+                    .filter((status) => {
+                      const text = getValue(status?.od_status);
+                      return text !== "Pending" && text !== "Confirmed";
+                    })
+                    .map((status, idx, filteredArray) => {
+                      const statusText = getValue(status?.od_status);
+                      const statusDate = formatDate(status?.od_date);
 
-                // Optional: status to color mapping
-                const statusColorMap = {
-                  Confirmed: "primary",
-                  Processing: "info",
-                  Shipped: "warning",
-                  Delivered: "success",
-                  Cancelled: "error",
-                  Completed: "success",
-                };
+                      const statusColorMap = {
+                        Confirmed: "primary",
+                        Processing: "info",
+                        Shipped: "warning",
+                        Delivered: "success",
+                        Cancelled: "error",
+                        Completed: "success",
+                      };
 
-                const stepColor = statusColorMap[statusText] || "inherit";
+                      const stepColor = statusColorMap[statusText] || "inherit";
 
-                return (
-                  <Step
-                    key={idx}
-                    completed={idx < detail.status_dates.length - 1}
-                    expanded={true}
-                  >
-                    <StepLabel
-                      StepIconProps={{
-                        color: stepColor,
-                      }}
-                    >
-                      <span className="font-medium">{statusText}</span>
-                    </StepLabel>
-                    <StepContent>
-                      <Typography variant="body2" className="text-gray-700">
-                        <strong>Date:</strong> {statusDate}
-                      </Typography>
-                      {/* <Typography variant="body2" className="text-gray-700">
-                        <strong>Order ID:</strong> {orderId}
-                      </Typography> */}
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
-          ) : (
-            <p>No status history available.</p>
-          )}
-        </div>
+                      return (
+                        <Step
+                          key={idx}
+                          completed={idx < filteredArray.length}
+                          expanded={true}
+                        >
+                          <StepLabel
+                            StepIconProps={{
+                              color: stepColor,
+                            }}
+                          >
+                            <span className="font-medium">{statusText}</span>
+                          </StepLabel>
+                          <StepContent>
+                            <Typography variant="body2" className="text-gray-700">
+                              <strong>Date:</strong> {statusDate}
+                            </Typography>
+                          </StepContent>
+                        </Step>
+                      );
+                    })}
+                </Stepper>
+              ) : (
+                <p>No status history available.</p>
+              )}
+
+            </div>
 
             {detail?.notes && (
               <div className="mt-4">

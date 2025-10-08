@@ -457,7 +457,7 @@ const AssignOrder = () => {
                 {locationData[0].order_locations.map((loc, index) => (
                   <Step
                   key={index}
-                  completed={index < locationData[0].order_locations.length - 1}
+                  completed={index < locationData[0].order_locations.length }
                   expanded={true} 
                 >
                 

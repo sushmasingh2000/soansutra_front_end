@@ -78,12 +78,7 @@ export const all_Data = [
     icon: <DashboardCustomizeOutlined />,
     navLink: "/admin-dashboard",
   },
-  {
-    id: "deldashboard",
-    label: "Dashboard",
-    icon: <DashboardCustomizeOutlined />,
-    navLink: "/deliveryboy_dashboard",
-  },
+  
   {
     id: "stores",
     label: "Store Management",
@@ -346,18 +341,26 @@ export const all_Data = [
       icon: <Boy />,
       navLink: "/crete_delivery",
     },
+
+    {
+    id: "deldashboard",
+    label: "Dashboard",
+    icon: <DashboardCustomizeOutlined />,
+    navLink: "/deliveryboy_dashboard",
+  },
+    {
+      id: "assign",
+      label: "My Order",
+      icon: <BoySharp />,
+      navLink: "/assign_order",
+    },
     {
       id: "pro",
       label: "Profile",
       icon: <BoySharp />,
       navLink: "/profile_delivery",
     },
-     {
-      id: "assign",
-      label: "My Order",
-      icon: <BoySharp />,
-      navLink: "/assign_order",
-    },
+   
     
   {
     id: "logout",
