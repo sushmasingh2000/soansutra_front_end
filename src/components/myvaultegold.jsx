@@ -40,7 +40,7 @@ export default function ViewMyVault() {
           <button
             className="px-4 py-2 rounded-lg text-black text-sm  bg-gradient-to-r from-yellow-400 to-yellow-600"
 
-          >
+          onClick={()=>navigate('/vault')}>
             View my Vault
           </button>
         </div>

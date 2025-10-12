@@ -164,7 +164,8 @@ export const endpoint = {
   create_product_inventory: `${domain}/api/v1/create-product-inventory`,
   get_product_inventory: `${domain}/api/v1/get-product-inventory`,
   update_product_inventory: `${domain}/api/v1/update-product-inventory`,
-
+  get_varient_price: `${domain}/api/v1/get-varient-price`,
+  
   // discount
   create_discount: `${domain}/api/v1/create-discount`,
   get_discount: `${domain}/api/v1/get-discount`,
@@ -317,6 +318,12 @@ export const endpoint = {
   get_order_location: `${domain}/api/v1/get-order-location`,
   get_all_dlv_profile_by : `${domain}/api/v1/get-dlv-profile-by-id`,
   get_dlv_dashboard : `${domain}/api/v1/delivery-boy-dashboard`,
+  
+  offline_order :`${domain}/api/v1/create-cart-items-by-admin`,
+  get_cart_admin :`${domain}/api/v1/get-cart-items-by-admin`,
+  remove_cart_admin :`${domain}/api/v1/remove-from-cart-items`,
+  create_order_by_admin :`${domain}/api/v1/create-order-by-admin`,
+  add_address_by_admin :`${domain}/api/v1/add-shipping-address-by-admin`,
   
 
   // location related api's

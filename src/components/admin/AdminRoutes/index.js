@@ -43,6 +43,7 @@ import DeliveryAdd from "../deliveryboy/Adddelivery.js";
 import DeliveryBoyProfile from "../deliveryboy/deliveryPanel/Profile.js";
 import AssignOrder from "../deliveryboy/deliveryPanel/AssignOrder.js";
 import DeliveryDashboard from "../deliveryboy/Deliverydashboard.js";
+import OfflineOrder from "../OfflineOrder.js";
 
 export const adminroutes = [
 
@@ -193,6 +194,11 @@ export const adminroutes = [
     path: "/inventory",
     component: <ProductInventory />,
      navItem: "Product Inventory",
+  },
+  {
+    path: "/offline",
+    component: <OfflineOrder />,
+     navItem: "Offline Order",
   },
   {
     path: "/custom",

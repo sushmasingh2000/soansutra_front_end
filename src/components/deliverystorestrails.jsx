@@ -251,17 +251,18 @@ const DeliveryStoresUI = ({ selected_v }) => {
 
         {loading ? (
           <Skeleton variant="rectangular" width="100%" height={40} />
-        ) : (
+        ) : nearestStore?.length > 0 ? (
           <button
             className="w-full hover:bg-orange-500 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors"
             style={{
               background:
                 "linear-gradient(270deg, rgb(255, 91, 108) 0%, rgb(253, 139, 100) 100%)",
             }}
+            onClick={() => setShowMore(!showMore)}
           >
             FIND IN STORE
           </button>
-        )}
+        ) : null}
       </div>
 
       {/* Try At Home */}

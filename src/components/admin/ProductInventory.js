@@ -14,6 +14,52 @@ const ProductInventory = () => {
   const [variant, setVariant] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const client = useQueryClient();
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [orderForm, setOrderForm] = useState({
+    user_id: "",
+    quantity: 1,
+  });
+
+  const offlineOrderFn = async () => {
+    if (
+      !orderForm.user_id ||
+      orderForm.quantity < 1 ||
+      orderForm.quantity > Number(inventory?.stock_in_store)
+    ) {
+      toast.error("Please enter valid user and quantity.");
+      return;
+    }
+
+    const payload = {
+      customer_unique: orderForm.user_id,
+      varient_id: defaultVariantId,
+      product_id: variant?.product_id || "",
+      quantity: orderForm.quantity,
+    };
+
+    try {
+      const res = await apiConnectorPost(endpoint.offline_order, payload);
+
+      if (res?.data?.success) {
+        toast.success("Order placed successfully!");
+        setOrderModalOpen(false);
+        setOrderForm({ user_id: "", quantity: 1 });
+        client.refetchQueries("get_inventory");
+      } else {
+        toast.error(res?.data?.message || "Order failed.");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while placing the order.");
+    }
+  };
+  const handleOrderChange = (e) => {
+    const { name, value } = e.target;
+
+    setOrderForm((prev) => ({
+      ...prev,
+      [name]: name === "quantity" ? Number(value) : value,
+    }));
+  };
 
   const [formData, setFormData] = useState({
     inventory_id: null,
@@ -26,6 +72,13 @@ const ProductInventory = () => {
     expiry_date: "",
     barcode: "",
   });
+  const { data: price } = useQuery(
+    ["get_price_va", defaultVariantId],
+    () =>
+      apiConnectorGet(`${endpoint.get_varient_price}?v_id=${defaultVariantId}`),
+    { refetchOnMount: false }
+  );
+  const vaprice = price?.data?.result || [];
 
   const { data } = useQuery(
     ["get_inventory", defaultVariantId],
@@ -36,6 +89,7 @@ const ProductInventory = () => {
     { refetchOnMount: false }
   );
   const inventory = data?.data?.result?.[0] || [];
+
   useEffect(() => {
     if (defaultVariantId) {
       const findProductForVariant = async () => {
@@ -89,7 +143,7 @@ const ProductInventory = () => {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold mb-6">Product Inventory</h1>
+      <h1 className="text-2xl font-bold mb-6">Product Inventory </h1>
 
       {/* Product Select */}
       <div className="flex justify-between gap-2">
@@ -144,6 +198,7 @@ const ProductInventory = () => {
               <th className="py-2 px-4 border-b">Batch #</th>
               {/* <th className="py-2 px-4 border-b">Expiry</th> */}
               <th className="py-2 px-4 border-b">Barcode</th>
+              <th className="py-2 px-4 border-b">Order</th>
             </tr>
           </thead>
           <tbody>
@@ -172,11 +227,132 @@ const ProductInventory = () => {
                 <td className="py-2 px-4 border-b">
                   {inventory.barcode || "N/A"}
                 </td>
+                <td className="py-2 px-4 border-b">
+                  <button
+                    onClick={() => setOrderModalOpen(true)}
+                    className="px-3 py-1 text-sm bg-purple-600 text-white rounded hover:bg-purple-700"
+                  >
+                    Book
+                  </button>
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      <ReactModal
+        isOpen={orderModalOpen}
+        onRequestClose={() => setOrderModalOpen(false)}
+        ariaHideApp={false}
+        className="bg-white p-10 w-full max-w-xl mx-auto mt-20 rounded shadow-lg outline-none"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50"
+      >
+        <h2 className="text-2xl text-center font-bold mb-4">Place Order</h2>
+
+        {/* Price Display */}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">
+            Variant Price (per unit)
+          </label>
+          <input
+            value={vaprice}
+            readOnly
+            className="border p-2 w-full bg-gray-100"
+          />
+        </div>
+
+        {/* Total Price Calculation */}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Total Price</label>
+          <input
+            value={
+              !isNaN(vaprice)
+                ? Number(vaprice) * Number(orderForm.quantity || 0)
+                : 0
+            }
+            readOnly
+            className="border p-2 w-full bg-gray-100"
+          />
+        </div>
+
+        {/* Order Form Inputs */}
+        <div className="space-y-4">
+          <div>
+            <label className="block mb-1 font-medium">User ID</label>
+            <input
+              name="user_id"
+              placeholder="Enter user ID"
+              value={orderForm.user_id}
+              onChange={handleOrderChange}
+              className="border p-2 w-full"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-medium">Quantity</label>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() =>
+                  setOrderForm((prev) => ({
+                    ...prev,
+                    quantity: Math.max(1, prev.quantity - 1),
+                  }))
+                }
+                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                −
+              </button>
+              <input
+                name="quantity"
+                value={orderForm.quantity}
+                onChange={(e) =>
+                  setOrderForm((prev) => ({
+                    ...prev,
+                    quantity: Math.min(
+                      Number(inventory?.stock_in_store) || 1,
+                      Math.max(1, Number(e.target.value))
+                    ),
+                  }))
+                }
+                type="number"
+                className="border p-1 w-20 text-center"
+              />
+              <button
+                onClick={() =>
+                  setOrderForm((prev) => ({
+                    ...prev,
+                    quantity: Math.min(
+                      Number(inventory?.stock_in_store) || 1,
+                      prev.quantity + 1
+                    ),
+                  }))
+                }
+                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                +
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">
+              Available: {inventory?.stock_in_store || 0}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={() => setOrderModalOpen(false)}
+            className="mr-3 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={offlineOrderFn}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Submit
+          </button>
+        </div>
+      </ReactModal>
 
       {/* Modal */}
       <ReactModal

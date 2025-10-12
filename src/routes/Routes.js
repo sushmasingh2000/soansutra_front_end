@@ -67,6 +67,7 @@ import EgoldSELLHistoryModal from "../components/pages/goldhistory/E-goldSellHis
 import { elements } from "chart.js";
 import DeliveryAdminPanel from "../components/deliveryadminpanel.jsx";
 import DeliveryBoyDashboard from "../components/deliveryboydashboard.jsx";
+import PaytmVault from "../components/pages/PaytmVault.js";
 
 export const routes = [
   {
@@ -421,6 +422,10 @@ export const routes = [
   {
     path: "/products_web",
     element: <DynamicProductListingPage />,
+  },
+  {
+    path: "/vault",
+    element: <PaytmVault />,
   },
   {
     path: "/myaccount/profile",

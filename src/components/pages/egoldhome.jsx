@@ -1,15 +1,12 @@
 
 import React, { useState } from 'react';
-import { Plus, Minus, Star, Shield, Award, Zap, View } from 'lucide-react';
+import { Plus, Minus} from 'lucide-react';
 import EgoldHeader from '../egoldheader';
 import ViewMyVault from '../myvaultegold';
 import HowToRedeem from '../howtoredeem';
 import Header from '../Header1';
 import NavigationBar from '../navigationbar';
 import Footer from '../Footer1';
-import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
-import { useQuery } from 'react-query';
-import { endpoint } from '../../utils/APIRoutes';
 import { useNavigate } from 'react-router-dom';
 
 const SonaSutraDigitalGoldHome = () => {

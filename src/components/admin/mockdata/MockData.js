@@ -236,6 +236,12 @@ export const all_Data = [
         icon: <AssignmentTurnedIn />,
         navLink: "/custom",
       },
+      {
+        id: "offline-order",
+        label: "Offline Order",
+        icon: <AssignmentTurnedIn />,
+        navLink: "/offline",
+      },
 
     ],
   },
