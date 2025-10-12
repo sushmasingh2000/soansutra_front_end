@@ -55,6 +55,10 @@ const OrderDetails = () => {
           <strong>Status:</strong> {getValue(order?.status)}
         </div>
         <div>
+          <strong>Shopping Mode:</strong> {getValue(order?.shopping_mode)}
+        </div>
+        
+        <div>
           <strong>Order Date:</strong> {formatDate(order?.order_date)}
         </div>
         <div>
