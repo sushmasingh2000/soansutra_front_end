@@ -9,7 +9,7 @@ const SonasutraInvoice = () => {
 
   const { orderId } = useParams();
   const { data } = useQuery(
-    ["invoice_get"],
+    ["invoice_get" , orderId],
     () => apiConnectorGet(`${endpoint.get_invoice}?order_id=${orderId}`),
     usequeryBoolean
   );
