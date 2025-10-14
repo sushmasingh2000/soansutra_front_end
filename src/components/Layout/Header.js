@@ -16,8 +16,6 @@ const Header = ({ onToggleSidebar }) => {
           </button>
           <h1 className="text-xl font-semibold">Admin Panel</h1>
         </div>
-
-        {/* Right side icons and profile dropdown can go here */}
       </div>
     </header>
   );

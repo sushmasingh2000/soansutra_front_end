@@ -166,7 +166,6 @@ const BannerSlidder = () => {
               </div>
             </div>
 
-            {/* Right side - Navigation buttons */}
             <div className="absolute right-0 flex items-center space-x-2">
               <button
                 onClick={goToPrevious}

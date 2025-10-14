@@ -194,6 +194,7 @@ const Order = () => {
               <th className="px-4 py-3 text-left">DeliveryID</th>
               <th className="px-4 py-3 text-left">Assigned</th>
               <th className="px-4 py-3 text-left">Actions</th>
+              <th className="px-4 py-3 text-left">Invoice</th>
             </tr>
           </thead>
           <tbody>
@@ -253,16 +254,16 @@ const Order = () => {
                   <td className="px-4 py-2">
                     {(order.is_assigned_status === "Pending" || order.is_assigned_status === "Reject") ?
                       <div className="flex flex-col items-center">
-                      <button
-                        onClick={() => openAssignModal(order)}
-                        className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
-                      >
-                        Assign
-                      </button> 
-                     <p>{ order?.is_assigned_status}</p></div>
+                        <button
+                          onClick={() => openAssignModal(order)}
+                          className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+                        >
+                          Assign
+                        </button>
+                        <p>{order?.is_assigned_status}</p></div>
                       :
                       order?.is_assigned_status
-                      }
+                    }
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex flex-wrap gap-2">
@@ -290,6 +291,20 @@ const Order = () => {
                         );
                       })}
                     </div>
+                  </td>
+                  <td className="px-4 py-2">
+                    {order?.status !== "Pending" && order?.status !== "Failed" ? 
+                      <div className="p-4">
+                        <button
+                          className="text-sm font-medium text-blue-600 underline"
+                          onClick={() => {
+                            navigate(`/invoice/${order?.order_unique}`);
+                          }}
+                        >
+                          View / Download Invoice
+                        </button>
+                      </div>
+                    : "--"}
                   </td>
                 </tr>
               ))

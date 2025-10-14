@@ -38,6 +38,7 @@ const LogIn = () => {
         window.location.reload();
         localStorage.setItem("token", res?.data?.result?.token);
         localStorage.setItem("role", res?.data?.result?.role);
+        localStorage.setItem("store", res?.data?.result?.store_name);
         localStorage.setItem(
           "designation",
           enCryptData(res?.data?.result?.role)
@@ -72,7 +73,7 @@ const LogIn = () => {
                   : "text-gray-600 hover:bg-gray-100"
               }`}
             >
-              {type === "user" ? "👤 Staff Login" : "🔐 Super Admin"}
+              {type === "user" ? "👤 Store Login" : "🔐 Super Admin"}
               {/* {type === "user" ? <FiUser size={18} /> : <FiShield size={18} />}
               {type === "user" ?  "Staff Login" : "Super Admin"} */}
             </button>
