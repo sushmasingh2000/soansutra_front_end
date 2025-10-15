@@ -3,6 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit } from "@mui/icons-material";
+import CustomTable from "./Shared/CustomTable";
 
 const ProductMaterial = () => {
     const [materials, setMaterials] = useState([]);
@@ -110,7 +111,7 @@ const ProductMaterial = () => {
             material_id: material.material_id,
             ma_material_id: material.master_mat_id || "",
             material_name: material.material_name || "",
-            unit: 0 ,
+            unit: 0,
             material_price: 1,
 
         });
@@ -126,6 +127,32 @@ const ProductMaterial = () => {
         }
     };
 
+    const tablehead = [
+        <span>S.No</span>,
+        <span>Master Material</span>,
+        <span>Name</span>,
+        <span>Actions</span>,
+    ]
+
+    const tablerow = materials.map((material, index) => [
+        <span>{index + 1}</span>,
+        <span>{material.ma_material_name || "--"}</span>,
+        <span>{material.material_name || "--"}</span>,
+        <span className="px-4 py-2 space-x-2">
+            <button
+                onClick={() => handleEdit(material)}
+                className="text-blue-600 hover:underline"
+            >
+                <Edit />
+            </button>
+            <button
+                onClick={() => handleDelete(material.material_id)}
+                className="text-red-600 hover:underline"
+            >
+                <DeleteForever />
+            </button>
+        </span>
+    ])
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -138,53 +165,11 @@ const ProductMaterial = () => {
                 </button>
             </div>
 
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-4 py-3 text-left">S.No</th>
-                            <th className="px-4 py-3 text-left">Master Material</th>
-                            <th className="px-4 py-3 text-left">Name</th>
-                            {/* <th className="px-4 py-3 text-left">Unit</th> */}
-                            {/* <th className="px-4 py-3 text-left">Price</th> */}
-                            <th className="px-4 py-3 text-left">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {materials.map((material, index) => (
-                            <tr key={material.material_id} className="border-t hover:bg-gray-50">
-                                <td className="px-4 py-2">{index + 1}</td>
-                                <td className="px-4 py-2">{material.ma_material_name || "--"}</td>
-                                <td className="px-4 py-2">{material.material_name || "--"}</td>
-                                {/* <td className="px-4 py-2">{material.un_name || "--"}</td> */}
-                                {/* <td className="px-4 py-2">{material.material_price || "--"}</td> */}
-                                <td className="px-4 py-2 space-x-2">
-                                    <button
-                                        onClick={() => handleEdit(material)}
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        <Edit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(material.material_id)}
-                                        className="text-red-600 hover:underline"
-                                    >
-                                        <DeleteForever />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        {materials.length === 0 && (
-                            <tr>
-                                <td colSpan={4} className="py-4 text-center text-gray-500">
-                                    No materials found.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-
+            <CustomTable
+                tablehead={tablehead}
+                tablerow={tablerow}
+            // isLoading={loading}
+            />
             {/* Modal */}
             {modalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

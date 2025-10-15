@@ -8,6 +8,7 @@ import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit } from "@mui/icons-material";
 import { useQuery, useQueryClient } from "react-query";
+import CustomTable from "./Shared/CustomTable";
 
 const PurityMaterial = () => {
   const [materials, setMaterials] = useState([]);
@@ -97,7 +98,32 @@ const PurityMaterial = () => {
     });
     setModalOpen(true);
   };
+  const tablehead = [
+    <span>S.No</span>,
+    <span>Master Material</span>,
+    <span>Stamp Name</span>,
+    <span>Purity</span>,
+    <span>Actionn</span>,
+  ]
 
+  const tablerow = purity.map((material, index) => [
+    <span>{index + 1}</span>,
+    <span> {material.ma_material_name || "--"}
+    </span>,
+    <span>{material.pur_stamp_name || "--"}</span>,
+    <span>
+      {material.pur_purity_percent || "--"}%
+    </span>,
+
+    <span className="px-4 py-2 space-x-2">
+      <button
+        onClick={() => handleEdit(material)}
+        className="text-blue-600 hover:underline"
+      >
+        <Edit />
+      </button>
+    </span>
+  ])
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -110,48 +136,12 @@ const PurityMaterial = () => {
         </button>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Master Material</th>
-              <th className="px-4 py-3 text-left">Stamp Name</th>
-              <th className="px-4 py-3 text-left">Purity</th>
-              <th className="px-4 py-3 text-left">Actionn</th>
-            </tr>
-          </thead>
-          <tbody>
-            {purity.map((material, index) => (
-              <tr key={material.pur_id} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2"> {material.ma_material_name|| "--"}
-                </td>
-                <td className="px-4 py-2">{material.pur_stamp_name || "--"}</td>
-                <td className="px-4 py-2">
-                  {material.pur_purity_percent || "--"}%
-                </td>
-               
-                <td className="px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => handleEdit(material)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {purity.length === 0 && (
-              <tr>
-                <td colSpan={4} className="py-4 text-center text-gray-500">
-                  No purity data found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={loading}
+      />
+
 
       {/* Modal */}
       {modalOpen && (

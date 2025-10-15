@@ -8,6 +8,7 @@ import { Edit, Eye, View } from "lucide-react";
 import { Delete } from "@mui/icons-material";
 import { useQuery, useQueryClient } from "react-query";
 import CustomToPagination from "../../Shared/Pagination";
+import CustomTable from "./Shared/CustomTable";
 
 const Products = () => {
   const [subcategories, setSubcategories] = useState([]);
@@ -157,11 +158,13 @@ const Products = () => {
       };
 
       const res = await apiConnectorPost(endpoint.update_product, payload);
-      toast.success(res?.data?.message || "Product updated");
-      setEditModal(false);
-      setSelectedProduct(null);
-      resetForm();
-      client.refetchQueries("get_products_admin")
+      toast(res?.data?.message);
+      if (res?.data?.success) {
+        setEditModal(false);
+        setSelectedProduct(null);
+        resetForm();
+        client.refetchQueries("get_products_admin")
+      }
     } catch (err) {
       toast.error("Error updating product.");
     } finally {
@@ -175,7 +178,7 @@ const Products = () => {
       const res = await apiConnectorGet(
         `${endpoint.delete_product}?product_id=${product.product_id}`
       );
-      toast.success(res?.data?.message || "Product deleted");
+      toast(res?.data?.message);
       client.refetchQueries("get_products_admin")
     } catch (err) {
       toast.error("Error deleting product.");
@@ -196,8 +199,6 @@ const Products = () => {
       state: { product }, // Pass entire product object
     });
   };
-
-
 
   const openEditModal = async (product) => {
     setSelectedProduct(product);
@@ -230,6 +231,63 @@ const Products = () => {
 
   const collections = data?.data?.result || [];
 
+  const tablehead = [
+    "S.No",
+    "Product Name & Image",
+    "Category",
+    "Subcategory",
+    "Collection",
+    "Variant",
+    "Actions"
+  ];
+
+  const tablerow = products.map((product, index) => {
+    let images = [];
+    try {
+      images = JSON.parse(product.product_images || "[]");
+    } catch {
+      images = [];
+    }
+
+    const firstImageUrl = images.length > 0 ? images[0].p_image_url : null;
+    const subcategoryName = product.sub_category_details?.sub_cat_name || "N/A";
+    const categoryName = product.sub_category_details?.category_details?.["`name`"] || "N/A";
+
+    return [
+      <span>{(page - 1) * 10 + index + 1}</span>,
+      <div className="flex items-center space-x-3">
+        {firstImageUrl && (
+          <img
+            src={firstImageUrl}
+            alt={product.name}
+            className="w-12 h-12 object-cover rounded border cursor-pointer"
+            onClick={() => openEditModal(product)}
+          />
+        )}
+        <span>{product.name}</span>
+      </div>,
+      <span>{categoryName}</span>,
+      <span>{subcategoryName}</span>,
+      <span>{product?.collection_details?.coll_name || "---"}</span>,
+      <button
+        onClick={() => handleVariantClick(product)}
+        title="Manage Variant"
+      >
+        <Edit className="!text-green-500" />
+      </button>,
+      <div className="flex space-x-2">
+        <button onClick={() => handleViewProduct(product)} title="View">
+          <Eye className="!text-green-500" />
+        </button>
+        <button onClick={() => openEditModal(product)} title="Edit">
+          <Edit className="!text-blue-500" />
+        </button>
+        <button onClick={() => deleteProduct(product)} title="Delete">
+          <Delete className="!text-red-500" />
+        </button>
+      </div>
+    ];
+  });
 
 
   return (
@@ -242,26 +300,26 @@ const Products = () => {
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
         >
           <span>➕</span>
-          <span>Add New Product</span>
+          <span>Add  Product</span>
         </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <input
           type="text"
           placeholder="Search by username"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <input
           type="date"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
         <input
           type="date"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
@@ -283,106 +341,11 @@ const Products = () => {
           <span>Collection</span>
         </button>
       </div>
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                S.No
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Product Name & Image
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Subcategory
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Collection
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Variant
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      />
 
-          <tbody className="bg-white divide-y divide-gray-200">
-            {products.length === 0 ? (
-              <tr>
-                <td colSpan="3" className="text-center py-6 text-gray-500">
-                  No products found.
-                </td>
-              </tr>
-            ) : (
-              products.map((product, index) => {
-                // Parse product images JSON safely
-                let images = [];
-                try {
-                  images = JSON.parse(product.product_images || "[]");
-                } catch {
-                  images = [];
-                }
-
-                // Extract first image url if exists
-                const firstImageUrl =
-                  images.length > 0 ? images[0].p_image_url : null;
-
-                // Access category and subcategory names carefully
-                const subcategoryName =
-                  product.sub_category_details?.sub_cat_name || "N/A";
-
-                // The category name has backticks in key: "`name`"
-                // Use bracket notation to access it safely
-                const categoryName =
-                  product.sub_category_details?.category_details?.["`name`"] ||
-                  "N/A";
-
-                return (
-                  <tr key={product.product_id}>
-                    <td className="px-6 py-4">{((page - 1) * 10) + index + 1}</td>
-
-                    <td className="px-6 py-4 flex items-center space-x-3">
-                      {firstImageUrl && (
-                        <img
-                          src={firstImageUrl}
-                          alt={product.name}
-                          className="w-12 h-12 object-cover rounded border cursor-pointer"
-                          onClick={() => openEditModal(product)} />
-                      )}
-                      <span>{product.name}</span>
-                    </td>
-                    {/* <td className="px-6 py-4">₹{product.price}</td> */}
-                    <td className="px-6 py-4">{categoryName || "--"}</td>
-                    <td className="px-6 py-4">{subcategoryName || "--"}</td>
-                    <td className="px-6 py-4">{product?.collection_details?.coll_name || "---"}</td>
-
-
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleVariantClick(product)}
-                        title="Manage Variant"
-                      >
-                        <Edit className="!text-green-500" />
-                      </button>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex space-x-2">
-                        <button onClick={() => handleViewProduct(product)} title="View"><Eye className="!text-green-500" /></button>
-                        <button onClick={() => openEditModal(product)} title="Edit"><Edit className="!text-blue-500" /></button>
-                        <button onClick={() => deleteProduct(product)} title="Delete"><Delete className="!text-red-500" /></button>
-                      </div></td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
 
       {createModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

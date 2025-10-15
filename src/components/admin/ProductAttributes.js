@@ -9,6 +9,7 @@ import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { Delete, Edit } from "lucide-react";
+import CustomTable from "./Shared/CustomTable";
 
 const ProductAttributes = () => {
   const [searchParams] = useSearchParams();
@@ -106,10 +107,10 @@ const ProductAttributes = () => {
     setModalOpen(true);
   };
 
-  const handleDelete = async (value_id ) => {
+  const handleDelete = async (value_id) => {
     try {
       const res = await apiConnectorGet(
-        `${endpoint.delete_product_attributes_value}?value_id=${value_id }`
+        `${endpoint.delete_product_attributes_value}?value_id=${value_id}`
       );
       toast(res?.data?.message);
       fetchAttributes();
@@ -117,6 +118,29 @@ const ProductAttributes = () => {
       toast.error("Delete failed.");
     }
   };
+
+  const tablehead = ["S.No.", "Attribute", "Value", "Unit", "Description", "Actions"];
+const tablerow = attributes.map((attr , index) => [
+  index+1, 
+   attr?.attribute_name || "",
+  attr.value || "-",
+  attr.un_name || "-",
+  attr.un_descriptoin || "-",
+  <div className="space-x-2">
+    <button
+      onClick={() => handleEdit(attr)}
+      className="text-blue-600 hover:underline"
+    >
+      <Edit />
+    </button>
+    <button
+      onClick={() => handleDelete(attr.value_id)}
+      className="text-red-600 hover:underline"
+    >
+      <Delete />
+    </button>
+  </div>,
+]);
 
   return (
     <div className="p-6">
@@ -130,50 +154,14 @@ const ProductAttributes = () => {
         </button>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr className="bg-gray-50">
-              <th className="px-4 py-3 text-left">Attribute</th>
-              <th className="px-4 py-3 text-left">Value</th>
-              <th className="px-4 py-3 text-left">Unit</th>
-              <th className="px-4 py-3 text-left">Description</th>
-              <th className="px-4 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {attributes.map((attr, index) => (
-              <tr key={index} className="border-t">
-                <td className="px-4 py-2">{attr?.attribute_name || ""}</td>
-                <td className="px-4 py-2">{attr.value || "-"}</td>
-                <td className="px-4 py-2">{attr.un_name || "-"}</td>
-                <td className="px-4 py-2">{attr.un_descriptoin || "-"}</td>
-                <td className="px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => handleEdit(attr)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    <Edit/>
-                  </button>
-                  <button
-                    onClick={() => handleDelete(attr.value_id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    <Delete/>
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {attributes.length === 0 && (
-              <tr>
-                <td colSpan={5} className="py-4 text-center text-gray-500">
-                  No attributes found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+    
+
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={isLoading}
+      />
+
 
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">

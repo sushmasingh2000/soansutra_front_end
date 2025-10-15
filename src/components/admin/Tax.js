@@ -3,6 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { Delete, Edit } from "lucide-react";
+import CustomTable from "./Shared/CustomTable";
 
 const Tax = () => {
     const [tax, setTaxs] = useState([]);
@@ -110,6 +111,36 @@ const Tax = () => {
         fetchTaxs();
     }, []);
 
+    const tablehead = [
+        <span>S.No</span>,
+        <span>Name</span>,
+        <span>Percentage</span>,
+        <span>Status</span>,
+        <span>Actions</span>,
+    ]
+
+    const tablerow = tax.map((tax, index) => [
+        <span>{index + 1}</span>,
+        <span>{tax.name}</span>,
+        <span>{tax.percentage}</span>,
+        <span>{tax.is_active}</span>,
+        <span className="px-6 py-4">
+            <div className="flex space-x-2">
+                <button
+                    onClick={() => openEditModal(tax)}
+                    className="text-green-600 hover:text-green-800"
+                >
+                    <Edit />
+                </button>
+                <button
+                    onClick={() => deleteTax(tax.tax_id)}
+                    className="text-red-600 hover:text-red-800"
+                >
+                    <Delete />
+                </button>
+            </div>
+        </span>
+    ])
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -122,51 +153,7 @@ const Tax = () => {
                 </button>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.No</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Percentage</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {tax.length === 0 ? (
-                            <tr>
-                                <td colSpan="5" className="text-center py-6 text-gray-500">No tax found.</td>
-                            </tr>
-                        ) : (
-                            tax.map((tax, index) => (
-                                <tr key={tax.tax_id}>
-                                    <td className="px-6 py-4 text-sm">{index + 1}</td>
-                                    <td className="px-6 py-4 text-sm">{tax.name}</td>
-                                    <td className="px-6 py-4 text-sm">{tax.percentage}</td>
-                                    <td className="px-6 py-4 text-sm">{tax.is_active}</td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => openEditModal(tax)}
-                                                className="text-green-600 hover:text-green-800"
-                                            >
-                                                <Edit />
-                                            </button>
-                                            <button
-                                                onClick={() => deleteTax(tax.tax_id)}
-                                                className="text-red-600 hover:text-red-800"
-                                            >
-                                                <Delete />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+            <CustomTable tablehead={tablehead} tablerow={tablerow} />
 
             {/* Create Modal */}
             {createModal && (

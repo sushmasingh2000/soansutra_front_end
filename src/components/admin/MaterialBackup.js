@@ -5,6 +5,7 @@ import CustomToPagination from "../../Shared/Pagination";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint, rupees } from "../../utils/APIRoutes";
 import moment from "moment";
+import CustomTable from "./Shared/CustomTable";
 
 const MasterMaterialBackup = () => {
   const [page, setPage] = useState(1)
@@ -43,8 +44,68 @@ const MasterMaterialBackup = () => {
 
   const allData = data?.data?.result || [];
 
+  const tablehead = [
+    <span>S.No</span>,
+    <span>Old Name</span>,
+    <span>New Name</span>,
+    <span>Old Price</span>,
+    <span>New Price</span>,
+    <span>Old Price Per Unit</span>,
+    <span>New Price Per Unit</span>,
+    <span>Old Unit</span>,
+    <span>New Unit</span>,
+    <span>Old Value</span>,
+    <span>New Value</span>,
+    <span>Old Date</span>,
+    <span>New Date</span>,
+  ]
 
+  const tablerow = allData?.data?.map((material, index) => [
+    <span className="px-4 py-2">{index + 1}</span>,
+    <span className={`px-4 py-2 ${material.ma_material_name_old !== material.ma_material_name_new && "bg-yellow-500"}`}>
+      {material.ma_material_name_old || "--"}
+    </span>,
+    <span className={`px-4 py-2 ${material.ma_material_name_old !== material.ma_material_name_new && "bg-yellow-500"}`}>
+      {material.ma_material_name_new || "--"}
+    </span>,
 
+    <span className={`px-4 py-2 ${material.ma_price_old !== material.ma_price_new && "bg-yellow-500"}`}>
+      {Number(material.ma_price_old).toFixed(2)}
+    </span>,
+    <span className={`px-4 py-2 ${material.ma_price_old !== material.ma_price_new && "bg-yellow-500"}`}>
+      {Number(material.ma_price_new).toFixed(2)}
+    </span>,
+
+    <span className={`px-4 py-2 ${material.ma_price_per_unit_old !== material.ma_price_per_unit_new && "bg-yellow-500"}`}>
+      {Number(material.ma_price_per_unit_old).toFixed(2)}
+    </span>,
+    <span className={`px-4 py-2 ${material.ma_price_per_unit_old !== material.ma_price_per_unit_new && "bg-yellow-500"}`}>
+      {Number(material.ma_price_per_unit_new).toFixed(2)}
+    </span>,
+
+    <span className={`px-4 py-2 ${material.ma_unit_old !== material.ma_unit_new && "bg-yellow-500"}`}>
+
+      {material.ma_unit_old || "--"}</span>,
+    <span className={`px-4 py-2 ${material.ma_unit_old !== material.ma_unit_new && "bg-yellow-500"}`}>
+
+      {material.ma_unit_new || "--"}</span>,
+
+    <span className={`px-4 py-2 ${material.ma_value_old !== material.ma_value_new && "bg-yellow-500"}`}>
+
+      {Number(material.ma_value_old).toFixed(2)}
+    </span>,
+    <span className={`px-4 py-2 ${material.ma_value_old !== material.ma_value_new && "bg-yellow-500"}`}>
+
+      {Number(material.ma_value_new).toFixed(2)}
+    </span>,
+
+    <span className="px-4 py-2">
+      {material.created_at_old ? moment(material.created_at_old).format("DD-MM-YYYY") : "--"}
+    </span>,
+    <span className="px-4 py-2">
+      {material.created_at_new ? moment(material.created_at_new).format("DD-MM-YYYY") : "--"}
+    </span>,
+  ])
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -101,91 +162,16 @@ const MasterMaterialBackup = () => {
           </button>
         </div>
       </div>
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Old Name</th>
-              <th className="px-4 py-3 text-left">New Name</th>
-              <th className="px-4 py-3 text-left">Old Price</th>
-              <th className="px-4 py-3 text-left">New Price</th>
-              <th className="px-4 py-3 text-left">Old Price Per Unit</th>
-              <th className="px-4 py-3 text-left">New Price Per Unit</th>
-              <th className="px-4 py-3 text-left">Old Unit</th>
-              <th className="px-4 py-3 text-left">New Unit</th>
-              <th className="px-4 py-3 text-left">Old Value</th>
-              <th className="px-4 py-3 text-left">New Value</th>
-              <th className="px-4 py-3 text-left">Old Date</th>
-              <th className="px-4 py-3 text-left">New Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allData?.data?.map((material, index) => (
-              <tr
-                key={material.ma_material_id}
-                className="border-t hover:bg-gray-50"
-              >
-                <td className="px-4 py-2">{index + 1}</td>
-                <td className={`px-4 py-2 ${material.ma_material_name_old !== material.ma_material_name_new && "bg-yellow-500"}`}>
-                  {material.ma_material_name_old || "--"}
-                </td>
-                <td className={`px-4 py-2 ${material.ma_material_name_old !== material.ma_material_name_new && "bg-yellow-500"}`}>
-                  {material.ma_material_name_new || "--"}
-                </td>
 
-                <td className={`px-4 py-2 ${material.ma_price_old !== material.ma_price_new && "bg-yellow-500"}`}>
-                  {Number(material.ma_price_old).toFixed(2)}
-                </td>
-                <td className={`px-4 py-2 ${material.ma_price_old !== material.ma_price_new && "bg-yellow-500"}`}>
-                  {Number(material.ma_price_new).toFixed(2)}
-                </td>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={loading}
+      />
 
-                <td className={`px-4 py-2 ${material.ma_price_per_unit_old !== material.ma_price_per_unit_new && "bg-yellow-500"}`}>
-                  {Number(material.ma_price_per_unit_old).toFixed(2)}
-                </td>
-                <td className={`px-4 py-2 ${material.ma_price_per_unit_old !== material.ma_price_per_unit_new && "bg-yellow-500"}`}>
-                  {Number(material.ma_price_per_unit_new).toFixed(2)}
-                </td>
-
-                <td className={`px-4 py-2 ${material.ma_unit_old !== material.ma_unit_new && "bg-yellow-500"}`}>
-
-                  {material.ma_unit_old || "--"}</td>
-                <td className={`px-4 py-2 ${material.ma_unit_old !== material.ma_unit_new && "bg-yellow-500"}`}>
-
-                  {material.ma_unit_new || "--"}</td>
-
-                <td className={`px-4 py-2 ${material.ma_value_old !== material.ma_value_new && "bg-yellow-500"}`}>
-
-                  {Number(material.ma_value_old).toFixed(2)}
-                </td>
-                <td className={`px-4 py-2 ${material.ma_value_old !== material.ma_value_new && "bg-yellow-500"}`}>
-
-                  {Number(material.ma_value_new).toFixed(2)}
-                </td>
-
-                <td className="px-4 py-2">
-                  {material.created_at_old ? moment(material.created_at_old).format("DD-MM-YYYY") : "--"}
-                </td>
-                <td className="px-4 py-2">
-                  {material.created_at_new ? moment(material.created_at_new).format("DD-MM-YYYY") : "--"}
-                </td>
-              </tr>
-            ))}
-            {allData?.data?.length === 0 && (
-              <tr>
-                <td colSpan={13} className="py-4 text-center text-gray-500">
-                  No materials found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-
-        </table>
-      </div>
       <CustomToPagination data={allData} setPage={setPage} page={page} />
 
-    </div>
+    </div >
   );
 };
 

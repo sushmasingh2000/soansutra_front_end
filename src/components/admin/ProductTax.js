@@ -7,6 +7,7 @@ import ReactModal from "react-modal";
 import { useQuery, useQueryClient } from "react-query";
 import { Delete, Edit, Edit2, Plus, Trash2 } from "lucide-react";
 import { Add } from "@mui/icons-material";
+import CustomTable from "./Shared/CustomTable";
 
 const ProductTax = () => {
     const [searchParams] = useSearchParams();
@@ -75,22 +76,22 @@ const ProductTax = () => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-   const handleSubmit = async () => {
-    if (!formData.tax_id || !formData.product_id) {
-        toast.error("Please select a valid tax and ensure product is loaded.");
-        return;
-    }
+    const handleSubmit = async () => {
+        if (!formData.tax_id || !formData.product_id) {
+            toast.error("Please select a valid tax and ensure product is loaded.");
+            return;
+        }
 
-    try {
-        const endpointUrl = isEditing ? endpoint.update_product_tax : endpoint.create_product_tax;
-        const res = await apiConnectorPost(endpointUrl, formData);
-        toast.success(res?.data?.message);
-        setModalOpen(false);
-        client.refetchQueries(["get_product_tax"]);
-    } catch (err) {
-        toast.error("Error saving tax.");
-    }
-};
+        try {
+            const endpointUrl = isEditing ? endpoint.update_product_tax : endpoint.create_product_tax;
+            const res = await apiConnectorPost(endpointUrl, formData);
+            toast.success(res?.data?.message);
+            setModalOpen(false);
+            client.refetchQueries(["get_product_tax"]);
+        } catch (err) {
+            toast.error("Error saving tax.");
+        }
+    };
 
 
     const handleDelete = async (id) => {
@@ -103,82 +104,75 @@ const ProductTax = () => {
         }
     };
 
+    const tablehead = ["S.No.", "Tax Name", "Percentage", "Status", "Actions"];
+    const tablerow = assignedTaxes.map((tax , index) => [
+        index+1,
+        tax.tax_name || "--",
+        `${tax.tax_percentage}%`,
+        tax.tax_is_active ? "Active" : "Inactive",
+        <div className="flex gap-2">
+            <button
+                onClick={() => openModal(tax)}
+                className="px-2 py-1 text-sm text-blue-800 rounded"
+            >
+                <Edit2 />
+            </button>
+            <button
+                onClick={() => handleDelete(tax.id)}
+                className="px-2 py-1 text-sm text-red-800 rounded"
+            >
+                <Delete />
+            </button>
+        </div>,
+    ]);
+
 
     return (
-        <div className="p-6  mx-auto">
+        <div className="p-6 ">
             <h1 className="text-2xl font-bold mb-6">Product Tax</h1>
 
             {variant && (
                 <>
-                   <div className="flex justify-between gap-2">
-                   <div className="flex justify-start gap-2">
-                     <div className="mb-4">
-                        <label className="block mb-1 font-medium">Product</label>
-                        <input
-                            className="w-full border p-2"
-                            readOnly
-                            value={variant.product_details?.product_name}
-                        />
+                    <div className="flex justify-between gap-2">
+                        <div className="flex justify-start gap-2">
+                            <div className="mb-4">
+                                <label className="block mb-1 font-medium">Product</label>
+                                <input
+                                    className="w-full border p-2 bg-white bg-opacity-45"
+                                    readOnly
+                                    value={variant.product_details?.product_name}
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block mb-1 font-medium">Variant</label>
+                                <input
+                                    className="w-full border p-2 bg-white bg-opacity-45"
+                                    readOnly
+                                    value={variant.varient_sku}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <div className="mb-4">
+                                <button
+                                    onClick={() => openModal()}
+                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                    <Add size={16} /> ADD
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="mb-4">
-                        <label className="block mb-1 font-medium">Variant</label>
-                        <input
-                            className="w-full border p-2"
-                            readOnly
-                            value={variant.varient_sku}
-                        />
-                    </div>
-                    </div>
-                    <div>
-                    <div className="mb-4">
-                         <button
-                            onClick={() => openModal()}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                            <Add size={16} /> ADD
-                        </button>
-                    </div>
-                   </div>
-                   </div>
                 </>
             )}
 
             {assignedTaxes.length > 0 && (
                 <div className="mt-4">
-                    <table className="min-w-full bg-white border rounded shadow overflow-hidden">
-                        <thead className="bg-gray-100 text-gray-700 text-left">
-                            <tr>
-                                <th className="py-2 px-4 border-b">Tax Name</th>
-                                <th className="py-2 px-4 border-b">Percentage</th>
-                                <th className="py-2 px-4 border-b">Status</th>
-                                <th className="py-2 px-4 border-b">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {assignedTaxes.map((tax) => (
-                                <tr key={tax.id} className="text-sm">
-                                    <td className="py-2 px-4 border-b">{tax.tax_name}</td>
-                                    <td className="py-2 px-4 border-b">{tax.tax_percentage}%</td>
-                                    <td className="py-2 px-4 border-b">{tax.tax_is_active}</td>
-                                    <td className="py-2 px-4 border-b">
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => openModal(tax)}
-                                                className="px-2 py-1 text-sm  text-blue-800 rounded "
-                                            >
-                                                <Edit2 />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(tax.id)}
-                                                className="px-2 py-1 text-sm  text-red-800 rounded "
-                                            >
-                                                <Delete />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <CustomTable
+                        tablehead={tablehead}
+                        tablerow={tablerow}
+                    //   isLoading={isLoading}
+                    />
+
                 </div>
             )}
 

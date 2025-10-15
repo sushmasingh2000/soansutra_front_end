@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import ReactModal from "react-modal";
 import { useQuery, useQueryClient } from "react-query";
 import { Edit2, Trash2, Plus } from "lucide-react";
+import CustomTable from "./Shared/CustomTable";
 
 const ProductDiscount = () => {
   const [searchParams] = useSearchParams();
@@ -97,8 +98,42 @@ const ProductDiscount = () => {
     }
   };
 
+  const tablehead = [
+    "S.No.",
+    "Discount Name",
+    "Type",
+    "Value",
+    "Start",
+    "End",
+    "Actions"
+  ];
+
+  const tablerow = assignedDiscounts.map((discount, index) => [
+    index + 1,
+    discount.discount_name,
+    discount.discount_type,
+    discount.discount_value,
+    discount.discount_start_date?.split("T")[0] || "--",
+    discount.discount_end_date?.split("T")[0] || "--",
+    <div className="flex gap-2">
+      <button
+        onClick={() => openModal(discount)}
+        className="text-blue-600 hover:underline"
+      >
+        <Edit2 size={16} />
+      </button>
+      <button
+        onClick={() => handleDelete(discount.id)}
+        className="text-red-600 hover:underline"
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
+  ]);
+
+
   return (
-    <div className="p-6  mx-auto">
+    <div className="p-6 ">
       <h1 className="text-2xl font-bold mb-6">Product Discount</h1>
 
       {/* Product Details */}
@@ -106,12 +141,12 @@ const ProductDiscount = () => {
         <div className="flex justify-between gap-2">
           <div className="flex gap-4">
             <div className="mb-4">
-              <label className="block mb-1 font-medium">Product</label>
-              <input className="w-full border p-2" readOnly value={variant.product_details?.product_name} />
+              <label className="block mb-1 font-medium ">Product</label>
+              <input className="w-full border p-2 bg-white bg-opacity-45" readOnly value={variant.product_details?.product_name} />
             </div>
             <div className="mb-4">
               <label className="block mb-1 font-medium">Variant</label>
-              <input className="w-full border p-2" readOnly value={variant.varient_sku} />
+              <input className="w-full border p-2 bg-white bg-opacity-45" readOnly value={variant.varient_sku} />
             </div>
           </div>
           <div className="mb-4">
@@ -128,45 +163,12 @@ const ProductDiscount = () => {
       {/* Discount Table */}
       {assignedDiscounts.length > 0 ? (
         <div className="mt-4">
-          <table className="min-w-full bg-white border rounded shadow overflow-hidden">
-            <thead className="bg-gray-100 text-gray-700 text-left">
-              <tr>
-                <th className="py-2 px-4 border-b">Discount Name</th>
-                <th className="py-2 px-4 border-b">Type</th>
-                <th className="py-2 px-4 border-b">Value</th>
-                <th className="py-2 px-4 border-b">Start</th>
-                <th className="py-2 px-4 border-b">End</th>
-                <th className="py-2 px-4 border-b">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {assignedDiscounts.map((discount) => (
-                <tr key={discount.id} className="text-sm">
-                  <td className="py-2 px-4 border-b">{discount.discount_name}</td>
-                  <td className="py-2 px-4 border-b">{discount.discount_type}</td>
-                  <td className="py-2 px-4 border-b">{discount.discount_value}</td>
-                  <td className="py-2 px-4 border-b">{discount.discount_start_date?.split("T")[0]}</td>
-                  <td className="py-2 px-4 border-b">{discount.discount_end_date?.split("T")[0]}</td>
-                  <td className="py-2 px-4 border-b">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => openModal(discount)}
-                        className="text-blue-600 hover:underline"
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(discount.id)}
-                        className="text-red-600 hover:underline"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <CustomTable
+            tablehead={tablehead}
+            tablerow={tablerow}
+          // isLoading={isLoading}
+          />
+
         </div>
       ) : (
         <p className="mt-4 text-gray-500">No discounts assigned yet.</p>

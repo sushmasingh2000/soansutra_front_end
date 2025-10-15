@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { Edit } from "@mui/icons-material";
 import CustomToPagination from "../../Shared/Pagination";
 import { useQuery, useQueryClient } from "react-query";
+import CustomTable from "./Shared/CustomTable";
 
 const RequestDemo = () => {
     const [loading, setLoading] = useState(false);
@@ -79,6 +80,41 @@ const RequestDemo = () => {
         setModalOpen(true);
     };
 
+    const tablehead = [
+        <span>S.No</span>,
+        <span>Name</span>,
+        <span>Email</span>,
+        <span>Status</span>,
+        <span>Contact No .</span>,
+        <span>Description</span>,
+        <span>Actions</span>,
+    ]
+
+    const tablerow = demoCalls?.data?.map((call, index) => [
+        <span>{index + 1}</span>,
+        <span>
+            {call.customer_details?.name || "--"}
+        </span>,
+        <span>
+            {call.customer_details?.cl_email || "--"}
+        </span>,
+        <span>
+            {statusMap[call.dc_status] || call.dc_status}
+        </span>,
+        <span>
+            {statusMap[call.dc_contact_no] || call.dc_contact_no}
+        </span>,
+        <span>{call.dc_description || "—"}</span>,
+        <span>
+            <button
+                onClick={() => handleEdit(call)}
+                className="text-blue-600 hover:underline"
+            >
+                <Edit />
+            </button>
+        </span>
+    ])
+
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -89,62 +125,19 @@ const RequestDemo = () => {
                         placeholder="Search by ..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full max-w-sm border border-gray-300 rounded px-4 py-2"
+                        className="w-full max-w-sm border border-gray-300 rounded px-4 py-2 bg-white bg-opacity-45"
                     />
                 </div>
 
             </div>
 
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-4 py-3 text-left">S.No</th>
-                            <th className="px-4 py-3 text-left">Name</th>
-                            <th className="px-4 py-3 text-left">Email</th>
-                            <th className="px-4 py-3 text-left">Status</th>
-                            <th className="px-4 py-3 text-left">Contact No .</th>
-                            <th className="px-4 py-3 text-left">Description</th>
-                            <th className="px-4 py-3 text-left">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {demoCalls?.data?.map((call, index) => (
-                            <tr key={call.dc_id} className="border-t hover:bg-gray-50">
-                                <td className="px-4 py-2">{index + 1}</td>
-                                <td className="px-4 py-2">
-                                    {call.customer_details?.name || "--"}
-                                </td>
-                                <td className="px-4 py-2">
-                                    {call.customer_details?.cl_email || "--"}
-                                </td>
-                                <td className="px-4 py-2">
-                                    {statusMap[call.dc_status] || call.dc_status}
-                                </td>
-                                <td className="px-4 py-2">
-                                    {statusMap[call.dc_contact_no] || call.dc_contact_no}
-                                </td>
-                                <td className="px-4 py-2">{call.dc_description || "—"}</td>
-                                <td className="px-4 py-2">
-                                    <button
-                                        onClick={() => handleEdit(call)}
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        <Edit />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        {demoCalls.length === 0 && (
-                            <tr>
-                                <td colSpan={6} className="py-4 text-center text-gray-500">
-                                    No demo calls found.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+            <CustomTable
+                tablehead={tablehead}
+                tablerow={tablerow}
+            // isLoading={loading}
+            />
+
+            <CustomToPagination data={demoCalls} page={page} setPage={setPage} />
 
             {/* Modal for editing call */}
             {modalOpen && (
@@ -202,7 +195,6 @@ const RequestDemo = () => {
                     </div>
                 </div>
             )}
-            <CustomToPagination data={demoCalls} setPage={setPage} page={page} />
         </div>
     );
 };

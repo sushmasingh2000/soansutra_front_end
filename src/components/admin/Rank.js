@@ -3,6 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { Edit } from "lucide-react";
+import CustomTable from "./Shared/CustomTable";
 
 const Rank = () => {
   const [ranks, setRanks] = useState([]);
@@ -69,47 +70,45 @@ const Rank = () => {
     fetchRanks();
   }, []);
 
+  const tablehead = [
+    <span>S.No</span>,
+    <span>Rank Name</span>,
+    <span>Customer Business</span>,
+    <span>Self Business</span>,
+    <span>Night Commission</span>,
+    <span>Instant Commission</span>,
+    <span>Reward Income</span>,
+    <span>Actions</span>,
+  ]
+
+  const tablerow = ranks.map((rank, index) => [
+    <span>{index + 1}</span>,
+    <span>{rank.rank_name}</span>,
+    <span>{rank.customer_buss}</span>,
+    <span>{rank.self_buss}</span>,
+    <span>{rank.clossing_night_comm}</span>,
+    <span>{rank.clossing_instent_comm}</span>,
+    <span>{rank.reward_income ?? "--"}</span>,
+    <span>
+      <button
+        onClick={() => openEditModal(rank)}
+        className="text-blue-600 hover:text-blue-800"
+      >
+        <Edit size={16} />
+      </button>
+    </span>,
+  ])
+
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Rank Management</h1>
 
-      <div className="overflow-auto bg-white rounded-lg shadow border">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left">S.No</th>
-              <th className="px-4 py-2 text-left">Rank Name</th>
-              <th className="px-4 py-2 text-left">Customer Business</th>
-              <th className="px-4 py-2 text-left">Self Business</th>
-              <th className="px-4 py-2 text-left">Night Commission</th>
-              <th className="px-4 py-2 text-left">Instant Commission</th>
-              <th className="px-4 py-2 text-left">Reward Income</th>
-              <th className="px-4 py-2 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {ranks.map((rank, index) => (
-              <tr key={rank.rnk_id}>
-                <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2">{rank.rank_name}</td>
-                <td className="px-4 py-2">{rank.customer_buss}</td>
-                <td className="px-4 py-2">{rank.self_buss}</td>
-                <td className="px-4 py-2">{rank.clossing_night_comm}</td>
-                <td className="px-4 py-2">{rank.clossing_instent_comm}</td>
-                <td className="px-4 py-2">{rank.reward_income ?? "--"}</td>
-                <td className="px-4 py-2">
-                  <button
-                    onClick={() => openEditModal(rank)}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <Edit size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={loading}
+      />
 
       {editModal && (
         <EditRankModal
