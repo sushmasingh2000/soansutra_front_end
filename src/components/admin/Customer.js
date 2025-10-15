@@ -40,8 +40,8 @@ const Customer = () => {
 
   const openPasswordModal = (customerId) => {
     setPasswordData({
-      userId: customerId, // 👈 Fill userId
-      new_password: "", // 👈 Keep password empty
+      userId: customerId,
+      new_password: "", 
     });
     setPasswordModalOpen(true);
   };

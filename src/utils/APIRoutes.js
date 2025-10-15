@@ -324,6 +324,9 @@ export const endpoint = {
   remove_cart_admin :`${domain}/api/v1/remove-from-cart-items`,
   create_order_by_admin :`${domain}/api/v1/create-order-by-admin`,
   add_address_by_admin :`${domain}/api/v1/add-shipping-address-by-admin`,
+  upload_Stock_by_admin :`${domain}/api/v1/upsert-inventory`,
+  sku_dropdown_by_admin :`${domain}/api/v1/get-sku-dropdown`,
+  get_pos_inventry :`${domain}/api/v1/get-pos-inventory`,
   
 
   // location related api's

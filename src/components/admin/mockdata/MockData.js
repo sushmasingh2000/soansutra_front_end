@@ -63,7 +63,8 @@ const AdminAccess = [
   "video",
   "mlm",
   "leads",
-  "del"
+  "del",
+  "POS"
 ];
 const deliveryboy = [
   "pro",
@@ -216,6 +217,25 @@ export const all_Data = [
         label: "Coupon Price Range",
         icon: <ViewTimeline />,
         navLink: "/price_range",
+      },
+    ],
+  },
+  {
+    id: "POS",
+    label: "POS",
+    icon: <AccountBalance />,
+    subcomponent: [
+      {
+        id: "Upload Stock",
+        label: "Upload Stock",
+        icon: <AccountBalance />,
+        navLink: "/stock",
+      },
+      {
+        id: "pos inventory",
+        label: "POS Inventory ",
+        icon: <AccountBalance />,
+        navLink: "/pos",
       },
     ],
   },
