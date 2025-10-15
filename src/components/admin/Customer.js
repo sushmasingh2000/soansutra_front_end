@@ -165,6 +165,7 @@ const Customer = () => {
 
   const tablehead = [
     "S.No",
+    "Unique Id",
     "Name",
     "Email",
     "Phone",
@@ -183,58 +184,59 @@ const Customer = () => {
     "Action",
   ];
 
-  const tablerow =  customers?.data?.map((c , index) =>[
-    index+1,
-      c.name,
-      c.cl_email,
-      c.cl_phone,
-      c.date_of_birth || "-",
-      <span
-        className="text-blue-600 underline cursor-pointer"
-        onClick={() => openPasswordModal(c.cust_unique_id)}
-      >
-        {c.cl_password || "-"}
-      </span>,
-      c.aniversary || "-",
-      c.spouse_birthday || "-",
-      c.occupation || "-",
-      c.govt_identity || "-",
-      c.govt_no || "-",
-      c.govt_id_image ? (
-        <img
-          src={c.govt_id_image}
-          alt="Govt ID"
-          className="h-10 w-16 object-cover rounded cursor-pointer hover:scale-105 transition"
-          onClick={() => window.open(c.govt_id_image, "_blank")}
-        />
-      ) : (
-        "-"
-      ),
-      c.city,
-      c.country,
-      moment(c.created_at).format("YYYY-MM-DD"),
-      c.cl_lgn_status,
-      <button
-        onClick={() => openModal(c)}
-        className="text-blue-600 hover:text-blue-800"
-        title="Edit Customer"
-      >
-        <Edit size={18} />
-      </button>,
-    ])
+  const tablerow = customers?.data?.map((c, index) => [
+    index + 1,
+    c.cust_unique_id,
+    c.name,
+    c.cl_email,
+    c.cl_phone,
+    c.date_of_birth || "-",
+    <span
+      className="text-blue-600 underline cursor-pointer"
+      onClick={() => openPasswordModal(c.cust_unique_id)}
+    >
+      {c.cl_password ? `${c.cl_password.slice(0, 5)}xxx` : "-"}
+    </span>,
+    c.aniversary || "-",
+    c.spouse_birthday || "-",
+    c.occupation || "-",
+    c.govt_identity || "-",
+    c.govt_no || "-",
+    c.govt_id_image ? (
+      <img
+        src={c.govt_id_image}
+        alt="Govt ID"
+        className="h-10 w-16 object-cover rounded cursor-pointer hover:scale-105 transition"
+        onClick={() => window.open(c.govt_id_image, "_blank")}
+      />
+    ) : (
+      "-"
+    ),
+    c.city,
+    c.country,
+    moment(c.created_at).format("YYYY-MM-DD"),
+    c.cl_lgn_status,
+    <button
+      onClick={() => openModal(c)}
+      className="text-blue-600 hover:text-blue-800"
+      title="Edit Customer"
+    >
+      <Edit size={18} />
+    </button>,
+  ])
 
   return (
     <div className="p-6 ">
-        <h1 className="text-2xl font-bold">Customer Management</h1>
+      <h1 className="text-2xl font-bold">Customer Management</h1>
 
       {/* Search bar */}
       <div className="my-4 flex items-center gap-4">
         <input
           type="text"
-          placeholder="Search by name, email, phone, or ID"
+          placeholder="Search by email or ID"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded w-72 bg-white bg-opacity-30" 
+          className="border p-2 rounded w-72 bg-white bg-opacity-30"
         />
         <button
           onClick={() => refetch()}
