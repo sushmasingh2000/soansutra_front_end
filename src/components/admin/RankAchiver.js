@@ -53,8 +53,6 @@ const Rankachiver = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading rank achievers</div>;
 
   const tablehead = [
     <span>S.No</span>,
@@ -128,7 +126,7 @@ const Rankachiver = () => {
       <CustomTable
         tablehead={tablehead}
         tablerow={tablerow}
-      // isLoading={loading}
+      isLoading={isLoading}
       />
       {/* Pagination */}
       <CustomToPagination

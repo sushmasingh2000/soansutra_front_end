@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { apiConnectorGet, apiConnectorPost, usequeryBoolean } from "../../../utils/ApiConnector";
+import React, { useState } from "react";
+import { apiConnectorGet } from "../../../utils/ApiConnector";
 import { endpoint } from "../../../utils/APIRoutes";
-import toast from "react-hot-toast";
-import { Delete, Edit } from "lucide-react";
 import CustomToPagination from "../../../Shared/Pagination";
 import { useQuery, useQueryClient } from "react-query";
 import { useFormik } from "formik";
-import { Switch } from "@mui/material";
 import CustomTable from "../Shared/CustomTable";
+import moment from "moment/moment";
 
 const InventoyPos = () => {
     const [page, setPage] = useState(1);
@@ -25,7 +23,7 @@ const InventoyPos = () => {
         enableReinitialize: true,
 
     })
-    const { data } = useQuery(
+    const { data , isLoading} = useQuery(
         ['get_pos', fk.values.search, fk.values.coupon_start_date, fk.values.coupon_end_date, page],
         () =>
             apiConnectorGet(endpoint?.get_pos_inventry, {
@@ -47,29 +45,26 @@ const InventoyPos = () => {
 
     const tablehead = [
         <span>S.No</span>,
-    <span>SKU</span>,
-    <span>Quantity</span>,
-    <span>Created At</span>,
-    <span>Updated At</span>,
+        <span>SKU</span>,
+        <span>Quantity</span>,
+        <span>Created At</span>,
+        <span>Updated At</span>,
     ]
 
 
     const tablerow = coupons?.data?.map((item, index) => [
         <span>{(page - 1) * 10 + index + 1}</span>,
-    <span>{item?.sku}</span>,
-    <span>{item?.swi_qnty}</span>,
-    <span>{new Date(item?.swi_created_at).toLocaleString()}</span>,
-    <span>{new Date(item?.swi_updated_at).toLocaleString()}</span>,
+        <span>{item?.sku}</span>,
+        <span>{item?.swi_qnty}</span>,
+        <span>{moment(item?.swi_created_at).format("DD-MM-YYYY HH:mm:ss")}</span>,
+        <span>{moment(item?.swi_updated_at).format("DD-MM-YYYY HH:mm:ss")}</span>,
     ])
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-800">Inventory Stock</h1>
-               
+                <h1 className="text-3xl font-bold text-gray-800">POS Inventory </h1>
             </div>
             <div className="bg-white bg-opacity-50 rounded-lg shadow-lg p-3 text-white mb-6">
-
-
                 <div className="flex flex-col sm:flex-wrap md:flex-row items-center gap-3 sm:gap-4 w-full text-sm sm:text-base">
                     <input
                         type="date"
@@ -120,10 +115,10 @@ const InventoyPos = () => {
             <CustomTable
                 tablehead={tablehead}
                 tablerow={tablerow}
-            // isLoading={loading}
+            isLoading={isLoading}
             />
             <CustomToPagination data={coupons} setPage={setPage} page={page} />
-            
+
         </div>
     );
 };

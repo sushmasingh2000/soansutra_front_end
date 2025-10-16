@@ -19,7 +19,6 @@ const Distributor = () => {
   const [pagination, setPagination] = useState(1);
   const [search, setSearch] = useState("");
 
-  // Fetch distributor data
   const { data, isLoading, error } = useQuery(
     ["get_distributor_details", pagination, search],
     () =>
@@ -133,14 +132,6 @@ const Distributor = () => {
     return () => clearTimeout(delay);
   }, [uplineSearch, uplinePage, uplineStartDate, uplineEndDate, isDistributorUpline, openUpline]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error loading distributors</div>;
-  }
-
   const tablehead = [
     <span>S.No.</span>,
     <span>Unique ID</span>,
@@ -214,6 +205,86 @@ const Distributor = () => {
     </span>
   ])
 
+  const tableheaddown = [
+    <span>S.No</span>,
+    <span>Unique ID</span>,
+    <span>Name</span>,
+    <span>Email</span>,
+    <span>Phone</span>,
+    <span>Self Invest</span>,
+    <span>Purchase Wallet</span>,
+    <span>Direct Business</span>,
+    <span>Sponsor Email</span>,
+    <span>Sponsor Phone</span>,
+    <span>Sponsor Name</span>,
+    <span>Direct Members</span>,
+    <span>Team Members</span>,
+    <span>Team Business</span>,
+    <span>Reg. Date</span>,
+  ]
+
+  const tablerowdown = downlineData?.data?.result?.data?.map((d, index) => [
+    <span>{index + 1}</span>,
+    <span>{d.mlm_unique_id}</span>,
+    <span>{d.name}</span>,
+    <span>{d.cl_email}</span>,
+    <span>{d.cl_phone}</span>,
+    <span>{d.mlm_self_invest}</span>,
+    <span>{d.purchase_wallet}</span>,
+    <span>{d.mlm_direct_buss}</span>,
+    <span>{d.spon_email}</span>,
+    <span>{d.spon_phone}</span>,
+    <span>{d.spon_name}</span>,
+    <span>{d.mlm_direct_mem}</span>,
+    <span>{d.mlm_team_mem}</span>,
+    <span>{d.mlm_team_buss}</span>,
+    <span>
+      {d.mlm_dist_reg_date
+        ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
+        : "--"}
+    </span>
+  ])
+
+  const tableheadUpline = [
+    <span>S.No</span>,
+    <span>Unique ID</span>,
+    <span>Name</span>,
+    <span>Email</span>,
+    <span>Phone</span>,
+    <span>Self Invest</span>,
+    <span>Purchase Wallet</span>,
+    <span>Direct Business</span>,
+    <span>Sponsor Email</span>,
+    <span>Sponsor Phone</span>,
+    <span>Sponsor Name</span>,
+    <span>Direct Members</span>,
+    <span>Team Members</span>,
+    <span>Team Business</span>,
+    <span>Reg. Date</span>,
+  ]
+
+  const tablerowUpline = uplineData?.data?.result?.data?.map((d, index) => [
+    <span>{index + 1}</span>,
+    <span>{d.mlm_unique_id}</span>,
+    <span>{d.name}</span>,
+    <span>{d.cl_email}</span>,
+    <span>{d.cl_phone}</span>,
+    <span>{d.mlm_self_invest}</span>,
+    <span>{d.purchase_wallet}</span>,
+    <span>{d.mlm_direct_buss}</span>,
+    <span>{d.spon_email}</span>,
+    <span>{d.spon_phone}</span>,
+    <span>{d.spon_name}</span>,
+    <span>{d.mlm_direct_mem}</span>,
+    <span>{d.mlm_team_mem}</span>,
+    <span>{d.mlm_team_buss}</span>,
+    <span>
+      {d.mlm_dist_reg_date
+        ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
+        : "--"}
+    </span>,
+  ])
+
   return (
     <div className="p-6 ">
       <div className="flex justify-between items-center mb-4">
@@ -233,7 +304,7 @@ const Distributor = () => {
       <CustomTable
         tablehead={tablehead}
         tablerow={tablerow}
-      // isLoading={loading}
+        isLoading={isLoading}
       />
 
       {/* Pagination Component */}
@@ -293,58 +364,11 @@ const Distributor = () => {
             </Button>
           </div>
 
-          {isLoadingDownline ? (
-            <p>Loading...</p>
-          ) : (
-            <div className="overflow-x-auto max-h-[60vh] overflow-y-auto">
-              <table className="min-w-full border text-sm">
-                <thead className="bg-yellow-100 text-left">
-                  <tr>
-                    <th className="px-4 py-2 border-b">S.No</th>
-                    <th className="px-4 py-2 border-b">Unique ID</th>
-                    <th className="px-4 py-2 border-b">Name</th>
-                    <th className="px-4 py-2 border-b">Email</th>
-                    <th className="px-4 py-2 border-b">Phone</th>
-                    <th className="px-4 py-2 border-b">Self Invest</th>
-                    <th className="px-4 py-2 border-b">Purchase Wallet</th>
-                    <th className="px-4 py-2 border-b">Direct Business</th>
-                    <th className="px-4 py-2 border-b">Sponsor Email</th>
-                    <th className="px-4 py-2 border-b">Sponsor Phone</th>
-                    <th className="px-4 py-2 border-b">Sponsor Name</th>
-                    <th className="px-4 py-2 border-b">Direct Members</th>
-                    <th className="px-4 py-2 border-b">Team Members</th>
-                    <th className="px-4 py-2 border-b">Team Business</th>
-                    <th className="px-4 py-2 border-b">Reg. Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {downlineData?.data?.result?.data?.map((d, index) => (
-                    <tr key={d.mlm_id}>
-                      <td className="px-4 py-2 border-b">{index + 1}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_unique_id}</td>
-                      <td className="px-4 py-2 border-b">{d.name}</td>
-                      <td className="px-4 py-2 border-b">{d.cl_email}</td>
-                      <td className="px-4 py-2 border-b">{d.cl_phone}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_self_invest}</td>
-                      <td className="px-4 py-2 border-b">{d.purchase_wallet}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_direct_buss}</td>
-                      <td className="px-4 py-2 border-b">{d.spon_email}</td>
-                      <td className="px-4 py-2 border-b">{d.spon_phone}</td>
-                      <td className="px-4 py-2 border-b">{d.spon_name}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_direct_mem}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_team_mem}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_team_buss}</td>
-                      <td className="px-4 py-2 border-b">
-                        {d.mlm_dist_reg_date
-                          ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
-                          : "--"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <CustomTable
+            tablehead={tableheaddown}
+            tablerow={tablerowdown}
+            isLoading={isLoadingDownline}
+          />
 
           <CustomToPagination
             data={downlineData?.data?.result}
@@ -404,60 +428,11 @@ const Distributor = () => {
               Customer
             </Button>
           </div>
-
-          {isLoadingUpline ? (
-            <p>Loading...</p>
-          ) : (
-            <div className="overflow-x-auto max-h-[60vh] overflow-y-auto">
-              <table className="min-w-full border text-sm">
-                <thead className="bg-green-100 text-left">
-                  <tr>
-                    <th className="px-4 py-2 border-b">S.No</th>
-                    <th className="px-4 py-2 border-b">Unique ID</th>
-                    <th className="px-4 py-2 border-b">Name</th>
-                    <th className="px-4 py-2 border-b">Email</th>
-                    <th className="px-4 py-2 border-b">Phone</th>
-                    <th className="px-4 py-2 border-b">Self Invest</th>
-                    <th className="px-4 py-2 border-b">Purchase Wallet</th>
-                    <th className="px-4 py-2 border-b">Direct Business</th>
-                    <th className="px-4 py-2 border-b">Sponsor Email</th>
-                    <th className="px-4 py-2 border-b">Sponsor Phone</th>
-                    <th className="px-4 py-2 border-b">Sponsor Name</th>
-                    <th className="px-4 py-2 border-b">Direct Members</th>
-                    <th className="px-4 py-2 border-b">Team Members</th>
-                    <th className="px-4 py-2 border-b">Team Business</th>
-                    <th className="px-4 py-2 border-b">Reg. Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {uplineData?.data?.result?.data?.map((d, index) => (
-                    <tr key={d.mlm_id}>
-                      <td className="px-4 py-2 border-b">{index + 1}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_unique_id}</td>
-                      <td className="px-4 py-2 border-b">{d.name}</td>
-                      <td className="px-4 py-2 border-b">{d.cl_email}</td>
-                      <td className="px-4 py-2 border-b">{d.cl_phone}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_self_invest}</td>
-                      <td className="px-4 py-2 border-b">{d.purchase_wallet}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_direct_buss}</td>
-                      <td className="px-4 py-2 border-b">{d.spon_email}</td>
-                      <td className="px-4 py-2 border-b">{d.spon_phone}</td>
-                      <td className="px-4 py-2 border-b">{d.spon_name}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_direct_mem}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_team_mem}</td>
-                      <td className="px-4 py-2 border-b">{d.mlm_team_buss}</td>
-                      <td className="px-4 py-2 border-b">
-                        {d.mlm_dist_reg_date
-                          ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
-                          : "--"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
+          <CustomTable
+            tablehead={tableheadUpline}
+            tablerow={tablerowUpline}
+            isLoading={isLoadingUpline}
+          />
           <CustomToPagination
             data={uplineData?.data?.result}
             page={uplinePage}

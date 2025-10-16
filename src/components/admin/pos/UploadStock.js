@@ -99,7 +99,7 @@ const UploadStock = () => {
   
     return (
      <div className="w-full flex justify-center items-center">
-      <div className="max-w-2xl bg-white opacity-75 p-6 rounded shadow mt-5">
+      <div className="lg:w-[45%] w-full bg-white opacity-75 p-6 rounded shadow mt-5">
         <h2 className="text-xl text-center font-semibold mb-8">Upload Stock</h2>
   
         <div className="grid grid-cols-1 gap-4">
