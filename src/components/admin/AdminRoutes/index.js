@@ -44,8 +44,8 @@ import DeliveryBoyProfile from "../deliveryboy/deliveryPanel/Profile.js";
 import AssignOrder from "../deliveryboy/deliveryPanel/AssignOrder.js";
 import DeliveryDashboard from "../deliveryboy/Deliverydashboard.js";
 import OfflineOrder from "../OfflineOrder.js";
-import UploadStock from "../pos/UploadStock.js";
 import InventoyPos from "../pos/InventoryPos.js";
+import OfflineSell from "../offlineSell/Offlinesell.js";
 
 export const adminroutes = [
 
@@ -126,15 +126,16 @@ export const adminroutes = [
     component: <Order />,
     navItem: "Order",
   },
-  {
-    path: "/stock",
-    component: <UploadStock />,
-    navItem: "Upload Stock",
-  },
+
   {
     path: "/pos",
     component: <InventoyPos />,
     navItem: "POS Inventory",
+  },
+   {
+    path: "/sell",
+    component: <OfflineSell />,
+    navItem: "Offline Sell",
   },
   {
     path: "/order-details/:orderId",

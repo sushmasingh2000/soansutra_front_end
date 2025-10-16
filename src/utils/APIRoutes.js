@@ -327,6 +327,7 @@ export const endpoint = {
   upload_Stock_by_admin :`${domain}/api/v1/upsert-inventory`,
   sku_dropdown_by_admin :`${domain}/api/v1/get-sku-dropdown`,
   get_pos_inventry :`${domain}/api/v1/get-pos-inventory`,
+  sku_for_sell_by_admin :`${domain}/api/v1/get-sku-for-sell`,
   
 
   // location related api's
