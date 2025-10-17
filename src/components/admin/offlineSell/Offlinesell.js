@@ -13,10 +13,12 @@ const OfflineSell = () => {
   const client = useQueryClient();
   const [searchValue, setSearchValue] = useState(""); // input field value
   const [customerId, setCustomerId] = useState(""); // actual ID used for fetching
-
+  const [confirmingOrder, setConfirmingOrder] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedSKU, setSelectedSKU] = useState(null);
   const [quantity, setQuantity] = useState("");
+  const [availableStock, setAvailableStock] = useState(null);
+
   const [cartPriceSummary, setCartPriceSummary] = useState({
     base_amount: 0,
     total_discount: 0,
@@ -86,9 +88,11 @@ const OfflineSell = () => {
   const skuList = sky?.data?.result || [];
 
   const skuOptions = skuList.map((item) => ({
-    label: item.sku,
+    label: `${item.sku} (${item.swi_qnty} qty)`,
     product_id: item.swi_pro_id,
     variant_id: item.swi_var_id,
+    raw_sku: item.sku, // keep raw SKU for lookup
+    quantity: item.swi_qnty,
   }));
 
   // Handle sell action
@@ -158,6 +162,57 @@ const OfflineSell = () => {
     }
   };
 
+  const handleConfirmOrder = async () => {
+    if (!customerId || coupons.length === 0) {
+      Swal.fire("Error", "Cart is empty or customer ID missing.", "error");
+      return;
+    }
+
+    setConfirmingOrder(true);
+
+    const items = coupons.map((item) => ({
+      varient_id: item.varient_id || item.variant_id,
+      quantity: item.quantity,
+    }));
+
+    const payment = {
+      method: 1,
+      status: "Unpaid",
+      amount: cartPriceSummary.grand_total || 0,
+    };
+
+    const body = {
+      status: "Pending",
+      payment_method: 1,
+      payment_status: "Unpaid",
+      notes: "N/A",
+      items,
+      payment,
+      isCoupon: false,
+    };
+
+    try {
+      const res = await apiConnectorPost(
+        `${endpoint.create_order_by_admin}?customer_unique=${customerId}`,
+        body
+      );
+
+      Swal.fire(
+        res?.data?.success ? "Order Created" : "Failed",
+        res?.data?.message || "Something went wrong",
+        res?.data?.success ? "success" : "error"
+      );
+
+      if (res?.data?.success) {
+        client.invalidateQueries(["get_admin_cart", customerId]); // clear cart
+      }
+    } catch (err) {
+      Swal.fire("Error", "Failed to confirm order.", "error");
+    } finally {
+      setConfirmingOrder(false);
+    }
+  };
+
   const tablehead = [
     "S.No",
     "SKU",
@@ -189,10 +244,10 @@ const OfflineSell = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Offline Sell </h1>
       <div className="bg-white bg-opacity-50 rounded-lg shadow-lg p-3 text-white mb-6">
         <div className="flex flex-col sm:flex-row items-center gap-4">
+
+          {/* Customer Input */}
           <div className="w-full sm:w-1/4">
-            <label className="block mb-1 font-medium text-black">
-              Customer
-            </label>
+            <label className="block mb-1 font-medium text-black">Customer</label>
             <input
               type="text"
               placeholder="Enter Customer Unique ID"
@@ -202,46 +257,91 @@ const OfflineSell = () => {
                 setSearchValue(val);
                 setCustomerId(val);
               }}
-              className="border px-4 py-4 rounded lg:w-72 bg-white bg-opacity-45 text-black"
+              className="border px-4 py-4 rounded w-full bg-white bg-opacity-45 text-black"
             />
           </div>
+
+          {/* SKU Dropdown */}
           <div className="w-full sm:w-1/3">
             <label className="block mb-1 font-medium text-black">SKU</label>
             <Autocomplete
               disablePortal
               options={skuOptions}
               value={selectedSKU}
-              onChange={(event, newValue) => setSelectedSKU(newValue)}
+              onChange={(event, newValue) => {
+                setSelectedSKU(newValue);
+                setAvailableStock(newValue?.quantity || 0);
+              }}
+              getOptionLabel={(option) => `${option.raw_sku} (${option.quantity} qty)`}
               renderInput={(params) => (
                 <TextField {...params} label="Select SKU for Sale" fullWidth />
               )}
             />
           </div>
+
+          {/* Quantity Selector */}
           <div className="w-full sm:w-1/4">
-            <label className="block mb-1 font-medium text-black">
-              Quantity
-            </label>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              className="bg-white bg-opacity-45 border border-gray-400 rounded-md py-4 px-3 text-black w-full"
-              placeholder="Enter Quantity"
-            />
+            <label className="block mb-1 font-medium text-black">Quantity</label>
+            <div className="flex items-center justify-between border border-gray-300 rounded-md bg-white bg-opacity-45 px-2 py-2">
+              <button
+                type="button"
+                onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                disabled={quantity <= 1}
+                className="bg-gray-300 text-black px-3 py-1 rounded disabled:opacity-50"
+              >
+                -
+              </button>
+
+              <input
+                type="number"
+                value={quantity}
+                min={1}
+                max={availableStock || undefined}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "") {
+                    setQuantity("");
+                    return;
+                  }
+                  const numVal = Number(val);
+                  if (!isNaN(numVal) && numVal >= 1 && numVal <= (availableStock || Infinity)) {
+                    setQuantity(numVal);
+                  }
+                }}
+                className="w-16 text-center bg-transparent outline-none text-black"
+                placeholder="Qty"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setQuantity((prev) => {
+                    if (availableStock) return Math.min(prev + 1, availableStock);
+                    return prev + 1;
+                  })
+                }
+                disabled={availableStock !== null && quantity >= availableStock}
+                className="bg-gray-300 text-black px-3 py-1 rounded disabled:opacity-50"
+              >
+                +
+              </button>
+            </div>
           </div>
-          <div className="w-full sm:w-1/4 pt-5">
+
+          {/* Submit Button */}
+          <div className="w-full sm:w-1/4 pt-6 sm:pt-5">
             <button
               onClick={handleSubmitClick}
               disabled={loading}
-              className={`w-full bg-blue-600 text-white py-4 rounded ${
-                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-              }`}
+              className={`w-full bg-blue-600 text-white py-3 rounded text-sm font-semibold transition ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                }`}
             >
               {loading ? "Processing..." : "Submit"}
             </button>
           </div>
         </div>
       </div>
+
 
       {/* Table Section */}
       <CustomTable
@@ -250,10 +350,9 @@ const OfflineSell = () => {
         isLoading={isLoading}
       />
       {/* Total Price Summary */}
-      {/* Total Price Summary */}
       <div className="flex justify-end mt-6">
         <div className="bg-white bg-opacity-45 rounded shadow px-6 py-4 text-right w-full sm:w-1/2 md:w-1/3">
-          <h2 className="text-lg font-bold text-gray-800 mb-2">Cart Summary</h2>
+          <h2 className="text-lg text-center font-bold text-gray-800 mb-2">Cart Summary</h2>
           <div className="text-gray-700">
             <div className="flex justify-between py-1">
               <span>Subtotal (Base Amount)</span>
@@ -279,6 +378,15 @@ const OfflineSell = () => {
               <span>₹{cartPriceSummary.grand_total.toLocaleString()}</span>
             </div>
           </div>
+          {coupons.length > 0 && (
+            <button
+              onClick={handleConfirmOrder}
+              disabled={confirmingOrder}
+              className="bg-green-600 text-white px-6 py-2 mt-4  flex justify-center w-full rounded hover:bg-green-700"
+            >
+              {confirmingOrder ? "Confirming..." : "Confirm Order"}
+            </button>
+          )}
         </div>
       </div>
 

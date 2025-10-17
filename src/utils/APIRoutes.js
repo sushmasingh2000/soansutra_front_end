@@ -172,6 +172,12 @@ export const endpoint = {
   update_discount: `${domain}/api/v1/update-discount`,
   delete_discount: `${domain}/api/v1/delete-discount`,
 
+
+  get_dazzle_plan: `${domain}/api/v1/get-dazzle-plan-detail`,
+
+
+  
+
   //product discount
   create_product_discount: `${domain}/api/v1/create-product-discount`,
   get_product_discount: `${domain}/api/v1/get-product-discount`,

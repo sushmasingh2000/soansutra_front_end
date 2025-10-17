@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import TreasureChestFaqToggleComponent from '../faqtreasurechest';
 import Footer from '../Footer1';
 import Header from '../Header1';
+import { useQuery } from 'react-query';
+import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
+import { endpoint } from '../../utils/APIRoutes';
 
 export default function TreasureChestBanner() {
   const [sliderPosition, setSliderPosition] = useState(0); // 0 = closed, 100 = fully open
@@ -12,7 +15,7 @@ export default function TreasureChestBanner() {
   const [startY, setStartY] = useState(0);
   const [showStickyFooter, setShowStickyFooter] = useState(true);
   const [activeTab, setActiveTab] = useState('comparison'); // 'comparison' or 'description'
-  const [selectedAmount, setSelectedAmount] = useState(null);
+  const [selectedAmount, setSelectedAmount] = useState(1000);
   const [amountError, setAmountError] = useState('');
   const [growthPercent, setGrowthPercent] = useState(null);
 
@@ -68,33 +71,16 @@ export default function TreasureChestBanner() {
     }
   };
 
-  const handleMouseStart = (e) => {
-    setIsDragging(true);
-    setStartY(e.clientY);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-
-    const currentY = e.clientY;
-    const deltaY = startY - currentY;
-    const newPosition = Math.max(0, Math.min(100, sliderPosition + (deltaY / (window.innerHeight * 2)) * 100));
-
-    setSliderPosition(newPosition);
-    setShowStickyFooter(newPosition < 90);
-  };
-
-  const handleMouseEnd = () => {
-    setIsDragging(false);
-
-    if (sliderPosition > 30) {
-      setSliderPosition(100);
-      setShowStickyFooter(false);
-    } else {
-      setSliderPosition(0);
-      setShowStickyFooter(true);
+  const { data } = useQuery(
+    ["get_rate_dazzle", selectedAmount],
+    () => apiConnectorGet(`${endpoint?.get_dazzle_plan}?prenciple=${selectedAmount}`),
+    {
+      keepPreviousData: true,
+      usequeryBoolean
     }
-  };
+  );
+
+  const dazzleamount = data?.data?.result || [];
 
   return (
     <>
@@ -428,39 +414,7 @@ export default function TreasureChestBanner() {
                             type="number"
                             value={selectedAmount}
                             onChange={(e) => {
-                              const valueStr = e.target.value;
-
-                              // Allow empty string (so user can delete input)
-                              if (valueStr === '') {
-                                setSelectedAmount('');
-                                setAmountError('');
-                                return;
-                              }
-
-                              // Only allow up to 10 digits
-                              if (valueStr.length > 10) {
-                                return; // ignore further input
-                              }
-
-                              const value = parseInt(valueStr, 10) || 0;
-                              setSelectedAmount(value);
-
-                              if (value < 1000) {
-                                setAmountError('Minimum amount is ₹1000');
-                              } else {
-                                setAmountError('');
-                              }
-                            }}
-                            onBlur={() => {
-                              const roundedValue = Math.round((+selectedAmount || 0) / 1000) * 1000;
-                              const finalValue = roundedValue < 1000 ? 1000 : roundedValue;
-                              setSelectedAmount(finalValue);
-
-                              if (finalValue < 1000) {
-                                setAmountError('Minimum amount is ₹1000');
-                              } else {
-                                setAmountError('');
-                              }
+                              setSelectedAmount(e.target.value);
                             }}
                             className={`w-full py-3 pl-10 pr-4 text-lg md:text-xl font-medium text-center border rounded-lg focus:outline-none ${amountError ? 'border-red-500' : 'border-gray-200 focus:border-purple-400'
                               }`}
@@ -470,8 +424,8 @@ export default function TreasureChestBanner() {
                           />
 
                         </div>
-                        {amountError && (
-                          <p className="text-center text-xs md:text-sm text-red-500 mt-2">{amountError}</p>
+                        {data?.data?.message !== "Data get Successfully" && (
+                          <p className="text-center text-xs md:text-sm text-red-500 mt-2">{data?.data?.message}</p>
                         )}
                         <p className="text-center text-xs md:text-sm text-gray-600 mt-2">Monthly Instalment (Multiples of ₹1,000 only)</p>
                         <div className="flex justify-center gap-2 mt-3">
@@ -534,7 +488,7 @@ export default function TreasureChestBanner() {
                       {activeTab === 'comparison' ? (
                         <div className="flex flex-col space-y-6 max-w-4xl mx-auto">
                           {/* Dazzle-12 ICON Plan */}
-                          <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{ background: `#FFF5F5`, border: `1px solid #FFE5E5` }}>
+                          {/* <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{ background: `#FFF5F5`, border: `1px solid #FFE5E5` }}>
                             <div className="flex items-center mb-6">
                               <div className="w-5 h-5 text-gray-600 mr-3 flex-shrink-0">
                                 <svg viewBox="0 0 24 24" fill="currentColor">
@@ -591,7 +545,7 @@ export default function TreasureChestBanner() {
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
 
                           {/* Dazzle-12 EDGE Plan */}
                           <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{
@@ -618,9 +572,9 @@ export default function TreasureChestBanner() {
                                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                     </svg>
                                   </div>
-                                  <span className="text-gray-700 text-sm md:text-base ">Your Total Instalments (9 Months)</span>
+                                  <span className="text-gray-700 text-sm md:text-base ">Your Total Instalments (11 Months)</span>
                                 </div>
-                                <span className="font-semibold text-gray-800 text-sm  ">₹ {(selectedAmount * 9)?.toLocaleString()}</span>
+                                <span className="font-semibold text-gray-800 text-sm  ">₹ {(dazzleamount?.total_installment || 0)?.toLocaleString()}</span>
                               </div>
 
                               <div className=" flex items-center justify-between gap-2 sm:gap-0">
@@ -630,12 +584,33 @@ export default function TreasureChestBanner() {
                                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                     </svg>
                                   </div>
-                                  <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (10th Month)</span>
+                                  <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (12th Month)</span>
                                 </div>
-                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{selectedAmount?.toLocaleString()}</span>
+                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{(dazzleamount?.after_12_month || 0)?.toLocaleString()}</span>
                               </div>
-
-                              <div className="flex items-center justify-between gap-2 sm:gap-0">
+                              <div className=" flex items-center justify-between gap-2 sm:gap-0">
+                                <div className="flex items-center">
+                                  <div className="w-4 h-4 text-green-500 mr-3 flex-shrink-0">
+                                    <svg viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                  </div>
+                                  <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (13th Month)</span>
+                                </div>
+                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{(dazzleamount?.after_13_month || 0)?.toLocaleString()}</span>
+                              </div>
+                              <div className=" flex items-center justify-between gap-2 sm:gap-0">
+                                <div className="flex items-center">
+                                  <div className="w-4 h-4 text-green-500 mr-3 flex-shrink-0">
+                                    <svg viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                  </div>
+                                  <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (14th Month)</span>
+                                </div>
+                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{(dazzleamount?.after_14_month || 0)?.toLocaleString()}</span>
+                              </div>
+                              {/* <div className="flex items-center justify-between gap-2 sm:gap-0">
                                 <div className="flex items-center">
                                   <div className="w-4 h-4 text-green-500 mr-3 flex-shrink-0">
                                     <svg viewBox="0 0 20 20" fill="currentColor">
@@ -645,7 +620,7 @@ export default function TreasureChestBanner() {
                                   <span className="text-gray-700 text-sm md:text-base break-words">Gold Value Appreciation (Adjust slider)</span>
                                 </div>
                                 <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{Math.round((selectedAmount * 10) * (growthPercent / 100)).toLocaleString()} ({growthPercent}%)</span>
-                              </div>
+                              </div> */}
 
                               <div className="relative mt-4">
                                 <input
@@ -666,7 +641,7 @@ export default function TreasureChestBanner() {
                               <div className="border-t pt-4 mt-6">
                                 <div className="flex items-center justify-between gap-2 sm:gap-0">
                                   <span className="font-semibold text-gray-800 text-base md:text-lg break-words">Estimated Total Redeemable Amount</span>
-                                  <span className="font-bold text-lg md:text-xl text-gray-800 whitespace-nowrap">₹ {Math.round(selectedAmount * 10 + (selectedAmount * 10) * (growthPercent / 100))?.toLocaleString()}</span>
+                                  <span className="font-bold text-lg md:text-xl text-gray-800 whitespace-nowrap">₹ {Math.round(dazzleamount?.redeem_amount || 0)?.toLocaleString()}</span>
                                 </div>
                                 <p className="text-gray-600 text-xs md:text-sm mt-2 break-words">₹{(selectedAmount * 10)?.toLocaleString()} invested could grow to ₹{Math.round(selectedAmount * 10 + (selectedAmount * 10) * (growthPercent / 100))?.toLocaleString()} at {growthPercent}% growth.</p>
                               </div>
@@ -674,7 +649,7 @@ export default function TreasureChestBanner() {
 
                             <div className="mt-6 space-y-2">
                               <p className="text-orange-800 text-xs md:text-sm break-words">○ Returns subject to gold market performance</p>
-                              <p className="text-orange-800 text-xs md:text-sm break-words">• Current 24KT Gold Rate: ₹10916</p>
+                              <p className="text-orange-800 text-xs md:text-sm break-words">• Current 24KT Gold Rate: ₹ {Number(dazzleamount?.gold_details?.ma_price_per_unit || 0)?.toFixed(2)}/gm</p>
                             </div>
                           </div>
 
@@ -683,7 +658,7 @@ export default function TreasureChestBanner() {
                         <div className="p-4 sm:p-6 lg:p-8" >
                           <div className="max-w-4xl mx-auto space-y-2">
                             {/* Dazzle-12 Chest ICON Card */}
-                            <div
+                            {/* <div
                               className="rounded-lg p-6 sm:p-8 mb-5"
                               style={{
                                 backgroundColor: 'rgb(255, 245, 245)',
@@ -701,7 +676,7 @@ export default function TreasureChestBanner() {
                               <p className="text-gray-800 font-medium text-sm sm:text-base">
                                 Your total redeemable amount after 10 months: <span className="font-semibold">₹50,000</span>
                               </p>
-                            </div>
+                            </div> */}
 
                             {/* Dazzle-12 Chest EDGE Card */}
                             <div
@@ -716,12 +691,12 @@ export default function TreasureChestBanner() {
                               </h2>
                               <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
                                 With the Dazzle-12 Edge plan, your monthly contribution
-                                of ₹5,000 is invested in the gold market. Based on the simulated market
-                                performance of 5%, your investment grows to ₹55,133. SonaSutra adds a
-                                bonus of ₹5,000 in the 10th month.
+                                of ₹{selectedAmount || 0} is invested in the gold market. Based on the simulated market
+                                performance of 80%, your investment grows to ₹{dazzleamount?.redeem_amount || 0}. SonaSutra adds a
+                                bonus of ₹{selectedAmount || 0} in the 14th month.
                               </p>
                               <p className="text-gray-800 font-medium text-sm sm:text-base mb-4">
-                                Potential gain compared to fixed savings: <span className="font-semibold text-green-600">+₹10,133</span>
+                                Potential gain compared to fixed savings: <span className="font-semibold text-green-600">+₹{dazzleamount?.after_14_month || 0}</span>
                               </p>
 
                               {/* Warning Banner */}
