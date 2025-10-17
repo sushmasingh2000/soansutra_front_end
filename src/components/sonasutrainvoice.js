@@ -791,7 +791,7 @@ const SonasutraInvoice = () => {
                   </li>
                   <li className="mb-[4px] text-justify">
                     Applicable Indian laws shall govern the transaction. In case
-                    of any dispute, courts in Chennai only shall have
+                    of any dispute, courts in Prayagraj only shall have
                     jurisdiction.
                   </li>
                   <li className="mb-[4px] text-justify">
@@ -912,9 +912,9 @@ const SonasutraInvoice = () => {
               </div>
               <div className="text-center text-[9px] leading-[1.3] m-[15px]">
                 <div className="mb-[5px]">
-                  <strong>Sonasutra Regd & Corporate Office:</strong> 727 Anna
-                  Salai (Pathari Road) Thousand Lights, Chennai, Tamil Nadu,
-                  India, 600006
+                  <strong>Sonasutra Regd & Corporate Office:</strong> Shop No 10 Rajpura,BIDA MART,
+                  Bhadohi, Sant Ravidas Nagar, Bhadohi, Uttar Pradesh, India,
+                  221401
                 </div>
                 <div className="mb-[5px]">
                   <strong>CIN :</strong> U52393TN2007PTC064830.{" "}
