@@ -27,7 +27,7 @@ const SonasutraInvoice = () => {
                 <div>Shop No 11, Ground Floor, Tower A, Vinayak Plaza, Maldahiya Crossing, Varanasi- 221001, Varanasi - 221001</div>
                 <div>, Uttar Pradesh , India</div>
                 <div>
-                  <strong>Store Contact Details:</strong> 7307515355 7307515355 & cfvnsvpz@Sonasutra.com <strong>Store Timings:</strong> 11 am to 9:00 pm
+                  <strong>Store Contact Details:</strong> 7307515355 7307515355 & cfvnsvpz@sonasutra.com <strong>Store Timings:</strong> 11 am to 9:00 pm
                 </div>
               </div>
               <div className="text-right w-[200px]">
@@ -273,7 +273,7 @@ const SonasutraInvoice = () => {
                   <li className="mb-[4px] text-justify">Tax is not payable on Reverse charge basis</li>
                   <li className="mb-[4px] text-justify">If the order is not picked up within 90 days, the order will stand cancelled, and the advance amount will be refunded back to the customer.</li>
                   <li className="mb-[4px] text-justify">Customers should pay 50% of the product value as advance while placing orders for jewellery products and 70% in case of solitaire products. In case the product is not collected within 90 days from date of such intimation, then the order shall stand automatically cancelled and paid value will be refunded back to the customer.</li>
-                  <li className="mb-[4px] text-justify">Refer company's website for other terms and conditions https://www.Sonasutra.com/terms-and-conditions. Company reserves the right to modify these terms and conditions from time to time. Payment & Refunds|15-Day Money Back|Advance Receipt/Customer order|Made-To-Order|Old Gold Exchange Programme (OGE)</li>
+                  <li className="mb-[4px] text-justify">Refer company's website for other terms and conditions https://www.sonasutra.com/terms-and-conditions. Company reserves the right to modify these terms and conditions from time to time. Payment & Refunds|15-Day Money Back|Advance Receipt/Customer order|Made-To-Order|Old Gold Exchange Programme (OGE)</li>
                   <li className="mb-[4px] text-justify">We've upgraded our policy! 15-Day Full Value Exchange instead of a 15-day Money Back. With this, customers can exchange their purchase for the full value without retaining any balance.</li>
                 </ol>
               </div>
@@ -286,7 +286,7 @@ const SonasutraInvoice = () => {
             {/* Footer Section */}
             <div>
               <div className="text-center m-[10px_15px] text-[9px] leading-[1.2]">
-                Read or understood and agreed to the attached terms and conditions. www.Sonasutra.com/terms-and-conditions
+                Read or understood and agreed to the attached terms and conditions. www.sonasutra.com/terms-and-conditions
               </div>
               <div className="text-center font-bold m-[10px_15px] text-[10px]">
                 THIS IS A COMPUTER GENERATED INVOICE AND HENCE NO SIGNATURE IS REQUIRED
@@ -307,19 +307,19 @@ const SonasutraInvoice = () => {
                   <strong>Sonasutra Regd & Corporate Office:</strong> 727 Anna Salai (Pathari Road) Thousand Lights, Chennai, Tamil Nadu, India, 600006
                 </div>
                 <div className="mb-[5px]">
-                  <strong>CIN :</strong> U52393TN2007PTC064830. <strong>Website:</strong> www.Sonasutra.com. <strong>Toll-free Number:</strong> 1800 102 0103
+                  <strong>CIN :</strong> U52393TN2007PTC064830. <strong>Website:</strong> www.sonasutra.com. <strong>Toll-free Number:</strong> 1800 102 0103
                 </div>
                 <div className="mb-[5px]">
-                  Thank you for shopping at Sonasutra. The next time you to buy a product, don't forget to visit www.Sonasutra.com for the latest designs.
+                  Thank you for shopping at Sonasutra. The next time you to buy a product, don't forget to visit www.sonasutra.com for the latest designs.
                 </div>
                 <div className="mb-[5px]">
                   You can also call us on 1800 102 0103 and 044-4293-5000 from 9 A.M to 12 A.M IST (Mon - Sat) , 9 A.M to 9 P.M (Sun).
                 </div>
                 <div className="mb-[5px]">
-                  For detailed terms pertaining to our Returns & Exchanges Policy, refer to Sonasutra.com/returns-exchanges
+                  For detailed terms pertaining to our Returns & Exchanges Policy, refer to sonasutra.com/returns-exchanges
                 </div>
                 <div className="mb-[10px]">
-                  You can also write to us at cs@Sonasutra.com E & OE
+                  You can also write to us at cs@sonasutra.com E & OE
                 </div>
               </div>
             </div>

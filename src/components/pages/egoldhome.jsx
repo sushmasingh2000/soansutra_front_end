@@ -33,7 +33,7 @@ const SonaSutraDigitalGoldHome = () => {
     },
     {
       question: "How to buy SonaSutra Digital Gold?",
-      answer: "Gold can be accumulated under the SonaSutra Digital Gold Program by buying through:SonaSutra.com"
+      answer: "Gold can be accumulated under the SonaSutra Digital Gold Program by buying through:sonasutra.com"
     },
     {
       question: "Where will the Digital Gold be stored after I buy it?",
@@ -81,7 +81,7 @@ const SonaSutraDigitalGoldHome = () => {
     },
     {
       question:"How do I buy SonaSutra Digital Gold?",
-      answer:"Just go to SonaSutra.com/Digigold/buy and enter the grams/amount that you want to buy.First-time buyers will have to register by providing the email, mobile number, address, and PAN details.For an existing customer, just logging in is enough.After confirming the value of the gold you want to buy, pay the amount and the gold will get credited to your SonaSutra Digital Gold balance.The prices are linked to the live gold rate. Therefore, the gold price is subject to change every five minutes."
+      answer:"Just go to sonasutra.com/Digigold/buy and enter the grams/amount that you want to buy.First-time buyers will have to register by providing the email, mobile number, address, and PAN details.For an existing customer, just logging in is enough.After confirming the value of the gold you want to buy, pay the amount and the gold will get credited to your SonaSutra Digital Gold balance.The prices are linked to the live gold rate. Therefore, the gold price is subject to change every five minutes."
     },
     {
       question:"What is the minimum and maximum gold amount I can purchase through SonaSutra Digital Gold?",
