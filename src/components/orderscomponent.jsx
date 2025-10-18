@@ -449,10 +449,8 @@ const OrdersContent = () => {
           </div>
 
           {/* Products */}
-          {/* Products */}
           <div className="px-6 py-5 border-b">
             <h3 className="text-sm font-semibold text-gray-800 mb-4">Items in this order</h3>
-
             <div className="space-y-4">
               {products?.map((prod, i) => {
                 const canReview = detail?.status === 'Delivered' || detail?.status === 'Completed';
