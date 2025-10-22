@@ -643,7 +643,7 @@ export default function TreasureChestBanner() {
                                   <span className="font-semibold text-gray-800 text-base md:text-lg break-words">Estimated Total Redeemable Amount</span>
                                   <span className="font-bold text-lg md:text-xl text-gray-800 whitespace-nowrap">₹ {Math.round(dazzleamount?.redeem_amount || 0)?.toLocaleString()}</span>
                                 </div>
-                                <p className="text-gray-600 text-xs md:text-sm mt-2 break-words">₹{(selectedAmount * 10)?.toLocaleString()} invested could grow to ₹{Math.round(selectedAmount * 10 + (selectedAmount * 10) * (growthPercent / 100))?.toLocaleString()} at {growthPercent}% growth.</p>
+                                <p className="text-gray-600 text-xs md:text-sm mt-2 break-words">₹{(dazzleamount?.total_installment)?.toLocaleString()} invested could grow to ₹ {Math.round(dazzleamount?.redeem_amount || 0)?.toLocaleString()} at {Number(dazzleamount?.rowth_in_percent)?.toFixed(2)}% growth.</p>
                               </div>
                             </div>
 
