@@ -3,8 +3,8 @@ export const frontend = "https://sonasutra.in";
 // export const domain = "http://192.168.18.214:2000";
 export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
-export const mode = "production";
-// export const mode = "sandbox";
+// export const mode = "production";
+export const mode = "sandbox";
 
 export const endpoint = {
   email_insider: `${domain}/api/v1/insert-external-leads`,
@@ -215,6 +215,12 @@ export const endpoint = {
   //payment
   create_payment_method: `${domain}/api/v1/create-payment-method`,
   get_payment_method: `${domain}/api/v1/get-payment-method`,
+  get_installment: `${domain}/api/v1/get-installment-details`,
+  pay_due_installment: `${domain}/api/v1/pay-due-installment`,
+  get_subscription_details: `${domain}/api/v1/get-subscription-plan-details`,
+
+
+  
 
   //customer
   create_customer: `${domain}/api/v1/create-customer`,
@@ -335,8 +341,10 @@ export const endpoint = {
   get_pos_inventry :`${domain}/api/v1/get-pos-inventory`,
   sku_for_sell_by_admin :`${domain}/api/v1/get-sku-for-sell`,
   get_cart_item_price_admin :`${domain}/api/v1/get-cart-items-price`,
+  get_dazzle_subscription_plan :`${domain}/api/v1/get-dazzle-subscription-plans`,
+  pay_for_subscription_plan :`${domain}/api/v1/pay-for-subscription-plan`,
   
-
+  
   // location related api's
   get_nearest_store: `${domain}/api/v1/get-nearest-store`
 };
