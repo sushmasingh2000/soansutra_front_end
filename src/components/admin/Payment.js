@@ -3,6 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import ReactModal from "react-modal";
+import CustomTable from "./Shared/CustomTable";
 
 const PaymentMethod = () => {
     const [paymentMethods, setPaymentMethods] = useState([]);
@@ -67,6 +68,22 @@ const PaymentMethod = () => {
         }
     };
 
+    const tablehead = [
+        <span>S.No</span>,
+        <span>Name</span>,
+        <span>Type</span>,
+        <span>Status</span>,
+        <span>Description</span>,
+    ]
+
+    const tablerow = paymentMethods?.map((pm, idx) => [
+        <span>{idx + 1}</span>,
+        <span>{pm.pm_name}</span>,
+        <span>{pm.pm_type}</span>,
+        <span>{pm.pm_status === "Active" ? "Active" : "Inactive"}</span>,
+        <span>{pm.pm_description || "-"}</span>,
+    ])
+
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Payment Methods</h1>
@@ -80,34 +97,11 @@ const PaymentMethod = () => {
                 </button>
             </div>
 
-            {loading ? (
-                <p>Loading payment methods...</p>
-            ) : paymentMethods.length === 0 ? (
-                <p>No payment methods found.</p>
-            ) : (
-                <table className="min-w-full border border-gray-300 rounded">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="border px-4 py-2 text-left">S.No</th>
-                            <th className="border px-4 py-2 text-left">Name</th>
-                            <th className="border px-4 py-2 text-left">Type</th>
-                            <th className="border px-4 py-2 text-left">Status</th>
-                            <th className="border px-4 py-2 text-left">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {paymentMethods.map((pm, index) => (
-                            <tr key={pm.pm_id}>
-                                <td className="border px-4 py-2">{index + 1}</td>
-                                <td className="border px-4 py-2">{pm.pm_name}</td>
-                                <td className="border px-4 py-2">{pm.pm_type}</td>
-                                <td className="border px-4 py-2">{pm.pm_status === "Active" ? "Active" : "Inactive"}</td>
-                                <td className="border px-4 py-2">{pm.pm_description || "-"}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+            <CustomTable
+          tablehead={tablehead}
+          tablerow={tablerow}
+          isLoading={loading}
+        />
 
             {/* Modal for adding payment method */}
             {modalOpen && (

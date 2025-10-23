@@ -164,12 +164,19 @@ export const endpoint = {
   create_product_inventory: `${domain}/api/v1/create-product-inventory`,
   get_product_inventory: `${domain}/api/v1/get-product-inventory`,
   update_product_inventory: `${domain}/api/v1/update-product-inventory`,
-
+  get_varient_price: `${domain}/api/v1/get-varient-price`,
+  
   // discount
   create_discount: `${domain}/api/v1/create-discount`,
   get_discount: `${domain}/api/v1/get-discount`,
   update_discount: `${domain}/api/v1/update-discount`,
   delete_discount: `${domain}/api/v1/delete-discount`,
+
+
+  get_dazzle_plan: `${domain}/api/v1/get-dazzle-plan-detail`,
+
+
+  
 
   //product discount
   create_product_discount: `${domain}/api/v1/create-product-discount`,
@@ -317,6 +324,17 @@ export const endpoint = {
   get_order_location: `${domain}/api/v1/get-order-location`,
   get_all_dlv_profile_by : `${domain}/api/v1/get-dlv-profile-by-id`,
   get_dlv_dashboard : `${domain}/api/v1/delivery-boy-dashboard`,
+  
+  offline_order :`${domain}/api/v1/create-cart-items-by-admin`,
+  get_cart_admin :`${domain}/api/v1/get-cart-items-by-admin`,
+  remove_cart_admin :`${domain}/api/v1/remove-from-cart-items`,
+  create_order_by_admin :`${domain}/api/v1/create-order-by-admin`,
+  add_address_by_admin :`${domain}/api/v1/add-shipping-address-by-admin`,
+  upload_Stock_by_admin :`${domain}/api/v1/upsert-inventory`,
+  sku_dropdown_by_admin :`${domain}/api/v1/get-sku-dropdown`,
+  get_pos_inventry :`${domain}/api/v1/get-pos-inventory`,
+  sku_for_sell_by_admin :`${domain}/api/v1/get-sku-for-sell`,
+  get_cart_item_price_admin :`${domain}/api/v1/get-cart-items-price`,
   
 
   // location related api's

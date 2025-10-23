@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
+import CustomTable from "./Shared/CustomTable";
 
 const ProductUnits = () => {
   const [categories, setCategories] = useState([]);
@@ -129,6 +130,50 @@ const ProductUnits = () => {
     fetchUnits();
   }, [selectedCategoryId]);
 
+  const tablehead = [
+    <span>
+      Name
+    </span>,
+    <span>
+      Slug
+    </span>,
+    <span>
+      Description
+    </span>,
+    <span>
+      Actions
+    </span>,
+  ]
+
+  const tablerow =
+    units.map((unit) => [
+      <span>
+        {unit.un_name}
+      </span>,
+      <span>
+        {unit.un_slug}
+      </span>,
+      <span>
+        {unit.description}
+      </span>,
+      <span>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => openEditModal(unit)}
+            className="text-green-600 hover:text-green-800"
+          >
+            ✏️
+          </button>
+          <button
+            onClick={() => deleteUnit(unit.un_id)}
+            className="text-red-600 hover:text-red-800"
+          >
+            🗑️
+          </button>
+        </div>
+      </span>
+    ])
+
   return (
     <div className="p-6">
       <div className="mb-4">
@@ -138,7 +183,7 @@ const ProductUnits = () => {
         <select
           value={selectedCategoryId}
           onChange={(e) => setSelectedCategoryId(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg"
+          className="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-40"
         >
           <option value="">-- Select Category --</option>
           {categories.map((cat) => (
@@ -160,67 +205,11 @@ const ProductUnits = () => {
           <span>Add New Unit</span>
         </button>
       </div>
-
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Slug
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Description
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {units.length === 0 ? (
-              <tr>
-                <td colSpan="4" className="text-center py-6 text-gray-500">
-                  No units found.
-                </td>
-              </tr>
-            ) : (
-              units.map((unit) => (
-                <tr key={unit.un_id}>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {unit.un_name}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {unit.un_slug}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
-                    {unit.description}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => openEditModal(unit)}
-                        className="text-green-600 hover:text-green-800"
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        onClick={() => deleteUnit(unit.un_id)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={loading}
+      />
       {/* Create Modal */}
       {createModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

@@ -66,10 +66,10 @@ const AddPurchaseWallet = () => {
     });
   };
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-      <h2 className="text-xl font-semibold mb-4">Purchase Transaction</h2>
+    <div className="max-w-2xl mx-auto bg-white opacity-75 p-6 rounded shadow mt-5">
+      <h2 className="text-xl text-center font-semibold mb-8">Purchase Transaction</h2>
 
-      <div className="space-y-4">
+      <div className="gap-5 grid grid-cols-2 space-x-4">
         <div>
           <label className="block mb-1 font-medium">User ID</label>
           <input

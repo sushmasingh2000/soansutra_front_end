@@ -52,6 +52,7 @@ const ProductDetailWebPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadercart, setIsLoadingCart] = useState(false);
   const token = localStorage.getItem("token");
+  
   const addToCartMutation = useMutation(
     (payload) => apiConnectorPost(endpoint.create_cart, payload),
     {

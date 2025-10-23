@@ -9,7 +9,7 @@ const SonasutraInvoice = () => {
 
   const { orderId } = useParams();
   const { data } = useQuery(
-    ["invoice_get"],
+    ["invoice_get", orderId],
     () => apiConnectorGet(`${endpoint.get_invoice}?order_id=${orderId}`),
     usequeryBoolean
   );
@@ -114,7 +114,7 @@ const SonasutraInvoice = () => {
 
               <div className="flex-1 text-[10px] leading-[1.3]">
                 <div className="font-bold mb-[2px]">
-                    {store?.name}
+                  {store?.name}
                   {/* Sonasutra TRADING PRIVATE LIMITED - Subsidiary of Titan
                   Company Limited */}
                 </div>
@@ -157,7 +157,7 @@ const SonasutraInvoice = () => {
                   <strong>Order No :</strong> {invoice_detail?.certificate_no}{" "}
                   <strong>Dated :</strong> {moment(bill?.order_date)?.format("DD-MM-YYYY")}
                 </div>
-              <div>
+                <div>
                   <strong>Doc No :</strong> {invoice_detail?.doc_id}{" "}
                   <strong> Dated :</strong> {moment(invoice_detail?.today_date)?.format("DD-MM-YYYY")}
                 </div>
@@ -652,26 +652,26 @@ const SonasutraInvoice = () => {
                   <tbody>
                     {invoice_detail?.product_type === "PRODUCT" && (
                       <>
-                      <tr>
-                        <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
-                          Pre-Discount Value ₹
-                        </td>
-                        <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                          {invoice_detail?.total_discount}
-                        </td>
-                      </tr>
-                   
+                        <tr>
+                          <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
+                            Pre-Discount Value ₹
+                          </td>
+                          <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
+                            {invoice_detail?.total_discount}
+                          </td>
+                        </tr>
 
-                    <tr>
-                      <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
-                        Coupon Discount/xCLusive Points* ₹
-                      </td>
-                      <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        {invoice_detail?.coupon_discount}
-                      </td>
-                    </tr>
+
+                        <tr>
+                          <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
+                            Coupon Discount/xCLusive Points* ₹
+                          </td>
+                          <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
+                            {invoice_detail?.coupon_discount}
+                          </td>
+                        </tr>
                       </>
-                     )}
+                    )}
                     <tr>
                       <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
                         <strong>Taxable Value ₹</strong>
@@ -791,7 +791,17 @@ const SonasutraInvoice = () => {
                   </li>
                   <li className="mb-[4px] text-justify">
                     Applicable Indian laws shall govern the transaction. In case
-                    of any dispute, courts in Prayagraj only shall have
+                    of any dispute, courts in
+
+                    {/* e-gold */}
+
+
+                    {/* product */}
+                    {invoice_detail?.product_type === "PRODUCT" ?
+                      <p>{store.city}, {store?.state}, {store.country}</p> :
+                      <p> Bhadohi, Uttar Pradesh, India</p>}
+
+                    only shall have
                     jurisdiction.
                   </li>
                   <li className="mb-[4px] text-justify">
@@ -856,7 +866,7 @@ const SonasutraInvoice = () => {
                   </li>
                   <li className="mb-[4px] text-justify">
                     Refer company's website for other terms and conditions
-                    https://www.Sonasutra.com/terms-and-conditions. Company
+                    https://www.sonasutra.com/terms-and-conditions. Company
                     reserves the right to modify these terms and conditions from
                     time to time. Payment & Refunds|15-Day Money Back|Advance
                     Receipt/Customer order|Made-To-Order|Old Gold Exchange
@@ -884,7 +894,7 @@ const SonasutraInvoice = () => {
             <div>
               <div className="text-center m-[10px_15px] text-[9px] leading-[1.2]">
                 Read or understood and agreed to the attached terms and
-                conditions. www.Sonasutra.com/terms-and-conditions
+                conditions. www.sonasutra.com/terms-and-conditions
               </div>
               <div className="text-center font-bold m-[10px_15px] text-[10px]">
                 THIS IS A COMPUTER GENERATED INVOICE AND HENCE NO SIGNATURE IS
@@ -923,7 +933,7 @@ const SonasutraInvoice = () => {
                 </div>
                 <div className="mb-[5px]">
                   Thank you for shopping at Sonasutra. The next time you to buy
-                  a product, don't forget to visit www.Sonasutra.com for the
+                  a product, don't forget to visit www.sonasutra.com for the
                   latest designs.
                 </div>
                 <div className="mb-[5px]">
@@ -932,10 +942,10 @@ const SonasutraInvoice = () => {
                 </div>
                 <div className="mb-[5px]">
                   For detailed terms pertaining to our Returns & Exchanges
-                  Policy, refer to Sonasutra.com/returns-exchanges
+                  Policy, refer to sonasutra.com/returns-exchanges
                 </div>
                 <div className="mb-[10px]">
-                  You can also write to us at cs@Sonasutra.com E & OE
+                  You can also write to us at cs@sonasutra.com E & OE
                 </div>
               </div>
             </div>

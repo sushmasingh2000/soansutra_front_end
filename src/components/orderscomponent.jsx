@@ -27,6 +27,7 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
 
 const OrdersContent = () => {
   const [activeTab, setActiveTab] = useState("myOrders");
@@ -305,8 +306,8 @@ const OrdersContent = () => {
                 <Star
                   key={i}
                   className={`w-6 h-6 cursor-pointer ${i < rating
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-gray-300"
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-gray-300"
                     }`}
                   onClick={() => setRating(i + 1)}
                 />
@@ -332,8 +333,8 @@ const OrdersContent = () => {
                     <button
                       key={opt}
                       className={`py-1 px-2 border rounded text-xs ${improveSelected.includes(opt)
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "text-gray-600"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "text-gray-600"
                         }`}
                       onClick={() =>
                         toggleOption(setImproveSelected, improveSelected, opt)
@@ -357,8 +358,8 @@ const OrdersContent = () => {
                 <button
                   key={opt}
                   className={`py-1 px-2 border rounded text-xs ${impressSelected.includes(opt)
-                      ? "bg-yellow-100 text-yellow-800"
-                      : "text-gray-600"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : "text-gray-600"
                     }`}
                   onClick={() =>
                     toggleOption(setImpressSelected, impressSelected, opt)
@@ -433,231 +434,243 @@ const OrdersContent = () => {
     }));
     const addressParts = detail?.shipping_details || {};
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 z-50">
-        <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto text-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-lg">
+
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Order Details</h2>
-              <p className="text-xs text-gray-600">
-                Order #{detail?.order_unique}
-              </p>
+              <p className="text-xs text-gray-500">Order #{detail?.order_unique}</p>
             </div>
-            <button
-              onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <X className="w-4 h-4 text-gray-500" />
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100">
+              <X className="w-5 h-5 text-gray-500" />
             </button>
           </div>
 
-          {/* Products List */}
-          <div className="p-4 border-b border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm">
-              Items in this order
-            </h3>
-            <div className="space-y-3">
-              {products?.map((prod, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col border p-3 rounded-lg shadow-sm bg-gray-50"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <img
-                      src={prod?.image}
-                      alt={prod?.name}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 text-sm">
-                        {prod?.name}
-                      </h4>
-                      <p className="text-xs text-gray-600">
-                        Quantity: {prod?.quantity}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-sm text-gray-900">
-                        ₹{prod?.price}
-                      </p>
-                    </div>
-                  </div>
+          {/* Products */}
+          <div className="px-6 py-5 border-b">
+            <h3 className="text-sm font-semibold text-gray-800 mb-4">Items in this order</h3>
+            <div className="space-y-4">
+              {products?.map((prod, i) => {
+                const canReview = detail?.status === 'Delivered' || detail?.status === 'Completed';
+                const avgRating = parseFloat(reviews?.[i]?.rating || 0);
 
-                  {/* New: Breakdown of product financials */}
-                  <div className="text-xs text-gray-700 pl-1">
-                    <p>Discount: ₹{detail?.order_items[i]?.discount}</p>
-                    <p>Tax Amount: ₹{detail?.order_items[i]?.tax_amount}</p>
-                    <p>Total Price: ₹{detail?.order_items[i]?.total_price}</p>
-                    <p className="font-semibold text-gray-900">
-                      Grand Total: ₹{detail?.order_items[i]?.grand_total}
-                    </p>
+                return (
+                  <div key={i} className="p-4 border rounded-lg bg-gray-50 shadow-sm">
+                    <div className="flex items-start gap-4">
+                      <img
+                        src={prod?.image}
+                        alt={prod?.name}
+                        className="w-14 h-14 object-cover rounded-md"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-sm text-gray-900">{prod?.name}</p>
+                        <p className="text-xs text-gray-500">Qty: {prod?.quantity}</p>
+
+                        <div className="grid grid-cols-2 gap-x-4 text-xs text-gray-700 mt-2">
+                          <p>Discount: ₹{detail?.order_items[i]?.discount}</p>
+                          <p>Tax: ₹{detail?.order_items[i]?.tax_amount}</p>
+                          <p>Total Price: ₹{detail?.order_items[i]?.total_price}</p>
+                          <p className="font-semibold text-gray-900">
+                            Grand Total: ₹{detail?.order_items[i]?.grand_total}
+                          </p>
+                        </div>
+
+                        {/* Inline Review Stars (only if status allows) */}
+                        {canReview && (
+                          <div className="mt-3">
+                            <div className="flex items-center gap-1 mb-1">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                  key={star}
+                                  onClick={() => {
+                                    setSelectedProduct(detail?.order_items[i]);
+                                    setShowReviewModal(true);
+                                  }}
+                                  className={`w-5 h-5 cursor-pointer transition ${star <= Math.floor(avgRating)
+                                    ? 'fill-yellow-400 text-yellow-400'
+                                    : star - 0.5 === avgRating
+                                      ? 'fill-yellow-400 text-yellow-200'
+                                      : 'text-gray-300'
+                                    }`}
+                                />
+                              ))}
+                            </div>
+                            <button
+                              onClick={() => {
+                                setSelectedProduct(detail?.order_items[i]);
+                                setShowReviewModal(true);
+                              }}
+                              className="text-xs text-red-500 hover:underline"
+                            >
+                              Write a Review
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-gray-900">₹{prod?.price}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
-            <div className="border-t border-gray-200 mt-3 pt-3">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-900 text-sm">
-                  Total
-                </span>
-                <span className="font-bold text-md text-gray-900">
-                  ₹{detail?.grand_total}
-                </span>
+
+            {/* Total */}
+            <div className="pt-5 mt-5 border-t">
+              <div className="flex justify-between font-semibold text-gray-800 text-sm">
+                <span>Total</span>
+                <span className="font-bold text-base">₹{detail?.grand_total}</span>
               </div>
             </div>
           </div>
-          {detail?.status !== "Pending" && (
-            <div
-              className="m-4"
-              onClick={() => {
-                setSelectedProduct(detail?.order_items[0]);
-                setShowReviewModal(true);
-              }}
-            >
-              <div
-                className="flex justify-start cursor-pointer"
-                onClick={() => setShowReviewModal(true)}
-              >
-                {[1, 2, 3, 4, 5]?.map((star) => {
-                  const avgRating = parseFloat(reviews?.[0]?.rating || 0);
 
-                  return (
-                    <Star
-                      key={star}
-                      className={`w-5 h-5 ${star <= Math.floor(avgRating)
+
+          {/* Review Section */}
+          {detail?.status !== "Pending" && (
+            <div className="px-6 py-4 border-b">
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  setSelectedProduct(detail?.order_items[0]);
+                  setShowReviewModal(true);
+                }}
+              >
+                <div className="flex items-center gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const avgRating = parseFloat(reviews?.[0]?.rating || 0);
+                    return (
+                      <Star
+                        key={star}
+                        className={`w-5 h-5 ${star <= Math.floor(avgRating)
                           ? "fill-yellow-400 text-yellow-400"
                           : star - 0.5 === avgRating
-                            ? "fill-yellow-400 text-yellow-200" // optional: lighter color for half
+                            ? "fill-yellow-400 text-yellow-200"
                             : "text-gray-300"
-                        }`}
-                    />
-                  );
-                })}
+                          }`}
+                      />
+                    );
+                  })}
+                </div>
+                <button className="bg-red-500 text-white text-xs font-medium px-3 py-1 rounded hover:bg-red-600">
+                  Add Review
+                </button>
+                <p className="text-xs text-gray-500 mt-1">Tap on stars to rate your experience</p>
               </div>
-              <button className="bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-2 py-0.5 mt-2 mb-2 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
-                Add Review
-              </button>
-              <p className="text-xs text-gray-600">
-                Tap on the stars to rate your experience
-              </p>
             </div>
           )}
+
           {/* Shipping & Payment */}
-          <div className="p-4">
+          <div className="px-6 py-4 border-b">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm">
-                  Shipping Address
-                </h3>
-                <div className="flex items-start gap-1">
-                  <MapPin className="w-3 h-3 text-gray-500 mt-1" />
-                  <p className="text-xs text-gray-600">
-                    {addressParts?.address}, {addressParts?.city},{" "}
-                    {addressParts?.state}, {addressParts?.country} -{" "}
-                    {addressParts?.postal_code}
+                <h4 className="font-semibold text-sm text-gray-900 mb-2">Shipping Address</h4>
+                <div className="flex gap-2 text-xs text-gray-600">
+                  <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                  <p>
+                    {addressParts?.address}, {addressParts?.city}, {addressParts?.state}, {addressParts?.country} - {addressParts?.postal_code}
                   </p>
                 </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm">
-                  Payment Method
-                </h3>
-                <div className="flex items-start gap-1">
-                  <CreditCard className="w-3 h-3 text-gray-500 mt-1" />
-                  <p className="text-xs text-gray-600">Paid via Credit Card</p>
+              {/* <div>
+                <h4 className="font-semibold text-sm text-gray-900 mb-2">Payment Method</h4>
+                <div className="flex gap-2 text-xs text-gray-600">
+                  <CreditCard className="w-4 h-4 mt-0.5 text-gray-400" />
+                  <p>Paid via Credit Card</p>
                 </div>
-              </div>
+              </div> */}
             </div>
-            <div className="mt-6">
-              <h2 className="text-lg font-semibold mb-4">Status Track</h2>
-              {detail?.status_dates?.length > 0 ? (
-                <Stepper
-                  orientation="vertical"
-                  nonLinear
-                  activeStep={
-                    detail.status_dates.filter(
-                      (s) =>
-                        getValue(s?.od_status) !== "Pending" &&
-                        getValue(s?.od_status) !== "Confirmed"
-                    ).length - 1
-                  }
-                >
-                  {detail.status_dates
-                    .filter((status) => {
-                      const text = getValue(status?.od_status);
-                      return text !== "Pending" && text !== "Confirmed";
-                    })
-                    .map((status, idx, filteredArray) => {
-                      const statusText = getValue(status?.od_status);
-                      const statusDate = formatDate(status?.od_date);
-
-                      const statusColorMap = {
-                        Confirmed: "primary",
-                        Processing: "info",
-                        Shipped: "warning",
-                        Delivered: "success",
-                        Cancelled: "error",
-                        Completed: "success",
-                      };
-
-                      const stepColor = statusColorMap[statusText] || "inherit";
-
-                      return (
-                        <Step
-                          key={idx}
-                          completed={idx < filteredArray.length}
-                          expanded={true}
-                        >
-                          <StepLabel
-                            StepIconProps={{
-                              color: stepColor,
-                            }}
-                          >
-                            <span className="font-medium">{statusText}</span>
-                          </StepLabel>
-                          <StepContent>
-                            <Typography variant="body2" className="text-gray-700">
-                              <strong>Date:</strong> {statusDate}
-                            </Typography>
-                          </StepContent>
-                        </Step>
-                      );
-                    })}
-                </Stepper>
-              ) : (
-                <p>No status history available.</p>
-              )}
-
-            </div>
-
-            {detail?.notes && (
-              <div className="mt-4">
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm">
-                  Order Notes
-                </h3>
-                <p className="text-xs text-gray-600 bg-gray-50 rounded-lg p-2">
-                  {detail?.notes}
-                </p>
-              </div>
-            )}
           </div>
+
+          {/* Order Status */}
+            <div className="px-6 py-5 border-b">
+              <h4 className="text-base font-semibold text-gray-800 mb-3">Status Track</h4>
+
+              {(() => {
+                // Count how many steps are beyond "Pending" and "Confirmed"
+                const meaningfulSteps = detail?.status_dates?.filter((s) => {
+                  const statusText = getValue(s?.od_status);
+                  return statusText !== "Pending" && statusText !== "Confirmed";
+                });
+
+                // Only render if there's more than just pending/confirmed
+                if (meaningfulSteps?.length > 0) {
+                  return (
+                    <Stepper
+                      orientation="vertical"
+                      nonLinear
+                      activeStep={detail.status_dates.length - 1}
+                    >
+                      {detail.status_dates.map((status, idx) => {
+                        const statusText = getValue(status?.od_status);
+                        const statusDate = formatDate(status?.od_date);
+                        const statusColorMap = {
+                          Pending: "info",
+                          Confirmed: "primary",
+                          Processing: "info",
+                          Shipped: "warning",
+                          Delivered: "success",
+                          Completed: "success",
+                          Cancelled: "error",
+                        };
+                        const stepColor = statusColorMap[statusText] || "inherit";
+
+                        return (
+                          <Step key={idx} completed={idx < detail.status_dates.length} expanded>
+                            <StepLabel StepIconProps={{ color: stepColor }}>
+                              <span className="font-medium">{statusText}</span>
+                            </StepLabel>
+                            <StepContent>
+                              <Typography variant="body2" className="text-xs text-gray-600">
+                                <strong>Date:</strong> {statusDate}
+                              </Typography>
+                            </StepContent>
+                          </Step>
+                        );
+                      })}
+                    </Stepper>
+                  );
+                }
+
+                // If not enough steps to show
+                return <p className="text-xs text-gray-500">Tracking info not available yet.</p>;
+              })()}
+            </div>
+
+          {/* Notes */}
+          {/* {detail?.notes && (
+            <div className="px-6 py-4 border-b">
+              <h4 className="font-semibold text-sm text-gray-900 mb-2">Order Notes</h4>
+              <p className="text-xs text-gray-600 bg-gray-50 rounded-md p-3">
+                {detail?.notes}
+              </p>
+            </div>
+          )} */}
+
+          {/* Invoice */}
           {detail?.status !== "Pending" && detail?.status !== "Failed" && (
-            <div className="p-4">
-              <button
-                className="text-sm font-medium text-blue-600 underline"
-                onClick={() => {
-                  navigate(`/invoice/${detail?.order_unique}`);
-                }}
-              >
-                View / Download Invoice
-              </button>
+            <div className="px-6 py-4 border-b">
+              <div className="flex items-center gap-2">
+                <DocumentTextIcon className="w-5 h-5 text-blue-500" />
+                <button
+                  className="text-sm font-medium text-blue-600 hover:underline"
+                  onClick={() => navigate(`/invoice/${detail?.order_unique}`)}
+                >
+                  View / Download Invoice
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Get a printable copy of your order</p>
             </div>
           )}
 
-          {/* Actions etc. */}
-          <div className="p-4 border-t border-gray-200">
+
+          {/* Footer Action */}
+          <div className="px-6 py-4 flex justify-end">
             <button
-              className="bg-purple-500 text-white px-3 py-1 rounded-lg"
+              className="bg-purple-600 hover:bg-purple-700 text-white text-sm px-5 py-2 rounded-md shadow"
               onClick={onClose}
             >
               Close
@@ -665,6 +678,8 @@ const OrdersContent = () => {
           </div>
         </div>
       </div>
+
+
     );
   };
 

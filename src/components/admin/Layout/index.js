@@ -1,5 +1,5 @@
 import { Notifications } from '@mui/icons-material';
-import { Avatar, IconButton } from '@mui/material';
+import { Avatar, Chip, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { IoColorPalette } from 'react-icons/io5';
 import { useMediaQuery } from 'react-responsive';
@@ -16,7 +16,7 @@ const AdminLayout = ({ component, navItem, navLink, id }) => {
   const background = localStorage.getItem('background_url');
   const [color, setcolor] = useState(
     background ||
-      'https://cdn.neowin.com/news/images/uploaded/2023/11/1699098103_windows_10_and_windows_11_story.jpg'
+    'https://cdn.neowin.com/news/images/uploaded/2023/11/1699098103_windows_10_and_windows_11_story.jpg'
   );
   // const user1 = localStorage.getItem("role_user");
   const [openCustomDialogBox, setopenCustomDialogBox] = useState(false);
@@ -54,6 +54,8 @@ const AdminLayout = ({ component, navItem, navLink, id }) => {
   //   setuser_exist(user1);
   // }, [user1]);
 
+  const store = localStorage.getItem("store")
+
   return (
     <div
       style={{
@@ -68,24 +70,22 @@ const AdminLayout = ({ component, navItem, navLink, id }) => {
           <div className="flex flex-col h-[24vh] w-full">
             <div className="flex w-full mb-4 items-center rounded justify-between">
               <p className="text-xl font-semibold">{navItem}</p>
-              <div className="flex items-center gap-5">
-                <IoColorPalette
-                  onClick={() => {
-                    setopenCustomDialogBox(true);
-                  }}
-                  className="text-2xl text-blue-700 cursor-pointer"
-                />
-
+              <div className="flex items-center gap-4">
                 <div className="flex items-center gap-3  p-3 ">
-                  <Avatar
-                    alt={user?.user_name}
-                    src={'https://mui.com/static/images/avatar/3.jpg'}
-                  />
                   <span className="flex flex-col">
-                    <p className="text-xs text-blue-700 capitalize">
-                      {usertype}
-                    </p>
+                    <Chip
+                      avatar={<Avatar
+                        alt={user?.user_name}
+                        src={'https://mui.com/static/images/avatar/3.jpg'}
+                        sx={{ width: 32, height: 32, fontSize: '0.75rem' }}
+                      />} label={store}  className='!bg-[#a97d39] !text-white'  />
                   </span>
+                  <IoColorPalette
+                    onClick={() => {
+                      setopenCustomDialogBox(true);
+                    }}
+                    className="text-xl text-blue-700 cursor-pointer"
+                  />
                   <IconButton>
                     <Notifications />
                   </IconButton>

@@ -12,6 +12,41 @@ import {
   Typography,
 } from "@mui/material";
 
+// Helpers
+const getValue = (val) =>
+  val === null || val === undefined || val === "" ? "—" : val;
+const formatDate = (date) =>
+  date ? new Date(date).toLocaleString() : "—";
+
+// Reusable InfoRow
+// 🧩 Reusable Components
+const InfoBox = ({ label, value }) => (
+  <div className="border rounded-md p-3 bg-gray-50 shadow-sm flex justify-between ">
+    <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+      {label}
+    </div>
+    <div className="text-sm font-medium text-gray-800 break-words">{value}</div>
+  </div>
+);
+
+const InfoBoxGrid = ({ title, children }) => (
+  <div className="bg-white bg-opacity-45 p-4 rounded-lg shadow-md h-fit">
+    <h2 className="text-lg font-semibold text-gray-700 mb-4">{title}</h2>
+    <div className="grid grid-cols-1  gap-3">{children}</div>
+  </div>
+);
+
+
+// Section wrapper
+const Section = ({ title, children }) => (
+  <div className="mt-8">
+    <h2 className="text-xl text-gray-700 font-semibold mb-4 border-b border-gray-200 pb-1">
+      {title}
+    </h2>
+    <div className="space-y-4">{children}</div>
+  </div>
+);
+
 const OrderDetails = () => {
   const { orderId } = useParams();
 
@@ -31,193 +66,95 @@ const OrderDetails = () => {
 
   const order = order_details?.data?.result;
 
-  const getValue = (val) =>
-    val === null || val === undefined || val === "" ? "--" : val;
+  if (isLoading)
+    return (
+      <div className="p-6 flex justify-center items-center h-64">
+        <div className="text-gray-500 animate-pulse">Loading order details…</div>
+      </div>
+    );
 
-  const formatDate = (date) => (date ? new Date(date).toLocaleString() : "--");
-
-  if (isLoading) return <div className="p-6">Loading order details...</div>;
   if (isError || !order)
     return (
       <div className="p-6 text-red-500">Failed to load order details.</div>
     );
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Order Details</h1>
+   <div className="p-6 max-w-screen-xl ">
 
-      <div className="bg-white shadow rounded-lg p-4 space-y-4 text-sm md:text-base">
-        <div>
-          <strong>Order Unique ID:</strong> {getValue(order?.order_unique)}
-        </div>
-        {/* <div><strong>Order ID:</strong> {getValue(order?.order_id)}</div> */}
-        <div>
-          <strong>Status:</strong> {getValue(order?.status)}
-        </div>
-        <div>
-          <strong>Order Date:</strong> {formatDate(order?.order_date)}
-        </div>
-        <div>
-          <strong>Payment Method:</strong>{" "}
-          {getValue(order?.pm_name)?.replace("_", " ")}
-        </div>
-        {/* <div><strong>Customer ID:</strong> {getValue(order?.customer_id)}</div> */}
-        {/* <div><strong>Store ID:</strong> {getValue(order?.store_id)}</div> */}
-        <div>
-          <strong>Total Amount:</strong> ₹{getValue(order?.total_amount)}
-        </div>
-        <div>
-          <strong>Total Discount:</strong> ₹{getValue(order?.total_discount)}
-        </div>
-        <div>
-          <strong>Total Tax:</strong> ₹{getValue(order?.total_tax)}
-        </div>
-        <div>
-          <strong>Grand Total:</strong> ₹{getValue(order?.grand_total)}
-        </div>
-        <div>
-          <strong>Notes:</strong> {getValue(order?.notes)}
-        </div>
+  {/* Grid layout: 3 columns on large screens, stacked on small */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+    
+    {/* 📋 Order Summary */}
+    <InfoBoxGrid title="Order Summary">
+      <InfoBox label="Order ID" value={getValue(order.order_unique)} />
+      <InfoBox label="Status" value={getValue(order.status)} />
+      <InfoBox label="Shopping Mode" value={getValue(order.shopping_mode)} />
+      <InfoBox label="Order Date" value={formatDate(order.order_date)} />
+      <InfoBox label="Payment Method" value={getValue(order.pm_name)} />
+      <InfoBox label="Total Amount" value={`₹${getValue(order.total_amount)}`} />
+      <InfoBox label="Discount" value={`₹${getValue(order.total_discount)}`} />
+      <InfoBox label="Tax" value={`₹${getValue(order.total_tax)}`} />
+      <InfoBox label="Grand Total" value={`₹${getValue(order.grand_total)}`} />
+    </InfoBoxGrid>
 
-        {/* Shipping Details */}
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold mb-2">Shipping Details</h2>
-          <div>
-            <strong>Address:</strong>{" "}
-            {getValue(order?.shipping_details?.address)}
-          </div>
-          <div>
-            <strong>City:</strong> {getValue(order?.shipping_details?.city)}
-          </div>
-          <div>
-            <strong>State:</strong> {getValue(order?.shipping_details?.state)}
-          </div>
-          <div>
-            <strong>Postal Code:</strong>{" "}
-            {getValue(order?.shipping_details?.postal_code)}
-          </div>
-          <div>
-            <strong>Country:</strong>{" "}
-            {getValue(order?.shipping_details?.country)}
-          </div>
-          <div>
-            <strong>Delivery Date:</strong>{" "}
-            {formatDate(order?.shipping_details?.delivery_date)}
-          </div>
-          <div>
-            <strong>Shipped Date:</strong>{" "}
-            {formatDate(order?.shipping_details?.shipped_date)}
-          </div>
-        </div>
+    {/* 🚚 Shipping Details */}
+    <InfoBoxGrid title="Shipping Details">
+      <InfoBox label="Address" value={getValue(order.shipping_details?.address)} />
+      <InfoBox label="City" value={getValue(order.shipping_details?.city)} />
+      <InfoBox label="State" value={getValue(order.shipping_details?.state)} />
+      <InfoBox label="Postal Code" value={getValue(order.shipping_details?.postal_code)} />
+      <InfoBox label="Country" value={getValue(order.shipping_details?.country)} />
+      <InfoBox label="Delivery Date" value={formatDate(order.shipping_details?.delivery_date)} />
+      <InfoBox label="Shipped Date" value={formatDate(order.shipping_details?.shipped_date)} />
+    </InfoBoxGrid>
 
-        {/* Order Items */}
-        <div className="mt-6">
-          <h2 className="text-lg font-semibold mb-2">Ordered Items</h2>
-          {order?.order_items?.length > 0 ? (
-            order?.order_items?.map((item, idx) => (
-              <div key={idx} className="border p-3 rounded mb-2 bg-gray-50">
-                <div className="flex items-center gap-4">
+    {/* 📦 Ordered Items Table */}
+    
+  </div>
+  <div className="bg-white bg-opacity-45 p-4 rounded-lg shadow-md overflow-x-auto mt-5">
+      <h2 className="text-lg font-semibold text-gray-700 mb-4">Ordered Items</h2>
+      {order?.order_items?.length > 0 ? (
+        <table className="min-w-full text-sm text-left border">
+          <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+            <tr>
+              <th className="px-3 py-2">S.No.</th>
+              <th className="px-3 py-2">Image</th>
+              <th className="px-3 py-2">SKU</th>
+              <th className="px-3 py-2">Qty</th>
+              <th className="px-3 py-2">Unit Price</th>
+              <th className="px-3 py-2">Discount</th>
+              <th className="px-3 py-2">Tax</th>
+              <th className="px-3 py-2">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {order.order_items.map((item, idx) => (
+              <tr key={idx} className="border-t hover:bg-gray-50">
+                <td className="px-3 py-2">{idx+1}</td>
+
+                <td className="px-3 py-2">
                   <img
                     src={item.p_image_url}
                     alt={item.sku}
-                    className="w-16 h-16 rounded object-cover"
+                    className="w-10 h-10 object-cover rounded border"
                   />
-                  <div>
-                    <p>
-                      <strong>SKU:</strong> {getValue(item?.sku)}
-                    </p>
-                    <p>
-                      <strong>Product ID:</strong> {getValue(item?.p_id)}
-                    </p>
-                    <p>
-                      <strong>Variant ID:</strong> {getValue(item?.variant_id)}
-                    </p>
-                    <p>
-                      <strong>Quantity:</strong> {getValue(item?.quantity)}
-                    </p>
-                    <p>
-                      <strong>Unit Price:</strong> ₹{getValue(item?.unit_price)}
-                    </p>
-                    <p>
-                      <strong>Total Price:</strong> ₹
-                      {getValue(item?.total_price)}
-                    </p>
-                    <p>
-                      <strong>Discount:</strong> ₹{getValue(item?.discount)}
-                    </p>
-                    <p>
-                      <strong>Tax Amount:</strong> ₹{getValue(item?.tax_amount)}
-                    </p>
-                    <p>
-                      <strong>Grand Total:</strong> ₹
-                      {getValue(item?.grand_total)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No items found.</p>
-          )}
-        </div>
-
-        {/* Status Dates */}
-        <div className="mt-6">
-          <h2 className="text-lg font-semibold mb-4">Status History</h2>
-          {order?.status_dates?.length > 0 ? (
-            <Stepper
-              orientation="vertical"
-              nonLinear
-              activeStep={order.status_dates.length - 1}
-            >
-              {order.status_dates.map((status, idx) => {
-                const statusText = getValue(status?.od_status);
-                const statusDate = formatDate(status?.od_date);
-                const orderId = getValue(status?.od_order_id);
-
-                // Optional: status to color mapping
-                const statusColorMap = {
-                  Confirmed: "primary",
-                  Processing: "info",
-                  Shipped: "warning",
-                  Delivered: "success",
-                  Cancelled: "error",
-                  Completed: "success",
-                };
-
-                const stepColor = statusColorMap[statusText] || "inherit";
-
-                return (
-                  <Step
-                    key={idx}
-                    completed={idx < order.status_dates.length}
-                    expanded={true} 
-                  >
-                    <StepLabel
-                      StepIconProps={{
-                        color: stepColor,
-                      }}
-                    >
-                      <span className="font-medium">{statusText}</span>
-                    </StepLabel>
-                    <StepContent>
-                      <Typography variant="body2" className="text-gray-700">
-                        <strong>Date:</strong> {statusDate}
-                      </Typography>
-                      {/* <Typography variant="body2" className="text-gray-700">
-                        <strong>Order ID:</strong> {orderId}
-                      </Typography> */}
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
-          ) : (
-            <p>No status history available.</p>
-          )}
-        </div>
-      </div>
+                </td>
+                <td className="px-3 py-2">{getValue(item.sku)}</td>
+                <td className="px-3 py-2">{getValue(item.quantity)}</td>
+                <td className="px-3 py-2">₹{getValue(item.unit_price)}</td>
+                <td className="px-3 py-2">₹{getValue(item.discount)}</td>
+                <td className="px-3 py-2">₹{getValue(item.tax_amount)}</td>
+                <td className="px-3 py-2">₹{getValue(item.grand_total)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-gray-500 text-sm">No items found.</p>
+      )}
     </div>
+</div>
+
   );
 };
 

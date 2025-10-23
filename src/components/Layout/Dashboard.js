@@ -2,39 +2,132 @@ import React from "react";
 import { apiConnectorGet, usequeryBoolean } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import { useQuery } from "react-query";
+import {
+  UserGroupIcon,
+  ShoppingBagIcon,
+  CubeIcon,
+  TruckIcon,
+  XCircleIcon,
+  CheckCircleIcon,
+  PhoneIcon,
+  BanknotesIcon,
+  ArrowDownTrayIcon,
+  UserIcon,
+} from "@heroicons/react/24/solid";
+
 
 // Mapping for label, color, and icon for known metrics
 const metricMap = {
-  product_category_count: { label: "Product Categories", color: "purple" },
-  product_count: { label: "Total Products", color: "blue" },
-  user_count: { label: "Users", color: "green" },
-  customer_count: { label: "Customers", color: "orange" },
+  product_category_count: {
+    label: "Product Categories",
+    color: "purple",
+    icon: CubeIcon,
+  },
+  product_count: {
+    label: "Total Products",
+    color: "blue",
+    icon: ShoppingBagIcon,
+  },
+  user_count: {
+    label: "Users",
+    color: "green",
+    icon: UserGroupIcon,
+  },
+  customer_count: {
+    label: "Customers",
+    color: "orange",
+    icon: UserIcon,
+  },
 
-  // Order statuses
-  order_status_Pending: { label: "Orders - Pending", color: "yellow" },
-  order_status_Shipped: { label: "Orders - Shipped", color: "blue" },
-  order_status_In_Transit: { label: "Orders - In Transit", color: "purple" },
-  order_status_Delivered: { label: "Orders - Delivered", color: "green" },
-  order_status_Cancelled: { label: "Orders - Cancelled", color: "red" },
+  // Orders
+  order_status_Pending: {
+    label: "Orders - Pending",
+    color: "yellow",
+    icon: TruckIcon,
+  },
+  order_status_Shipped: {
+    label: "Orders - Shipped",
+    color: "blue",
+    icon: TruckIcon,
+  },
+  order_status_In_Transit: {
+    label: "Orders - In Transit",
+    color: "purple",
+    icon: TruckIcon,
+  },
+  order_status_Delivered: {
+    label: "Orders - Delivered",
+    color: "green",
+    icon: CheckCircleIcon,
+  },
+  order_status_Cancelled: {
+    label: "Orders - Cancelled",
+    color: "red",
+    icon: XCircleIcon,
+  },
 
   // Custom orders
-  custom_order_status_Pending: { label: "Custom Orders - Pending", color: "yellow" },
-  custom_order_status_Processing: { label: "Custom Orders - Processing", color: "blue" },
-  custom_order_status_Rejected: { label: "Custom Orders - Rejected", color: "red" },
-  custom_order_status_Success: { label: "Custom Orders - Success", color: "green" },
+  custom_order_status_Pending: {
+    label: "Custom Orders - Pending",
+    color: "yellow",
+    icon: ShoppingBagIcon,
+  },
+  custom_order_status_Processing: {
+    label: "Custom Orders - Processing",
+    color: "blue",
+    icon: TruckIcon,
+  },
+  custom_order_status_Rejected: {
+    label: "Custom Orders - Rejected",
+    color: "red",
+    icon: XCircleIcon,
+  },
+  custom_order_status_Success: {
+    label: "Custom Orders - Success",
+    color: "green",
+    icon: CheckCircleIcon,
+  },
 
-  // Demo call statuses
-  demo_call_status_Pending: { label: "Demo Calls - Pending", color: "yellow" },
-  demo_call_status_Processing: { label: "Demo Calls - Processing", color: "blue" },
-  demo_call_status_Rejected: { label: "Demo Calls - Rejected", color: "red" },
-  demo_call_status_Success: { label: "Demo Calls - Success", color: "green" },
+  // Demo calls
+  demo_call_status_Pending: {
+    label: "Demo Calls - Pending",
+    color: "yellow",
+    icon: PhoneIcon,
+  },
+  demo_call_status_Processing: {
+    label: "Demo Calls - Processing",
+    color: "blue",
+    icon: PhoneIcon,
+  },
+  demo_call_status_Rejected: {
+    label: "Demo Calls - Rejected",
+    color: "red",
+    icon: XCircleIcon,
+  },
+  demo_call_status_Success: {
+    label: "Demo Calls - Success",
+    color: "green",
+    icon: CheckCircleIcon,
+  },
 
-  //gold 
-  buy_gold: { label: "Buy Gold", color: "yellow" },
-  sell_gold: { label: "Sell Gold", color: "red" },
-  total_distributor: { label: "Total Distributor", color: "green" },
-
+  // Gold
+  buy_gold: {
+    label: "Buy Gold",
+    color: "yellow",
+    icon: BanknotesIcon,
+  },
+  sell_gold: {
+    label: "Sell Gold",
+    color: "red",
+    icon: ArrowDownTrayIcon,
+  },
+  total_distributor: {
+    label: "Total Distributor",
+    color: "green",
+    icon: UserGroupIcon,
+  },
 };
+
 
 const Dashboard = () => {
   const { data } = useQuery(
@@ -62,7 +155,9 @@ const Dashboard = () => {
               label={mapItem.label}
               value={item.total_count}
               color={mapItem.color}
+              icon={mapItem.icon}
             />
+
           );
         })}
       </div>
@@ -70,15 +165,22 @@ const Dashboard = () => {
   );
 };
 
-const StatCard = ({ color, label, value }) => (
-  <div className={`bg-${color}-50 p-6 rounded-lg border border-${color}-200`}>
-    <div className="flex items-center justify-between">
-      <div>
-        <p className={`text-${color}-600 text-sm font-medium`}>{label}</p>
-        <p className={`text-xl font-bold text-${color}-700`}>{value}</p>
+const StatCard = ({ color, label, value, icon: Icon }) => {
+  const formattedValue = Number(value);
+  return (
+    <div className={`bg-${color}-50 py-6  px-2 rounded-lg border border-${color}-200`}>
+      <div className="flex items-center justify-between">
+        {Icon && <Icon className={`h-8 w-8 text-${color}-400`} />}
+
+        <div>
+          <p className={`text-${color}-600 text-sm font-medium`}>{label}</p>
+          <p className={`text-xl text-end px-5 font-bold text-${color}-700`}>{formattedValue}</p>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
+
+
 
 export default Dashboard;

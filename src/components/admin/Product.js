@@ -8,6 +8,14 @@ import { Edit, Eye, View } from "lucide-react";
 import { Delete } from "@mui/icons-material";
 import { useQuery, useQueryClient } from "react-query";
 import CustomToPagination from "../../Shared/Pagination";
+import CustomTable from "./Shared/CustomTable";
+// Create this reusable component for repeated info rows
+const InfoRow = ({ label, value }) => (
+  <div>
+    <p className="text-gray-500 font-medium">{label}:</p>
+    <p className="text-gray-800">{value}</p>
+  </div>
+);
 
 const Products = () => {
   const [subcategories, setSubcategories] = useState([]);
@@ -157,11 +165,13 @@ const Products = () => {
       };
 
       const res = await apiConnectorPost(endpoint.update_product, payload);
-      toast.success(res?.data?.message || "Product updated");
-      setEditModal(false);
-      setSelectedProduct(null);
-      resetForm();
-      client.refetchQueries("get_products_admin")
+      toast(res?.data?.message);
+      if (res?.data?.success) {
+        setEditModal(false);
+        setSelectedProduct(null);
+        resetForm();
+        client.refetchQueries("get_products_admin")
+      }
     } catch (err) {
       toast.error("Error updating product.");
     } finally {
@@ -175,7 +185,7 @@ const Products = () => {
       const res = await apiConnectorGet(
         `${endpoint.delete_product}?product_id=${product.product_id}`
       );
-      toast.success(res?.data?.message || "Product deleted");
+      toast(res?.data?.message);
       client.refetchQueries("get_products_admin")
     } catch (err) {
       toast.error("Error deleting product.");
@@ -196,8 +206,6 @@ const Products = () => {
       state: { product }, // Pass entire product object
     });
   };
-
-
 
   const openEditModal = async (product) => {
     setSelectedProduct(product);
@@ -230,6 +238,63 @@ const Products = () => {
 
   const collections = data?.data?.result || [];
 
+  const tablehead = [
+    "S.No",
+    "Product Name & Image",
+    "Category",
+    "Subcategory",
+    "Collection",
+    "Variant",
+    "Actions"
+  ];
+
+  const tablerow = products.map((product, index) => {
+    let images = [];
+    try {
+      images = JSON.parse(product.product_images || "[]");
+    } catch {
+      images = [];
+    }
+
+    const firstImageUrl = images.length > 0 ? images[0].p_image_url : null;
+    const subcategoryName = product.sub_category_details?.sub_cat_name || "N/A";
+    const categoryName = product.sub_category_details?.category_details?.["`name`"] || "N/A";
+
+    return [
+      <span>{(page - 1) * 10 + index + 1}</span>,
+      <div className="flex items-center space-x-3">
+        {firstImageUrl && (
+          <img
+            src={firstImageUrl}
+            alt={product.name}
+            className="w-12 h-12 object-cover rounded border cursor-pointer"
+            onClick={() => openEditModal(product)}
+          />
+        )}
+        <span>{product.name}</span>
+      </div>,
+      <span>{categoryName}</span>,
+      <span>{subcategoryName}</span>,
+      <span>{product?.collection_details?.coll_name || "---"}</span>,
+      <button
+        onClick={() => handleVariantClick(product)}
+        title="Manage Variant"
+      >
+        <Edit className="!text-green-500" />
+      </button>,
+      <div className="flex space-x-2">
+        <button onClick={() => handleViewProduct(product)} title="View">
+          <Eye className="!text-green-500" />
+        </button>
+        <button onClick={() => openEditModal(product)} title="Edit">
+          <Edit className="!text-blue-500" />
+        </button>
+        <button onClick={() => deleteProduct(product)} title="Delete">
+          <Delete className="!text-red-500" />
+        </button>
+      </div>
+    ];
+  });
 
 
   return (
@@ -242,26 +307,26 @@ const Products = () => {
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
         >
           <span>➕</span>
-          <span>Add New Product</span>
+          <span>Add  Product</span>
         </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <input
           type="text"
           placeholder="Search by username"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <input
           type="date"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
         <input
           type="date"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
@@ -283,106 +348,11 @@ const Products = () => {
           <span>Collection</span>
         </button>
       </div>
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                S.No
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Product Name & Image
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Subcategory
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Collection
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Variant
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      />
 
-          <tbody className="bg-white divide-y divide-gray-200">
-            {products.length === 0 ? (
-              <tr>
-                <td colSpan="3" className="text-center py-6 text-gray-500">
-                  No products found.
-                </td>
-              </tr>
-            ) : (
-              products.map((product, index) => {
-                // Parse product images JSON safely
-                let images = [];
-                try {
-                  images = JSON.parse(product.product_images || "[]");
-                } catch {
-                  images = [];
-                }
-
-                // Extract first image url if exists
-                const firstImageUrl =
-                  images.length > 0 ? images[0].p_image_url : null;
-
-                // Access category and subcategory names carefully
-                const subcategoryName =
-                  product.sub_category_details?.sub_cat_name || "N/A";
-
-                // The category name has backticks in key: "`name`"
-                // Use bracket notation to access it safely
-                const categoryName =
-                  product.sub_category_details?.category_details?.["`name`"] ||
-                  "N/A";
-
-                return (
-                  <tr key={product.product_id}>
-                    <td className="px-6 py-4">{((page - 1) * 10) + index + 1}</td>
-
-                    <td className="px-6 py-4 flex items-center space-x-3">
-                      {firstImageUrl && (
-                        <img
-                          src={firstImageUrl}
-                          alt={product.name}
-                          className="w-12 h-12 object-cover rounded border cursor-pointer"
-                          onClick={() => openEditModal(product)} />
-                      )}
-                      <span>{product.name}</span>
-                    </td>
-                    {/* <td className="px-6 py-4">₹{product.price}</td> */}
-                    <td className="px-6 py-4">{categoryName || "--"}</td>
-                    <td className="px-6 py-4">{subcategoryName || "--"}</td>
-                    <td className="px-6 py-4">{product?.collection_details?.coll_name || "---"}</td>
-
-
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleVariantClick(product)}
-                        title="Manage Variant"
-                      >
-                        <Edit className="!text-green-500" />
-                      </button>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex space-x-2">
-                        <button onClick={() => handleViewProduct(product)} title="View"><Eye className="!text-green-500" /></button>
-                        <button onClick={() => openEditModal(product)} title="Edit"><Edit className="!text-blue-500" /></button>
-                        <button onClick={() => deleteProduct(product)} title="Delete"><Delete className="!text-red-500" /></button>
-                      </div></td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
 
       {createModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -695,168 +665,130 @@ const Products = () => {
       )}
 
       {/* View Modal */}
-      {viewModal && viewData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-semibold mb-4">View Product</h2>
-            <div className="grid grid-cols-1 gap-4 text-sm text-gray-800">
-              <div>
-                <strong>Name:</strong> {viewData.name}
-              </div>
-              <div>
-                <strong>Description:</strong> {viewData.description || "N/A"}
-              </div>
-              {/* <div>
-                <strong>Price:</strong> ₹{viewData.price}
-              </div> */}
-              <div>
-                <strong>Tags:</strong> {viewData.product_tags || "N/A"}
-              </div>
+    {viewModal && viewData && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+    <div className="bg-white w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl transform transition-all duration-300 scale-100">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-800">📦 Product Details</h2>
+        <p className="text-sm text-gray-500">Here is a detailed view of the selected product.</p>
+      </div>
 
-              <div>
-                <strong>Category:</strong>{" "}
-                {viewData.sub_category_details?.category_details?.["`name`"] ||
-                  "N/A"}
-              </div>
-              <div>
-                <strong>Subcategory:</strong>{" "}
-                {viewData.sub_category_details?.sub_cat_name || "N/A"}
-              </div>
+      <div className="p-6 space-y-8">
 
-              <div>
-                <strong>Images:</strong>
-                <div className="flex gap-2 mt-2 flex-wrap">
-                  {(() => {
-                    let images = [];
-                    try {
-                      images = JSON.parse(viewData.product_images || "[]");
-                    } catch (err) {
-                      console.error("Invalid product_images JSON", err);
-                    }
-
-                    return images
-                      .filter((img) => img?.p_image_url)
-                      .map((img, idx) => (
-                        <img
-                          key={idx}
-                          src={img.p_image_url}
-                          alt={`Product image ${idx + 1}`}
-                          className="w-24 h-24 object-cover rounded border"
-                        />
-                      ));
-                  })()}
-                </div>
-              </div>
-
-              <div>
-                <strong>Inventory:</strong>
-                <div className="mt-2 space-y-2 text-sm">
-                  {(() => {
-                    let inventory = [];
-                    try {
-                      inventory = JSON.parse(
-                        viewData.inventory_details || "[]"
-                      );
-                    } catch (err) {
-                      console.error("Invalid inventory_details JSON", err);
-                    }
-
-                    return inventory.length === 0 ? (
-                      <div className="text-gray-500">No inventory data.</div>
-                    ) : (
-                      inventory.map((inv, idx) => (
-                        <div
-                          key={idx}
-                          className="border p-2 rounded bg-gray-50"
-                        >
-                          <div>
-                            <strong>Quantity:</strong> {inv.quantity ?? "N/A"}
-                          </div>
-                          <div>
-                            <strong>Barcode:</strong> {inv.barcode ?? "N/A"}
-                          </div>
-                          <div>
-                            <strong>Batch Number:</strong>{" "}
-                            {inv.batch_number ?? "N/A"}
-                          </div>
-                          <div>
-                            <strong>Expiry Date:</strong>{" "}
-                            {inv.expiry_date ?? "N/A"}
-                          </div>
-                          <div>
-                            <strong>Last Updated:</strong>{" "}
-                            {inv.last_updated
-                              ? new Date(inv.last_updated).toLocaleString()
-                              : "N/A"}
-                          </div>
-                          <div>
-                            <strong>Inventory Unique:</strong>{" "}
-                            {inv.inventory_unique ?? "N/A"}
-                          </div>
-                          <div>
-                            <strong>Minimum Quantity:</strong>{" "}
-                            {inv.minimum_quantity ?? "N/A"}
-                          </div>
-                          <div>
-                            <strong>Reserved Quantity:</strong>{" "}
-                            {inv.reserved_quantity ?? "N/A"}
-                          </div>
-
-                          {inv.warehouse_details && (
-                            <div className="mt-2 pl-2 border-l-4 border-gray-300">
-                              <div>
-                                <strong>Warehouse:</strong>{" "}
-                                {inv.warehouse_details.name || "N/A"}
-                              </div>
-                              <div>
-                                <strong>City:</strong>{" "}
-                                {inv.warehouse_details.city || "N/A"}
-                              </div>
-                              <div>
-                                <strong>State:</strong>{" "}
-                                {inv.warehouse_details.state || "N/A"}
-                              </div>
-                              <div>
-                                <strong>Country:</strong>{" "}
-                                {inv.warehouse_details.country || "N/A"}
-                              </div>
-                              <div>
-                                <strong>Pincode:</strong>{" "}
-                                {inv.warehouse_details.pincode || "N/A"}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))
-                    );
-                  })()}
-                </div>
-              </div>
-
-              <div>
-                <strong>Created At:</strong>{" "}
-                {new Date(viewData.created_at).toLocaleString()}
-              </div>
-              <div>
-                <strong>Updated At:</strong>{" "}
-                {new Date(viewData.updated_at).toLocaleString()}
-              </div>
-            </div>
-
-            <div className="flex justify-end mt-6">
-              <button
-                onClick={() => {
-                  setViewModal(false);
-                  setViewData(null);
-                }}
-                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
-                Close
-              </button>
-            </div>
+        {/* Basic Info Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">🔍 Basic Info</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <InfoRow label="Name" value={viewData.name} />
+            <InfoRow label="Tags" value={viewData.product_tags || "N/A"} />
+            <InfoRow label="Category" value={viewData.sub_category_details?.category_details?.["`name`"] || "N/A"} />
+            <InfoRow label="Subcategory" value={viewData.sub_category_details?.sub_cat_name || "N/A"} />
           </div>
-        </div>
-      )}
+        </section>
+            <InfoRow label="Description" value={viewData.description || "N/A"} />
+
+        {/* Images Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">🖼️ Product Images</h3>
+          <div className="flex flex-wrap gap-3">
+            {(() => {
+              let images = [];
+              try {
+                images = JSON.parse(viewData.product_images || "[]");
+              } catch (err) {
+                console.error("Invalid product_images JSON", err);
+              }
+
+              return images.length > 0 ? (
+                images.filter(img => img?.p_image_url).map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img.p_image_url}
+                    alt={`Product image ${idx + 1}`}
+                    className="w-24 h-24 object-cover rounded-lg border shadow-sm"
+                  />
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">No images available.</p>
+              );
+            })()}
+          </div>
+        </section>
+
+        {/* Inventory Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">📦 Inventory Details</h3>
+          <div className="space-y-4">
+            {(() => {
+              let inventory = [];
+              try {
+                inventory = JSON.parse(viewData.inventory_details || "[]");
+              } catch (err) {
+                console.error("Invalid inventory_details JSON", err);
+              }
+
+              return inventory.length === 0 ? (
+                <p className="text-gray-500">No inventory data available.</p>
+              ) : (
+                inventory.map((inv, idx) => (
+                  <div key={idx} className="p-4 border rounded-md bg-gray-50 shadow-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                      <InfoRow label="Quantity" value={inv.quantity ?? "N/A"} />
+                      <InfoRow label="Barcode" value={inv.barcode ?? "N/A"} />
+                      <InfoRow label="Batch Number" value={inv.batch_number ?? "N/A"} />
+                      <InfoRow label="Expiry Date" value={inv.expiry_date ?? "N/A"} />
+                      <InfoRow label="Inventory Unique" value={inv.inventory_unique ?? "N/A"} />
+                      <InfoRow label="Last Updated" value={inv.last_updated ? new Date(inv.last_updated).toLocaleString() : "N/A"} />
+                      <InfoRow label="Minimum Quantity" value={inv.minimum_quantity ?? "N/A"} />
+                      <InfoRow label="Reserved Quantity" value={inv.reserved_quantity ?? "N/A"} />
+                    </div>
+
+                    {/* Warehouse Info */}
+                    {inv.warehouse_details && (
+                      <div className="mt-3 pl-4 border-l-4 border-blue-200 text-sm text-gray-700">
+                        <p className="font-medium">🏠 Warehouse Info</p>
+                        <p><strong>Name:</strong> {inv.warehouse_details.name || "N/A"}</p>
+                        <p><strong>City:</strong> {inv.warehouse_details.city || "N/A"}</p>
+                        <p><strong>State:</strong> {inv.warehouse_details.state || "N/A"}</p>
+                        <p><strong>Country:</strong> {inv.warehouse_details.country || "N/A"}</p>
+                        <p><strong>Pincode:</strong> {inv.warehouse_details.pincode || "N/A"}</p>
+                      </div>
+                    )}
+                  </div>
+                ))
+              );
+            })()}
+          </div>
+        </section>
+
+        {/* Timestamps */}
+        <section>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">🕒 Timestamps</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <InfoRow label="Created At" value={new Date(viewData.created_at).toLocaleString()} />
+            <InfoRow label="Updated At" value={new Date(viewData.updated_at).toLocaleString()} />
+          </div>
+        </section>
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-end px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <button
+          onClick={() => {
+            setViewModal(false);
+            setViewData(null);
+          }}
+          className="px-5 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-md"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+  
+)}
+
+
       <CustomToPagination data={prod?.data?.result} setPage={setPage} page={page} />
     </div>
   );

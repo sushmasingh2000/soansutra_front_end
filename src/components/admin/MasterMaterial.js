@@ -3,6 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint, rupees } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit } from "@mui/icons-material";
+import CustomTable from "./Shared/CustomTable";
 
 const MasterMaterial = () => {
   const [materials, setMaterials] = useState([]);
@@ -117,6 +118,48 @@ const MasterMaterial = () => {
     }
   };
 
+  const tablehead = [
+    <span>S.No</span>,
+    <span>Name</span>,
+    <span>Buy Price</span>,
+    <span>Buy Value</span>,
+    <span>🌕 Buy Tax(%)</span>,
+    <span>🌕 Sell Price</span>,
+    <span>🌕 Sell Value</span>,
+    <span>🌕 Sell Tax(%)</span>,
+    <span>Buy Making Price </span>,
+    <span> Buy Making Price Type </span>,
+    <span>Actions</span>,
+  ]
+  const tablerow = materials.map((material, index) => [
+    <span>{index + 1}</span>,
+    <span>
+      {material.ma_material_name || "--"}
+    </span>,
+    <span>{material.ma_price || "--"} {rupees}</span>,
+    <span>{material.ma_value || "--"}  {material.ma_unit || "--"}</span>,
+    <span>  {material.ma_buy_tax_percentage || "--"} </span>,
+    <span>  {material.ma_sell_price || "--"} </span>,
+    <span>  {material.ma_sell_value || "--"} </span>,
+    <span>  {material.ma_sell_tax_percentage || "--"} </span>,
+    <span>  {material.ma_buy_making_price || "--"} </span>,
+    <span>  {material.ma_buy_making_price_type || "--"} </span>,
+
+    <span>
+      <button
+        onClick={() => handleEdit(material)}
+        className="text-blue-600 hover:underline"
+      >
+        <Edit />
+      </button>
+      <button
+        onClick={() => handleDelete(material.ma_material_id)}
+        className="text-red-600 hover:underline"
+      >
+        <DeleteForever />
+      </button>
+    </span>,
+  ])
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -128,70 +171,11 @@ const MasterMaterial = () => {
           + Add Master Material
         </button>
       </div>
-
-      <div className="bg-white shadow rounded-lg overflow-scroll">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Name</th>
-              <th className="px-4 py-3 text-left">Buy Price</th>
-              <th className="px-4 py-3 text-left">Buy Value</th>
-              <th className="px-4 py-3 text-left">🌕 Buy Tax(%)</th>
-              <th className="px-4 py-3 text-left">🌕 Sell Price</th>
-              <th className="px-4 py-3 text-left">🌕 Sell Value</th>
-              <th className="px-4 py-3 text-left">🌕 Sell Tax(%)</th>
-              <th className="px-4 py-3 text-left">Buy Making Price </th>
-              <th className="px-4 py-3 text-left"> Buy Making Price Type </th>
-              <th className="px-4 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {materials.map((material, index) => (
-              <tr
-                key={material.ma_material_id}
-                className="border-t hover:bg-gray-50"
-              >
-                <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2">
-                  {material.ma_material_name || "--"}
-                </td>
-
-                <td className="px-4 py-2">{material.ma_price || "--"} {rupees}</td>
-                <td className="px-4 py-2">{material.ma_value || "--"}  {material.ma_unit || "--"}</td>
-                <td className="px-4 py-2">  {material.ma_buy_tax_percentage || "--"} </td>
-                <td className="px-4 py-2">  {material.ma_sell_price || "--"} </td>
-                <td className="px-4 py-2">  {material.ma_sell_value || "--"} </td>
-                <td className="px-4 py-2">  {material.ma_sell_tax_percentage || "--"} </td>
-                <td className="px-4 py-2">  {material.ma_buy_making_price || "--"} </td>
-                <td className="px-4 py-2">  {material.ma_buy_making_price_type || "--"} </td>
-
-                <td className="px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => handleEdit(material)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(material.ma_material_id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    <DeleteForever />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {materials.length === 0 && (
-              <tr>
-                <td colSpan={4} className="py-4 text-center text-gray-500">
-                  No materials found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={loading}
+      />
 
       {/* Modal */}
       {modalOpen && (
@@ -282,7 +266,7 @@ const MasterMaterial = () => {
                   className="w-full border p-2 rounded"
                 />
               </div>
-             
+
 
               <div>
                 <label> Sell Material Price</label>
@@ -325,20 +309,20 @@ const MasterMaterial = () => {
                 /> </div>
             </div>
 
-             <div className="flex flex-col w-fit">
-                <label>Buy Making  Price Type</label>
-                <select 
+            <div className="flex flex-col w-fit">
+              <label>Buy Making  Price Type</label>
+              <select
                 name="ma_buy_making_price_type"
-                 value={formData.ma_buy_making_price_type}
-                   onChange={(e) =>
-                    setFormData({ ...formData, ma_buy_making_price_type: e.target.value })
-                  }
-                   className="p-3 border rounded">
-                  <option value="">Select Buy Making  Price Type </option>
-                  <option value="1">Flat</option>
-                  <option value="2">Percentage</option>
-                </select>
-              </div>
+                value={formData.ma_buy_making_price_type}
+                onChange={(e) =>
+                  setFormData({ ...formData, ma_buy_making_price_type: e.target.value })
+                }
+                className="p-3 border rounded">
+                <option value="">Select Buy Making  Price Type </option>
+                <option value="1">Flat</option>
+                <option value="2">Percentage</option>
+              </select>
+            </div>
 
             <div className="flex justify-end space-x-2">
               <button

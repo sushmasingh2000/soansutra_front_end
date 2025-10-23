@@ -3,6 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { DeleteForever, Edit, ToggleOn, ToggleOff } from "@mui/icons-material";
+import CustomTable from "./Shared/CustomTable";
 
 const Video = () => {
   const [videos, setVideos] = useState([]);
@@ -105,6 +106,45 @@ const Video = () => {
     }
   };
 
+  const tablehead = [
+    <span>S.No</span>,
+    <span>Name</span>,
+    <span>Preview</span>,
+    <span>Status</span>,
+    <span>Actions</span>,
+  ]
+
+  const tablerow = videos.map((video, index) => [
+    <span>{index + 1}</span>,
+    <span>{video.video_name}</span>,
+    <span>
+      <video
+        src={video.vid_url}
+        controls
+        className="w-32 rounded"
+      />
+    </span>,
+    <span>
+      <button onClick={() => toggleStatus(video.vid_id)}>
+        {video.video_status ? <ToggleOn /> : <ToggleOff />}
+      </button>
+    </span>,
+    <span>
+      <button
+        onClick={() => handleEdit(video)}
+        className="text-blue-600 hover:underline"
+      >
+        <Edit />
+      </button>
+      <button
+        onClick={() => handleDelete(video.vid_id)}
+        className="text-red-600 hover:underline"
+      >
+        <DeleteForever />
+      </button>
+    </span>
+  ])
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -120,60 +160,11 @@ const Video = () => {
         </button>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Name</th>
-              <th className="px-4 py-3 text-left">Preview</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {videos.map((video, index) => (
-              <tr key={video.vid_id} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2">{video.video_name}</td>
-                <td className="px-4 py-2">
-                  <video
-                    src={video.vid_url}
-                    controls
-                    className="w-32 rounded"
-                  />
-                </td>
-                <td className="px-4 py-2">
-                  <button onClick={() => toggleStatus(video.vid_id)}>
-                    {video.video_status ? <ToggleOn /> : <ToggleOff />}
-                  </button>
-                </td>
-                <td className="px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => handleEdit(video)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(video.vid_id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    <DeleteForever />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {videos.length === 0 && (
-              <tr>
-                <td colSpan={5} className="py-4 text-center text-gray-500">
-                  No videos found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={loading}
+      />
 
       {/* Modal */}
       {modalOpen && (

@@ -13,6 +13,7 @@ import { apiConnectorGet } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import VariantModal from "./Variant";
 import VariantMaterialModal from "./VariantMaterial";
+import CustomTable from "./Shared/CustomTable";
 
 const ProductVariant = () => {
   const location = useLocation();
@@ -108,6 +109,102 @@ const ProductVariant = () => {
   if (!product) {
     return <div className="p-6 text-red-500">Product data not found!</div>;
   }
+  const tablehead = [
+    "S.No",
+    "SKU",
+    "Making Price (₹)",
+    "Price Type",
+    "Weight",
+    "Quantity",
+    "Reserved Quantity",
+    "Minimum Quantity",
+    "Inventory",
+    "Attribute",
+    "Material",
+    "Discount",
+    "Tax",
+    "Actions",
+  ];
+
+
+  const tablerow = variants.map((variant, index) => [
+    <span>{index + 1}</span>,
+    <span>{variant.varient_sku || "--"}</span>,
+    <span>{variant.making_price || "--"}</span>,
+    <span>{variant.mak_price_type || "--"}</span>,
+    <span>{variant.varient_weight || "--"}</span>,
+    <span
+      className="text-blue-600 underline cursor-pointer"
+      onClick={() =>
+        variant?.inventory_id > 0 && handleQuantityClick(variant?.inventory_id)
+      }
+    >
+      {variant.inventory_details?.quantity || "--"}
+    </span>,
+    <span>{variant.inventory_details?.reserved_quantity || "--"}</span>,
+    <span>{variant.inventory_details?.minimum_quantity || "--"}</span>,
+
+    <button
+      onClick={() =>
+        navigate(`/inventory?variant_id=${variant.varient_id}`)
+      }
+      className="text-indigo-600 hover:underline"
+    >
+      <Edit2 />
+    </button>,
+
+    <button
+      onClick={() =>
+        navigate(
+          `/product-attribute?variant_id=${variant.varient_id}&&product_id=${variant?.product_id}`
+        )
+      }
+      className="text-green-600 hover:underline"
+    >
+      <Edit />
+    </button>,
+
+    <button
+      onClick={() => setMaterialModalVariant(variant)}
+      className="text-green-600 hover:underline"
+    >
+      <Edit />
+    </button>,
+
+    <button
+      onClick={() =>
+        navigate(`/product-discount?variant_id=${variant.varient_id}`)
+      }
+      className="text-green-600 hover:underline"
+    >
+      <Edit />
+    </button>,
+
+    <button
+      onClick={() =>
+        navigate(`/product-tax?variant_id=${variant.varient_id}`)
+      }
+      className="text-green-600 hover:underline"
+    >
+      <Edit />
+    </button>,
+
+    <div className="space-x-2">
+      <button
+        onClick={() => openModalForEdit(variant)}
+        className="text-blue-600 hover:underline"
+      >
+        <Edit />
+      </button>
+      <button
+        onClick={() => handleDeleteVariant(variant.varient_id)}
+        className="text-red-600 hover:underline"
+      >
+        <Delete />
+      </button>
+    </div>,
+  ]);
+
 
   return (
     <div className="p-6">
@@ -122,143 +219,12 @@ const ProductVariant = () => {
         </button>
       </div>
 
-      <table className="min-w-full border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-4 py-2 text-center">S.No</th>
-            <th className="border px-4 py-2 text-center">SKU</th>
-            {/* <th className="border px-4 py-2 text-center">Price (₹)</th> */}
-            <th className="border px-4 py-2 text-center">Making Price (₹)</th>
-            <th className="border px-4 py-2 text-center">Price Type</th>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+        isLoading={loding}
+      />
 
-            <th className="border px-4 py-2 text-center">Weight</th>
-            {/* <th className="border px-4 py-2 text-center">Dimension Unit</th> */}
-            <th className="border px-4 py-2 text-center">Quantity</th>
-            <th className="border px-4 py-2 text-center">Reserved Quantity</th>
-            <th className="border px-4 py-2 text-center">Minimum Quantity</th>
-            <th className="border px-4 py-2 text-center">Inventory</th>
-            <th className="border px-4 py-2 text-center">Attribute</th>
-            <th className="border px-4 py-2 text-center">Material</th>
-            <th className="border px-4 py-2 text-center">Discount</th>
-            <th className="border px-4 py-2 text-center">Tax</th>
-            <th className="border px-4 py-2 text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {variants.length === 0 ? (
-            <tr>
-              <td colSpan="5" className="text-center p-4 text-gray-500">
-                No variants found.
-              </td>
-            </tr>
-          ) : (
-            variants?.map((variant, index) => (
-              <tr key={variant?.varient_id} className="hover:bg-gray-50">
-                <td className="border px-4 py-2 text-center">{index + 1}</td>
-                <td className="border px-4 py-2 text-center">
-                  {variant.varient_sku || "--"}
-                </td>
-                {/* <td className="border px-4 py-2 text-center">
-                  {variant.varient_price || "--"}
-                </td> */}
-                <td className="border px-4 py-2 text-center">
-                  {variant.making_price || "--"}
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  {variant.mak_price_type || "--"}
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  {variant.varient_weight || "--"}
-                </td>
-
-                <td
-                  className="border px-4 py-2 text-center text-blue-600 underline cursor-pointer"
-                  onClick={() =>
-                    variant?.inventory_id > 0 &&
-                    handleQuantityClick(variant?.inventory_id)
-                  }
-                >
-                  {variant.inventory_details?.quantity || "--"}
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  {variant.inventory_details?.reserved_quantity || "--"}
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  {variant.inventory_details?.minimum_quantity || "--"}
-                </td>
-
-                <td className="border text-center px-4 py-2">
-                  <button
-                    onClick={() =>
-                      navigate(`/inventory?variant_id=${variant.varient_id}`)
-                    }
-                    className="text-indigo-600 hover:underline"
-                  >
-                    <Edit2 />
-                  </button>
-                </td>
-                <td className="border text-center px-4 py-2">
-                  <button
-                    onClick={() =>
-                      navigate(
-                        `/product-attribute?variant_id=${variant.varient_id}&&product_id=${variant?.product_id}`
-                      )
-                    }
-                    className="text-green-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                </td>
-                <td className="border text-center px-4 py-2">
-                  <button
-                    onClick={() => setMaterialModalVariant(variant)}
-                    className="text-green-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                </td>
-                <td className="border text-center px-4 py-2">
-                  <button
-                    onClick={() =>
-                      navigate(
-                        `/product-discount?variant_id=${variant.varient_id}`
-                      )
-                    }
-                    className="text-green-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                </td>
-                <td className="border text-center px-4 py-2">
-                  <button
-                    onClick={() =>
-                      navigate(`/product-tax?variant_id=${variant.varient_id}`)
-                    }
-                    className="text-green-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                </td>
-
-                <td className="border text-center px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => openModalForEdit(variant)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteVariant(variant.varient_id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    <Delete />
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
 
       {/* Modal for Create/Edit Variant */}
       <ReactModal

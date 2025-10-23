@@ -7,6 +7,7 @@ import ReactModal from "react-modal";
 import moment from "moment";
 import { Edit } from "lucide-react";
 import CustomToPagination from "../../Shared/Pagination";
+import CustomTable from "./Shared/CustomTable";
 
 const Customer = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -39,8 +40,8 @@ const Customer = () => {
 
   const openPasswordModal = (customerId) => {
     setPasswordData({
-      userId: customerId, // 👈 Fill userId
-      new_password: "", // 👈 Keep password empty
+      userId: customerId,
+      new_password: "", 
     });
     setPasswordModalOpen(true);
   };
@@ -54,7 +55,7 @@ const Customer = () => {
     { keepPreviousData: true }
   );
 
-  const customers = data?.data?.message || [];
+  const customers = data?.data?.result || [];
 
   const handlePasswordChange = async () => {
     if (!passwordData.new_password) {
@@ -150,121 +151,108 @@ const Customer = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast(endpointUrl?.data?.message)
-          if(endpointUrl?.data?.success){
-            toast(isEditing ? "Customer updated." : "Customer created.");
-            setModalOpen(false);
-            refetch();
-          }
-      
+      toast(endpointUrl?.data?.message);
+      if (endpointUrl?.data?.success) {
+        toast(isEditing ? "Customer updated." : "Customer created.");
+        setModalOpen(false);
+        refetch();
+      }
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong.");
     }
   };
 
+  const tablehead = [
+    "S.No",
+    "Unique Id",
+    "Name",
+    "Email",
+    "Phone",
+    "DOB",
+    "Password",
+    "Anniversary",
+    "Spouse Birthday",
+    "Occupation",
+    "Govt ID Type",
+    "Govt ID No",
+    "Govt ID Image",
+    "City",
+    "Country",
+    "Created",
+    "Status",
+    "Action",
+  ];
+
+  const tablerow = customers?.data?.map((c, index) => [
+    index + 1,
+    c.cust_unique_id,
+    c.name,
+    c.cl_email,
+    c.cl_phone,
+    c.date_of_birth || "-",
+    <span
+      className="text-blue-600 underline cursor-pointer"
+      onClick={() => openPasswordModal(c.cust_unique_id)}
+    >
+      {c.cl_password ? `${c.cl_password.slice(0, 5)}xxx` : "-"}
+    </span>,
+    c.aniversary || "-",
+    c.spouse_birthday || "-",
+    c.occupation || "-",
+    c.govt_identity || "-",
+    c.govt_no || "-",
+    c.govt_id_image ? (
+      <img
+        src={c.govt_id_image}
+        alt="Govt ID"
+        className="h-10 w-16 object-cover rounded cursor-pointer hover:scale-105 transition"
+        onClick={() => window.open(c.govt_id_image, "_blank")}
+      />
+    ) : (
+      "-"
+    ),
+    c.city,
+    c.country,
+    moment(c.created_at).format("YYYY-MM-DD"),
+    c.cl_lgn_status,
+    <button
+      onClick={() => openModal(c)}
+      className="text-blue-600 hover:text-blue-800"
+      title="Edit Customer"
+    >
+      <Edit size={18} />
+    </button>,
+  ])
+
   return (
-    <div className="p-6  mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Customer Management</h1>
-        {/* <button
-                    onClick={() => openModal()}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                    <Plus size={16} />
-                    Add Customer
-                </button> */}
-      </div>
+    <div className="p-6 ">
+      <h1 className="text-2xl font-bold">Customer Management</h1>
 
       {/* Search bar */}
+      <div className="my-4 flex items-center gap-4">
+        <input
+          type="text"
+          placeholder="Search by email or ID"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border p-2 rounded w-72 bg-white bg-opacity-30"
+        />
+        <button
+          onClick={() => refetch()}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Search
+        </button>
+      </div>
 
       {/* Table */}
-      <div className="overflow-auto rounded border">
-        <table className="min-w-full bg-white">
-          <thead className="bg-gray-100 text-left text-gray-700">
-            <tr>
-              <th className="px-4 py-2 border-b">Name</th>
-              <th className="px-4 py-2 border-b">Email</th>
-              <th className="px-4 py-2 border-b">Phone</th>
-              <th className="px-4 py-2 border-b">DOB</th>
-              <th className="px-4 py-2 border-b">Password</th>
-              <th className="px-4 py-2 border-b">Anniversary</th>
-              <th className="px-4 py-2 border-b">Spouse Birthday</th>
-              <th className="px-4 py-2 border-b">Occupation</th>
-              <th className="px-4 py-2 border-b">Govt ID Type</th>
-              <th className="px-4 py-2 border-b">Govt ID No</th>
-              <th className="px-4 py-2 border-b">Govt ID Image</th>
-              <th className="px-4 py-2 border-b">City</th>
-              <th className="px-4 py-2 border-b">Country</th>
-              <th className="px-4 py-2 border-b">Created</th>
-              <th className="px-4 py-2 border-b">Status</th>
-              <th className="px-4 py-2 border-b">Action</th>
-              {/* <th className="px-4 py-2 border-b">Status</th>
-                            <th className="px-4 py-2 border-b">Status</th> */}
-            </tr>
-          </thead>
 
-          <tbody>
-            {customers?.data?.map((c) => (
-              <tr key={c.customer_id}>
-                <td className="px-4 py-2 border-b">{c.name}</td>
-                <td className="px-4 py-2 border-b">{c.cl_email}</td>
-                <td className="px-4 py-2 border-b">{c.cl_phone}</td>
-                <td className="px-4 py-2 border-b">{c.date_of_birth || "-"}</td>
-                <td
-                  className="px-4 py-2 border-b text-blue-600 cursor-pointer underline"
-                  onClick={() => openPasswordModal(c.cust_unique_id)}
-                >
-                  {c.cl_password || "-"}
-                </td>
-                <td className="px-4 py-2 border-b">{c.aniversary || "-"}</td>
-                <td className="px-4 py-2 border-b">
-                  {c.spouse_birthday || "-"}
-                </td>
-                <td className="px-4 py-2 border-b">{c.occupation || "-"}</td>
-                <td className="px-4 py-2 border-b">{c.govt_identity || "-"}</td>
-                <td className="px-4 py-2 border-b">{c.govt_no || "-"}</td>
-
-                <td className="px-4 py-2 border-b">
-                  {c.govt_id_image ? (
-                    <img
-                      src={c.govt_id_image}
-                      alt="Govt ID"
-                      className="h-10 w-16 object-cover rounded cursor-pointer hover:scale-105 transition"
-                      onClick={() => window.open(c.govt_id_image, "_blank")}
-                    />
-                  ) : (
-                    "-"
-                  )}
-                </td>
-
-                <td className="px-4 py-2 border-b">{c.city}</td>
-                <td className="px-4 py-2 border-b">{c.country}</td>
-                <td className="px-4 py-2 border-b">
-                  {moment(c.created_at).format("YYYY-MM-DD")}
-                </td>
-                <td className="px-4 py-2 border-b">{c.cl_lgn_status}</td>
-                <td className="px-4 py-2 border-b">
-                  <button
-                    onClick={() => openModal(c)}
-                    className="text-blue-600 hover:text-blue-800"
-                    title="Edit Customer"
-                  >
-                    <Edit size={18} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {customers.length === 0 && (
-              <tr>
-                <td colSpan="7" className="text-center py-4 text-gray-500">
-                  No customers found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+        isLoading={data?.isLoading}
+      />
 
       <CustomToPagination data={customers} page={page} setPage={setPage} />
 

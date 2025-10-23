@@ -3,6 +3,7 @@ import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import { Delete, Edit } from "lucide-react";
+import CustomTable from "./Shared/CustomTable";
 
 const Discount = () => {
     const [discounts, setDiscounts] = useState([]);
@@ -120,6 +121,40 @@ const Discount = () => {
         fetchDiscounts();
     }, []);
 
+    const tablehead = [
+        <span>S.No</span>,
+        <span>Name</span>,
+        <span>Type</span>,
+        <span>Value</span>,
+        <span>Start Date</span>,
+        <span>End Date</span>,
+        <span>Status</span>,
+        <span>Actions</span>,
+
+    ]
+
+    const tablerow = discounts.map((discount, index) => [
+        <span>{index + 1}</span>,
+        <span>{discount.name}</span>,
+        <span>{discount.discount_type}</span>,
+        <span>{discount.value}</span>,
+        <span>{discount.start_date}</span>,
+        <span>{discount.end_date}</span>,
+        <span>{discount.is_active}</span>,
+        <span className="px-6 py-4">
+            <div className="flex space-x-2">
+                <button
+                    onClick={() => openEditModal(discount)}
+                    className="text-green-600 hover:text-green-800"
+                ><Edit /></button>
+                <button
+                    onClick={() => deleteDiscount(discount.discount_id)}
+                    className="text-red-600 hover:text-red-800"
+                ><Delete /></button>
+            </div>
+        </span>])
+
+
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -132,84 +167,47 @@ const Discount = () => {
                 </button>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.No</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {discounts.length === 0 ? (
-                            <tr>
-                                <td colSpan="7" className="text-center py-6 text-gray-500">No discounts found.</td>
-                            </tr>
-                        ) : (
-                            discounts.map((discount, index) => (
-                                <tr key={discount.discount_id}>
-                                    <td className="px-6 py-4 text-sm">{index + 1}</td>
-                                    <td className="px-6 py-4 text-sm">{discount.name}</td>
-                                    <td className="px-6 py-4 text-sm">{discount.discount_type}</td>
-                                    <td className="px-6 py-4 text-sm">{discount.value}</td>
-                                    <td className="px-6 py-4 text-sm">{discount.start_date}</td>
-                                    <td className="px-6 py-4 text-sm">{discount.end_date}</td>
-                                    <td className="px-6 py-4 text-sm">{discount.is_active}</td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => openEditModal(discount)}
-                                                className="text-green-600 hover:text-green-800"
-                                            ><Edit /></button>
-                                            <button
-                                                onClick={() => deleteDiscount(discount.discount_id)}
-                                                className="text-red-600 hover:text-red-800"
-                                            ><Delete /></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+
+            <CustomTable
+                tablehead={tablehead}
+                tablerow={tablerow}
+            // isLoading={loading}
+            />
 
             {/* Create Modal */}
-            {createModal && (
-                <DiscountModal
-                    title="Add Discount"
-                    formData={formData}
-                    onClose={() => {
-                        setCreateModal(false);
-                        resetForm();
-                    }}
-                    onSubmit={createDiscount}
-                    onChange={handleInputChange}
-                    loading={loading}
-                />
-            )}
+            {
+                createModal && (
+                    <DiscountModal
+                        title="Add Discount"
+                        formData={formData}
+                        onClose={() => {
+                            setCreateModal(false);
+                            resetForm();
+                        }}
+                        onSubmit={createDiscount}
+                        onChange={handleInputChange}
+                        loading={loading}
+                    />
+                )
+            }
 
             {/* Edit Modal */}
-            {editModal && (
-                <DiscountModal
-                    title="Edit Discount"
-                    formData={formData}
-                    onClose={() => {
-                        setEditModal(false);
-                        resetForm();
-                    }}
-                    onSubmit={updateDiscount}
-                    onChange={handleInputChange}
-                    loading={loading}
-                />
-            )}
-        </div>
+            {
+                editModal && (
+                    <DiscountModal
+                        title="Edit Discount"
+                        formData={formData}
+                        onClose={() => {
+                            setEditModal(false);
+                            resetForm();
+                        }}
+                        onSubmit={updateDiscount}
+                        onChange={handleInputChange}
+                        loading={loading}
+                    />
+                )
+            }
+        </div >
     );
 };
 

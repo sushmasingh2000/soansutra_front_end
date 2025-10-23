@@ -10,6 +10,7 @@ import CustomToPagination from "../../Shared/Pagination";
 import { useQuery } from "react-query";
 import moment from "moment";
 import { Dialog } from "@mui/material";
+import CustomTable from "./Shared/CustomTable";
 
 const BankDetails = () => {
   const [page, setPage] = useState(1);
@@ -115,6 +116,49 @@ const BankDetails = () => {
     }
   };
 
+
+
+
+  const tablehead = [
+    <span>S.No</span>,
+    <span>Acc. Holder Name</span>,
+    <span>Acc. No.</span>,
+    <span>Beneficery ID</span>,
+    <span> Email</span>,
+    <span> Phone</span>,
+    <span> VPA</span>,
+    <span>Bank Name</span>,
+    <span>Branch Name</span>,
+    <span>IFSC Code</span>,
+    <span> Address</span>,
+    <span> City</span>,
+    <span> Postal Code</span>,
+    <span> State</span>,
+    <span>Country Code</span>,
+    <span>Updated At</span>,
+  ]
+
+  const tablerow = bankList?.data?.map((item, idx) => [
+    <span>{(page - 1) * count + idx + 1}</span>,
+    <span>{item?.account_holder_name || "--"}</span>,
+    <span>{item?.account_number || "--"}</span>,
+    <span>{item?.bene_id || "--"}</span>,
+    <span>{item?.bene_email || "--"}</span>,
+    <span>{item?.bene_phone || "--"}</span>,
+    <span>{item?.bene_vpa || "--"}</span>,
+    <span>{item?.bank_name || "--"}</span>,
+    <span>{item?.branch_name || "--"}</span>,
+    <span>{item?.ifsc_code || "--"}</span>,
+    <span>{item?.bene_address || "--"}</span>,
+    <span>{item?.bene_city || "--"}</span>,
+    <span>{item?.bene_postal_code || "--"}</span>,
+    <span>{item?.bene_state || "--"}</span>,
+    <span>{item?.country_code || "--"}</span>,
+    <span>
+      {item?.updated_at ? moment(item?.updated_at).format("DD-MM-YYYY") : "--"}
+    </span>,
+  ])
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -125,88 +169,30 @@ const BankDetails = () => {
         <input
           type="text"
           placeholder="Search by username"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <input
           type="date"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
         <input
           type="date"
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded bg-white bg-opacity-45"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Acc. Holder Name</th>
-              <th className="px-4 py-3 text-left">Acc. No.</th>
-              <th className="px-4 py-3 text-left">Beneficery ID</th>
-                  <th className="px-4 py-3 text-left"> Email</th>
-              <th className="px-4 py-3 text-left"> Phone</th>
-              <th className="px-4 py-3 text-left"> VPA</th>
-              <th className="px-4 py-3 text-left">Bank Name</th>
-              <th className="px-4 py-3 text-left">Branch Name</th>
-              <th className="px-4 py-3 text-left">IFSC Code</th>
-              <th className="px-4 py-3 text-left"> Address</th>
-              <th className="px-4 py-3 text-left"> City</th>
-              <th className="px-4 py-3 text-left"> Postal Code</th>
-              <th className="px-4 py-3 text-left"> State</th>
-              <th className="px-4 py-3 text-left">Country Code</th>
-              <th className="px-4 py-3 text-left">Updated At</th>
-              {/* <th className="px-4 py-3 text-left">Action</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {bankList?.data?.map((item, index) => (
-              <tr key={item?.bank_id || index} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2">{(page - 1) * count + index + 1}</td>
-                <td className="px-4 py-2">{item?.account_holder_name || "--"}</td>
-                <td className="px-4 py-2">{item?.account_number || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_id || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_email || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_phone || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_vpa || "--"}</td>
-                <td className="px-4 py-2">{item?.bank_name || "--"}</td>
-                <td className="px-4 py-2">{item?.branch_name || "--"}</td>
-                <td className="px-4 py-2">{item?.ifsc_code || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_address || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_city || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_postal_code || "--"}</td>
-                <td className="px-4 py-2">{item?.bene_state || "--"}</td>
-                <td className="px-4 py-2">{item?.country_code || "--"}</td>
 
-                <td className="px-4 py-2">
-                  {item?.updated_at ? moment(item?.updated_at).format("DD-MM-YYYY") : "--"}
-                </td>
-                {/* <td className="px-4 py-2">
-                  <button
-                    onClick={() => {
-                      setSelectedBank(item);
-                      setFormData({ ...item, country_code: item?.country_code || "91" });
-                      setSelectedCountryCode(item?.country_code || "91");
-                      setEditModalOpen(true);
-                    }}
-                    className="text-blue-600 hover:underline"
-                  >
-                    <Edit />
-                  </button>
-                </td> */}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={loading}
+      />
       <div className="mt-6">
         <CustomToPagination page={page} data={bankList} setPage={setPage} />
       </div>

@@ -63,7 +63,9 @@ const AdminAccess = [
   "video",
   "mlm",
   "leads",
-  "del"
+  "del",
+  "POS",
+  "Offlinesell"
 ];
 const deliveryboy = [
   "pro",
@@ -220,6 +222,19 @@ export const all_Data = [
     ],
   },
   {
+    id: "POS",
+    label: "POS",
+    icon: <AccountBalance />,
+    subcomponent: [
+      {
+        id: "pos",
+        label: "Add Stock ",
+        icon: <AccountBalance />,
+        navLink: "/pos",
+      },
+    ],
+  },
+  {
     id: "order-management",
     label: "Order Management",
     icon: <Sell />,
@@ -236,7 +251,26 @@ export const all_Data = [
         icon: <AssignmentTurnedIn />,
         navLink: "/custom",
       },
+      {
+        id: "offline-order",
+        label: "Offline Order",
+        icon: <AssignmentTurnedIn />,
+        navLink: "/offline",
+      },
 
+    ],
+  },
+  {
+    id: "Offlinesell",
+    label: "Offline Sell",
+    icon: <AccountBalance />,
+    subcomponent: [
+      {
+        id: "sell offline",
+        label: "Sell ",
+        icon: <AccountBalance />,
+        navLink: "/sell",
+      },
     ],
   },
   {

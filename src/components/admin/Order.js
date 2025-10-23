@@ -4,6 +4,7 @@ import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
 import CustomToPagination from "../../Shared/Pagination";
 import { useNavigate } from "react-router-dom";
+import CustomTable from "./Shared/CustomTable";
 
 const Order = () => {
   const [orders, setOrders] = useState({});
@@ -147,6 +148,125 @@ const Order = () => {
     }
   };
 
+  const tablehead = [
+    "S.No",
+    "Order ID",
+    productType === "EGOLD" ? "Receiving Type" : "Products",
+    "Status",
+    "Delivery ID",
+    "Assigned",
+    "Actions",
+    "Invoice",
+  ];
+
+  const tablerow = orders?.data?.map((order, index) => [
+    index + 1,
+
+    // Order ID (clickable)
+    <span
+      className="text-blue-600 hover:underline cursor-pointer"
+      onClick={() => navigate(`/order-details/${order.order_unique}`)}
+    >
+      {order.order_unique}
+    </span>,
+
+    // Product or EGOLD receiving type
+    productType === "EGOLD" ? (
+      order.receiving_type
+    ) : (
+      <div className="space-y-2">
+        {order?.order_items?.map((item, i) => (
+          <div key={i} className="flex flex-col items-center gap-2">
+            <div>
+              <img
+              src={item.p_image_url}
+              alt="Product"
+              className="w-8 h-8 rounded-full object-cover"
+            /></div>
+            <div>
+              <p className="font-semibold">{item.sku}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    ),
+
+    // Status badge
+    <span
+      className={`px-2 py-1 rounded-full text-xs font-medium ${order.status === "Pending"
+          ? "bg-yellow-100 text-yellow-700"
+          : order.status === "Confirmed"
+            ? "bg-green-100 text-green-700"
+            : order.status === "Cancelled"
+              ? "bg-red-100 text-red-700"
+              : "bg-gray-100 text-gray-700"
+        }`}
+    >
+      {order.status}
+    </span>,
+
+    // Delivery ID
+    <span
+      className="text-blue-600 underline cursor-pointer"
+      onClick={() => fetchDeliveryBoyDetails(order?.dlv_id)}
+    >
+      {order?.dlv_id || "--"}
+    </span>,
+
+    // Assignment
+    (order.is_assigned_status === "Pending" || order.is_assigned_status === "Reject") ? (
+      <div className="flex flex-col items-center">
+        <button
+          onClick={() => openAssignModal(order)}
+          className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+        >
+          Assign
+        </button>
+        <p>{order?.is_assigned_status}</p>
+      </div>
+    ) : (
+      order?.is_assigned_status
+    ),
+
+    // Actions - Status buttons
+    <div className="flex flex-wrap gap-2">
+      {statusButtons.map(({ status, bgColor, hoverColor }) => {
+        const currentIndex = statusButtons.findIndex(
+          (btn) => btn.status === order.status
+        );
+        const buttonIndex = statusButtons.findIndex(
+          (btn) => btn.status === status
+        );
+        const isDisabled = buttonIndex <= currentIndex;
+        return (
+          <button
+            key={status}
+            onClick={() =>
+              !isDisabled && handleStatusChange(order.order_unique, status)
+            }
+            disabled={isDisabled}
+            className={`px-3 py-1 text-white rounded ${bgColor} ${hoverColor} ${isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
+          >
+            {status}
+          </button>
+        );
+      })}
+    </div>,
+
+    // Invoice
+    (order?.status !== "Pending" && order?.status !== "Failed") ? (
+      <button
+        className="text-sm font-medium text-blue-600 underline"
+        onClick={() => navigate(`/invoice/${order?.order_unique}`)}
+      >
+        View / Download Invoice
+      </button>
+    ) : (
+      "--"
+    ),
+  ]);
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -179,132 +299,12 @@ const Order = () => {
         </div>
       )}
 
-      <div className="bg-white shadow rounded-lg overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Order ID</th>
-              {productType === "EGOLD" ? (
-                <th className="px-4 py-3 text-left">Receiving Type</th>
-              ) : (
-                <th className="px-4 py-3 text-left">Products</th>
-              )}
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-left">DeliveryID</th>
-              <th className="px-4 py-3 text-left">Assigned</th>
-              <th className="px-4 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders?.data?.length > 0 ? (
-              orders?.data?.map((order, index) => (
-                <tr key={order.order_id} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td
-                    className="px-4 py-2 text-blue-600 hover:underline cursor-pointer"
-                    onClick={() => navigate(`/order-details/${order.order_unique}`)}
-                  >
-                    {order.order_unique}
-                  </td>
-
-                  {productType === "EGOLD" ? (
-                    <td className="px-4 py-2">{order.receiving_type}</td>
-                  ) : (
-                    <td className="px-4 py-2 space-y-2">
-                      {order?.order_items?.map((item, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <img
-                            src={item.p_image_url}
-                            alt="Product"
-                            className="w-8 h-8 rounded-full object-cover"
-                          />
-                          <div>
-                            <p className="font-semibold">{item.sku}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </td>
-                  )}
-
-                  <td className="px-4 py-2">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${order.status === "Pending"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : order.status === "Confirmed"
-                          ? "bg-green-100 text-green-700"
-                          : order.status === "Cancelled"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-
-                  <td className="px-4 py-2">
-                    <span
-                      className="text-blue-600 underline cursor-pointer"
-                      onClick={() => fetchDeliveryBoyDetails(order?.dlv_id)}
-                    >
-                      {order?.dlv_id || "--"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2">
-                    {(order.is_assigned_status === "Pending" || order.is_assigned_status === "Reject") ?
-                      <div className="flex flex-col items-center">
-                      <button
-                        onClick={() => openAssignModal(order)}
-                        className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
-                      >
-                        Assign
-                      </button> 
-                     <p>{ order?.is_assigned_status}</p></div>
-                      :
-                      order?.is_assigned_status
-                      }
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="flex flex-wrap gap-2">
-                      {statusButtons.map(({ status, bgColor, hoverColor }) => {
-                        const currentIndex = statusButtons.findIndex(
-                          (btn) => btn.status === order.status
-                        );
-                        const buttonIndex = statusButtons.findIndex(
-                          (btn) => btn.status === status
-                        );
-                        const isDisabled = buttonIndex <= currentIndex;
-                        return (
-                          <button
-                            key={status}
-                            onClick={() =>
-                              !isDisabled &&
-                              handleStatusChange(order.order_unique, status)
-                            }
-                            disabled={isDisabled}
-                            className={`px-3 py-1 text-white rounded ${bgColor} ${hoverColor} ${isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                              }`}
-                          >
-                            {status}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="py-4 text-center text-gray-500">
-                  No orders found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        <CustomToPagination setPage={setPage} page={page} data={orders} />
-      </div>
-
+      <CustomTable
+        tablehead={tablehead}
+        tablerow={tablerow}
+      // isLoading={isLoading}
+      />
+      <CustomToPagination setPage={setPage} page={page} data={orders} />
       {/* Assign Modal */}
       {assignModalOpen && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">

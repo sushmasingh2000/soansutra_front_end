@@ -7,6 +7,7 @@ import CustomToPagination from "../../Shared/Pagination";
 import { useQuery, useQueryClient } from "react-query";
 import { useFormik } from "formik";
 import { Switch } from "@mui/material";
+import CustomTable from "./Shared/CustomTable";
 
 const Coupon = () => {
     const [page, setPage] = useState(1);
@@ -77,7 +78,7 @@ const Coupon = () => {
     );
     const mat_data = material?.data?.result || [];
 
-     const { data: price_range } = useQuery(
+    const { data: price_range } = useQuery(
         ["get_range"],
         () => apiConnectorGet(endpoint.get_coupon_range),
         usequeryBoolean
@@ -189,16 +190,62 @@ const Coupon = () => {
                     : item.coupon_apply_on === "Material"
                         ? "2"
                         : item.coupon_apply_on === "Package"
-                        ? "3"
-                        : "",
+                            ? "3"
+                            : "",
             coupon_middle_id: item.coupon_middle_id?.toString() || "",
         });
 
         setEditModal(true);
     };
 
+    const tablehead = [
+        <span>S.No</span>,
+        <span>Apply On</span>,
+        <span>Apply Name</span>,
+        <span>Code</span>,
+        <span>Type</span>,
+        <span>Value</span>,
+        <span>Description</span>,
+        <span>Start Date</span>,
+        <span>End Date</span>,
+        <span>Status</span>,
+        <span>Actions</span>,
+
+    ]
 
 
+    const tablerow = coupons?.data?.map((item, index) => [
+        <span>{index + 1}</span>,
+        <span>{item.coupon_apply_on}</span>,
+        <span>{item?.applied_name}</span>,
+        <span>{item.coupon_code}</span>,
+        <span>{item.coupon_discount_type}</span>,
+        <span>{item.coupon_value}</span>,
+        <span>{item.coupon_description}</span>,
+        <span>{item.coupon_start_date}</span>,
+        <span>{item.coupon_end_date}</span>,
+        <span> <Switch
+            checked={item.coupon_is_active === "Active"}
+            onChange={() => ChangeCouponStatus(item.coupon_id)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full ${item.coupon_is_active === "Active" ? "" : ""
+                }`}
+        >
+            <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${item.coupon_is_active === "Active" ? "translate-x-6" : "translate-x-1"
+                    }`}
+            />
+        </Switch></span>,
+        <span className="px-6 py-4">
+            <div className="flex space-x-2">
+                <button
+                    onClick={() => openEditModal(item)}
+                    className="text-green-600 hover:text-green-800"
+                ><Edit /></button>
+
+            </div>
+        </span>
+
+    ])
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -260,66 +307,11 @@ const Coupon = () => {
                     </button>
                 </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm border overflow-scroll">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">S.No</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Apply On</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Apply Name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {coupons?.data?.length === 0 ? (
-                            <tr>
-                                <td colSpan="7" className="text-center py-6 text-gray-500">No coupons found.</td>
-                            </tr>
-                        ) : (
-                            coupons?.data?.map((item, index) => (
-                                <tr key={item.coupon_id || index}>
-                                    <td className="px-6 py-4 text-sm">{index + 1}</td>
-                                    <td className="px-6 py-4 text-sm">{item.coupon_apply_on}</td>
-                                    <td className="px-6 py-4 text-sm">{item?.applied_name}</td>
-                                    <td className="px-6 py-4 text-sm">{item.coupon_code}</td>
-                                    <td className="px-6 py-4 text-sm">{item.coupon_discount_type}</td>
-                                    <td className="px-6 py-4 text-sm">{item.coupon_value}</td>
-                                    <td className="px-6 py-4 text-sm">{item.coupon_description}</td>
-                                    <td className="px-6 py-4 text-sm">{item.coupon_start_date}</td>
-                                    <td className="px-6 py-4 text-sm">{item.coupon_end_date}</td>
-                                    <td> <Switch
-                                        checked={item.coupon_is_active === "Active"}
-                                        onChange={() => ChangeCouponStatus(item.coupon_id)}
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full ${item.coupon_is_active === "Active" ? "" : ""
-                                            }`}
-                                    >
-                                        <span
-                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${item.coupon_is_active === "Active" ? "translate-x-6" : "translate-x-1"
-                                                }`}
-                                        />
-                                    </Switch></td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => openEditModal(item)}
-                                                className="text-green-600 hover:text-green-800"
-                                            ><Edit /></button>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+            <CustomTable
+                tablehead={tablehead}
+                tablerow={tablerow}
+            // isLoading={loading}
+            />
             <CustomToPagination data={coupons} setPage={setPage} page={page} />
             {/* Create Modal */}
             {createModal && (
@@ -363,7 +355,7 @@ const Coupon = () => {
     );
 };
 
-const CouponModal = ({ title, formData, onClose, onSubmit, onChange, loading, cat_data, mat_data , price_range_data }) => {
+const CouponModal = ({ title, formData, onClose, onSubmit, onChange, loading, cat_data, mat_data, price_range_data }) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
@@ -425,7 +417,7 @@ const CouponModal = ({ title, formData, onClose, onSubmit, onChange, loading, ca
                         </select>
                     )}
 
-                     {formData.coupon_apply_on === "3" && (
+                    {formData.coupon_apply_on === "3" && (
                         <select
                             name="coupon_middle_id"
                             value={formData.coupon_middle_id}
