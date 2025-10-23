@@ -928,7 +928,7 @@ const SonasutraInvoice = () => {
                 </div>
                 <div className="mb-[5px]">
                   <strong>CIN :</strong> U47733UP2025PTC225721.{" "}
-                  <strong>Website:</strong> www.Sonasutra.com.{" "}
+                  <strong>Website:</strong> www.sonasutra.com.{" "}
                   <strong>Toll-free Number:</strong> 1800 102 0103
                 </div>
                 <div className="mb-[5px]">
@@ -937,7 +937,7 @@ const SonasutraInvoice = () => {
                   latest designs.
                 </div>
                 <div className="mb-[5px]">
-                  You can also call us on 7068454247 and 044-4293-5000 from 9
+                  You can also call us on 7068454247  from 9
                   A.M to 12 A.M IST (Mon - Sat) , 9 A.M to 9 P.M (Sun).
                 </div>
                 <div className="mb-[5px]">
