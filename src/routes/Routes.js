@@ -68,6 +68,8 @@ import { elements } from "chart.js";
 import DeliveryAdminPanel from "../components/deliveryadminpanel.jsx";
 import DeliveryBoyDashboard from "../components/deliveryboydashboard.jsx";
 import PaytmVault from "../components/pages/PaytmVault.js";
+import CertificateUI from "../components/e-certificate.jsx";
+import CertificateVerification from "../components/certificateui.jsx";
 
 export const routes = [
   {
@@ -532,6 +534,16 @@ export const routes = [
  {
   path:"/delivery-boy",
   element:<DeliveryBoyDashboard/>
+ },
+
+ {
+  path:"/download-e-certificate",
+  element:<CertificateUI/>
+ },
+
+ {
+  path:"/e-certificate",
+  element:<CertificateVerification/>
  }
    
 ];
