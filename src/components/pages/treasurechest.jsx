@@ -636,7 +636,7 @@ export default function TreasureChestBanner() {
                         START SAVING
                       </button>
                       :
-              <p onClick={setShowinstallment}>Check Your Details</p>
+              <p className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-2 cursor-pointer" onClick={setShowinstallment}>Check Your Installment Details</p>
             }
                     </div>
                   </div>
@@ -1240,7 +1240,7 @@ export default function TreasureChestBanner() {
       )}
         {showinstallment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white rounded-2xl w-[90%] md:w-[70%] lg:w-[60%] p-6 relative">
+        <div className="bg-white rounded-2xl w-[90%] md:w-[70%] lg:w-[70%] p-6 relative">
           {/* Close button */}
           <button
             onClick={() => setShowinstallment(false)}
@@ -1268,19 +1268,19 @@ export default function TreasureChestBanner() {
                 <input
                   type="text"
                   placeholder="Search by name or ID"
-                  className="border px-3 py-2 rounded"
+                  className="border px-3 py-2 rounded w-full"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <input
                   type="date"
-                  className="border px-3 py-2 rounded"
+                  className="border px-3 py-2 rounded w-full"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
                 <input
                   type="date"
-                  className="border px-3 py-2 rounded"
+                  className="border px-3 py-2 rounded w-full"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
