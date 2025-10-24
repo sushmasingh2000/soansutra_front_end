@@ -46,6 +46,8 @@ import DeliveryDashboard from "../deliveryboy/Deliverydashboard.js";
 import OfflineOrder from "../OfflineOrder.js";
 import InventoyPos from "../pos/InventoryPos.js";
 import OfflineSell from "../offlineSell/Offlinesell.js";
+import Installment from "../Installment.js";
+import SubscriptionPlan from "../SubscriptionPlan.js";
 
 export const adminroutes = [
 
@@ -131,6 +133,16 @@ export const adminroutes = [
     path: "/pos",
     component: <InventoyPos />,
     navItem: "POS Inventory",
+  },
+  {
+    path: "/installment",
+    component: <Installment />,
+    navItem: "Installment",
+  },
+  {
+    path: "/subscription",
+    component: <SubscriptionPlan />,
+    navItem: "Subscription Plan",
   },
    {
     path: "/sell",

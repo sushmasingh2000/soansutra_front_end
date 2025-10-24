@@ -1,87 +1,261 @@
-
-
-import { Check } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import TreasureChestFaqToggleComponent from '../faqtreasurechest';
-import Footer from '../Footer1';
-import Header from '../Header1';
-import { useQuery } from 'react-query';
-import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
-import { endpoint } from '../../utils/APIRoutes';
+import { Check, Lock } from "lucide-react";
+import { useEffect, useState } from "react";
+import TreasureChestFaqToggleComponent from "../faqtreasurechest";
+import Footer from "../Footer1";
+import Header from "../Header1";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  apiConnectorGet,
+  apiConnectorPost,
+  usequeryBoolean,
+} from "../../utils/ApiConnector";
+import { endpoint } from "../../utils/APIRoutes";
+import toast from "react-hot-toast";
+import CustomTable from "../admin/Shared/CustomTable";
+import CustomToPagination from "../../Shared/Pagination";
 
 export default function TreasureChestBanner() {
   const [sliderPosition, setSliderPosition] = useState(0); // 0 = closed, 100 = fully open
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedPlanId, setSelectedPlanId] = useState(null); // plan_id from dropdown
+
   const [startY, setStartY] = useState(0);
   const [showStickyFooter, setShowStickyFooter] = useState(true);
-  const [activeTab, setActiveTab] = useState('comparison'); // 'comparison' or 'description'
+  const [activeTab, setActiveTab] = useState("comparison"); // 'comparison' or 'description'
   const [selectedAmount, setSelectedAmount] = useState(1000);
-  const [amountError, setAmountError] = useState('');
+  const [amountError, setAmountError] = useState("");
   const [growthPercent, setGrowthPercent] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [showinstallment, setShowinstallment] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  // Add scroll listener to sync slider with page scroll
+  const { data: ins , isLoading } = useQuery(
+    ["get_installment", debouncedSearchTerm, startDate, endDate, page],
+    () =>
+      apiConnectorGet(endpoint.get_installment, {
+        search: debouncedSearchTerm,
+        start_date: startDate,
+        end_date: endDate,
+        page: page,
+        count: 10,
+      })
+  );
+
+  const installmentList = ins?.data?.result || [];
+  const payMutation = useMutation({
+    mutationFn: (body) => apiConnectorPost(endpoint.pay_due_installment, body),
+    onSuccess: (res) => {
+      const paymentlink = res?.data?.payments?.url;
+        if (paymentlink) {
+          setShowinstallment(false);
+          window.location.href = paymentlink;
+          return;
+        }
+      toast(res?.data?.message);
+      client.refetchQueries("get_installment");
+    },
+    onError: (err) => {
+      alert("Payment failed " + (err?.response?.data?.message || ""));
+    },
+  });
+  const client = useQueryClient();
+
+  const handlePayNow = (installment) => {
+    const { installment_id, remaining_amnt } = installment;
+  if (!installment_id || !remaining_amnt) {
+    toast("Missing installment_id or remaining_amount");
+    return;
+  }
+    payMutation.mutate({
+      installment_id,
+      payable_amount: remaining_amnt, 
+    });
+  };
+
+  const tablehead = [
+    <span>S.No</span>,
+    <span>Plan</span>,
+    <span>Due Date</span>,
+    <span>Amount Due</span>,
+    <span>Penality Amount</span>,
+    <span>Paid Amount</span>,
+    <span>Status</span>,
+    <span>Action</span>,
+  ];
+
+  // ✅ Table rows
+  const tablerow = installmentList?.data?.map((item, idx) => [
+    <span>{idx + 1}</span>,
+    <span>{item?.dz_descripton || "-"}</span>,
+    <span>{new Date(item?.due_date).toLocaleDateString()}</span>,
+    <span>₹{Number(item?.amount_due).toLocaleString()}</span>,
+    <span>₹{Number(item?.penalty_accrued).toLocaleString()}</span>,
+    <span>₹{Number(item?.paid_amount).toLocaleString()}</span>,
+    <span
+      className={`${
+        item?.payment_status === "Pending"
+          ? "text-red-500"
+          : "text-green-600 font-semibold"
+      }`}
+    >
+      {item?.payment_status}
+    </span>,
+     <td className="px-4 py-2 text-center">
+     {item.pay_status === "Show Pay Button" ? (
+       <button
+       onClick={() => handlePayNow(item)}
+       disabled={payMutation.isLoading}
+       className={`${
+         payMutation.isLoading
+           ? "bg-gray-400 cursor-not-allowed"
+           : "bg-green-500 hover:bg-green-600"
+       } text-white px-4 py-1 rounded-lg text-sm font-semibold`}
+     >
+       {payMutation.isLoading ? "Processing..." : "Pay Now"}
+     </button>
+     ) : (
+      <Lock/>
+     )}
+   </td>
+  ]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
   useEffect(() => {
     const handleScroll = () => {
-      if (isDragging) return; // Don't update position while dragging
+      if (isDragging) return;
 
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // Calculate scroll percentage
-      const scrollPercentage = Math.min(scrollTop / (documentHeight - windowHeight), 1);
-
-      // Convert scroll percentage to slider position (0-100)
+      const scrollPercentage = Math.min(
+        scrollTop / (documentHeight - windowHeight),
+        1
+      );
       const newSliderPosition = scrollPercentage * 100;
       setSliderPosition(newSliderPosition);
-
-      // Show sticky footer when slider is not fully open
       setShowStickyFooter(newSliderPosition < 90);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [isDragging]);
-
-  const handleTouchStart = (e) => {
-    setIsDragging(true);
-    setStartY(e.touches[0].clientY);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-
-    const currentY = e.touches[0].clientY;
-    const deltaY = startY - currentY;
-    const newPosition = Math.max(0, Math.min(100, sliderPosition + (deltaY / (window.innerHeight * 2)) * 100));
-
-    setSliderPosition(newPosition);
-    setShowStickyFooter(newPosition < 90);
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-
-    if (sliderPosition > 30) {
-      setSliderPosition(100);
-      setShowStickyFooter(false);
-    } else {
-      setSliderPosition(0);
-      setShowStickyFooter(true);
-    }
-  };
 
   const { data } = useQuery(
     ["get_rate_dazzle", selectedAmount],
-    () => apiConnectorGet(`${endpoint?.get_dazzle_plan}?prenciple=${selectedAmount}`),
+    () =>
+      apiConnectorGet(
+        `${endpoint?.get_dazzle_plan}?prenciple=${selectedAmount}`
+      ),
     {
       keepPreviousData: true,
-      usequeryBoolean
+      usequeryBoolean,
     }
   );
 
   const dazzleamount = data?.data?.result || [];
+
+  const { data: dazzledetail } = useQuery(
+    ["get_rate_dazzle", selectedAmount, selectedPlan],
+    () =>
+      apiConnectorGet(
+        `${endpoint?.get_dazzle_plan}?prenciple=${selectedAmount}&plan_type=${selectedPlan}`
+      ),
+    {
+      enabled: !!selectedPlan && !!selectedAmount,
+      keepPreviousData: true,
+    }
+  );
+
+  const dazzledetail_plan = dazzledetail?.data?.result || [];
+
+  // const handlePlanChange = (e) => {
+  //   const value = e.target.value;
+  //   // map month → plan_type
+  //   const planType =
+  //     value.includes("12") ? 1 : value.includes("13") ? 2 : value.includes("14") ? 3 : null;
+  //   setSelectedPlan(planType);
+  // };
+  const handlePlanChange = (e) => {
+    const selectedDescription = e.target.value;
+    const planData = dazzleamountplan.find(
+      (p) => p.dz_descripton === selectedDescription
+    );
+
+    setSelectedPlanId(planData?.dz_id); // for POST API
+    // Map 12/13/14-months → plan_type (1/2/3)
+    const planType = selectedDescription.includes("12")
+      ? 1
+      : selectedDescription.includes("13")
+      ? 2
+      : selectedDescription.includes("14")
+      ? 3
+      : null;
+
+    setSelectedPlan(planType);
+  };
+
+  const { mutate: submitPlan, isLoading: submitting } = useMutation(
+    (payload) => apiConnectorPost(endpoint?.pay_for_subscription_plan, payload),
+    {
+      onSuccess: (res) => {
+        const paymentlink = res?.data?.payments?.url;
+        // console.log(res?.data?.payments?.url)
+        if (paymentlink) {
+          // ✅ Redirect to Cashfree Payment Page
+          setShowPopup(false);
+          window.location.href = paymentlink;
+
+          return;
+        }
+        toast(res?.data?.message);
+        if (res?.data?.success) {
+        }
+      },
+      onError: (err) => {
+        console.error(err);
+        alert("Something went wrong while submitting the plan!");
+      },
+    }
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!selectedPlanId || !selectedPlan || !selectedAmount) {
+      alert("Please fill all fields before submitting.");
+      return;
+    }
+
+    const payload = {
+      plan_id: selectedPlanId,
+      total_amount: selectedAmount,
+      plan_type: selectedPlan,
+    };
+    submitPlan(payload);
+  };
+
+  const { data: plan } = useQuery(
+    ["get_rate_dazzle_plan_subscription"],
+    () => apiConnectorGet(endpoint?.get_dazzle_subscription_plan),
+    {
+      usequeryBoolean,
+    }
+  );
+
+  const dazzleamountplan = plan?.data?.result || [];
 
   return (
     <>
@@ -92,17 +266,12 @@ export default function TreasureChestBanner() {
       <div className="h-90 relative overflow-hidden">
         {/* Background with custom gradient - only when slider is not fully open */}
         {sliderPosition < 100 && (
-          <div
-            className="absolute inset-0  bg-[radial-gradient(at_17%_100%,hsla(50,100%,70%,1)_0px,transparent_50%),radial-gradient(at_1%_57%,hsla(40,100%,50%,0.57)_0px,transparent_50%),radial-gradient(at_93%_99%,hsla(0,100%,70%,1)_0px,transparent_50%)]"
-
-          />
+          <div className="absolute inset-0  bg-[radial-gradient(at_17%_100%,hsla(50,100%,70%,1)_0px,transparent_50%),radial-gradient(at_1%_57%,hsla(40,100%,50%,0.57)_0px,transparent_50%),radial-gradient(at_93%_99%,hsla(0,100%,70%,1)_0px,transparent_50%)]" />
         )}
 
         {/* Content Container - only show when slider is not fully open */}
         {sliderPosition < 100 && (
-          <div className="fixed inset-0 z-10 pt-20  bg-[radial-gradient(at_17%_100%,hsla(50,100%,70%,1)_0px,transparent_50%),radial-gradient(at_1%_57%,hsla(40,100%,50%,0.57)_0px,transparent_50%),radial-gradient(at_93%_99%,hsla(0,100%,70%,1)_0px,transparent_50%)]"
-
-          >
+          <div className="fixed inset-0 z-10 pt-20  bg-[radial-gradient(at_17%_100%,hsla(50,100%,70%,1)_0px,transparent_50%),radial-gradient(at_1%_57%,hsla(40,100%,50%,0.57)_0px,transparent_50%),radial-gradient(at_93%_99%,hsla(0,100%,70%,1)_0px,transparent_50%)]">
             {/* Desktop Version */}
             <div className="hidden md:block">
               <div className="container mx-auto px-40">
@@ -118,18 +287,17 @@ export default function TreasureChestBanner() {
                     </div>
                     <div className="mb-3">
                       <h1 className="text-[38px] font-semibold text-black mb-6 leading-tight">
-                        Start Saving for Jewellery,<br />
+                        Start Saving for Jewellery,
+                        <br />
                         The Smart Way.
                       </h1>
                       <p className="text-sm text-gray-600 mb-8">
-                        Pay in 9 easy instalments & get the 10th one<br />
+                        Pay in 9 easy instalments & get the 10th one
+                        <br />
                         free as a SonaSutra discount!
                       </p>
                     </div>
-                    <button
-                      className="px-8 py-4 rounded-[10px] text-black font-semibold text-[12px] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-yellow-400 to-yellow-600"
-
-                    >
+                    <button className="px-8 py-4 rounded-[10px] text-black font-semibold text-[12px] shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-yellow-400 to-yellow-600">
                       Your Plan & JOIN
                     </button>
                   </div>
@@ -140,38 +308,76 @@ export default function TreasureChestBanner() {
                         alt="Gold Ring with Diamonds"
                         className="w-96 h-auto transform rotate-12 mb-8"
                         style={{
-                          animation: 'rotate180 4s ease-in-out infinite',
-                          animationDirection: 'alternate'
+                          animation: "rotate180 4s ease-in-out infinite",
+                          animationDirection: "alternate",
                         }}
                       />
                     </div>
                     <div className="grid grid-cols-3 gap-3 w-full max-w-2xl">
                       <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
                         <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          <svg
+                            className="w-5 h-5 text-gray-600"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
-                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Trust of SonaSutra</h3>
-                        <p className="text-gray-600 text-xs">Spirit of SonaSutra.<br />3,00,270+ enrolments.</p>
+                        <h3 className="font-semibold text-red-800 mb-1 text-sm">
+                          Trust of SonaSutra
+                        </h3>
+                        <p className="text-gray-600 text-xs">
+                          Spirit of SonaSutra.
+                          <br />
+                          3,00,270+ enrolments.
+                        </p>
                       </div>
                       <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
                         <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg
+                            className="w-5 h-5 text-gray-600"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
-                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Assured Bonus</h3>
-                        <p className="text-gray-600 text-xs">Your 10th instalment is on<br />us- 100% FREE.</p>
+                        <h3 className="font-semibold text-red-800 mb-1 text-sm">
+                          Assured Bonus
+                        </h3>
+                        <p className="text-gray-600 text-xs">
+                          Your 10th instalment is on
+                          <br />
+                          us- 100% FREE.
+                        </p>
                       </div>
                       <div className="bg-yellow-100 backdrop-blur-sm rounded-2xl p-4 text-center">
                         <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                          <svg
+                            className="w-5 h-5 text-gray-600"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
-                        <h3 className="font-semibold text-red-800 mb-1 text-sm">Flexible Plan</h3>
-                        <p className="text-gray-600 text-xs">Redeem at ease- online or<br />in-store.</p>
+                        <h3 className="font-semibold text-red-800 mb-1 text-sm">
+                          Flexible Plan
+                        </h3>
+                        <p className="text-gray-600 text-xs">
+                          Redeem at ease- online or
+                          <br />
+                          in-store.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -196,8 +402,8 @@ export default function TreasureChestBanner() {
                       alt="Gold Ring with Diamonds"
                       className="w-40 h-auto transform rotate-12 mb-4"
                       style={{
-                        animation: 'rotate180 4s ease-in-out infinite',
-                        animationDirection: 'alternate'
+                        animation: "rotate180 4s ease-in-out infinite",
+                        animationDirection: "alternate",
                       }}
                     />
                   </div>
@@ -207,7 +413,8 @@ export default function TreasureChestBanner() {
                     Start Saving for Jewellery, The Smart Way.
                   </h1>
                   <p className="text-lg text-gray-600 mb-6">
-                    Pay in 9 easy instalments & get the 10th one free as a SonaSutra discount!
+                    Pay in 9 easy instalments & get the 10th one free as a
+                    SonaSutra discount!
                   </p>
                 </div>
               </div>
@@ -221,12 +428,15 @@ export default function TreasureChestBanner() {
               <div className="bg-white/95 backdrop-blur-sm border-t border-gray-200 p-4">
                 <div className="flex items-center justify-between">
                   <div className="text-left flex-1">
-                    <p className="text-gray-800 font-semibold text-xs py-[-10]">Start saving ₹5,000/month</p>
-                    <p className="text-yellow-600 text-xs">for your dream jewellery</p>
+                    <p className="text-gray-800 font-semibold text-xs py-[-10]">
+                      Start saving ₹5,000/month
+                    </p>
+                    <p className="text-yellow-600 text-xs">
+                      for your dream jewellery
+                    </p>
                   </div>
                   <button
                     className="ml-4 px-6 py-3 rounded-[10px] bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 whitespace-nowrap"
-
                     onClick={() => {
                       setSliderPosition(100);
                       setShowStickyFooter(false);
@@ -244,49 +454,51 @@ export default function TreasureChestBanner() {
 
           {/* Custom CSS for rotation animation */}
           <style jsx>{`
-          @keyframes rotate180 {
-            0% {
-              transform: rotate(12deg);
+            @keyframes rotate180 {
+              0% {
+                transform: rotate(12deg);
+              }
+              100% {
+                transform: rotate(192deg);
+              }
             }
-            100% {
-              transform: rotate(192deg);
-            }
-          }
-        `}</style>
+          `}</style>
 
           {/* Bottom Slider */}
           <div
             className="fixed inset-x-0 shadow-2xl z-40 transition-transform duration-300 ease-out"
             style={{
-              transform: `translateY(calc(100% - 80px + ${(sliderPosition * -1)}%))`,
-              minHeight: '100vh',
-              bottom: showStickyFooter ? '55px' : '0px',
+              transform: `translateY(calc(100% - 80px + ${
+                sliderPosition * -1
+              }%))`,
+              minHeight: "100vh",
+              bottom: showStickyFooter ? "55px" : "0px",
               background: `
                   radial-gradient(at 17% 100%, hsla(240,87%,93%,1) 0px, transparent 50%),
                   radial-gradient(at 1% 57%, hsla(240,100%,70%,0.57) 0px, transparent 50%),
                   radial-gradient(at 93% 99%, hsla(287,100%,84%,1) 0px, transparent 50%)
-                `
+                `,
             }}
           >
-
-
-
             {/* Main content area */}
             <div
               className="flex flex-col min-h-full justify-between rounded-[48px]"
               style={{
-                background: 'white'
+                background: "white",
               }}
             >
               <div className="p-4 md:p-8 flex-1 bg-white rounded-tl-[48px] rounded-tr-[48px] flex flex-col">
                 {/* Heading for desktop */}
                 <div className="hidden md:block">
-                  <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center rounded-3xl"> YOUR PLAN</h1>
+                  <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center rounded-3xl">
+                    {" "}
+                    YOUR PLAN
+                  </h1>
                 </div>
 
                 <div className="max-w-6xl mx-auto">
                   <div className="text-black font-semibold text-sm text-left mb-4 ml-2 md:hidden">
-                    <p className='text-black text-xl'> Your Plan</p>
+                    <p className="text-black text-xl"> Your Plan</p>
                   </div>
                   <div className="grid md:grid-cols-1 gap-4 md:gap-8 mb-8">
                     {/* <div className="bg-white rounded-3xl p-4 md:p-8 shadow-xl border border-red-100" style={{
@@ -352,10 +564,13 @@ export default function TreasureChestBanner() {
                       START SAVING
                     </button>
                   </div> */}
-                    <div className="rounded-3xl p-4 md:p-8 shadow-xl border border-yellow-100 relative overflow-hidden" style={{
-                      background: `radial-gradient(at 98% 7%,hsla(36,100%,90%,1) 0px,transparent 50%), radial-gradient(at 0% 0%,hsla(24,100%,99%,1) 0px,transparent 50%)`,
-                      border: `1px solid yellow`
-                    }}>
+                    <div
+                      className="rounded-3xl p-4 md:p-8 shadow-xl border border-yellow-100 relative overflow-hidden"
+                      style={{
+                        background: `radial-gradient(at 98% 7%,hsla(36,100%,90%,1) 0px,transparent 50%), radial-gradient(at 0% 0%,hsla(24,100%,99%,1) 0px,transparent 50%)`,
+                        border: `1px solid yellow`,
+                      }}
+                    >
                       <div className="absolute -right-4 top-6 bg-yellow-800 text-white px-8 py-1 text-sm md:text-base font-bold transform rotate-12 shadow-md">
                         POPULAR
                       </div>
@@ -366,7 +581,9 @@ export default function TreasureChestBanner() {
                               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                             </svg>
                           </div>
-                          <span className="text-gray-700 font-medium text-base md:text-lg">Dazzle-12 Chest</span>
+                          <span className="text-gray-700 font-medium text-base md:text-lg">
+                            Dazzle-12 Chest
+                          </span>
                         </div>
                       </div>
                       <div className="mb-6">
@@ -377,32 +594,50 @@ export default function TreasureChestBanner() {
                       <div className="space-y-4 mb-6">
                         <div className="flex items-start space-x-3">
                           <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">11 Monthly instalments converted into grams of gold</span>
+                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">
+                            11 Monthly instalments converted into grams of gold
+                          </span>
                         </div>
                         <div className="flex items-start space-x-3">
                           <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">Gold value accumulated over time with each instalment</span>
+                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">
+                            Gold value accumulated over time with each
+                            instalment
+                          </span>
                         </div>
                         <div className="flex items-start space-x-3">
                           <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">Complete transparency ensured with real time gold rates</span>
+                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">
+                            Complete transparency ensured with real time gold
+                            rates
+                          </span>
                         </div>
                         <div className="flex items-start space-x-3">
                           <Check className="w-5 h-5 text-yellow-800 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">Enjoy SonaSutra benefit— no matter how gold rates move.</span>
+                          <span className="text-gray-700 text-sm md:text-base leading-relaxed">
+                            Enjoy SonaSutra benefit— no matter how gold rates
+                            move.
+                          </span>
                         </div>
                       </div>
                       <div className="bg-yellow-50 rounded-2xl p-4 mb-6">
                         <p className="text-orange-800 font-medium text-sm md:text-base">
-                          <span className="font-bold">Gold Value + Assured Bonus</span> on redemption
+                          <span className="font-bold">
+                            Gold Value + Assured Bonus
+                          </span>{" "}
+                          on redemption
                         </p>
                       </div>
-                      <button 
+                      {installmentList?.data?.length === 0 ?
+                      <button
                         className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-4 rounded-2xl font-semibold text-base md:text-lg  transition-all duration-300 transform hover:scale-105 shadow-lg"
                         onClick={() => setShowPopup(true)}
                       >
                         START SAVING
                       </button>
+                      :
+              <p className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-2 cursor-pointer" onClick={setShowinstallment}>Check Your Installment Details</p>
+            }
                     </div>
                   </div>
 
@@ -410,28 +645,38 @@ export default function TreasureChestBanner() {
                   <div className="max-w-5xl mx-auto mt-8 mb-6">
                     <div className="bg-white rounded-2xl p-4 md:p-8">
                       {/* Header */}
-                      <h2 className="text-center text-xl md:text-2xl  font-semibold text-[black] mb-6">CALCULATE YOUR SAVINGS</h2>
+                      <h2 className="text-center text-xl md:text-2xl  font-semibold text-[black] mb-6">
+                        CALCULATE YOUR SAVINGS
+                      </h2>
                       <div className="mb-6 ">
                         <div className="relative max-w-md mx-auto bg-[yellow] ">
-                          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-base md:text-lg text-gray-600">₹</span>
+                          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-base md:text-lg text-gray-600">
+                            ₹
+                          </span>
                           <input
                             type="number"
                             value={selectedAmount}
                             onChange={(e) => {
                               setSelectedAmount(e.target.value);
                             }}
-                            className={`w-full py-3 pl-10 pr-4 text-lg md:text-xl font-medium text-center border rounded-lg focus:outline-none ${amountError ? 'border-red-500' : 'border-gray-200 focus:border-purple-400'
-                              }`}
+                            className={`w-full py-3 pl-10 pr-4 text-lg md:text-xl font-medium text-center border rounded-lg focus:outline-none ${
+                              amountError
+                                ? "border-red-500"
+                                : "border-gray-200 focus:border-purple-400"
+                            }`}
                             min="1000"
                             step="1000"
                             placeholder="Enter amount (multiple of ₹1,000)"
                           />
-
                         </div>
                         {data?.data?.message !== "Data get Successfully" && (
-                          <p className="text-center text-xs md:text-sm text-red-500 mt-2">{data?.data?.message}</p>
+                          <p className="text-center text-xs md:text-sm text-red-500 mt-2">
+                            {data?.data?.message}
+                          </p>
                         )}
-                        <p className="text-center text-xs md:text-sm text-gray-600 mt-2">Monthly Instalment (Multiples of ₹1,000 only)</p>
+                        <p className="text-center text-xs md:text-sm text-gray-600 mt-2">
+                          Monthly Instalment (Multiples of ₹1,000 only)
+                        </p>
                         <div className="flex justify-center gap-2 mt-3">
                           <button
                             onClick={() => setSelectedAmount(1000)}
@@ -462,12 +707,13 @@ export default function TreasureChestBanner() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              setActiveTab('comparison');
+                              setActiveTab("comparison");
                             }}
-                            className={`flex-1 py-2 px-4 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === 'comparison'
-                              ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black'
-                              : 'text-gray-600 hover:text-[black]'
-                              }`}
+                            className={`flex-1 py-2 px-4 rounded-full text-xs md:text-sm font-medium transition-all ${
+                              activeTab === "comparison"
+                                ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black"
+                                : "text-gray-600 hover:text-[black]"
+                            }`}
                           >
                             Plan Comparison
                           </button>
@@ -476,12 +722,13 @@ export default function TreasureChestBanner() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              setActiveTab('description');
+                              setActiveTab("description");
                             }}
-                            className={`flex-1 py-2 px-4 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === 'description'
-                              ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black'
-                              : 'text-gray-600 hover:text-[black]'
-                              }`}
+                            className={`flex-1 py-2 px-4 rounded-full text-xs md:text-sm font-medium transition-all ${
+                              activeTab === "description"
+                                ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black"
+                                : "text-gray-600 hover:text-[black]"
+                            }`}
                           >
                             Description
                           </button>
@@ -489,7 +736,7 @@ export default function TreasureChestBanner() {
                       </div>
 
                       {/* Content based on active tab */}
-                      {activeTab === 'comparison' ? (
+                      {activeTab === "comparison" ? (
                         <div className="flex flex-col space-y-6 max-w-4xl mx-auto">
                           {/* Dazzle-12 ICON Plan */}
                           {/* <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{ background: `#FFF5F5`, border: `1px solid #FFE5E5` }}>
@@ -552,17 +799,22 @@ export default function TreasureChestBanner() {
                           </div> */}
 
                           {/* Dazzle-12 EDGE Plan */}
-                          <div className="w-full rounded-xl p-6 md:p-8 shadow-lg" style={{
-                            background: `#FFF6EC66`,
-                            border: `1px solid #F5EAA8`
-                          }}>
+                          <div
+                            className="w-full rounded-xl p-6 md:p-8 shadow-lg"
+                            style={{
+                              background: `#FFF6EC66`,
+                              border: `1px solid #F5EAA8`,
+                            }}
+                          >
                             <div className="flex items-center mb-6">
                               <div className="w-5 h-5 text-gray-600 mr-3 flex-shrink-0">
                                 <svg viewBox="0 0 24 24" fill="currentColor">
                                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                 </svg>
                               </div>
-                              <span className="font-medium text-gray-800 text-base md:text-lg mr-3">Dazzle-12 Chest</span>
+                              <span className="font-medium text-gray-800 text-base md:text-lg mr-3">
+                                Dazzle-12 Chest
+                              </span>
                               <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap">
                                 ⭐ EDGE
                               </span>
@@ -572,47 +824,103 @@ export default function TreasureChestBanner() {
                               <div className=" flex items-center justify-between gap-2 sm:gap-0">
                                 <div className="flex items-center">
                                   <div className="w-4 h-4 text-green-500 mr-3 flex-shrink-0">
-                                    <svg viewBox="0 0 20 20" fill="currentColor">
-                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    <svg
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clipRule="evenodd"
+                                      />
                                     </svg>
                                   </div>
-                                  <span className="text-gray-700 text-sm md:text-base ">Your Total Instalments (11 Months)</span>
+                                  <span className="text-gray-700 text-sm md:text-base ">
+                                    Your Total Instalments (11 Months)
+                                  </span>
                                 </div>
-                                <span className="font-semibold text-gray-800 text-sm  ">₹ {(dazzleamount?.total_installment || 0)?.toLocaleString()}</span>
+                                <span className="font-semibold text-gray-800 text-sm  ">
+                                  ₹{" "}
+                                  {(
+                                    dazzleamount?.total_installment || 0
+                                  )?.toLocaleString()}
+                                </span>
                               </div>
 
                               <div className=" flex items-center justify-between gap-2 sm:gap-0">
                                 <div className="flex items-center">
                                   <div className="w-4 h-4 text-green-500 mr-3 flex-shrink-0">
-                                    <svg viewBox="0 0 20 20" fill="currentColor">
-                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    <svg
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clipRule="evenodd"
+                                      />
                                     </svg>
                                   </div>
-                                  <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (12th Month)</span>
+                                  <span className="text-gray-700 text-sm md:text-base ">
+                                    SonaSutra Bonus (12th Month)
+                                  </span>
                                 </div>
-                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{(dazzleamount?.after_12_month || 0)?.toLocaleString()}</span>
+                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">
+                                  ₹
+                                  {(
+                                    dazzleamount?.after_12_month || 0
+                                  )?.toLocaleString()}
+                                </span>
                               </div>
                               <div className=" flex items-center justify-between gap-2 sm:gap-0">
                                 <div className="flex items-center">
                                   <div className="w-4 h-4 text-green-500 mr-3 flex-shrink-0">
-                                    <svg viewBox="0 0 20 20" fill="currentColor">
-                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    <svg
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clipRule="evenodd"
+                                      />
                                     </svg>
                                   </div>
-                                  <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (13th Month)</span>
+                                  <span className="text-gray-700 text-sm md:text-base ">
+                                    SonaSutra Bonus (13th Month)
+                                  </span>
                                 </div>
-                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{(dazzleamount?.after_13_month || 0)?.toLocaleString()}</span>
+                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">
+                                  ₹
+                                  {(
+                                    dazzleamount?.after_13_month || 0
+                                  )?.toLocaleString()}
+                                </span>
                               </div>
                               <div className=" flex items-center justify-between gap-2 sm:gap-0">
                                 <div className="flex items-center">
                                   <div className="w-4 h-4 text-green-500 mr-3 flex-shrink-0">
-                                    <svg viewBox="0 0 20 20" fill="currentColor">
-                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    <svg
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clipRule="evenodd"
+                                      />
                                     </svg>
                                   </div>
-                                  <span className="text-gray-700 text-sm md:text-base ">SonaSutra Bonus (14th Month)</span>
+                                  <span className="text-gray-700 text-sm md:text-base ">
+                                    SonaSutra Bonus (14th Month)
+                                  </span>
                                 </div>
-                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">₹{(dazzleamount?.after_14_month || 0)?.toLocaleString()}</span>
+                                <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs md:text-sm font-medium ml-7 sm:ml-0 whitespace-nowrap">
+                                  ₹
+                                  {(
+                                    dazzleamount?.after_14_month || 0
+                                  )?.toLocaleString()}
+                                </span>
                               </div>
                               {/* <div className="flex items-center justify-between gap-2 sm:gap-0">
                                 <div className="flex items-center">
@@ -633,33 +941,62 @@ export default function TreasureChestBanner() {
                                   max="100"
                                   step="1"
                                   value={growthPercent}
-                                  onChange={(e) => setGrowthPercent(e.target.valueAsNumber)}
+                                  onChange={(e) =>
+                                    setGrowthPercent(e.target.valueAsNumber)
+                                  }
                                   className="w-full h-2 rounded-lg appearance-none cursor-pointer"
                                   style={{
                                     background: `linear-gradient(to right, #F97316 ${growthPercent}%, #FEE2E2 ${growthPercent}%)`,
-                                    color: 'darkorange',
+                                    color: "darkorange",
                                   }}
                                 />
                               </div>
 
                               <div className="border-t pt-4 mt-6">
                                 <div className="flex items-center justify-between gap-2 sm:gap-0">
-                                  <span className="font-semibold text-gray-800 text-base md:text-lg break-words">Estimated Total Redeemable Amount</span>
-                                  <span className="font-bold text-lg md:text-xl text-gray-800 whitespace-nowrap">₹ {Math.round(dazzleamount?.redeem_amount || 0)?.toLocaleString()}</span>
+                                  <span className="font-semibold text-gray-800 text-base md:text-lg break-words">
+                                    Estimated Total Redeemable Amount
+                                  </span>
+                                  <span className="font-bold text-lg md:text-xl text-gray-800 whitespace-nowrap">
+                                    ₹{" "}
+                                    {Math.round(
+                                      dazzleamount?.redeem_amount || 0
+                                    )?.toLocaleString()}
+                                  </span>
                                 </div>
-                                <p className="text-gray-600 text-xs md:text-sm mt-2 break-words">₹{(dazzleamount?.total_installment)?.toLocaleString()} invested could grow to ₹ {Math.round(dazzleamount?.redeem_amount || 0)?.toLocaleString()} at {Number(dazzleamount?.rowth_in_percent)?.toFixed(2)}% growth.</p>
+                                <p className="text-gray-600 text-xs md:text-sm mt-2 break-words">
+                                  ₹
+                                  {dazzleamount?.total_installment?.toLocaleString()}{" "}
+                                  invested could grow to ₹{" "}
+                                  {Math.round(
+                                    dazzleamount?.redeem_amount || 0
+                                  )?.toLocaleString()}{" "}
+                                  at{" "}
+                                  {Number(
+                                    dazzleamount?.rowth_in_percent
+                                  )?.toFixed(2)}
+                                  % growth.
+                                </p>
                               </div>
                             </div>
 
                             <div className="mt-6 space-y-2">
-                              <p className="text-orange-800 text-xs md:text-sm break-words">○ Returns subject to gold market performance</p>
-                              <p className="text-orange-800 text-xs md:text-sm break-words">• Current 24KT Gold Rate: ₹ {Number(dazzleamount?.gold_details?.ma_price_per_unit || 0)?.toFixed(2)}/gm</p>
+                              <p className="text-orange-800 text-xs md:text-sm break-words">
+                                ○ Returns subject to gold market performance
+                              </p>
+                              <p className="text-orange-800 text-xs md:text-sm break-words">
+                                • Current 24KT Gold Rate: ₹{" "}
+                                {Number(
+                                  dazzleamount?.gold_details
+                                    ?.ma_price_per_unit || 0
+                                )?.toFixed(2)}
+                                /gm
+                              </p>
                             </div>
                           </div>
-
                         </div>
                       ) : (
-                        <div className="p-4 sm:p-6 lg:p-8" >
+                        <div className="p-4 sm:p-6 lg:p-8">
                           <div className="max-w-4xl mx-auto space-y-2">
                             {/* Dazzle-12 Chest ICON Card */}
                             {/* <div
@@ -686,27 +1023,36 @@ export default function TreasureChestBanner() {
                             <div
                               className="rounded-lg p-6 sm:p-8"
                               style={{
-                                backgroundColor: 'rgba(255, 246, 236, 0.4)',
-                                border: '1px solid rgb(245, 234, 168)'
+                                backgroundColor: "rgba(255, 246, 236, 0.4)",
+                                border: "1px solid rgb(245, 234, 168)",
                               }}
                             >
                               <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
                                 Dazzle-12 EDGE
                               </h2>
                               <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                                With the Dazzle-12 Edge plan, your monthly contribution
-                                of ₹{selectedAmount || 0} is invested in the gold market. Based on the simulated market
-                                performance of 80%, your investment grows to ₹{dazzleamount?.redeem_amount || 0}. SonaSutra adds a
-                                bonus of ₹{selectedAmount || 0} in the 14th month.
+                                With the Dazzle-12 Edge plan, your monthly
+                                contribution of ₹{selectedAmount || 0} is
+                                invested in the gold market. Based on the
+                                simulated market performance of 80%, your
+                                investment grows to ₹
+                                {dazzleamount?.redeem_amount || 0}. SonaSutra
+                                adds a bonus of ₹{selectedAmount || 0} in the
+                                14th month.
                               </p>
                               <p className="text-gray-800 font-medium text-sm sm:text-base mb-4">
-                                Potential gain compared to fixed savings: <span className="font-semibold text-green-600">+₹{dazzleamount?.after_14_month || 0}</span>
+                                Potential gain compared to fixed savings:{" "}
+                                <span className="font-semibold text-green-600">
+                                  +₹{dazzleamount?.after_14_month || 0}
+                                </span>
                               </p>
 
                               {/* Warning Banner */}
                               <div
                                 className="flex items-center gap-3 p-3 sm:p-4 rounded-lg"
-                                style={{ backgroundColor: 'rgb(254, 243, 199)' }}
+                                style={{
+                                  backgroundColor: "rgb(254, 243, 199)",
+                                }}
                               >
                                 <div className="flex-shrink-0">
                                   <svg
@@ -729,10 +1075,13 @@ export default function TreasureChestBanner() {
                           </div>
                         </div>
                       )}
-                      <div className="w-full rounded-xl p-6 md:p-8 shadow-lg mt-10" style={{
-                        background: `#E1F8D4`,
-                        border: `1px solid #F5EAA8`
-                      }}>
+                      <div
+                        className="w-full rounded-xl p-6 md:p-8 shadow-lg mt-10"
+                        style={{
+                          background: `#E1F8D4`,
+                          border: `1px solid #F5EAA8`,
+                        }}
+                      >
                         <img
                           src="https://cdn.caratlane.com/media/static/images/web/Treasure%20Chest/Landing%20Page/Talktoexpert.png"
                           alt="Questions and Butterfly Pendant"
@@ -756,7 +1105,7 @@ export default function TreasureChestBanner() {
                   </div>
                   <TreasureChestFaqToggleComponent />
                 </div>
-                <div >
+                <div>
                   <Footer />
                 </div>
               </div>
@@ -768,46 +1117,189 @@ export default function TreasureChestBanner() {
       {/* Popup Modal */}
       {showPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl" style={{
-            background: `white`,
-            border: `1px solid yellow`
-          }}>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-800">Start Saving Now</h2>
-              <button onClick={() => setShowPopup(false)} className="text-gray-500 hover:text-gray-700">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <form className="space-y-4">
+          <div
+            className="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl"
+            style={{
+              background: `white`,
+              border: `1px solid yellow`,
+            }}
+          >
+            {installmentList.data.length === 0 ?
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Start Saving Now
+                </h2>
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div> :
+              <p onClick={setShowinstallment}>Check Your Details</p>
+            }
+
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Choose Plan</label>
-                <select className="w-full px-4 py-3 rounded-2xl border border-yellow-200 focus:outline-none focus:border-yellow-400 bg-white text-gray-700">
-                  <option>12 Month Plan</option>
-                  <option>13 Month Plan</option>
-                  <option>14 Month Plan</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Enter Amount</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Enter Amount
+                </label>
                 <input
                   type="number"
                   placeholder="₹ Enter amount (multiple of ₹1,000)"
                   className="w-full px-4 py-3 rounded-2xl border border-yellow-200 focus:outline-none focus:border-yellow-400 bg-white text-gray-700 text-lg font-medium text-center"
                   min="1000"
                   step="1000"
+                  value={selectedAmount}
+                  onChange={(e) => setSelectedAmount(e.target.value)}
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Choose Plan
+                </label>
+
+                <select
+                  onChange={handlePlanChange}
+                  className="w-full px-4 py-3 rounded-2xl border border-yellow-200 focus:outline-none focus:border-yellow-400 bg-white text-gray-700"
+                >
+                  <option value="">Select Plan</option>
+                  {dazzleamountplan?.map((item) => (
+                    <option key={item?.dz_id} value={item?.dz_descripton}>
+                      {item?.dz_descripton}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-4 rounded-2xl font-semibold text-base md:text-lg  transition-all duration-300 transform hover:scale-105 shadow-lg"
+                disabled={submitting}
+                className={`w-full ${
+                  submitting
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:scale-105"
+                } text-black py-4 rounded-2xl font-semibold text-base md:text-lg transition-all duration-300 shadow-lg`}
               >
-                Submit
+                {submitting ? "Submitting..." : "Submit"}
               </button>
             </form>
+            {dazzledetail_plan?.total_installment && (
+              <div className="mt-6 border-t pt-4 space-y-2 text-sm text-gray-800">
+                <h3 className="text-lg font-semibold mb-2">Plan Summary</h3>
+
+                <p>
+                  <strong>Total Installment:</strong> ₹
+                  {dazzledetail_plan?.total_installment}
+                </p>
+
+                {/* Conditionally show month result */}
+                {selectedPlan === 1 && (
+                  <p>
+                    <strong>After 12 Months:</strong> ₹
+                    {dazzledetail_plan?.after_12_month}
+                  </p>
+                )}
+                {selectedPlan === 2 && (
+                  <p>
+                    <strong>After 13 Months:</strong> ₹
+                    {dazzledetail_plan?.after_13_month}
+                  </p>
+                )}
+                {selectedPlan === 3 && (
+                  <p>
+                    <strong>After 14 Months:</strong> ₹
+                    {dazzledetail_plan?.after_14_month}
+                  </p>
+                )}
+
+                <p>
+                  <strong>Redeem Amount:</strong> ₹
+                  {dazzledetail_plan?.redeem_amount}
+                </p>
+                <p>
+                  <strong>Growth :</strong>{" "}
+                  {Number(dazzledetail_plan?.rowth_in_percent).toFixed(2)}%
+                </p>
+              </div>
+            )}
           </div>
         </div>
+      )}
+        {showinstallment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white rounded-2xl w-[90%] md:w-[70%] lg:w-[70%] p-6 relative">
+          {/* Close button */}
+          <button
+            onClick={() => setShowinstallment(false)}
+            className="absolute top-3 right-3 text-gray-600 hover:text-black text-xl"
+          >
+            ✕
+          </button>
+
+          {/* If installmentList is empty -> show “No data” message */}
+          {installmentList.length === 0 ? (
+            <div className="text-center py-10">
+              <h2 className="text-xl font-semibold mb-3">
+                No Installment Records Found
+              </h2>
+              <p className="text-gray-500">
+                Start saving to create your first installment.
+              </p>
+            </div>
+          ) : (
+            // If data exists -> show table and filters
+            <>
+              <h1 className="text-2xl font-bold mb-4">Installment Details</h1>
+
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
+                <input
+                  type="text"
+                  placeholder="Search by name or ID"
+                  className="border px-3 py-2 rounded w-full"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <input
+                  type="date"
+                  className="border px-3 py-2 rounded w-full"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                <input
+                  type="date"
+                  className="border px-3 py-2 rounded w-full"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+
+              <CustomTable
+                tablehead={tablehead}
+                tablerow={tablerow}
+                isLoading={isLoading}
+              />
+              <CustomToPagination
+                data={installmentList}
+                page={page}
+                setPage={setPage}
+              />
+            </>
+          )}
+        </div>
+      </div>
       )}
     </>
   );

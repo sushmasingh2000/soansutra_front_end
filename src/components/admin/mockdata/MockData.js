@@ -65,7 +65,8 @@ const AdminAccess = [
   "leads",
   "del",
   "POS",
-  "Offlinesell"
+  "Offlinesell",
+  "dazzl"
 ];
 const deliveryboy = [
   "pro",
@@ -257,9 +258,30 @@ export const all_Data = [
         icon: <AssignmentTurnedIn />,
         navLink: "/offline",
       },
-
+      
     ],
   },
+  {
+    id: "dazzl",
+    label: "Dazzle-12",
+    icon: <ConfirmationNumber />,
+    subcomponent: [
+      {
+        id: "subs",
+        label: "Subscription Plan",
+        icon: <AssignmentTurnedIn />,
+        navLink: "/subscription",
+      },
+      {
+        id: "due",
+        label: "Due Installment",
+        icon: <AssignmentTurnedIn />,
+        navLink: "/installment",
+      },
+      
+    ],
+  },
+
   {
     id: "Offlinesell",
     label: "Offline Sell",
