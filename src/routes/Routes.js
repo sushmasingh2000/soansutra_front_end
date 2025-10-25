@@ -70,6 +70,7 @@ import DeliveryBoyDashboard from "../components/deliveryboydashboard.jsx";
 import PaytmVault from "../components/pages/PaytmVault.js";
 import CertificateUI from "../components/e-certificate.jsx";
 import CertificateVerification from "../components/certificateui.jsx";
+import GoldLockerUI from "../components/vault.jsx";
 
 export const routes = [
   {
@@ -544,6 +545,10 @@ export const routes = [
  {
   path:"/e-certificate",
   element:<CertificateVerification/>
+ },
+ {
+  path:"/goldlocker",
+  element:<GoldLockerUI/>
  }
    
 ];
