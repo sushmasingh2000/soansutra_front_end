@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, RotateCcw, ArrowLeftRight, ShoppingBag } from 'lucide-react';
+import { ArrowLeftRight, ChevronDown, ChevronUp, RotateCcw, ShoppingBag } from 'lucide-react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Footer from './Footer1';
 import Header from './Header1';
 import NavigationBar from './navigationbar';
-import Footer from './Footer1';
-import { Link } from 'react-router-dom';
-import WarrantyPolicyUI from './warrentyui'
+import WarrantyPolicyUI from './warrentyui';
 
 const ReturnPolicy = () => {
   const [expandedSection, setExpandedSection] = useState(null);

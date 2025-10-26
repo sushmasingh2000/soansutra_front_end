@@ -1,10 +1,15 @@
 // export const domain = "http://192.168.248.149:2000";
 export const frontend = "https://sonasutra.in";
-// export const domain = "http://192.168.18.214:2000";
+// export const domain = "http://192.168.248.149:2000";
 export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
-// export const mode = "production";
-export const mode = "sandbox";
+export const mode = "production";
+// export const mode = "sandbox";
+
+export const zoho_account_id = "60051739358";
+export const zoho_domain_country = "IN";
+export const zoho_api_key =
+  "1003.e80ef3d3f3c093b71f95211b2eb1b663.c16c8a4586cd079bcf16b570500894cb";
 
 export const endpoint = {
   email_insider: `${domain}/api/v1/insert-external-leads`,
@@ -165,18 +170,14 @@ export const endpoint = {
   get_product_inventory: `${domain}/api/v1/get-product-inventory`,
   update_product_inventory: `${domain}/api/v1/update-product-inventory`,
   get_varient_price: `${domain}/api/v1/get-varient-price`,
-  
+
   // discount
   create_discount: `${domain}/api/v1/create-discount`,
   get_discount: `${domain}/api/v1/get-discount`,
   update_discount: `${domain}/api/v1/update-discount`,
   delete_discount: `${domain}/api/v1/delete-discount`,
 
-
   get_dazzle_plan: `${domain}/api/v1/get-dazzle-plan-detail`,
-
-
-  
 
   //product discount
   create_product_discount: `${domain}/api/v1/create-product-discount`,
@@ -218,9 +219,6 @@ export const endpoint = {
   get_installment: `${domain}/api/v1/get-installment-details`,
   pay_due_installment: `${domain}/api/v1/pay-due-installment`,
   get_subscription_details: `${domain}/api/v1/get-subscription-plan-details`,
-
-
-  
 
   //customer
   create_customer: `${domain}/api/v1/create-customer`,
@@ -328,23 +326,22 @@ export const endpoint = {
   update_cust_order_status: `${domain}/api/v1/update-cust-order-status-by-dlv`,
   update_order_location: `${domain}/api/v1/update-order-location`,
   get_order_location: `${domain}/api/v1/get-order-location`,
-  get_all_dlv_profile_by : `${domain}/api/v1/get-dlv-profile-by-id`,
-  get_dlv_dashboard : `${domain}/api/v1/delivery-boy-dashboard`,
-  
-  offline_order :`${domain}/api/v1/create-cart-items-by-admin`,
-  get_cart_admin :`${domain}/api/v1/get-cart-items-by-admin`,
-  remove_cart_admin :`${domain}/api/v1/remove-from-cart-items`,
-  create_order_by_admin :`${domain}/api/v1/create-order-by-admin`,
-  add_address_by_admin :`${domain}/api/v1/add-shipping-address-by-admin`,
-  upload_Stock_by_admin :`${domain}/api/v1/upsert-inventory`,
-  sku_dropdown_by_admin :`${domain}/api/v1/get-sku-dropdown`,
-  get_pos_inventry :`${domain}/api/v1/get-pos-inventory`,
-  sku_for_sell_by_admin :`${domain}/api/v1/get-sku-for-sell`,
-  get_cart_item_price_admin :`${domain}/api/v1/get-cart-items-price`,
-  get_dazzle_subscription_plan :`${domain}/api/v1/get-dazzle-subscription-plans`,
-  pay_for_subscription_plan :`${domain}/api/v1/pay-for-subscription-plan`,
-  
-  
+  get_all_dlv_profile_by: `${domain}/api/v1/get-dlv-profile-by-id`,
+  get_dlv_dashboard: `${domain}/api/v1/delivery-boy-dashboard`,
+
+  offline_order: `${domain}/api/v1/create-cart-items-by-admin`,
+  get_cart_admin: `${domain}/api/v1/get-cart-items-by-admin`,
+  remove_cart_admin: `${domain}/api/v1/remove-from-cart-items`,
+  create_order_by_admin: `${domain}/api/v1/create-order-by-admin`,
+  add_address_by_admin: `${domain}/api/v1/add-shipping-address-by-admin`,
+  upload_Stock_by_admin: `${domain}/api/v1/upsert-inventory`,
+  sku_dropdown_by_admin: `${domain}/api/v1/get-sku-dropdown`,
+  get_pos_inventry: `${domain}/api/v1/get-pos-inventory`,
+  sku_for_sell_by_admin: `${domain}/api/v1/get-sku-for-sell`,
+  get_cart_item_price_admin: `${domain}/api/v1/get-cart-items-price`,
+  get_dazzle_subscription_plan: `${domain}/api/v1/get-dazzle-subscription-plans`,
+  pay_for_subscription_plan: `${domain}/api/v1/pay-for-subscription-plan`,
+
   // location related api's
-  get_nearest_store: `${domain}/api/v1/get-nearest-store`
+  get_nearest_store: `${domain}/api/v1/get-nearest-store`,
 };
