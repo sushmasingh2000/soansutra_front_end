@@ -1,26 +1,32 @@
 import { Check, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
-import TreasureChestFaqToggleComponent from "../faqtreasurechest";
-import Footer from "../Footer1";
-import Header from "../Header1";
+import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import CustomToPagination from "../../Shared/Pagination";
 import {
   apiConnectorGet,
   apiConnectorPost,
   usequeryBoolean,
 } from "../../utils/ApiConnector";
-import { endpoint } from "../../utils/APIRoutes";
-import toast from "react-hot-toast";
+import {
+  endpoint,
+  zoho_account_id,
+  zoho_api_key,
+  zoho_domain_country
+} from "../../utils/APIRoutes";
 import CustomTable from "../admin/Shared/CustomTable";
-import CustomToPagination from "../../Shared/Pagination";
+import TreasureChestFaqToggleComponent from "../faqtreasurechest";
+import Footer from "../Footer1";
+import Header from "../Header1";
 
 export default function TreasureChestBanner() {
   const [sliderPosition, setSliderPosition] = useState(0); // 0 = closed, 100 = fully open
   const [isDragging, setIsDragging] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [selectedPlanId, setSelectedPlanId] = useState(null); // plan_id from dropdown
-
-  const [startY, setStartY] = useState(0);
+  const [loader, setLoading] = useState(false);
+  const [paymentlink, setPaymentLink] = useState("");
+  const [instance, setInstance] = useState(null);
   const [showStickyFooter, setShowStickyFooter] = useState(true);
   const [activeTab, setActiveTab] = useState("comparison"); // 'comparison' or 'description'
   const [selectedAmount, setSelectedAmount] = useState(1000);
@@ -33,8 +39,72 @@ export default function TreasureChestBanner() {
   const [page, setPage] = useState(1);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const client = useQueryClient();
 
-  const { data: ins , isLoading } = useQuery(
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isDragging) return;
+
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      const scrollPercentage = Math.min(
+        scrollTop / (documentHeight - windowHeight),
+        1
+      );
+      const newSliderPosition = scrollPercentage * 100;
+      setSliderPosition(newSliderPosition);
+      setShowStickyFooter(newSliderPosition < 90);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isDragging]);
+
+  useEffect(() => {
+    if (window.ZPayments) {
+      const config = {
+        account_id: zoho_account_id,
+        domain: zoho_domain_country,
+        otherOptions: {
+          api_key: zoho_api_key,
+        },
+      };
+      const zInstance = new window.ZPayments(config);
+      setInstance(zInstance);
+    }
+  }, []);
+  // debouncing search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  // selecte actual plan
+  const handlePlanChange = (e) => {
+    const selectedDescription = e.target.value;
+    const planData = dazzleamountplan.find(
+      (p) => p.dz_descripton === selectedDescription
+    );
+
+    setSelectedPlanId(planData?.dz_id); // for POST API
+    // Map 12/13/14-months → plan_type (1/2/3)
+    const planType = selectedDescription.includes("12")
+      ? 1
+      : selectedDescription.includes("13")
+      ? 2
+      : selectedDescription.includes("14")
+      ? 3
+      : null;
+
+    setSelectedPlan(planType);
+  };
+
+  const { data: ins, isLoading } = useQuery(
     ["get_installment", debouncedSearchTerm, startDate, endDate, page],
     () =>
       apiConnectorGet(endpoint.get_installment, {
@@ -47,15 +117,45 @@ export default function TreasureChestBanner() {
   );
 
   const installmentList = ins?.data?.result || [];
+
+  const { data: dazzledetail } = useQuery(
+    ["get_rate_dazzle", selectedAmount, selectedPlan],
+    () =>
+      apiConnectorGet(
+        `${endpoint?.get_dazzle_plan}?prenciple=${selectedAmount}&plan_type=${selectedPlan}`
+      ),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: true,
+    }
+  );
+
+  const dazzledetail_plan = dazzledetail?.data?.result || [];
+  const dazzleamount = dazzledetail?.data?.result || [];
+
+  const { data: plan } = useQuery(
+    ["get_rate_dazzle_plan_subscription"],
+    () => apiConnectorGet(endpoint?.get_dazzle_subscription_plan),
+    {
+      usequeryBoolean,
+    }
+  );
+
+  const dazzleamountplan = plan?.data?.result || [];
+
+  ////////////////////////////// pay other installment ///////////////////
   const payMutation = useMutation({
     mutationFn: (body) => apiConnectorPost(endpoint.pay_due_installment, body),
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       const paymentlink = res?.data?.payments?.url;
-        if (paymentlink) {
-          setShowinstallment(false);
-          window.location.href = paymentlink;
-          return;
-        }
+      // if (paymentlink) {
+      //   setShowinstallment(false);
+      //   window.location.href = paymentlink;
+      //   return;
+      // }
+      await instance?.requestPaymentMethod(res.data);
+
       toast(res?.data?.message);
       client.refetchQueries("get_installment");
     },
@@ -63,18 +163,50 @@ export default function TreasureChestBanner() {
       alert("Payment failed " + (err?.response?.data?.message || ""));
     },
   });
-  const client = useQueryClient();
 
   const handlePayNow = (installment) => {
     const { installment_id, remaining_amnt } = installment;
-  if (!installment_id || !remaining_amnt) {
-    toast("Missing installment_id or remaining_amount");
-    return;
-  }
+    if (!installment_id || !remaining_amnt) {
+      toast("Missing installment_id or remaining_amount");
+      return;
+    }
     payMutation.mutate({
       installment_id,
-      payable_amount: remaining_amnt, 
+      payable_amount: remaining_amnt,
     });
+  };
+
+  ////////////////////////////// pay first installment ///////////////////
+
+  const submitPlan = async (payload) => {
+    setLoading(true);
+    try {
+      const res = await apiConnectorPost(
+        endpoint.pay_for_subscription_plan,
+        payload
+      );
+      toast(res?.data?.message);
+      await instance?.requestPaymentMethod(res.data);
+    } catch (e) {
+      toast(e?.message || "something went wrong");
+    }
+    setLoading(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!selectedPlanId || !selectedPlan || !selectedAmount) {
+      alert("Please fill all fields before submitting.");
+      return;
+    }
+
+    const payload = {
+      plan_id: selectedPlanId,
+      total_amount: selectedAmount,
+      plan_type: selectedPlan,
+    };
+    submitPlan(payload);
   };
 
   const tablehead = [
@@ -105,157 +237,24 @@ export default function TreasureChestBanner() {
     >
       {item?.payment_status}
     </span>,
-     <td className="px-4 py-2 text-center">
-     {item.pay_status === "Show Pay Button" ? (
-       <button
-       onClick={() => handlePayNow(item)}
-       disabled={payMutation.isLoading}
-       className={`${
-         payMutation.isLoading
-           ? "bg-gray-400 cursor-not-allowed"
-           : "bg-green-500 hover:bg-green-600"
-       } text-white px-4 py-1 rounded-lg text-sm font-semibold`}
-     >
-       {payMutation.isLoading ? "Processing..." : "Pay Now"}
-     </button>
-     ) : (
-      <Lock/>
-     )}
-   </td>
+    <td className="px-4 py-2 text-center">
+      {item.pay_status === "Show Pay Button" ? (
+        <button
+          onClick={() => handlePayNow(item)}
+          disabled={payMutation.isLoading}
+          className={`${
+            payMutation.isLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-500 hover:bg-green-600"
+          } text-white px-4 py-1 rounded-lg text-sm font-semibold`}
+        >
+          {payMutation.isLoading ? "Processing..." : "Pay Now"}
+        </button>
+      ) : (
+        <Lock />
+      )}
+    </td>,
   ]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isDragging) return;
-
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      const scrollPercentage = Math.min(
-        scrollTop / (documentHeight - windowHeight),
-        1
-      );
-      const newSliderPosition = scrollPercentage * 100;
-      setSliderPosition(newSliderPosition);
-      setShowStickyFooter(newSliderPosition < 90);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isDragging]);
-
-  const { data } = useQuery(
-    ["get_rate_dazzle", selectedAmount],
-    () =>
-      apiConnectorGet(
-        `${endpoint?.get_dazzle_plan}?prenciple=${selectedAmount}`
-      ),
-    {
-      keepPreviousData: true,
-      usequeryBoolean,
-    }
-  );
-
-  const dazzleamount = data?.data?.result || [];
-
-  const { data: dazzledetail } = useQuery(
-    ["get_rate_dazzle", selectedAmount, selectedPlan],
-    () =>
-      apiConnectorGet(
-        `${endpoint?.get_dazzle_plan}?prenciple=${selectedAmount}&plan_type=${selectedPlan}`
-      ),
-    {
-      enabled: !!selectedPlan && !!selectedAmount,
-      keepPreviousData: true,
-    }
-  );
-
-  const dazzledetail_plan = dazzledetail?.data?.result || [];
-
-  // const handlePlanChange = (e) => {
-  //   const value = e.target.value;
-  //   // map month → plan_type
-  //   const planType =
-  //     value.includes("12") ? 1 : value.includes("13") ? 2 : value.includes("14") ? 3 : null;
-  //   setSelectedPlan(planType);
-  // };
-  const handlePlanChange = (e) => {
-    const selectedDescription = e.target.value;
-    const planData = dazzleamountplan.find(
-      (p) => p.dz_descripton === selectedDescription
-    );
-
-    setSelectedPlanId(planData?.dz_id); // for POST API
-    // Map 12/13/14-months → plan_type (1/2/3)
-    const planType = selectedDescription.includes("12")
-      ? 1
-      : selectedDescription.includes("13")
-      ? 2
-      : selectedDescription.includes("14")
-      ? 3
-      : null;
-
-    setSelectedPlan(planType);
-  };
-
-  const { mutate: submitPlan, isLoading: submitting } = useMutation(
-    (payload) => apiConnectorPost(endpoint?.pay_for_subscription_plan, payload),
-    {
-      onSuccess: (res) => {
-        const paymentlink = res?.data?.payments?.url;
-        // console.log(res?.data?.payments?.url)
-        if (paymentlink) {
-          // ✅ Redirect to Cashfree Payment Page
-          setShowPopup(false);
-          window.location.href = paymentlink;
-
-          return;
-        }
-        toast(res?.data?.message);
-        if (res?.data?.success) {
-        }
-      },
-      onError: (err) => {
-        console.error(err);
-        alert("Something went wrong while submitting the plan!");
-      },
-    }
-  );
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!selectedPlanId || !selectedPlan || !selectedAmount) {
-      alert("Please fill all fields before submitting.");
-      return;
-    }
-
-    const payload = {
-      plan_id: selectedPlanId,
-      total_amount: selectedAmount,
-      plan_type: selectedPlan,
-    };
-    submitPlan(payload);
-  };
-
-  const { data: plan } = useQuery(
-    ["get_rate_dazzle_plan_subscription"],
-    () => apiConnectorGet(endpoint?.get_dazzle_subscription_plan),
-    {
-      usequeryBoolean,
-    }
-  );
-
-  const dazzleamountplan = plan?.data?.result || [];
 
   return (
     <>
@@ -628,16 +627,21 @@ export default function TreasureChestBanner() {
                           on redemption
                         </p>
                       </div>
-                      {installmentList?.data?.length === 0 ?
-                      <button
-                        className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-4 rounded-2xl font-semibold text-base md:text-lg  transition-all duration-300 transform hover:scale-105 shadow-lg"
-                        onClick={() => setShowPopup(true)}
-                      >
-                        START SAVING
-                      </button>
-                      :
-              <p className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-2 cursor-pointer" onClick={setShowinstallment}>Check Your Installment Details</p>
-            }
+                      {installmentList?.data?.length === 0 ? (
+                        <button
+                          className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-4 rounded-2xl font-semibold text-base md:text-lg  transition-all duration-300 transform hover:scale-105 shadow-lg"
+                          onClick={() => setShowPopup(true)}
+                        >
+                          START SAVING
+                        </button>
+                      ) : (
+                        <p
+                          className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-2 cursor-pointer"
+                          onClick={setShowinstallment}
+                        >
+                          Check Your Installment Details
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -669,9 +673,10 @@ export default function TreasureChestBanner() {
                             placeholder="Enter amount (multiple of ₹1,000)"
                           />
                         </div>
-                        {data?.data?.message !== "Data get Successfully" && (
+                        {dazzledetail?.data?.message !==
+                          "Data get Successfully" && (
                           <p className="text-center text-xs md:text-sm text-red-500 mt-2">
-                            {data?.data?.message}
+                            {dazzledetail?.data?.message}
                           </p>
                         )}
                         <p className="text-center text-xs md:text-sm text-gray-600 mt-2">
@@ -1124,7 +1129,7 @@ export default function TreasureChestBanner() {
               border: `1px solid yellow`,
             }}
           >
-            {installmentList.data.length === 0 ?
+            {installmentList.data.length === 0 ? (
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-800">
                   Start Saving Now
@@ -1147,9 +1152,10 @@ export default function TreasureChestBanner() {
                     />
                   </svg>
                 </button>
-              </div> :
+              </div>
+            ) : (
               <p onClick={setShowinstallment}>Check Your Details</p>
-            }
+            )}
 
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
@@ -1175,7 +1181,7 @@ export default function TreasureChestBanner() {
                   onChange={handlePlanChange}
                   className="w-full px-4 py-3 rounded-2xl border border-yellow-200 focus:outline-none focus:border-yellow-400 bg-white text-gray-700"
                 >
-                  <option value="">Select Plan</option>
+                  {/* <option value="">Select Plan</option> */}
                   {dazzleamountplan?.map((item) => (
                     <option key={item?.dz_id} value={item?.dz_descripton}>
                       {item?.dz_descripton}
@@ -1186,14 +1192,14 @@ export default function TreasureChestBanner() {
 
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={loader}
                 className={`w-full ${
-                  submitting
+                  loader
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:scale-105"
                 } text-black py-4 rounded-2xl font-semibold text-base md:text-lg transition-all duration-300 shadow-lg`}
               >
-                {submitting ? "Submitting..." : "Submit"}
+                {loader ? "Submitting..." : "Submit"}
               </button>
             </form>
             {dazzledetail_plan?.total_installment && (
@@ -1238,71 +1244,72 @@ export default function TreasureChestBanner() {
           </div>
         </div>
       )}
-        {showinstallment && (
+      {showinstallment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white rounded-2xl w-[90%] md:w-[70%] lg:w-[70%] p-6 relative">
-          {/* Close button */}
-          <button
-            onClick={() => setShowinstallment(false)}
-            className="absolute top-3 right-3 text-gray-600 hover:text-black text-xl"
-          >
-            ✕
-          </button>
+          <div className="bg-white rounded-2xl w-[90%] md:w-[70%] lg:w-[70%] p-6 relative">
+            {/* Close button */}
+            <button
+              onClick={() => setShowinstallment(false)}
+              className="absolute top-3 right-3 text-gray-600 hover:text-black text-xl"
+            >
+              ✕
+            </button>
 
-          {/* If installmentList is empty -> show “No data” message */}
-          {installmentList.length === 0 ? (
-            <div className="text-center py-10">
-              <h2 className="text-xl font-semibold mb-3">
-                No Installment Records Found
-              </h2>
-              <p className="text-gray-500">
-                Start saving to create your first installment.
-              </p>
-            </div>
-          ) : (
-            // If data exists -> show table and filters
-            <>
-              <h1 className="text-2xl font-bold mb-4">Installment Details</h1>
-
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
-                <input
-                  type="text"
-                  placeholder="Search by name or ID"
-                  className="border px-3 py-2 rounded w-full"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <input
-                  type="date"
-                  className="border px-3 py-2 rounded w-full"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-                <input
-                  type="date"
-                  className="border px-3 py-2 rounded w-full"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
+            {/* If installmentList is empty -> show “No data” message */}
+            {installmentList.length === 0 ? (
+              <div className="text-center py-10">
+                <h2 className="text-xl font-semibold mb-3">
+                  No Installment Records Found
+                </h2>
+                <p className="text-gray-500">
+                  Start saving to create your first installment.
+                </p>
               </div>
+            ) : (
+              // If data exists -> show table and filters
+              <>
+                <h1 className="text-2xl font-bold mb-4">Installment Details</h1>
 
-              <CustomTable
-                tablehead={tablehead}
-                tablerow={tablerow}
-                isLoading={isLoading}
-              />
-              <CustomToPagination
-                data={installmentList}
-                page={page}
-                setPage={setPage}
-              />
-            </>
-          )}
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
+                  <input
+                    type="text"
+                    placeholder="Search by name or ID"
+                    className="border px-3 py-2 rounded w-full"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <input
+                    type="date"
+                    className="border px-3 py-2 rounded w-full"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  <input
+                    type="date"
+                    className="border px-3 py-2 rounded w-full"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
+
+                <CustomTable
+                  tablehead={tablehead}
+                  tablerow={tablerow}
+                  isLoading={isLoading}
+                />
+                <CustomToPagination
+                  data={installmentList}
+                  page={page}
+                  setPage={setPage}
+                />
+              </>
+            )}
+          </div>
         </div>
-      </div>
       )}
     </>
   );
 }
 
 export { TreasureChestBanner };
+

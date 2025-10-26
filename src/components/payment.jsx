@@ -1,53 +1,102 @@
-import React, { useEffect, useState } from 'react';
-import { apiConnectorGet, apiConnectorPost } from '../utils/ApiConnector';
-import { endpoint, mode } from '../utils/APIRoutes';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { apiConnectorGet, apiConnectorPost } from "../utils/ApiConnector";
+import {
+  endpoint,
+  mode,
+  zoho_account_id,
+  zoho_api_key,
+  zoho_domain_country,
+} from "../utils/APIRoutes";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Payment = ({ selectedOrderId }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(true);
-  const [paymentlink, setPaymentLink] = useState("")
-  const [selectedPaymentId, setSelectedPaymentId] = useState('3');
-  // Current address data
+  const [paymentlink, setPaymentLink] = useState("");
+  const [instance, setInstance] = useState(null);
+
+  const [selectedPaymentId, setSelectedPaymentId] = useState("3");
+  useEffect(() => {
+    if (window.ZPayments) {
+      const config = {
+        account_id: zoho_account_id,
+        domain: zoho_domain_country,
+        otherOptions: {
+          api_key: zoho_api_key,
+        },
+      };
+      const zInstance = new window.ZPayments(config);
+      setInstance(zInstance);
+    }
+  }, []);
   const [currentAddress, setCurrentAddress] = useState({
-    firstName: 'abhishek',
-    lastName: 'chaurasia',
-    mobile: '7905140270',
-    address: 'BETA 1 C-120',
-    landmark: '',
-    city: 'Gautam buddh nagar',
-    pincode: '201308',
-    state: 'Uttar Pradesh',
-    country: 'India',
-    type: 'Home'
+    firstName: "abhishek",
+    lastName: "chaurasia",
+    mobile: "7905140270",
+    address: "BETA 1 C-120",
+    landmark: "",
+    city: "Gautam buddh nagar",
+    pincode: "201308",
+    state: "Uttar Pradesh",
+    country: "India",
+    type: "Home",
   });
 
   // New address being edited
   const [newAddress, setNewAddress] = useState({ ...currentAddress });
 
   const indianStates = [
-    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
-    'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
-    'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
-    'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
   ];
 
-  const countries = ['India', 'United States', 'United Kingdom', 'Canada', 'Australia'];
+  const countries = [
+    "India",
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewAddress(prev => ({
+    setNewAddress((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleAddressTypeChange = (type) => {
-    setNewAddress(prev => ({
+    setNewAddress((prev) => ({
       ...prev,
-      type: type
+      type: type,
     }));
   };
 
@@ -70,7 +119,9 @@ const Payment = ({ selectedOrderId }) => {
     try {
       const response = await apiConnectorGet(endpoint?.get_shipping_Address);
       const addressList = response?.data?.result || [];
-      const activeAddress = addressList.find(addr => addr.is_default === "Active");
+      const activeAddress = addressList.find(
+        (addr) => addr.is_default === "Active"
+      );
       if (activeAddress) {
         setDefaultAddress(activeAddress);
       }
@@ -79,31 +130,31 @@ const Payment = ({ selectedOrderId }) => {
     }
   };
   useEffect(() => {
-    addres_fn()
-  }, [])
+    addres_fn();
+  }, []);
 
   const paymentOptions = [
-    { id: '3', label: 'Pay Online' },
-    { id: '4', label: 'Pay E-Gold' },
-    { id: '6', label: 'Purchase Wallet' }
+    { id: "3", label: "Pay Online" },
+    { id: "4", label: "Pay E-Gold" },
+    { id: "6", label: "Purchase Wallet" },
   ];
-  const loadCashfreeSdk = () => {
-    return new Promise((resolve, reject) => {
-      if (window.Cashfree) return resolve(window.Cashfree);
+  // const loadCashfreeSdk = () => {
+  //   return new Promise((resolve, reject) => {
+  //     if (window.Cashfree) return resolve(window.Cashfree);
 
-      const script = document.createElement("script");
-      script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-      script.onload = () => resolve(window.Cashfree);
-      script.onerror = (err) => reject(err);
-      document.body.appendChild(script);
-    });
-  };
+  //     const script = document.createElement("script");
+  //     script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+  //     script.onload = () => resolve(window.Cashfree);
+  //     script.onerror = (err) => reject(err);
+  //     document.body.appendChild(script);
+  //   });
+  // };
 
   // const order_paymentFn = async () => {
   //   try {
   //     const response = await apiConnectorPost(endpoint?.create_order_payment, {
   //       order_id: selectedOrderId,
-  //       payment_id: selectedPaymentId 
+  //       payment_id: selectedPaymentId
   //     });
   //     const payment_session_id = response?.data?.payment_session_id
   //     let cashfree;
@@ -142,34 +193,39 @@ const Payment = ({ selectedOrderId }) => {
           order_id: selectedOrderId,
           payment_method: paymentId,
         });
-        const payment_session_id = response?.data?.payment_session_id;
-        let cashfree;
-        try {
-          cashfree = await loadCashfreeSdk();
-        } catch (err) {
-          console.error("Cannot load Cashfree SDK:", err);
-          alert("Payment SDK load failed");
-          return;
-        }
+        await instance?.requestPaymentMethod(response.data);
 
-        try {
-          cashfree = cashfree({ mode: mode });
-          cashfree.checkout({
-            paymentSessionId: payment_session_id,
-            redirectTarget: "_self",
-          });
-        } catch (err) {
-          console.error("Checkout error:", err);
-          alert("Checkout failed");
-        }
+        // const payment_session_id = response?.data?.payment_session_id;
+        // let cashfree;
+        // try {
+        //   cashfree = await loadCashfreeSdk();
+        // } catch (err) {
+        //   console.error("Cannot load Cashfree SDK:", err);
+        //   alert("Payment SDK load failed");
+        //   return;
+        // }
+
+        // try {
+        //   cashfree = cashfree({ mode: mode });
+        //   cashfree.checkout({
+        //     paymentSessionId: payment_session_id,
+        //     redirectTarget: "_self",
+        //   });
+        // } catch (err) {
+        //   console.error("Checkout error:", err);
+        //   alert("Checkout failed");
+        // }
       } else if (paymentId === 4 || paymentId === 6) {
-        response = await apiConnectorPost(endpoint?.create_order_payment_wallet, {
-          order_id: selectedOrderId,
-          payment_method: paymentId,
-        });
+        response = await apiConnectorPost(
+          endpoint?.create_order_payment_wallet,
+          {
+            order_id: selectedOrderId,
+            payment_method: paymentId,
+          }
+        );
         toast(response?.data?.message);
         if (response?.data?.success) {
-          navigate("/myaccount/profile")
+          navigate("/myaccount/profile");
         }
       }
     } catch (e) {
@@ -178,30 +234,39 @@ const Payment = ({ selectedOrderId }) => {
     }
   };
 
-  if (paymentlink) {
-    return (
-      document.location.href = paymentlink
-    );
-  }
+  // if (paymentlink) {
+  //   return (
+  //     document.location.href = paymentlink
+  //   );
+  // }
   return (
     <>
-
       <div className="max-w-md mx-auto bg-white p-6 min-h-screen">
         <div className="mb-8">
-          <h2 className="text-lg font-medium text-gray-800 mb-4">Preferred Payment Options</h2>
+          <h2 className="text-lg font-medium text-gray-800 mb-4">
+            Preferred Payment Options
+          </h2>
           <div className="mb-6">
-            <h3 className="text-base font-medium text-gray-700 mb-3">Gift Cards</h3>
+            <h3 className="text-base font-medium text-gray-700 mb-3">
+              Gift Cards
+            </h3>
 
             <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 flex items-center justify-between">
               <div className="flex items-center">
                 <div className="bg-yellow-100 rounded-lg p-2 mr-3">
-                  <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-6 h-6 text-yellow-600"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" />
                   </svg>
                 </div>
                 <div>
                   <p className="font-medium text-gray-800">Have a gift card?</p>
-                  <p className="text-sm text-gray-600">Avail additional discounts with gift cards</p>
+                  <p className="text-sm text-gray-600">
+                    Avail additional discounts with gift cards
+                  </p>
                 </div>
               </div>
               <button className="text-yellow-500 font-medium text-sm px-3 py-1 hover:bg-yellow-100 rounded">
@@ -211,22 +276,29 @@ const Payment = ({ selectedOrderId }) => {
           </div>
 
           <div className="mb-6">
-            <h3 className="text-base font-medium text-gray-700 mb-3">Payment Options</h3>
+            <h3 className="text-base font-medium text-gray-700 mb-3">
+              Payment Options
+            </h3>
 
             {paymentOptions.map(({ id, label }) => (
               <div
                 key={id}
                 className={`border-2 mb-2 rounded-lg p-4 flex items-center justify-between cursor-pointer
-              ${selectedPaymentId === id
-                    ? 'bg-yellow-50 border-yellow-500'
-                    : 'bg-yellow-50 border-yellow-200 hover:border-yellow-400'
-                  }`}
+              ${
+                selectedPaymentId === id
+                  ? "bg-yellow-50 border-yellow-500"
+                  : "bg-yellow-50 border-yellow-200 hover:border-yellow-400"
+              }`}
                 onClick={() => setSelectedPaymentId(id)}
               >
                 <div className="flex items-center">
                   <div className="bg-yellow-100 rounded-lg p-2 mr-3">
                     {/* You can customize icons per payment method */}
-                    <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-6 h-6 text-yellow-600"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
                     </svg>
                   </div>
@@ -236,7 +308,11 @@ const Payment = ({ selectedOrderId }) => {
                 </div>
                 {selectedPaymentId === id && (
                   <div className="bg-yellow-500 rounded-full p-1">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-4 h-4 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                     </svg>
                   </div>
@@ -244,9 +320,12 @@ const Payment = ({ selectedOrderId }) => {
               </div>
             ))}
           </div>
-          <button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black 
+          <button
+            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black 
           font-medium py-4 rounded-lg text-lg hover:from-yellow-600 hover:to-yellow-700 transition-all 
-          duration-200 shadow-lg" onClick={order_paymentFn}>
+          duration-200 shadow-lg"
+            onClick={order_paymentFn}
+          >
             PAY NOW
           </button>
         </div>
@@ -254,20 +333,30 @@ const Payment = ({ selectedOrderId }) => {
         <div className="bg-yellow-50 rounded-lg p-4 mb-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
-              <p className="text-sm text-gray-600 mb-1">{defaultAddress?.address_line1}</p>
+              <p className="text-sm text-gray-600 mb-1">
+                {defaultAddress?.address_line1}
+              </p>
               {defaultAddress?.address_line2 && (
-                <p className="text-sm text-gray-600 mb-1">{defaultAddress.address_line2}</p>
+                <p className="text-sm text-gray-600 mb-1">
+                  {defaultAddress.address_line2}
+                </p>
               )}
               <p className="text-sm text-gray-600 mb-1">
-                {defaultAddress?.city}, {defaultAddress?.state}, {defaultAddress?.postal_code}
+                {defaultAddress?.city}, {defaultAddress?.state},{" "}
+                {defaultAddress?.postal_code}
               </p>
-              <p className="text-sm text-gray-600 mb-3">{defaultAddress?.country}</p>
+              <p className="text-sm text-gray-600 mb-3">
+                {defaultAddress?.country}
+              </p>
               <p className="text-sm text-gray-700">
-                <span className="font-medium">Phone:</span> +91 {defaultAddress?.phone_number}
+                <span className="font-medium">Phone:</span> +91{" "}
+                {defaultAddress?.phone_number}
               </p>
               <p className="text-sm text-gray-700">
                 <span className="font-medium">Address Type:</span>{" "}
-                <span className="text-red-600">{defaultAddress?.type || "Default"}</span>
+                <span className="text-red-600">
+                  {defaultAddress?.type || "Default"}
+                </span>
               </p>
             </div>
             {/* <button 
@@ -299,8 +388,13 @@ const Payment = ({ selectedOrderId }) => {
             transition-transform duration-300 ease-in-out transform translate-y-0 md:translate-y-0 md:right-0 md:top-0 md:bottom-0 md:h-screen"
           >
             <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="font-semibold">{editingAddress ? 'Edit Address' : 'Add Address'}</h2>
-              <button onClick={closeAddEditModal} className="text-gray-600 text-2xl">
+              <h2 className="font-semibold">
+                {editingAddress ? "Edit Address" : "Add Address"}
+              </h2>
+              <button
+                onClick={closeAddEditModal}
+                className="text-gray-600 text-2xl"
+              >
                 ×
               </button>
             </div>
@@ -323,7 +417,9 @@ const Payment = ({ selectedOrderId }) => {
                 />
               </div>
               <div className="flex">
-                <span className="p-2 border-r border-gray-300 bg-yellow-50 text-gray-500 rounded-l-lg">+91</span>
+                <span className="p-2 border-r border-gray-300 bg-yellow-50 text-gray-500 rounded-l-lg">
+                  +91
+                </span>
                 <input
                   name="mobile"
                   value={newAddress.mobile}
@@ -373,7 +469,9 @@ const Payment = ({ selectedOrderId }) => {
                 >
                   <option>State</option>
                   {indianStates.map((state) => (
-                    <option key={state} value={state}>{state}</option>
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
                   ))}
                 </select>
                 <select
@@ -383,7 +481,9 @@ const Payment = ({ selectedOrderId }) => {
                   className="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 >
                   {countries.map((country) => (
-                    <option key={country} value={country}>{country}</option>
+                    <option key={country} value={country}>
+                      {country}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -391,23 +491,29 @@ const Payment = ({ selectedOrderId }) => {
               <h3 className="font-semibold">Address Type</h3>
               <div className="flex space-x-2">
                 <button
-                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Home' ? 'bg-yellow-600 text-white' : 'bg-yellow-200 text-gray-800 hover:bg-yellow-300'
-                    }`}
-                  onClick={() => handleAddressTypeChange('Home')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    newAddress.type === "Home"
+                      ? "bg-yellow-600 text-white"
+                      : "bg-yellow-200 text-gray-800 hover:bg-yellow-300"
+                  }`}
+                  onClick={() => handleAddressTypeChange("Home")}
                 >
                   Home (7am-10pm)
                 </button>
                 <button
-                  className={`px-4 py-2 rounded-lg transition-colors ${newAddress.type === 'Office' ? 'bg-yellow-600 text-white' : 'bg-yellow-200 text-gray-800 hover:bg-yellow-300'
-                    }`}
-                  onClick={() => handleAddressTypeChange('Office')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    newAddress.type === "Office"
+                      ? "bg-yellow-600 text-white"
+                      : "bg-yellow-200 text-gray-800 hover:bg-yellow-300"
+                  }`}
+                  onClick={() => handleAddressTypeChange("Office")}
                 >
                   Office (10am-7pm)
                 </button>
               </div>
               <p className="text-xs text-gray-500">
-                Preferences will help us plan your delivery. However, shipments can sometimes arrive early or later than
-                planned.
+                Preferences will help us plan your delivery. However, shipments
+                can sometimes arrive early or later than planned.
               </p>
             </div>
             <div className="p-4 border-t">
