@@ -6,7 +6,6 @@ import { endpoint } from "../utils/APIRoutes";
 import { useParams } from "react-router-dom";
 import moment from "moment/moment";
 const SonasutraInvoice = () => {
-
   const { orderId } = useParams();
   const { data } = useQuery(
     ["invoice_get", orderId],
@@ -15,11 +14,11 @@ const SonasutraInvoice = () => {
   );
 
   const invoice_detail = data?.data?.result?.[0] || [];
-  const store = invoice_detail?.store_details || []
-  const bill = invoice_detail?.billing_details || []
-  const ship = invoice_detail?.shipping_details || []
-  const order = invoice_detail?.order_items || []
-  const payment = invoice_detail?.payment_details || []
+  const store = invoice_detail?.store_details || [];
+  const bill = invoice_detail?.billing_details || [];
+  const ship = invoice_detail?.shipping_details || [];
+  const order = invoice_detail?.order_items || [];
+  const payment = invoice_detail?.payment_details || [];
 
   const totals = order?.reduce(
     (acc, item) => {
@@ -47,32 +46,78 @@ const SonasutraInvoice = () => {
 
   function numberToWords(num) {
     const a = [
-      '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
-      'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
-      'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen',
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+      "Ten",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
     ];
-    const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    const b = [
+      "",
+      "",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
 
     const numToWords = (n) => {
       if (n < 20) return a[n];
-      if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + a[n % 10] : '');
-      if (n < 1000) return a[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' ' + numToWords(n % 100) : '');
-      if (n < 100000) return numToWords(Math.floor(n / 1000)) + ' Thousand' + (n % 1000 !== 0 ? ' ' + numToWords(n % 1000) : '');
-      if (n < 10000000) return numToWords(Math.floor(n / 100000)) + ' Lakh' + (n % 100000 !== 0 ? ' ' + numToWords(n % 100000) : '');
-      return numToWords(Math.floor(n / 10000000)) + ' Crore' + (n % 10000000 !== 0 ? ' ' + numToWords(n % 10000000) : '');
+      if (n < 100)
+        return b[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + a[n % 10] : "");
+      if (n < 1000)
+        return (
+          a[Math.floor(n / 100)] +
+          " Hundred" +
+          (n % 100 !== 0 ? " " + numToWords(n % 100) : "")
+        );
+      if (n < 100000)
+        return (
+          numToWords(Math.floor(n / 1000)) +
+          " Thousand" +
+          (n % 1000 !== 0 ? " " + numToWords(n % 1000) : "")
+        );
+      if (n < 10000000)
+        return (
+          numToWords(Math.floor(n / 100000)) +
+          " Lakh" +
+          (n % 100000 !== 0 ? " " + numToWords(n % 100000) : "")
+        );
+      return (
+        numToWords(Math.floor(n / 10000000)) +
+        " Crore" +
+        (n % 10000000 !== 0 ? " " + numToWords(n % 10000000) : "")
+      );
     };
 
     const integerPart = Math.floor(num);
     const decimalPart = Math.round((num - integerPart) * 100);
 
-    let words = numToWords(integerPart) + ' Rupees';
+    let words = numToWords(integerPart) + " Rupees";
     if (decimalPart > 0) {
-      words += ' and ' + numToWords(decimalPart) + ' Paise';
+      words += " and " + numToWords(decimalPart) + " Paise";
     }
-    return words + ' Only';
+    return words + " Only";
   }
-
-
 
   const handlePrint = () => {
     window.print();
@@ -125,10 +170,13 @@ const SonasutraInvoice = () => {
                   {/* Shop No 11, Ground Floor, Tower A, Vinayak Plaza, Maldahiya
                   Crossing, Varanasi- 221001, Varanasi - 221001 */}
                 </div>
-                <div> {store?.state}  {store?.country}</div>
                 <div>
-                  <strong>Store Contact Details:</strong> {store?.phone}
-                  & {store?.email}
+                  {" "}
+                  {store?.state} {store?.country}
+                </div>
+                <div>
+                  <strong>Store Contact Details:</strong> {store?.phone}&{" "}
+                  {store?.email}
                 </div>
               </div>
               <div className="text-right w-[200px]">
@@ -151,15 +199,21 @@ const SonasutraInvoice = () => {
                 <div>
                   <strong>PAN :</strong> {store?.pan_no}
                 </div>
+                <div>
+                  <strong>Certificate ID:</strong>{" "}
+                  {invoice_detail?.certificate_id}
+                </div>
               </div>
               <div className="flex-1 text-right text-[10px]">
                 <div>
                   <strong>Order No :</strong> {invoice_detail?.certificate_no}{" "}
-                  <strong>Dated :</strong> {moment(bill?.order_date)?.format("DD-MM-YYYY")}
+                  <strong>Dated :</strong>{" "}
+                  {moment(bill?.order_date)?.format("DD-MM-YYYY")}
                 </div>
                 <div>
                   <strong>Doc No :</strong> {invoice_detail?.doc_id}{" "}
-                  <strong> Dated :</strong> {moment(invoice_detail?.today_date)?.format("DD-MM-YYYY")}
+                  <strong> Dated :</strong>{" "}
+                  {moment(invoice_detail?.today_date)?.format("DD-MM-YYYY")}
                 </div>
               </div>
             </div>
@@ -258,11 +312,10 @@ const SonasutraInvoice = () => {
                 </div> */}
                 </div>
               )}
-
             </div>
 
             {/* Products Section */}
-            {invoice_detail?.product_type === "PRODUCT" ?
+            {invoice_detail?.product_type === "PRODUCT" ? (
               <div className="p-[0_15px]">
                 <table className="w-full border-collapse text-[9px] mb-[10px]">
                   <thead>
@@ -357,58 +410,65 @@ const SonasutraInvoice = () => {
 
                   <tbody>
                     {order?.map((item, index) => {
-                      return <>
-                        <tr>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {index + 1}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px] bg-[#e5e5e5] font-bold">
-                            {item?.varient_sku}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-left text-[9px] relative">
-                            {item?.product_name}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.material_details?.[0]?.pur_stamp_name}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.batch_no}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.qnty}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.varient_weight}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.material_details?.[0]?.weight}
-                          </td>
-                          {item?.material_details?.[1]?.weight && (
+                      return (
+                        <>
+                          <tr>
                             <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                              {item?.material_details?.[1]?.weight}
+                              {index + 1}
                             </td>
-                          )}
-                          {item?.material_details?.[2]?.weight && (
+                            <td className="border border-black p-[8px_5px] text-center text-[9px] bg-[#e5e5e5] font-bold">
+                              {item?.varient_sku}
+                            </td>
+                            <td className="border border-black p-[8px_5px] text-left text-[9px] relative">
+                              {item?.product_name}
+                            </td>
                             <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                              {item?.material_details?.[2]?.weight}
+                              {item?.material_details?.[0]?.pur_stamp_name}
                             </td>
-                          )}
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.batch_no}
+                            </td>
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.qnty}
+                            </td>
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.varient_weight}
+                            </td>
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.material_details?.[0]?.weight}
+                            </td>
+                            {item?.material_details?.[1]?.weight && (
+                              <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                                {item?.material_details?.[1]?.weight}
+                              </td>
+                            )}
+                            {item?.material_details?.[2]?.weight && (
+                              <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                                {item?.material_details?.[2]?.weight}
+                              </td>
+                            )}
 
-                          {/* <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                            {/* <td className="border border-black p-[8px_5px] text-center text-[9px]">
                           0.000/0.000
                         </td> */}
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {([0, 1, 2].reduce((sum, i) => sum + (item?.material_details?.[i]?.weight || 0), 0))}
-                          </td>
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {[0, 1, 2].reduce(
+                                (sum, i) =>
+                                  sum +
+                                  (item?.material_details?.[i]?.weight || 0),
+                                0
+                              )}
+                            </td>
 
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.making_price}
-                          </td>
-                          <td className="border border-black p-[8px_5px] text-center text-[9px]">
-                            {item?.total_price}
-                          </td>
-                        </tr>
-                      </>
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.making_price}
+                            </td>
+                            <td className="border border-black p-[8px_5px] text-center text-[9px]">
+                              {item?.total_price}
+                            </td>
+                          </tr>
+                        </>
+                      );
                     })}
                     <tr className="bg-[#e5e5e5] font-bold">
                       <td
@@ -450,48 +510,33 @@ const SonasutraInvoice = () => {
                       </td>
                     </tr>
                   </tbody>
-
-
                 </table>
-              </div> :
+              </div>
+            ) : (
               <div className="p-[0_15px]">
                 <table className="w-full border-collapse text-[9px] mb-[10px]">
                   <thead>
                     <tr>
-                      <th
-                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
-                      >
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold">
                         Sr No.
                       </th>
-                      <th
-                        className="bg-[#e5e5e5]  border border-black p-[8px_5px] text-center font-bold"
-                      >
+                      <th className="bg-[#e5e5e5]  border border-black p-[8px_5px] text-center font-bold">
                         Order ID
                       </th>
-                      <th
-                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
-                      >
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold">
                         Product Type
                       </th>
-                      <th
-                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
-                      >
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold">
                         Weight
                       </th>
-                      <th
-                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
-                      >
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold">
                         Material Cost /gm
                       </th>
-                      <th
-                        className="bg-[#e5e5e5]  border border-black p-[8px_5px] text-center font-bold"
-                      >
+                      <th className="bg-[#e5e5e5]  border border-black p-[8px_5px] text-center font-bold">
                         Order Type
                       </th>
 
-                      <th
-                        className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold"
-                      >
+                      <th className="bg-[#e5e5e5] border border-black p-[8px_5px] text-center font-bold">
                         Price (₹)
                       </th>
                     </tr>
@@ -499,7 +544,9 @@ const SonasutraInvoice = () => {
 
                   <tbody>
                     <tr>
-                      <td className="border border-black p-[8px_5px] text-center">1</td>
+                      <td className="border border-black p-[8px_5px] text-center">
+                        1
+                      </td>
                       <td className="border border-black p-[8px_5px] text-center">
                         {invoice_detail?.certificate_no || "N/A"}
                       </td>
@@ -515,7 +562,6 @@ const SonasutraInvoice = () => {
                       <td className="border border-black p-[8px_5px] text-center">
                         {invoice_detail?.order_type || "N/A"}
                       </td>
-
 
                       <td className="border border-black p-[8px_5px] text-center">
                         ₹ {invoice_detail?.total_amount || "0.00"}
@@ -537,9 +583,7 @@ const SonasutraInvoice = () => {
                   </tbody>
                 </table>
               </div>
-
-            }
-
+            )}
 
             {/* Lower Section */}
             <div className="flex p-[15px] gap-5">
@@ -623,20 +667,15 @@ const SonasutraInvoice = () => {
                         </tr>
                       </thead>
                       <tbody>
-
                         <tr>
                           <td className="border border-black p-[4px] text-center">
-
                             {invoice_detail?.coupon_discount}
                           </td>
 
                           <td className="border border-black p-[4px] text-center">
-
                             {invoice_detail?.coupon_discount}
                           </td>
                         </tr>
-
-
                       </tbody>
                     </table>
                     <div className="text-[8px] mt-[5px]">
@@ -645,7 +684,6 @@ const SonasutraInvoice = () => {
                     </div>
                   </div>
                 )}
-
               </div>
               <div className="w-[300px]">
                 <table className="w-full border-collapse text-[10px] mt-[10px]">
@@ -660,7 +698,6 @@ const SonasutraInvoice = () => {
                             {invoice_detail?.total_discount}
                           </td>
                         </tr>
-
 
                         <tr>
                           <td className="bg-[#f5f5f5] p-[3px_8px] border border-black text-left">
@@ -701,7 +738,9 @@ const SonasutraInvoice = () => {
                         <strong>Total Invoice Price ₹</strong>
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        <strong>{Number(invoice_detail?.grand_total)?.toFixed(2)}</strong>
+                        <strong>
+                          {Number(invoice_detail?.grand_total)?.toFixed(2)}
+                        </strong>
                       </td>
                     </tr>
                     {/* <tr>
@@ -725,7 +764,9 @@ const SonasutraInvoice = () => {
                         <strong>Total Payable Amount ₹ (Rounded off)</strong>
                       </td>
                       <td className="p-[3px_8px] border border-black text-right min-w-[80px]">
-                        <strong>{Math.round(invoice_detail?.grand_total || 0)}</strong>
+                        <strong>
+                          {Math.round(invoice_detail?.grand_total || 0)}
+                        </strong>
                       </td>
                     </tr>
                   </tbody>
@@ -739,26 +780,31 @@ const SonasutraInvoice = () => {
                 <strong>Invoice value in words :</strong>
               </div>
               <div>
-                {numberToWords(Math.round(invoice_detail?.grand_total || 0))} (Rounded off)
+                {numberToWords(Math.round(invoice_detail?.grand_total || 0))}{" "}
+                (Rounded off)
               </div>
             </div>
 
             {/* Rates Section */}
             <div className="m-[10px_15px] text-[10px]">
-
               {order?.[0]?.material_details?.map((item) => {
-                return <div>
-                  <strong>Standard {item?.master_mat_name} Rate for  :</strong>{" "}
-                  {item?.pur_stamp_name}T: ₹ {item?.ma_price_per_unit}/{item?.ma_unit}
-                </div>
+                return (
+                  <div>
+                    <strong>Standard {item?.master_mat_name} Rate for :</strong>{" "}
+                    {item?.pur_stamp_name}T: ₹ {item?.ma_price_per_unit}/
+                    {item?.ma_unit}
+                  </div>
+                );
               })}
 
               {order?.[0]?.material_details?.map((item) => {
-                return <div>
-                  <strong>{item?.material_name} Rate for :</strong> ₹ {item?.ma_price_per_unit}/{item?.ma_unit}
-                </div>
+                return (
+                  <div>
+                    <strong>{item?.material_name} Rate for :</strong> ₹{" "}
+                    {item?.ma_price_per_unit}/{item?.ma_unit}
+                  </div>
+                );
               })}
-
             </div>
           </div>
           <div className="absolute bottom-[10px] left-0 right-0 text-center text-[10px] m-0">
@@ -792,17 +838,16 @@ const SonasutraInvoice = () => {
                   <li className="mb-[4px] text-justify">
                     Applicable Indian laws shall govern the transaction. In case
                     of any dispute, courts in
-
                     {/* e-gold */}
-
-
                     {/* product */}
-                    {invoice_detail?.product_type === "PRODUCT" ?
-                      <p>{store.city}, {store?.state}, {store.country}</p> :
-                      <p> Bhadohi, Uttar Pradesh, India</p>}
-
-                    only shall have
-                    jurisdiction.
+                    {invoice_detail?.product_type === "PRODUCT" ? (
+                      <p>
+                        {store.city}, {store?.state}, {store.country}
+                      </p>
+                    ) : (
+                      <p> Bhadohi, Uttar Pradesh, India</p>
+                    )}
+                    only shall have jurisdiction.
                   </li>
                   <li className="mb-[4px] text-justify">
                     We declare that the invoice shows the actual price of goods
@@ -909,10 +954,16 @@ const SonasutraInvoice = () => {
                   invoice
                 </div>
                 <div className="inline-block w-[80px] h-[80px] border-2 border-black bg-white mb-[15px] relative">
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[8px]">
-                    QR CODE
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
+                    {/* QR CODE */}
+                    <img
+                      src={invoice_detail?.digital_certificate}
+                      alt="QR Code"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </div>
+
                 <br />
                 <div className="w-[60px] h-[60px] rounded-full bg-[#666] m-auto relative">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[8px] text-center">
@@ -922,9 +973,9 @@ const SonasutraInvoice = () => {
               </div>
               <div className="text-center text-[9px] leading-[1.3] m-[15px]">
                 <div className="mb-[5px]">
-                  <strong>Sonasutra Regd & Corporate Office:</strong> Shop No 10 Rajpura,BIDA MART,
-                  Bhadohi, Sant Ravidas Nagar, Bhadohi, Uttar Pradesh, India,
-                  221401
+                  <strong>Sonasutra Regd & Corporate Office:</strong> Shop No 10
+                  Rajpura,BIDA MART, Bhadohi, Sant Ravidas Nagar, Bhadohi, Uttar
+                  Pradesh, India, 221401
                 </div>
                 <div className="mb-[5px]">
                   <strong>CIN :</strong> U47733UP2025PTC225721.{" "}
@@ -937,8 +988,8 @@ const SonasutraInvoice = () => {
                   latest designs.
                 </div>
                 <div className="mb-[5px]">
-                  You can also call us on 7068454247  from 9
-                  A.M to 12 A.M IST (Mon - Sat) , 9 A.M to 9 P.M (Sun).
+                  You can also call us on 7068454247 from 9 A.M to 12 A.M IST
+                  (Mon - Sat) , 9 A.M to 9 P.M (Sun).
                 </div>
                 <div className="mb-[5px]">
                   For detailed terms pertaining to our Returns & Exchanges

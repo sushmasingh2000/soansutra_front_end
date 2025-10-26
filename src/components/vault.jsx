@@ -3,6 +3,10 @@ import Footer from './Footer1';
 import Header from './Header1';
 import NavigationBar from './navigationbar';
 import EgoldHeader from './egoldheader';
+import { useQuery } from 'react-query';
+import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
+import { endpoint } from '../utils/APIRoutes';
+import { useNavigate } from 'react-router-dom';
 
 const GoldLockerUI = () => {
     // Hardcoded data
@@ -10,6 +14,20 @@ const GoldLockerUI = () => {
     const currentValue = '₹0';
     const valueChange = '+₹0 (0%)';
 
+    const token = localStorage.getItem("token");
+
+    const { data: profile } = useQuery(
+        ["profile"],
+        () => apiConnectorGet(endpoint?.get_customer_profile),
+        {
+          ...usequeryBoolean,
+          enabled: !!token,
+        }
+      );
+    
+      const profileData = profile?.data?.result || [];
+
+      const navigate = useNavigate();
     return (
         <>
             <Header />
@@ -35,7 +53,7 @@ const GoldLockerUI = () => {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-300/20 to-transparent rounded-full"></div>
                         <h2 className="text-sm font-medium text-gray-600 mb-2">Gold in Locker</h2>
                         <div className="flex items-baseline justify-between mb-4">
-                            <div className="text-3xl font-bold text-gray-900">{goldAmount}g</div>
+                            <div className="text-3xl font-bold text-gray-900">{profileData?.gold_wallet} gm</div>
                             <div className="text-sm text-gray-500">Og</div>
                         </div>
                         <div className="flex items-baseline justify-between mb-6">
@@ -49,7 +67,8 @@ const GoldLockerUI = () => {
                             <button className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg text-sm font-medium hover:bg-gray-200">
                                 View All transactions
                             </button>
-                            <button className="flex-1 bg-yellow-600 text-black py-3 px-4 rounded-lg text-sm font-medium hover:bg-yellow-700">
+                            <button className="flex-1 bg-yellow-600 text-black py-3 px-4 rounded-lg text-sm font-medium hover:bg-yellow-700"
+                            onClick={()=>navigate("/buy-gold")}>
                                 Buy more Gold
                             </button>
                         </div>
@@ -106,7 +125,10 @@ const GoldLockerUI = () => {
                                 <h3 className="text-sm font-semibold text-gray-900">Sell Gold</h3>
                             </div>
                         </div>
-                        <button className="w-full bg-yellow-600 text-black py-2 px-4 rounded-lg text-sm font-medium hover:bg-yellow-700">
+                        <button className="w-full bg-yellow-600 text-black py-2 px-4 rounded-lg text-sm font-medium
+                         hover:bg-yellow-700"
+                         onClick={()=>navigate("/sell-gold")}>
+
                             Sell Gold →
                         </button>
                     </div>
