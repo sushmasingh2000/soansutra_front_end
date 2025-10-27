@@ -8,11 +8,11 @@ export const mode = "production";
 
 export const zoho_account_id = "60051739358";
 export const zoho_domain_country = "IN";
-export const zoho_api_key =
-  "1003.e80ef3d3f3c093b71f95211b2eb1b663.c16c8a4586cd079bcf16b570500894cb";
+export const zoho_api_key ="1003.e80ef3d3f3c093b71f95211b2eb1b663.c16c8a4586cd079bcf16b570500894cb";
 
 export const endpoint = {
   email_insider: `${domain}/api/v1/insert-external-leads`,
+  e_certificate: `${domain}/api/v1/e-certificate-detils`,
 
   login: `${domain}/api/v1/login-user`,
   login_super_user: `${domain}/api/v1/login-super-user`,
