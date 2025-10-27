@@ -6,7 +6,7 @@ import EgoldHeader from './egoldheader';
 import { useQuery } from 'react-query';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const GoldLockerUI = () => {
     // Hardcoded data
@@ -64,9 +64,9 @@ const GoldLockerUI = () => {
                             </div>
                         </div>
                         <div className="flex space-x-3">
-                            <button className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg text-sm font-medium hover:bg-gray-200">
+                            <Link to={"/view-e-gold-history"} className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg text-sm font-medium hover:bg-gray-200">
                                 View All transactions
-                            </button>
+                            </Link>
                             <button className="flex-1 bg-yellow-600 text-black py-3 px-4 rounded-lg text-sm font-medium hover:bg-yellow-700"
                             onClick={()=>navigate("/buy-gold")}>
                                 Buy more Gold

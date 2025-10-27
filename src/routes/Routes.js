@@ -71,6 +71,7 @@ import PaytmVault from "../components/pages/PaytmVault.js";
 import CertificateUI from "../components/e-certificate.jsx";
 import CertificateVerification from "../components/certificateui.jsx";
 import GoldLockerUI from "../components/vault.jsx";
+import EGoldHistoryButtons from "../components/pages/goldhistory/historybutton.jsx";
 
 export const routes = [
   {
@@ -546,9 +547,9 @@ export const routes = [
   path:"/e-certificate",
   element:<CertificateVerification/>
  },
-//  {
-//   path:"/goldlocker",
-//   element:<GoldLockerUI/>
-//  }
+ {
+  path:"/view-e-gold-history",
+  element:<EGoldHistoryButtons/>
+ }
    
 ];

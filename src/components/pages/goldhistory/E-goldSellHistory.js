@@ -2,11 +2,12 @@ import { useQuery } from "react-query";
 import { apiConnectorGet, usequeryBoolean } from "../../../utils/ApiConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomTable from "../../../Shared/CustomTable";
 import Header from "../../Header1";
 import NavigationBar from "../../navigationbar";
 import Footer from "../../Footer1";
+import EgoldHeader from "../../egoldheader";
 
 const EgoldSellHistoryModal = () => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const EgoldSellHistoryModal = () => {
     <>
       <Header />
       <NavigationBar />
-
+      <EgoldHeader />
       <div className="flex justify-between items-center p-4 border-b">
         <h2 className="text-lg font-bold">E-Gold Sell History</h2>
       </div>
@@ -72,6 +73,14 @@ const EgoldSellHistoryModal = () => {
         ) : (
           <CustomTable tablehead={tablehead} tablerow={tablerow} />
         )}
+      </div>
+      <div className="flex justify-center mt-4 mb-20">
+        <Link
+          to={"/view-e-gold-history"}
+          className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+        >
+          Go Back
+        </Link>
       </div>
 
       <Footer />
