@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom'; // 👈 URL query params ke liye
+import { useSearchParams } from 'react-router-dom'; 
 import { endpoint } from '../utils/APIRoutes';
 import { useQuery } from 'react-query';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
@@ -37,10 +37,10 @@ const CertificateUI = () => {
     metalPurity: `${rawData?.pur_stamp_name || "N/A"} ${rawData?.master_mat_name || ""}`,
     netMetalWeight: rawData?.material_details?.[0]?.weight || "N/A",
     certificateNumber: certificateData?.certificate_id || "N/A",
-    diamondQuality: "GH-SI",
-    totalDiamondWeight: "0.137",
-    diamondShape: "Round",
-    totalDiamondCount: 8,
+    // diamondQuality: "GH-SI",
+    // totalDiamondWeight: "0.137",
+    // diamondShape: "Round",
+    // totalDiamondCount: 8,
     imageUrl: product?.product_image?.p_image_url || "/no-image.png",
   };
 
