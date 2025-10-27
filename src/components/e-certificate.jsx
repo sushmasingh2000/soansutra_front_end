@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 
 const CertificateUI = () => {
@@ -21,41 +20,54 @@ const CertificateUI = () => {
     imageUrl: "https://cdn.caratlane.com/media/catalog/product/J/E/JE04737-YGS300_1_lar.jpg", // Real product image from CaratLane
   };
 
+  const handleDownload = () => {
+    // Placeholder for download logic - e.g., generate PDF via html2canvas + jsPDF or server-side
+    alert('Download E-Certificate functionality would be implemented here (e.g., via jsPDF).');
+  };
+
   return (
-    <div className="min-h-screen bg-white font-sans antialiased">
-      {/* Outer Container with Yellow Border */}
-      <div className="max-w-4xl mx-auto p-6 border-4 border-yellow-600 rounded-lg shadow-lg relative bg-white">
-        {/* Header with Logo and Title */}
-        <div className="mb-8 relative">
-          {/* Logo and Partnership - Left aligned */}
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              <img
-                src="/logo512.png"
-                alt="Sonasutra Logo"
-                className="w-24 h-24 rounded-full"
-              />
-              <p className="text-xs text-yellow-600 italic mt-1">A Sonasutra Partnership</p>
-            </div>
+    <div className="min-h-screen bg-gray-100 font-sans antialiased px-2 sm:px-0 py-4"> {/* Added px-2 sm:px-0 for mobile side margins without conflict */}
+      {/* Download Button - Centered at top, outside container */}
+      <div className="max-w-4xl mx-auto flex justify-center mb-4">
+        <button
+          onClick={handleDownload}
+          className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition-colors text-sm"
+        >
+          Download E-Certificate
+        </button>
+      </div>
+
+      {/* Outer Container with Yellow Border - PDF-like styling */}
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 border-4 border-yellow-600 rounded-lg shadow-lg relative bg-white"> {/* Removed conflicting mx-2 sm:mx-0; centering via mx-auto intact */}
+        {/* Header with Logo and Title - Using relative/absolute for perfect centering */}
+        <div className="mb-2 sm:mb-2 relative min-h-[5rem] sm:min-h-[6rem] md:min-h-[7rem] lg:min-h-[8rem] flex items-center justify-center"> {/* Added min-height responsive to container height for logo accommodation; changed to items-center justify-center for better vertical centering */}
+          {/* Logo - Left aligned, even smaller on mobile */}
+          <div className="flex-shrink-0 flex flex-col items-start absolute left-0 top-1/2 -translate-y-1/2"> {/* Changed top-0 to top-1/2 -translate-y-1/2 to vertically center logo block with title */}
+            <img
+              src="/logo512.png"
+              alt="Sonasutra Logo"
+              className="w-8 h-8 sm:w-16 sm:h-16 md:w-14 md:h-14 lg:w-15lg:h-15 rounded-full" 
+            />
+            <p className="text-[8px] sm:text-sm text-yellow-600 italic mt-1">A Sonasutra <br/>Partnership</p> {/* Smaller text on mobile */}
           </div>
-          {/* E - CERTIFICATE - Centered at same level as logo */}
-          <h1 className="absolute left-1/2 mb-10 top-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-gray-700 whitespace-nowrap">
+          {/* E - CERTIFICATE - Perfectly centered with absolute positioning */}
+          <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl sm:text-2xl md:text-3xl font-bold text-gray-700 whitespace-nowrap z-10">
             E - CERTIFICATE
           </h1>
-          {/* Thick Yellow Gradient Bottom Line */}
-         <div className="max-w-4xl  -mx-6 h-1 bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 rounded-full mt-2"></div>
         </div>
+        {/* Thick Yellow Gradient Bottom Line - Full width */}
+        <div className="-mx-4 sm:-mx-6 h-1 bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 rounded-full mt-0"></div> {/* Removed mt to hug the header bottom; container's mb handles spacing */}
 
-        {/* Product Details Section */}
+        {/* Product Details Section - Row layout even on small screens */}
         <div className="mb-8">
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Details Table */}
-            <div className="md:w-2/3 space-y-2">
-              <h2 className="text-lg font-semibold text-yellow-600 mb-4">PRODUCT DETAILS</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="flex flex-row items-start gap-4 sm:gap-6 md:gap-8"> {/* flex-row always; gap responsive */}
+            {/* Details Table - Flexible width */}
+            <div className="flex-1 space-y-2 min-w-0"> {/* flex-1 to take available space, min-w-0 to allow shrink */}
+              <h2 className="text-base sm:text-lg font-semibold text-yellow-600 mb-3 sm:mb-4">PRODUCT DETAILS</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm overflow-hidden"> {/* overflow-hidden to prevent text overflow on tight mobile */}
                 <div>
                   <p className="font-medium">Product Name:</p>
-                  <p className="text-gray-700">{certificate.productName}</p>
+                  <p className="text-gray-700 truncate">{certificate.productName}</p> {/* truncate long names on mobile */}
                 </div>
                 <div>
                   <p className="font-medium">SKU Code Number:</p>
@@ -80,26 +92,26 @@ const CertificateUI = () => {
               </div>
             </div>
 
-            {/* Product Image */}
-            <div className="md:w-1/3">
+            {/* Product Image - Fixed right-side position even on small screens */}
+            <div className="flex-shrink-0 w-24 sm:w-32 md:w-40 h-32 sm:h-40 md:h-48"> {/* Fixed sizes: smaller on mobile, grows on larger; flex-shrink-0 to stay right */}
               <img
                 src={certificate.imageUrl}
                 alt="Product Image"
-                className="w-full h-48 object-cover rounded-lg border border-yellow-300"
+                className="w-full h-full object-cover rounded-lg border border-yellow-300"
               />
             </div>
           </div>
 
           {/* Certificate Number */}
-          <div className="text-right mt-4">
-            <p className="text-xs font-medium text-yellow-600">CERTIFICATE NUMBER: {certificate.certificateNumber}</p>
+          <div className="text-right mt-3 sm:mt-4">
+            <p className="text-xs sm:text-sm font-medium text-yellow-600">CERTIFICATE NUMBER: {certificate.certificateNumber}</p>
           </div>
         </div>
 
         {/* Gold / Metal Section */}
-        <div className="mb-8 p-4 bg-yellow-50 rounded-lg">
-          <h3 className="text-base font-semibold text-yellow-600 mb-2">GOLD / PURITY</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div className="mb-8 p-3 sm:p-4 bg-yellow-50 rounded-lg">
+          <h3 className="text-sm sm:text-base font-semibold text-yellow-600 mb-2">GOLD / PURITY</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
             <div>
               <p className="font-medium">Metal / Purity:</p>
               <p className="text-gray-700">{certificate.metalPurity}</p>
@@ -113,10 +125,10 @@ const CertificateUI = () => {
 
         {/* Diamonds Section */}
         <div className="mb-8">
-          <h3 className="text-base font-semibold text-yellow-600 mb-4">
+          <h3 className="text-sm sm:text-base font-semibold text-yellow-600 mb-3 sm:mb-4">
             DIAMONDS | TOTAL COUNT: {certificate.totalDiamondCount}
           </h3>
-          <table className="w-full border-collapse border border-yellow-300 text-xs">
+          <table className="w-full border-collapse border border-yellow-300 text-xs sm:text-sm">
             <thead>
               <tr className="bg-yellow-100">
                 <th className="border border-yellow-300 p-2 text-left">QUALITY</th>
@@ -137,14 +149,14 @@ const CertificateUI = () => {
         </div>
 
         {/* Footer Notes */}
-        <div className="text-xs text-gray-600 space-y-1 mb-4">
+        <div className="text-xs sm:text-sm text-gray-600 space-y-1 mb-4">
           <p>* Tolerance +/- 0.05 grams.</p>
           <p>* All solitaires / diamonds graded as 0.137 ct.</p>
           <p>produced as mounting permits.</p>
         </div>
 
         {/* Bottom Links and Customer Care */}
-        <div className="flex flex-col md:flex-row justify-between items-center text-xs text-yellow-600 border-t border-yellow-300 pt-4">
+        <div className="flex flex-col md:flex-row justify-between items-center text-xs sm:text-sm text-yellow-600 border-t border-yellow-300 pt-3 sm:pt-4">
           <a href="https://www.sonasutra.com/certificate" className="underline hover:no-underline">
             www.sonasutra.com/certificate
           </a>

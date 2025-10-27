@@ -428,7 +428,7 @@ export const routes = [
   },
   {
     path: "/vault",
-    element: <PaytmVault />,
+    element: <GoldLockerUI/>,
   },
   {
     path: "/myaccount/profile",
@@ -546,9 +546,9 @@ export const routes = [
   path:"/e-certificate",
   element:<CertificateVerification/>
  },
- {
-  path:"/goldlocker",
-  element:<GoldLockerUI/>
- }
+//  {
+//   path:"/goldlocker",
+//   element:<GoldLockerUI/>
+//  }
    
 ];
