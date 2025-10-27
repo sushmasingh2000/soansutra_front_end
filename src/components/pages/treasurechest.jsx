@@ -91,8 +91,7 @@ export default function TreasureChestBanner() {
       (p) => p.dz_descripton === selectedDescription
     );
 
-    setSelectedPlanId(planData?.dz_id); // for POST API
-    // Map 12/13/14-months → plan_type (1/2/3)
+    setSelectedPlanId(planData?.dz_id); 
     const planType = selectedDescription.includes("12")
       ? 1
       : selectedDescription.includes("13")
@@ -197,7 +196,7 @@ export default function TreasureChestBanner() {
     e.preventDefault();
 
     if (!selectedPlanId || !selectedPlan || !selectedAmount) {
-      alert("Please fill all fields before submitting.");
+      alert("Please Select your Plan .");
       return;
     }
 
@@ -206,7 +205,7 @@ export default function TreasureChestBanner() {
       total_amount: selectedAmount,
       plan_type: selectedPlan,
     };
-    submitPlan(payload);
+   submitPlan(payload);
   };
 
   const tablehead = [
@@ -1181,7 +1180,7 @@ export default function TreasureChestBanner() {
                   onChange={handlePlanChange}
                   className="w-full px-4 py-3 rounded-2xl border border-yellow-200 focus:outline-none focus:border-yellow-400 bg-white text-gray-700"
                 >
-                  {/* <option value="">Select Plan</option> */}
+                  <option value="">Select Plan</option>
                   {dazzleamountplan?.map((item) => (
                     <option key={item?.dz_id} value={item?.dz_descripton}>
                       {item?.dz_descripton}
