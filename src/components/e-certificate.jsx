@@ -45,7 +45,7 @@ const CertificateUI = () => {
   };
 
   const handleDownload = () => {
-    alert(`Download E-Certificate for ${certificate.certificateNumber} coming soon!`);
+    window.print();
   };
 
   return (
