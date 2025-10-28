@@ -10,6 +10,7 @@ const CertificateUI = () => {
 
   // testted
   // http://localhost:3001/download-e-certificate?certificate_no=CER-17606-00214
+  // attribute agr  matrail diamond hai atttribute m count ayega 
 
   const { data, isLoading, isError } = useQuery(
     ["e_certificate", certificateNo],
