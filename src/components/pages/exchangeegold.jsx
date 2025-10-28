@@ -148,7 +148,7 @@ const ExchangeRedeemComponent = () => {
             </div>
 
             <div className="text-2xl font-bold text-gray-800 mb-1">
-              {Number(get_price?.ma_price).toFixed(2)} /gram
+              {Number(get_price?.ma_price_per_unit).toFixed(2)} /gram
               {/* ₹{(
                 Number(get_price?.ma_price) +
                 (Number(get_price?.ma_price) * Number(get_price?.ma_sell_tax_percentage) / 100)
