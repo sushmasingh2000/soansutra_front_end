@@ -20,25 +20,27 @@ const EGoldHistoryButtons = () => {
     <Header/>
     <NavigationBar/>    
     <EgoldHeader/>
-    <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 mb-20">
-      {/* Buy E-Gold History Button */}
-      <Link to={"/egold_buy"}
-        
-        className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-      >
-        Buy E-Gold History
-      </Link>
+     <div className="max-w-md mx-auto flex flex-col sm:flex-row gap-4 justify-center mt-10 mb-20 px-6">
+        {/* Buy E-Gold History Button */}
+        <Link
+          to={"/egold_buy"}
+          className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md 
+                     hover:bg-yellow-700 transition-colors text-sm focus:outline-none 
+                     focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 text-center w-full sm:w-auto"
+        >
+          Buy E-Gold History
+        </Link>
 
-      {/* Sell E-Gold History Button */}
-      <Link to={"/egold_sell"}
-        
-        className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-      >
-        Sell E-Gold History
-      </Link>
-
-     
-    </div>
+        {/* Sell E-Gold History Button */}
+        <Link
+          to={"/egold_sell"}
+          className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md 
+                     hover:bg-yellow-700 transition-colors text-sm focus:outline-none 
+                     focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 text-center w-full sm:w-auto"
+        >
+          Sell E-Gold History
+        </Link>
+      </div>
 
      
     <Footer/>
