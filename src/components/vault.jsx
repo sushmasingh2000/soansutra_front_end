@@ -12,7 +12,7 @@ const GoldLockerUI = () => {
     // Hardcoded data
     const goldAmount = '0';
     const currentValue = '₹0';
-    const valueChange = '+₹0 (0%)';
+    // const valueChange = '+₹0 (0%)';
 
     const token = localStorage.getItem("token");
 
@@ -59,8 +59,8 @@ const GoldLockerUI = () => {
                         <div className="flex items-baseline justify-between mb-6">
                             <span className="text-sm font-medium text-gray-600">Current Value</span>
                             <div className="text-xl font-bold text-green-600 flex items-baseline">
-                                {currentValue}
-                                <span className="ml-1 text-sm text-green-600">({valueChange})</span>
+                                {profileData?.wallet_status?.current_inr_value}
+                                <span className="ml-1 text-sm text-green-600">({`+₹${profileData?.wallet_status?.inr_increase} (${profileData?.wallet_status?.percent_increase}%)`})</span>
                             </div>
                         </div>
                         <div className="flex space-x-3">
