@@ -31,7 +31,7 @@ const GoldLockerUI = () => {
     return (
         <>
             <Header />
-            <NavigationBar />
+            {/* <NavigationBar /> */}
             <EgoldHeader />
             <div className=" max-w-2xl bg-white font-sans antialiased align-items-center justify-center mx-auto min-h-screen flex flex-col  rounded-xl border border-yellow-200">
                 {/* Header */}

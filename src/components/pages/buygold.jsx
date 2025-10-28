@@ -274,7 +274,7 @@ const BuyGold = () => {
   return (
     <>
       <Header />
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <EgoldHeader />
       <Loader isLoading={loader} />
       <div className="w-full bg-white-100 flex items-center justify-center p-4">
