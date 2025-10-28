@@ -8,6 +8,9 @@ const CertificateUI = () => {
   const [searchParams] = useSearchParams();
   const certificateNo = searchParams.get("certificate_no"); 
 
+  // testted
+  // http://localhost:3001/download-e-certificate?certificate_no=CER-17606-00214
+
   const { data, isLoading, isError } = useQuery(
     ["e_certificate", certificateNo],
     () => apiConnectorGet(`${endpoint.e_certificate}?certificate_id=${certificateNo}`),
@@ -35,6 +38,8 @@ const CertificateUI = () => {
     width: rawData?.attributes?.find(a => a.attribute_name === "Thickness")?.value || "N/A",
     grossWeight: rawData?.material_details?.[0]?.weight || "N/A",
     metalPurity: `${rawData?.pur_stamp_name || "N/A"} ${rawData?.master_mat_name || ""}`,
+    metalName: ` ${rawData?.master_mat_name || ""}`,
+    metaunit: ` ${rawData?.ma_unit || ""}`,
     netMetalWeight: rawData?.material_details?.[0]?.weight || "N/A",
     certificateNumber: certificateData?.certificate_id || "N/A",
     // diamondQuality: "GH-SI",
@@ -101,7 +106,7 @@ const CertificateUI = () => {
 
         {/* Gold / Purity */}
         <div className="mb-8 p-4 bg-yellow-50 rounded-lg">
-          <h3 className="text-base font-semibold text-yellow-600 mb-2">GOLD / PURITY</h3>
+          <h3 className="text-base font-semibold text-yellow-600 mb-2">{certificate?.metalName} / PURITY</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div><p className="font-medium">Metal / Purity:</p><p className="text-gray-700">{certificate.metalPurity}</p></div>
             <div><p className="font-medium">Net Metal Weight:</p><p className="text-gray-700">{certificate.netMetalWeight} g</p></div>
@@ -111,14 +116,14 @@ const CertificateUI = () => {
         {/* Diamonds */}
         <div className="mb-8">
           <h3 className="text-base font-semibold text-yellow-600 mb-4">
-            DIAMONDS | 
+{certificate?.metalName} 
             {/* TOTAL COUNT: {certificate.totalDiamondCount} */}
           </h3>
           <table className="w-full border-collapse border border-yellow-300 text-sm">
             <thead>
               <tr className="bg-yellow-100">
                 <th className="border border-yellow-300 p-2 text-left">QUALITY</th>
-              <th className="border border-yellow-300 p-2 text-left">WEIGHT</th> 
+              <th className="border border-yellow-300 p-2 text-left">WEIGHT ({certificate?.metaunit}) </th> 
                  {/* <th className="border border-yellow-300 p-2 text-left">SHAPE</th>
                 <th className="border border-yellow-300 p-2 text-left">COUNT</th> */}
               </tr>
@@ -137,7 +142,9 @@ const CertificateUI = () => {
         {/* Footer */}
         <div className="text-xs text-gray-600 space-y-1 mb-4">
           <p>* Tolerance +/- 0.05 grams.</p>
-          <p>* All solitaires / diamonds graded as 0.137 ct.</p>
+          {certificate?.metalName === "Diamond" && (
+           <p>* All solitaires / diamonds graded as 0.137 ct.</p>
+          )} 
           <p>Produced as mounting permits.</p>
         </div>
 
