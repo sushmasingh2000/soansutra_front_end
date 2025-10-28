@@ -164,7 +164,7 @@ const SonaSutraDigitalGoldHome = () => {
   return (
     <div className="min-h-screen bg-white overflow-y-hidden">
          <Header/>
-    <NavigationBar/>
+    {/* <NavigationBar/> */}
         <EgoldHeader/>
 
       {/* Hero Section */}

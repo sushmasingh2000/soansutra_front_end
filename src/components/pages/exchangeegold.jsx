@@ -23,7 +23,7 @@ const ExchangeRedeemComponent = () => {
     <div className="w-full bg-gray-50 min-h-screen">
       {/* Desktop View */}
       <Header />
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <EgoldHeader />
       <div className="hidden lg:block max-w-6xl mx-auto p-6">
         {/* Header */}

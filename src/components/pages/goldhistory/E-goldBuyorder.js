@@ -60,7 +60,7 @@ const EgoldBuyHistoryModal = () => {
 
         <>
             <Header />
-            <NavigationBar />
+            {/* <NavigationBar /> */}
             <EgoldHeader />
             <div className="flex justify-between items-center p-4 border-b">
                 <h2 className="text-lg font-bold">E-Gold Buy History</h2>

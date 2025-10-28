@@ -18,7 +18,7 @@ const EGoldHistoryButtons = () => {
   return (
     <>
     <Header/>
-    <NavigationBar/>    
+    {/* <NavigationBar/>     */}
     <EgoldHeader/>
      <div className="max-w-md mx-auto flex flex-col sm:flex-row gap-4 justify-center mt-10 mb-20 px-6">
         {/* Buy E-Gold History Button */}
