@@ -1,6 +1,6 @@
 // export const domain = "http://192.168.248.149:2000";
 export const frontend = "https://sonasutra.in";
-// export const domain = "http://192.168.248.149:2000";
+// export const domain = "http://192.168.18.214:2000";
 export const domain = "https://backend.sonasutra.in";
 export const rupees = "₹";
 export const mode = "production";
@@ -230,6 +230,8 @@ export const endpoint = {
   creata_by_wallet: `${domain}/api/v1/handle-purchase-wallet`,
   change_password_admin: `${domain}/api/v1/change-password`,
   get_leddger_report: `${domain}/api/v1/get-wallet-ledger-report`,
+  distributor_registration_admin: `${domain}/api/v1/distributor-registration-admin-to-other-id-below`,
+  pay_for_subscription_plan_by_admin: `${domain}/api/v1/pay-for-subscription-plan-by-admin`,
 
   // payout
   payout_released: `${domain}/api/v1/release-payout`,
