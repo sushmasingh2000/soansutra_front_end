@@ -73,7 +73,7 @@ const CertificateUI = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 font-sans antialiased px-2 sm:px-0 py-4">
-      <div className="max-w-4xl mx-auto flex justify-center mb-4">
+      <div className="max-w-4xl mx-auto flex justify-center mb-4 print:hidden">
         <button
           onClick={handleDownload}
           className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition-colors text-sm"
@@ -253,7 +253,7 @@ const CertificateUI = () => {
           >
             www.sonasutra.com/certificate
           </a>
-          <p className="mt-2 md:mt-0">Customer Care: +91-44-42980000</p>
+          <p className="mt-2 md:mt-0">Customer Care: +91-7068454247</p>
         </div>
       </div>
     </div>
