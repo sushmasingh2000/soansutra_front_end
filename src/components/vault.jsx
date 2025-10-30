@@ -20,14 +20,14 @@ const GoldLockerUI = () => {
         ["profile"],
         () => apiConnectorGet(endpoint?.get_customer_profile),
         {
-          ...usequeryBoolean,
-          enabled: !!token,
+            ...usequeryBoolean,
+            enabled: !!token,
         }
-      );
-    
-      const profileData = profile?.data?.result || [];
+    );
 
-      const navigate = useNavigate();
+    const profileData = profile?.data?.result || [];
+
+    const navigate = useNavigate();
     return (
         <>
             <Header />
@@ -54,13 +54,15 @@ const GoldLockerUI = () => {
                         <h2 className="text-sm font-medium text-gray-600 mb-2">Gold in Locker</h2>
                         <div className="flex items-baseline justify-between mb-4">
                             <div className="text-3xl font-bold text-gray-900">{profileData?.gold_wallet} gm</div>
-                            <div className="text-sm text-gray-500">Og</div>
+
                         </div>
                         <div className="flex items-baseline justify-between mb-6">
                             <span className="text-sm font-medium text-gray-600">Current Value</span>
-                            <div className="text-xl font-bold text-green-600 flex items-baseline">
+                            <div className="text-base sm:text-xl font-bold text-green-600 flex items-baseline flex-wrap gap-1">
                                 {profileData?.wallet_status?.current_inr_value}
-                                <span className="ml-1 text-sm text-green-600">({`+₹${profileData?.wallet_status?.inr_increase} (${profileData?.wallet_status?.percent_increase}%)`})</span>
+                                <span className="text-xs sm:text-sm text-green-600 whitespace-nowrap">
+                                    ({`+₹${profileData?.wallet_status?.inr_increase} (${profileData?.wallet_status?.percent_increase}%)`})
+                                </span>
                             </div>
                         </div>
                         <div className="flex space-x-3">
@@ -68,7 +70,7 @@ const GoldLockerUI = () => {
                                 View All transactions
                             </Link>
                             <button className="flex-1 bg-yellow-600 text-black py-3 px-4 rounded-lg text-sm font-medium hover:bg-yellow-700"
-                            onClick={()=>navigate("/buy-gold")}>
+                                onClick={() => navigate("/buy-gold")}>
                                 Buy more Gold
                             </button>
                         </div>
@@ -114,12 +116,12 @@ const GoldLockerUI = () => {
                         <div className="flex items-center space-x-3 mb-3">
                             <div className="w-10 h-10 bg-white-100 rounded-lg flex items-center justify-center">
                                 <div className="flex-shrink-0 w-[65px] h-[65px] bg-white rounded-lg flex items-center justify-center overflow-hidden">
-                                <img
-                                    src="/image/jewellery.png"
-                                    alt="Sonasutra Logo"
-                                    className="w-full h-full object-contain"
-                                />
-                            </div>
+                                    <img
+                                        src="/image/jewellery.png"
+                                        alt="Sonasutra Logo"
+                                        className="w-full h-full object-contain"
+                                    />
+                                </div>
                             </div>
                             <div className="flex-1">
                                 <h3 className="text-sm font-semibold text-gray-900">Sell Gold</h3>
@@ -127,7 +129,7 @@ const GoldLockerUI = () => {
                         </div>
                         <button className="w-full bg-yellow-600 text-black py-2 px-4 rounded-lg text-sm font-medium
                          hover:bg-yellow-700"
-                         onClick={()=>navigate("/sell-gold")}>
+                            onClick={() => navigate("/sell-gold")}>
 
                             Sell Gold →
                         </button>
@@ -137,13 +139,13 @@ const GoldLockerUI = () => {
                     <div className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-yellow-100">
                         <div className="flex items-center space-x-3 mb-3">
                             <div className="w-10 h-10 bg-white-100 rounded-lg flex items-center justify-center">
-                               <div className="flex-shrink-0 w-[65px] h-[65px] bg-white rounded-lg flex items-center justify-center overflow-hidden">
-                                <img
-                                    src="/image/delivery.png"
-                                    alt="Sonasutra Logo"
-                                    className="w-full h-full object-contain"
-                                />
-                            </div>
+                                <div className="flex-shrink-0 w-[65px] h-[65px] bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                                    <img
+                                        src="/image/delivery.png"
+                                        alt="Sonasutra Logo"
+                                        className="w-full h-full object-contain"
+                                    />
+                                </div>
                             </div>
                             <div className="flex-1">
                                 <h3 className="text-sm font-semibold text-gray-900">Get Delivery</h3>

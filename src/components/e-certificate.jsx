@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom'; 
+import { useSearchParams } from 'react-router-dom';
 import { endpoint } from '../utils/APIRoutes';
 import { useQuery } from 'react-query';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 
 const CertificateUI = () => {
   const [searchParams] = useSearchParams();
-  const certificateNo = searchParams.get("certificate_no"); 
+  const certificateNo = searchParams.get("certificate_no");
 
   const { data, isLoading, isError } = useQuery(
     ["e_certificate", certificateNo],
@@ -50,7 +50,7 @@ const CertificateUI = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 font-sans antialiased px-2 sm:px-0 py-4">
-      <div className="max-w-4xl mx-auto flex justify-center mb-4">
+      <div className="max-w-4xl mx-auto flex justify-center mb-4 print:hidden">
         <button
           onClick={handleDownload}
           className="px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition-colors text-sm"
@@ -100,9 +100,10 @@ const CertificateUI = () => {
         </div>
 
         {/* Gold / Purity */}
+        
         <div className="mb-8 p-4 bg-yellow-50 rounded-lg">
           <h3 className="text-base font-semibold text-yellow-600 mb-2">GOLD / PURITY</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-2 gap-4 text-sm"> 
             <div><p className="font-medium">Metal / Purity:</p><p className="text-gray-700">{certificate.metalPurity}</p></div>
             <div><p className="font-medium">Net Metal Weight:</p><p className="text-gray-700">{certificate.netMetalWeight} g</p></div>
           </div>
@@ -111,15 +112,15 @@ const CertificateUI = () => {
         {/* Diamonds */}
         <div className="mb-8">
           <h3 className="text-base font-semibold text-yellow-600 mb-4">
-            DIAMONDS | 
+            DIAMONDS |
             {/* TOTAL COUNT: {certificate.totalDiamondCount} */}
           </h3>
           <table className="w-full border-collapse border border-yellow-300 text-sm">
             <thead>
               <tr className="bg-yellow-100">
                 <th className="border border-yellow-300 p-2 text-left">QUALITY</th>
-              <th className="border border-yellow-300 p-2 text-left">WEIGHT</th> 
-                 {/* <th className="border border-yellow-300 p-2 text-left">SHAPE</th>
+                <th className="border border-yellow-300 p-2 text-left">WEIGHT</th>
+                {/* <th className="border border-yellow-300 p-2 text-left">SHAPE</th>
                 <th className="border border-yellow-300 p-2 text-left">COUNT</th> */}
               </tr>
             </thead>
@@ -145,7 +146,7 @@ const CertificateUI = () => {
           <a href="https://www.sonasutra.com/certificate" className="underline hover:no-underline">
             www.sonasutra.com/certificate
           </a>
-          <p className="mt-2 md:mt-0">Customer Care: +91-44-42980000</p>
+          <p className="mt-2 md:mt-0">Customer Care: +91-7068454247</p>
         </div>
       </div>
     </div>
