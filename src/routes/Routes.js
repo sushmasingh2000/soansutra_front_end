@@ -72,6 +72,7 @@ import CertificateUI from "../components/e-certificate.jsx";
 import CertificateVerification from "../components/certificateui.jsx";
 import GoldLockerUI from "../components/vault.jsx";
 import EGoldHistoryButtons from "../components/pages/goldhistory/historybutton.jsx";
+import POSMain from "../components/pages/POS/Main.js";
 
 export const routes = [
   {
@@ -426,6 +427,10 @@ export const routes = [
   {
     path: "/products_web",
     element: <DynamicProductListingPage />,
+  },
+   {
+    path: "/pos_main",
+    element: <POSMain />,
   },
   {
     path: "/vault",
