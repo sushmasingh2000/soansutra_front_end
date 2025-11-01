@@ -3,7 +3,7 @@ export default function POSActions() {
     "Hold Bill", "Table", "Payments", "Orders", "Cash Control",
     "Credit Notes", "Refund", "Return", "Website Orders"
   ];
-
+// 626
   return (
     <div className="flex flex-col space-y-2 p-2">
       {actions.map((a) => (
