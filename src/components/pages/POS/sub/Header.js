@@ -11,7 +11,7 @@ export default function POSHeader() {
         </div>
       </div>
       <div className="text-sm">
-        <span>Salesman: <b>Nandan Ji Kumar</b></span> | 
+        <span>Salesman: <b>Anandi Behen</b></span> | 
         <span> Counter: <b>Counter One</b></span>
       </div>
     </div>
