@@ -1,8 +1,8 @@
 export default function POSPaymentButtons() {
   const buttons = [
-    "Multiple Pay (F12)", "Redeem Credit", "Hold (F6)",
-    "Apply Offer (F2)", "Pay Later (F11)", "UPI (F5)",
-    "Card (F3)", "Cash (F4)", "Hold & Print (F7)"
+    "Save", "Cancel", "Ledger",
+    "Delete", "New", "Print",
+    "Prev", "Next", "Export" , "Import"
   ];
 
   return (

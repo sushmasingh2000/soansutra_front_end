@@ -4,11 +4,15 @@ export default function POSHeader() {
       <div className="flex items-center space-x-4">
         <button className="p-2 bg-white/20 rounded">☰</button>
         <div className="flex space-x-3">
-          <label><input type="radio" name="mode" /> Dine In</label>
-          <label><input type="radio" name="mode" /> Take Away</label>
-          <label><input type="radio" name="mode" defaultChecked /> Walk In</label>
-          <label><input type="radio" name="mode" /> Delivery</label>
-        </div>
+          <label className="bg-white/20 hover:bg-white/30 p-2 rounded">Detailed</label>
+          <label className="bg-white/20 hover:bg-white/30 p-2 rounded"> Daily Balance</label>
+          <label className="bg-white/20 hover:bg-white/30 p-2 rounded"> Summary</label>
+          <label className="bg-white/20 hover:bg-white/30 p-2 rounded"> Daily Transaction</label>
+          <label className="bg-white/20 hover:bg-white/30 p-2 rounded"> Gold Book</label>
+          <label className="bg-white/20 hover:bg-white/30 p-2 rounded"> Cash Book</label>
+          <label className="bg-white/20 hover:bg-white/30 p-2 rounded"> Silver Book</label>
+
+        </div> 
       </div>
       <div className="text-sm">
         <span>Salesman: <b>Anandi Behen</b></span> | 

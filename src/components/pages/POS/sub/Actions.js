@@ -1,7 +1,7 @@
 export default function POSActions() {
   const actions = [
-    "Hold Bill", "Table", "Payments", "Orders", "Cash Control",
-    "Credit Notes", "Refund", "Return", "Website Orders"
+    "Reciepts",  "Payments", "Adjust", "Metal Rcpt",
+    "Metal Paid", "Gold Bhav", "Silver Bhav", "Transfer" , "Bal. Adjust" , "Commission",
   ];
 // 626
   return (
@@ -12,11 +12,11 @@ export default function POSActions() {
         </button>
       ))}
 
-      <div className="mt-auto p-2 text-sm">
+      {/* <div className="mt-auto p-2 text-sm">
         <div>Order No: <b>CB8807FC</b></div>
         <div>Total Amount: <b>₹5300</b></div>
         <button className="w-full bg-red-500 mt-2 p-2 rounded">Last Bill Print</button>
-      </div>
+      </div> */}
     </div>
   );
 }

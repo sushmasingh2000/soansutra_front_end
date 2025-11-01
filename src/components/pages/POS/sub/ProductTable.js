@@ -1,7 +1,8 @@
 export default function POSProductTable() {
   const headers = [
-    "S/No.", "Product", "Bar Code", "Selected Qty",
-    "MRP", "Sale Price", "Discount", "Unit Cost", "Net Amount", "Action"
+    "S/No.", "Type", "item ", "Stamp",
+    "Remarks", "Unit", "Pc", "PKt.Wt.", "PKt.less.", "Gr.Wt", "Less","Net.Wt", "Tunch" , "Wastage", "Rate", "Lbr.",
+     "on", "Other" , "Dis" , "Fine" , "Total"
   ];
 
   return (
