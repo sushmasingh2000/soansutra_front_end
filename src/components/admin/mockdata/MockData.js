@@ -33,19 +33,14 @@ import {
 
 import { Eye, Image, LucideAmpersands, User2Icon } from "lucide-react";
 
-const superAdminAccess = [
-  "dashboard",
-  "stores",
-  "users",
-  "permissions",
-];
+const superAdminAccess = ["dashboard", "stores", "users", "permissions"];
 const ManagerAccess = [
   "dashboard",
   "collection",
   "product-management",
   "order-management",
   "demo-call",
-  "del"
+  "del",
 ];
 
 const AdminAccess = [
@@ -59,6 +54,7 @@ const AdminAccess = [
   "coupon-management",
   "wallet",
   "finance",
+  "shop_data",
   "demo-call",
   "video",
   "mlm",
@@ -66,13 +62,9 @@ const AdminAccess = [
   "del",
   "POS",
   "Offlinesell",
-  "dazzl"
+  "dazzl",
 ];
-const deliveryboy = [
-  "pro",
-  "assign",
-  "deldashboard"
-];
+const deliveryboy = ["pro", "assign", "deldashboard"];
 
 export const all_Data = [
   {
@@ -81,7 +73,7 @@ export const all_Data = [
     icon: <DashboardCustomizeOutlined />,
     navLink: "/admin-dashboard",
   },
-  
+
   {
     id: "stores",
     label: "Store Management",
@@ -200,8 +192,7 @@ export const all_Data = [
         icon: <Discount />,
         navLink: "/discount",
       },
-
-    ]
+    ],
   },
   {
     id: "coupon-management",
@@ -258,7 +249,6 @@ export const all_Data = [
         icon: <AssignmentTurnedIn />,
         navLink: "/offline",
       },
-      
     ],
   },
   {
@@ -278,7 +268,6 @@ export const all_Data = [
         icon: <AssignmentTurnedIn />,
         navLink: "/installment",
       },
-      
     ],
   },
 
@@ -326,11 +315,11 @@ export const all_Data = [
         navLink: "/bank_detail",
       },
       {
-          id: "payment",
-          label: "Payment",
-          icon: <PaymentSharp />,
-          navLink: "/payment",
-        },
+        id: "payment",
+        label: "Payment",
+        icon: <PaymentSharp />,
+        navLink: "/payment",
+      },
       {
         id: "payout-report",
         label: "Payout Report",
@@ -340,11 +329,17 @@ export const all_Data = [
     ],
   },
   {
-      id: "leads",
-      label: "External Leads",
-      icon: <LucideAmpersands />,
-      navLink: "/leads",
-    },
+    id: "shop_data",
+    label: "Shop Info",
+    icon: <LucideAmpersands />,
+    navLink: "/shop-info",
+  },
+  {
+    id: "leads",
+    label: "External Leads",
+    icon: <LucideAmpersands />,
+    navLink: "/leads",
+  },
   {
     id: "video",
     label: "Videos",
@@ -364,60 +359,58 @@ export const all_Data = [
     navLink: "/customer",
   },
 
-   {
-      id: "mlm",
-      label: "MLM",
-      icon: <Eye />,
-      subcomponent: [
-        {
-            id: "distributor",
-            label: "Distributor",
-            icon: <DirectionsTransit />,
-            navLink: "/distributor",
-          },
-        {
-          id: "rank",
-          label: "Master Rank",
-          icon: <PermScanWifi />,
-          navLink: "/rank",
-        },
-        {
-          id: "rank_achivers",
-          label: "Rank Achiever",
-          icon: <PermScanWifi />,
-          navLink: "/rankachiver",
-        },
-  
-      ],
-    },
-    
-    {
-      id: "del",
-      label: "Create Delivery Boy",
-      icon: <Boy />,
-      navLink: "/crete_delivery",
-    },
+  {
+    id: "mlm",
+    label: "MLM",
+    icon: <Eye />,
+    subcomponent: [
+      {
+        id: "distributor",
+        label: "Distributor",
+        icon: <DirectionsTransit />,
+        navLink: "/distributor",
+      },
+      {
+        id: "rank",
+        label: "Master Rank",
+        icon: <PermScanWifi />,
+        navLink: "/rank",
+      },
+      {
+        id: "rank_achivers",
+        label: "Rank Achiever",
+        icon: <PermScanWifi />,
+        navLink: "/rankachiver",
+      },
+    ],
+  },
 
-    {
+  {
+    id: "del",
+    label: "Create Delivery Boy",
+    icon: <Boy />,
+    navLink: "/crete_delivery",
+  },
+
+  {
     id: "deldashboard",
     label: "Dashboard",
     icon: <DashboardCustomizeOutlined />,
     navLink: "/deliveryboy_dashboard",
   },
-    {
-      id: "assign",
-      label: "My Order",
-      icon: <BoySharp />,
-      navLink: "/assign_order",
-    },
-    {
-      id: "pro",
-      label: "Profile",
-      icon: <BoySharp />,
-      navLink: "/profile_delivery",
-    },
-   
-    
+  {
+    id: "assign",
+    label: "My Order",
+    icon: <BoySharp />,
+    navLink: "/assign_order",
+  },
+  {
+    id: "pro",
+    label: "Profile",
+    icon: <BoySharp />,
+    navLink: "/profile_delivery",
+  },
+
   {
     id: "logout",
     label: "Logout",
@@ -436,10 +429,10 @@ if (userRole === "superuser") {
   allowedIds = ManagerAccess;
 } else if (userRole === "deliveryboy") {
   allowedIds = deliveryboy;
-}
- else {
+} else {
   allowedIds = AdminAccess;
 }
 
-export const filtered_Data = all_Data.filter((item) => allowedIds.includes(item.id));
-
+export const filtered_Data = all_Data.filter((item) =>
+  allowedIds.includes(item.id)
+);

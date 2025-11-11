@@ -48,6 +48,7 @@ import InventoyPos from "../pos/InventoryPos.js";
 import OfflineSell from "../offlineSell/Offlinesell.js";
 import Installment from "../Installment.js";
 import SubscriptionPlan from "../SubscriptionPlan.js";
+import ShopInfoDetails from "../../pages/ShopInfoDetails.js";
 
 export const adminroutes = [
 
@@ -56,6 +57,11 @@ export const adminroutes = [
     path: "/stores",
     component: <StoreManagement />,
     navItem:"Store Management"
+  },
+ {
+    path: "/shop-info",
+    component: <ShopInfoDetails />,
+    navItem:"Shop Info"
   },
   {
     path: "/users",

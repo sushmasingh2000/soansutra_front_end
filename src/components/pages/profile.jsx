@@ -10,66 +10,67 @@ import {
   Star,
   Ticket,
   User,
-  X
-} from 'lucide-react';
-import React, { useState } from 'react';
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
 // Import your separate components here
-import { useQuery } from 'react-query';
-import { useLocation } from 'react-router-dom';
-import { apiConnectorGet, usequeryBoolean } from '../../utils/ApiConnector';
-import { endpoint } from '../../utils/APIRoutes';
-import CouponsContent from '../coupnscontent';
-import Distributer from '../distributer';
-import EGoldContent from '../egoldcontent';
-import Footer from '../Footer1';
-import Header1 from '../Header1';
-import ManageRefundsContent from '../managerefundcontent';
-import OrdersContent from '../orderscomponent';
-import PaymentContent from '../paymentcontent';
-import ProfileContent from '../profilecontent';
-import TreasureChestContent from '../treasurechestcontent';
-import WalletLedgeUSER from '../WalletLedger';
-import XclusiveContent from '../xclusivecontent';
-import Bank from './distributor/Bank';
-import CashbackReport from './distributor/CashbackReport';
-import CommissionReport from './distributor/CommisionReport';
-import DirectCustomer from './distributor/DirectCustomer';
-import DirectDistributor from './distributor/DirectDistributor';
-import PayoutReport from './distributor/PayoutReport';
-import TeamCustomer from './distributor/TeamCustomer';
-import TeamDistributor from './distributor/TeamDistributer';
-import WithdrawalReport from './distributor/WithdrawalReport';
-import Withdrawalrequest from './distributor/WithdrawalRequest';
-import Fundrequest from './distributor/Transfer';
+import { useQuery } from "react-query";
+import { useLocation } from "react-router-dom";
+import { apiConnectorGet, usequeryBoolean } from "../../utils/ApiConnector";
+import { endpoint } from "../../utils/APIRoutes";
+import CouponsContent from "../coupnscontent";
+import Distributer from "../distributer";
+import EGoldContent from "../egoldcontent";
+import Footer from "../Footer1";
+import Header1 from "../Header1";
+import ManageRefundsContent from "../managerefundcontent";
+import OrdersContent from "../orderscomponent";
+import PaymentContent from "../paymentcontent";
+import ProfileContent from "../profilecontent";
+import TreasureChestContent from "../treasurechestcontent";
+import WalletLedgeUSER from "../WalletLedger";
+import XclusiveContent from "../xclusivecontent";
+import Bank from "./distributor/Bank";
+import CashbackReport from "./distributor/CashbackReport";
+import CommissionReport from "./distributor/CommisionReport";
+import DirectCustomer from "./distributor/DirectCustomer";
+import DirectDistributor from "./distributor/DirectDistributor";
+import PayoutReport from "./distributor/PayoutReport";
+import TeamCustomer from "./distributor/TeamCustomer";
+import TeamDistributor from "./distributor/TeamDistributer";
+import Fundrequest from "./distributor/Transfer";
+import WithdrawalReport from "./distributor/WithdrawalReport";
+import Withdrawalrequest from "./distributor/WithdrawalRequest";
+import ShopInfoForm from "./ShopInfoForm";
+import ShopInfoDetails from "./ShopInfoDetails";
 
 const ProfileDashboard = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const hasTxnParams = searchParams.has('client_txn_id') && searchParams.has('txn_id');
-  const defaultTab = hasTxnParams ? 'ORDERS_EXCHANGE' : 'PROFILE';
+  const hasTxnParams =
+    searchParams.has("client_txn_id") && searchParams.has("txn_id");
+  const defaultTab = hasTxnParams ? "ORDERS_EXCHANGE" : "PROFILE";
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const { data } = useQuery(
-    ['profile'],
-    () =>
-      apiConnectorGet(endpoint?.get_customer_profile),
-     {
-        ...usequeryBoolean,
-        enabled: !!token 
-      }
+    ["profile"],
+    () => apiConnectorGet(endpoint?.get_customer_profile),
+    {
+      ...usequeryBoolean,
+      enabled: !!token,
+    }
   );
 
   const profileData = data?.data?.result || [];
-
 
   const { data: distri } = useQuery(
     ["profile_distributor"],
     () => apiConnectorGet(endpoint.get_profile_distributor),
     {
       ...usequeryBoolean,
-      enabled: !!token
+      enabled: !!token,
     }
   );
 
@@ -77,69 +78,77 @@ const ProfileDashboard = () => {
 
   // Sidebar navigation items
   const navigationItems = [
-     {
-      category: 'ACCOUNTS',
-      items: [
-        { id: 'PROFILE', label: 'PROFILE', icon: User }
-      ]
+    {
+      category: "ACCOUNTS",
+      items: [{ id: "PROFILE", label: "PROFILE", icon: User }],
     },
     {
-      category: 'ORDERS',
+      category: "ORDERS",
       items: [
-        { id: 'ORDERS_EXCHANGE', label: 'ORDERS AND EXCHANGE', icon: Package },
-        { id: 'PAYMENT', label: 'PAYMENT', icon: CreditCard },
-        { id: 'MANAGE_REFUNDS', label: 'MANAGE REFUNDS', icon: RefreshCcw },
-        { id: 'PURCHASE REPORT', label: 'PURCHASE REPORT', icon: RefreshCcw }
-
-      ]
+        { id: "ORDERS_EXCHANGE", label: "ORDERS AND EXCHANGE", icon: Package },
+        { id: "PAYMENT", label: "PAYMENT", icon: CreditCard },
+        { id: "MANAGE_REFUNDS", label: "MANAGE REFUNDS", icon: RefreshCcw },
+        { id: "PURCHASE REPORT", label: "PURCHASE REPORT", icon: RefreshCcw },
+      ],
     },
     ...(distri_pro?.mlm_is_distributor === 1
-      ? [{
-        category: 'DISTRIBUTER',
-        items: [
-          { id: 'DISTRIBUTER', label: 'DISTRIBUTER', icon: Home },
-          { id: 'DIRECT DISTRIBUTER', label: 'DIRECT DISTRIBUTER', icon: Home },
-          { id: 'TEAM DISTRIBUTER', label: 'TEAM DISTRIBUTER', icon: Home },
-          { id: 'DIRECT CUSTOMER', label: 'DIRECT CUSTOMER', icon: Home },
-          { id: 'TEAM CUSTOMER', label: 'TEAM CUSTOMER', icon: Home },
-          { id: 'WITHDRAWAL REQUEST', label: 'WITHDRAWAL REQUEST', icon: Home },
-          { id: 'WITHDRAWAL REPORT', label: 'WITHDRAWAL REPORT', icon: Home },
-          { id: 'CASHBACK REPORT', label: 'CASHBACK REPORT', icon: Home },
-          { id: 'PAYOUT REPORT', label: 'PAYOUT REPORT', icon: Home },
-          { id: 'COMMISSION REPORT', label: 'COMMISSION REPORT', icon: Home },
-          { id: 'BANK', label: 'BANK', icon: Home },
-          { id: 'FUND TRANSFER', label: 'FUND TRANSFER', icon: Home },
-
-
+      ? [
+          {
+            category: "DISTRIBUTER",
+            items: [
+              { id: "DISTRIBUTER", label: "DISTRIBUTER", icon: Home },
+              {
+                id: "DIRECT DISTRIBUTER",
+                label: "DIRECT DISTRIBUTER",
+                icon: Home,
+              },
+              { id: "TEAM DISTRIBUTER", label: "TEAM DISTRIBUTER", icon: Home },
+              { id: "DIRECT CUSTOMER", label: "DIRECT CUSTOMER", icon: Home },
+              { id: "TEAM CUSTOMER", label: "TEAM CUSTOMER", icon: Home },
+              {
+                id: "WITHDRAWAL REQUEST",
+                label: "WITHDRAWAL REQUEST",
+                icon: Home,
+              },
+              {
+                id: "WITHDRAWAL REPORT",
+                label: "WITHDRAWAL REPORT",
+                icon: Home,
+              },
+              { id: "CASHBACK REPORT", label: "CASHBACK REPORT", icon: Home },
+              { id: "PAYOUT REPORT", label: "PAYOUT REPORT", icon: Home },
+              {
+                id: "COMMISSION REPORT",
+                label: "COMMISSION REPORT",
+                icon: Home,
+              },
+              { id: "BANK", label: "BANK", icon: Home },
+              { id: "FUND TRANSFER", label: "FUND TRANSFER", icon: Home },
+              { id: "SHOP INFO", label: "SHOP INFO", icon: Home },
+              { id: "SHOP DETAILS", label: "SHOP DETAILS", icon: Home },
+            ],
+          },
         ]
-      }]
       : []),
 
     {
-      category: 'APPOINTMENTS',
-      items: [
-        { id: 'TRY_AT_HOME', label: 'TRY AT HOME', icon: Home }
-      ]
+      category: "APPOINTMENTS",
+      items: [{ id: "TRY_AT_HOME", label: "TRY AT HOME", icon: Home }],
     },
     {
-      category: 'OFFERS',
-      items: [
-        { id: 'COUPONS', label: 'COUPONS', icon: Ticket }
-      ]
+      category: "OFFERS",
+      items: [{ id: "COUPONS", label: "COUPONS", icon: Ticket }],
     },
-   
+
     {
-      category: 'CREDITS',
+      category: "CREDITS",
       items: [
-        { id: 'XCLUSIVE', label: 'XCLUSIVE', icon: Award },
-        { id: 'SonaSutra_E-SUVARNA', label: 'SonaSutra e-Suvarna', icon: Gem },
-        { id: 'SonaSutra_Dazzle-12', label: 'SonaSutra Dazzle-12', icon: Star }
-      ]
-    }
+        { id: "XCLUSIVE", label: "XCLUSIVE", icon: Award },
+        { id: "SonaSutra_E-SUVARNA", label: "SonaSutra e-Suvarna", icon: Gem },
+        { id: "SonaSutra_Dazzle-12", label: "SonaSutra Dazzle-12", icon: Star },
+      ],
+    },
   ];
-
-
-
 
   // Handle navigation click for mobile
   const handleNavClick = (tabId) => {
@@ -150,58 +159,64 @@ const ProfileDashboard = () => {
   // Function to render content based on active tab
   const renderContent = () => {
     switch (activeTab) {
-      case 'PROFILE':
+      case "PROFILE":
         return <ProfileContent />;
-      case 'ORDERS_EXCHANGE':
+      case "ORDERS_EXCHANGE":
         return <OrdersContent />;
-      case 'PAYMENT':
+      case "PAYMENT":
         return <PaymentContent />;
-      case 'MANAGE_REFUNDS':
+      case "MANAGE_REFUNDS":
         return <ManageRefundsContent />;
-      case 'PURCHASE REPORT':
+      case "PURCHASE REPORT":
         return <WalletLedgeUSER />;
-      case 'DISTRIBUTER':
+      case "DISTRIBUTER":
         return <Distributer />;
-      case 'DIRECT DISTRIBUTER':
+      case "DIRECT DISTRIBUTER":
         return <DirectDistributor />;
-      case 'WITHDRAWAL REQUEST':
+      case "WITHDRAWAL REQUEST":
         return <Withdrawalrequest />;
-      case 'WITHDRAWAL REPORT':
+      case "WITHDRAWAL REPORT":
         return <WithdrawalReport />;
-      case 'CASHBACK REPORT':
+      case "CASHBACK REPORT":
         return <CashbackReport />;
-      case 'PAYOUT REPORT':
+      case "PAYOUT REPORT":
         return <PayoutReport />;
-      case 'COMMISSION REPORT':
+      case "COMMISSION REPORT":
         return <CommissionReport />;
-      case 'TEAM DISTRIBUTER':
+      case "TEAM DISTRIBUTER":
         return <TeamDistributor />;
-      case 'DIRECT CUSTOMER':
+      case "DIRECT CUSTOMER":
         return <DirectCustomer />;
-      case 'TEAM CUSTOMER':
+      case "TEAM CUSTOMER":
         return <TeamCustomer />;
-      case 'BANK':
+      case "BANK":
         return <Bank />;
-      case 'FUND TRANSFER':
+      case "FUND TRANSFER":
         return <Fundrequest />;
-      case 'COUPONS':
+      case "COUPONS":
         return <CouponsContent />;
-      case 'XCLUSIVE':
+      case "XCLUSIVE":
         return <XclusiveContent />;
-      case 'SONASUTRA_ESUVARNA':
+      case "SONASUTRA_ESUVARNA":
         return <EGoldContent />;
-      case 'SONASUTRA_DAZZLE-12':
+      case "SONASUTRA_DAZZLE-12":
         return <TreasureChestContent />;
+      case "SHOP INFO":
+        return <ShopInfoForm />;
+      case "SHOP DETAILS":
+        return <ShopInfoDetails />;
       default:
         return (
           <div className="p-3 md:p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               {navigationItems
-                .flatMap(category => category.items)
-                .find(item => item.id === activeTab)?.label || 'Content'}
+                .flatMap((category) => category.items)
+                .find((item) => item.id === activeTab)?.label || "Content"}
             </h2>
             <div className="bg-white rounded-lg border border-yellow-200 p-6 text-center">
-              <p className="text-gray-500 text-sm">Content for {activeTab} will be displayed here</p>
+              <p className="text-gray-500 text-sm">
+                Content for {activeTab} will be displayed here
+              </p>
             </div>
           </div>
         );
@@ -215,12 +230,14 @@ const ProfileDashboard = () => {
 
       <div className="max-w-full mx-auto flex">
         {/* Sidebar - Always visible on desktop, toggleable on mobile */}
-        <div className={`
-          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} 
+        <div
+          className={`
+          ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} 
           md:translate-x-0 fixed md:static inset-y-0 left-0 z-40 
           w-80 bg-white border-r border-yellow-200 min-w-screen 
           transition-transform duration-300 ease-in-out
-        `}>
+        `}
+        >
           {/* Mobile Close Button */}
           <div className="md:hidden flex justify-end p-3 border-b border-yellow-200">
             <button
@@ -232,8 +249,13 @@ const ProfileDashboard = () => {
           </div>
 
           {/* User Info */}
-          <div className="p-3 border-b border-yellow-200" onClick={()=>setActiveTab("PROFILE")}>
-            <h3 className="font-semibold text-gray-900 text-base">{profileData.name}</h3>
+          <div
+            className="p-3 border-b border-yellow-200"
+            onClick={() => setActiveTab("PROFILE")}
+          >
+            <h3 className="font-semibold text-gray-900 text-base">
+              {profileData.name}
+            </h3>
             <p className="text-xs text-gray-500">{profileData.cl_email}</p>
           </div>
 
@@ -251,10 +273,11 @@ const ProfileDashboard = () => {
                       <button
                         key={item.id}
                         onClick={() => handleNavClick(item.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${activeTab === item.id
-                            ? 'bg-yellow-50 text-yellow-900 border-r-2 border-yellow-700'
-                            : 'text-gray-700 hover:bg-yellow-50 hover:text-gray-900'
-                          }`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${
+                          activeTab === item.id
+                            ? "bg-yellow-50 text-yellow-900 border-r-2 border-yellow-700"
+                            : "text-gray-700 hover:bg-yellow-50 hover:text-gray-900"
+                        }`}
                       >
                         <div className="flex items-center">
                           <Icon className="w-3 h-3 mr-2" />
@@ -291,8 +314,8 @@ const ProfileDashboard = () => {
             </button>
             <h1 className="text-xs font-semibold text-gray-900">
               {navigationItems
-                .flatMap(category => category.items)
-                .find(item => item.id === activeTab)?.label || 'Profile'}
+                .flatMap((category) => category.items)
+                .find((item) => item.id === activeTab)?.label || "Profile"}
             </h1>
           </div>
 

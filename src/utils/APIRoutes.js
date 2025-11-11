@@ -8,7 +8,8 @@ export const mode = "production";
 
 export const zoho_account_id = "60051739358";
 export const zoho_domain_country = "IN";
-export const zoho_api_key ="1003.e80ef3d3f3c093b71f95211b2eb1b663.c16c8a4586cd079bcf16b570500894cb";
+export const zoho_api_key =
+  "1003.e80ef3d3f3c093b71f95211b2eb1b663.c16c8a4586cd079bcf16b570500894cb";
 
 export const endpoint = {
   email_insider: `${domain}/api/v1/insert-external-leads`,
@@ -346,4 +347,23 @@ export const endpoint = {
 
   // location related api's
   get_nearest_store: `${domain}/api/v1/get-nearest-store`,
+  get_shop_info: `${domain}/api/v1/save-shop-info`,
+  get_shop_details: `${domain}/api/v1/get-shop-details`,
+
+  /////////// product group
+  get_product_group: `${domain}/api/v1/get-product-group`,
+  add_product_group: `${domain}/api/v1/add-product-group`,
+  update_product_group: `${domain}/api/v1/update-product-group`,
+  add_product_items: `${domain}/api/v1/add-product-items`,
+  update_product_items: `${domain}/api/v1/update-product-items`,
+  delete_product_items: `${domain}/api/v1/delete-product-items`,
+  delete_group: `${domain}/api/v1/delete-group`,
+  get_product_items: `${domain}/api/v1/get-product-items`,
+  get_groups: `${domain}/api/v1/get-groups`,
+  get_customer_dropdown: `${domain}/api/v1/get-all-customer-dropdown`,
+  get_product_item_dropdown: `${domain}/api/v1/get-product-items-dropdown`,
+  insert_pos_bill: `${domain}/api/v1/insert-pos-bill`,
+  get_pos_bill: `${domain}/api/v1/get-pos-bill-details`,
+  get_pos_due_payment: `${domain}/api/v1/get-pos-due-payment`,
+  get_new_pos_bill_no: `${domain}/api/v1/get-new-bill-no`,
 };

@@ -73,6 +73,7 @@ import CertificateVerification from "../components/certificateui.jsx";
 import GoldLockerUI from "../components/vault.jsx";
 import EGoldHistoryButtons from "../components/pages/goldhistory/historybutton.jsx";
 import POSMain from "../components/pages/POS/Main.js";
+import ShopInfoation from "../components/pages/ShopInfoation.js";
 
 export const routes = [
   {
@@ -124,6 +125,7 @@ export const routes = [
       </MainLayout>
     ),
   },
+
   {
     path: "/payout_report",
     element: (
@@ -428,13 +430,13 @@ export const routes = [
     path: "/products_web",
     element: <DynamicProductListingPage />,
   },
-   {
+  {
     path: "/pos_main",
     element: <POSMain />,
   },
   {
     path: "/vault",
-    element: <GoldLockerUI/>,
+    element: <GoldLockerUI />,
   },
   {
     path: "/myaccount/profile",
@@ -518,43 +520,42 @@ export const routes = [
   },
 
   {
-  path:"/shipping-policy",
-  element:<ShippingPolicy/>
- },
-//  {
-//   path:"/delivery-admin",
-//   element:<DeliveryApp/>
-//  },
- {
-  path:"/egold_buy",
-  element:<EgoldBuyHistoryModal/>
- },
- {
-  path:"/egold_sell",
-  element:<EgoldSELLHistoryModal/>
- },
- {
-  path:"/delivery-admin",
-  element:<DeliveryAdminPanel/>
- },
+    path: "/shipping-policy",
+    element: <ShippingPolicy />,
+  },
+  //  {
+  //   path:"/delivery-admin",
+  //   element:<DeliveryApp/>
+  //  },
+  {
+    path: "/egold_buy",
+    element: <EgoldBuyHistoryModal />,
+  },
+  {
+    path: "/egold_sell",
+    element: <EgoldSELLHistoryModal />,
+  },
+  {
+    path: "/delivery-admin",
+    element: <DeliveryAdminPanel />,
+  },
 
- {
-  path:"/delivery-boy",
-  element:<DeliveryBoyDashboard/>
- },
+  {
+    path: "/delivery-boy",
+    element: <DeliveryBoyDashboard />,
+  },
 
- {
-  path:"/download-e-certificate",
-  element:<CertificateUI/>
- },
+  {
+    path: "/download-e-certificate",
+    element: <CertificateUI />,
+  },
 
- {
-  path:"/e-certificate",
-  element:<CertificateVerification/>
- },
- {
-  path:"/view-e-gold-history",
-  element:<EGoldHistoryButtons/>
- }
-   
+  {
+    path: "/e-certificate",
+    element: <CertificateVerification />,
+  },
+  {
+    path: "/view-e-gold-history",
+    element: <EGoldHistoryButtons />,
+  },
 ];
