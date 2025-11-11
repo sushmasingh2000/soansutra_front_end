@@ -63,7 +63,7 @@ const NavigationBar = () => {
       description:
         "Pay 11 installments, and get the extra bonus on 12th,13th and 14th plan  FREE as a SonaSutra Benefit!",
       image:
-        "https://cdn.caratlane.com/media/static/images/web/Treasure-Chest-1-26-may-25.png",
+        "../../../public/images/Icon.png",
       icon: "🎁",
     },
     {

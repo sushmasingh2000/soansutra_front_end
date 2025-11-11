@@ -204,21 +204,19 @@ const Footer = () => {
           <div className="mb-4">
             <h4 className="text-black font-medium mb-3 text-sm">Find Us On</h4> {/* Changed to black */}
             <div className="flex space-x-3">
-              <a href="#" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600 " > {/* Gold background */}
+              <a href="https://www.instagram.com/sona.sutraa?igsh=NWRqbG5zOTZzbDhv" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600 " > {/* Gold background */}
                 <i className="fab fa-instagram text-sm"></i>
               </a>
-              <a href="#" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600" > {/* Gold background */}
+              <a href="https://www.facebook.com/share/16cSyCTCeb/" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600" > {/* Gold background */}
                 <i className="fab fa-facebook-f text-sm"></i>
               </a>
               <a href="#" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600" > {/* Gold background */}
                 <i className="fab fa-linkedin-in text-sm"></i>
               </a>
-              <a href="#" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600" > {/* Gold background */}
-                <i className="fab fa-pinterest-p text-sm"></i>
+              <a href="https://youtube.com/@sonasutraa?si=BbxowBt4k1gM_6VH" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600" > {/* Gold background */}
+                <i className="fab fa-youtube text-sm"></i>
               </a>
-              <a href="#" className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform bg-gradient-to-r from-yellow-400 to-yellow-600" > {/* Gold background */}
-                <i className="fab fa-x-twitter text-sm"></i>
-              </a>
+              
             </div>
           </div>
         </div>
