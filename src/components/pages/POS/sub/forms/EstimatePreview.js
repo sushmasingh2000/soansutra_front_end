@@ -1,5 +1,6 @@
 import React from "react";
 import { numberToWords } from "../../../../../utils/utilsFun";
+import moment from "moment";
 
 export default function EstimatePrintPreview({ formik }) {
   const handlePrint = () => {
@@ -176,14 +177,40 @@ export default function EstimatePrintPreview({ formik }) {
                   </tr>
                 ))}
 
-                {/* <tr>
-                  <td className="border border-gray-400 px-2">
-                    Bal [{data?.balDate || "12/04/2025"}]
-                  </td>
-                  <td className="border border-gray-400 px-2 text-right">
-                    {data?.balance || "425.00"}
-                  </td>
-                </tr> */}
+                {formik?.values?.pb_billing_date && (
+                  <tr>
+                    <td className="border border-gray-400 px-2">
+                      Due Bal [
+                      {moment(formik?.values?.pb_billing_date)?.format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
+                      ]
+                    </td>
+                    <td className="border border-gray-400 px-2 text-right">
+                      {formik?.values?.pb_closing_bal}
+                    </td>
+                  </tr>
+                )}
+                {formik.values.add_extra_amount && (
+                  <tr>
+                    <td className="border border-gray-400 px-2 font-semibold">
+                      Extra Add
+                    </td>
+                    <td className="border border-gray-400 px-2 text-right font-semibold">
+                      {formik.values.add_extra_amount}
+                    </td>
+                  </tr>
+                )}
+                {formik.values.less_extra_amount && (
+                  <tr>
+                    <td className="border border-gray-400 px-2 font-semibold">
+                      Extra Less
+                    </td>
+                    <td className="border border-gray-400 px-2 text-right font-semibold">
+                      {formik.values.less_extra_amount}
+                    </td>
+                  </tr>
+                )}
                 <tr>
                   <td className="border border-gray-400 px-2 font-semibold">
                     Closing Balance
