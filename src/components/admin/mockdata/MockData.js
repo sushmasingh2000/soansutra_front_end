@@ -224,6 +224,12 @@ export const all_Data = [
         icon: <AccountBalance />,
         navLink: "/pos",
       },
+      {
+        id: "offpos",
+        label: "OFF POS",
+        icon: <AccountBalance />,
+        navLink: "/pos_main",
+      },
     ],
   },
   {

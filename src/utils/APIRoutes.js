@@ -304,6 +304,7 @@ export const endpoint = {
   get_cashback_report: `${domain}/api/v1/get-income-details`,
   get_team_admin: `${domain}/api/v1/get-team-by-admin`,
   get_upline_team_admin: `${domain}/api/v1/get-upline-team-by-admin`,
+  get_chain_report: `${domain}/api/v1/get-chain-report`,
 
   //rankmlm
   get_rank_deatils: `${domain}/api/v1/get-rank-details-by-admin`,
@@ -315,6 +316,7 @@ export const endpoint = {
   bank_get_all: `${domain}/api/v1/get-customer-bank-details`,
   update_customer_bank: `${domain}/api/v1/update-customer-bank-by-admin`,
   fund_transfer: `${domain}/api/v1/fund-transfer`,
+  assign_direct_rank: `${domain}/api/v1/update-customer-rank`,
 
   //deliveryboy
   get_div_profile: `${domain}/api/v1/get-dlv-profile`,

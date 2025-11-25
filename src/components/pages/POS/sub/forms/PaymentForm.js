@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-export default function PaymentForm({ formik }) {
+export default function PaymentForm({ formik, setOpenDialog }) {
   const [form, setForm] = useState({
     paymentType: "Cash",
     name: "",
@@ -33,8 +33,7 @@ export default function PaymentForm({ formik }) {
 
     formik.setFieldValue("payment", updatedReceipts);
 
-    // alert("✅ Receipt added to Formik successfully!");
-    console.log("🔍 Updated Formik:", formik.values);
+    setOpenDialog(false);
   };
 
   // Reset the local form fields
@@ -53,6 +52,7 @@ export default function PaymentForm({ formik }) {
       expDate: "",
       apCode: "",
     });
+    setOpenDialog(false);
   };
 
   return (

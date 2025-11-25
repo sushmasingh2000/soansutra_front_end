@@ -44,6 +44,7 @@ import WithdrawalReport from "./distributor/WithdrawalReport";
 import Withdrawalrequest from "./distributor/WithdrawalRequest";
 import ShopInfoForm from "./ShopInfoForm";
 import ShopInfoDetails from "./ShopInfoDetails";
+import ChainReport from "./ChainReport";
 
 const ProfileDashboard = () => {
   const location = useLocation();
@@ -105,6 +106,7 @@ const ProfileDashboard = () => {
               { id: "TEAM DISTRIBUTER", label: "TEAM DISTRIBUTER", icon: Home },
               { id: "DIRECT CUSTOMER", label: "DIRECT CUSTOMER", icon: Home },
               { id: "TEAM CUSTOMER", label: "TEAM CUSTOMER", icon: Home },
+              { id: "CHAIN REPORT", label: "CHAIN REPORT", icon: Home },
               {
                 id: "WITHDRAWAL REQUEST",
                 label: "WITHDRAWAL REQUEST",
@@ -205,6 +207,8 @@ const ProfileDashboard = () => {
         return <ShopInfoForm />;
       case "SHOP DETAILS":
         return <ShopInfoDetails />;
+      case "CHAIN REPORT":
+        return <ChainReport />;
       default:
         return (
           <div className="p-3 md:p-6">

@@ -19,11 +19,11 @@ export default function POSMain() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const defaultRow = {
-    type: "Gold",
-    item: "Ring",
-    stamp: "14KT",
+    type: "",
+    item: "",
+    stamp: "",
     remarks: "",
-    unit: "gm",
+    unit: "",
     pc: "",
     pktWt: "",
     pktLess: "",
@@ -34,7 +34,7 @@ export default function POSMain() {
     wastage: "",
     rate: "",
     lbr: "",
-    on: "Per",
+    on: "per",
     other: "",
     dis: "",
     fine: "",
@@ -54,10 +54,10 @@ export default function POSMain() {
       curr_date: moment(new Date())?.format("YYYY-MM-DD HH:mm:ss"),
     },
     onSubmit: (values) => {
-      console.log("✅ POS Table Submitted:", values);
-      alert("POS data saved successfully!");
+      // alert("POS data saved successfully!");
     },
   });
+
   async function getPosDetails(type, cust) {
     if (!formik.values?.customer_details?.customer_id) {
       return toast("Please select the customer", { id: 1 });
@@ -107,7 +107,7 @@ export default function POSMain() {
         formik.setFieldValue("customer_details", {
           customer_id: body?.pb_cust_id,
         });
-        swalAlert(Swal, "error", res?.data?.message);
+        // swalAlert(Swal, "error", res?.data?.message);
       }
     } catch (e) {
       swalAlert(Swal, "error", e?.message);
@@ -139,7 +139,11 @@ export default function POSMain() {
           <div className="!w-full !flex !justify-end">
             <POSFooter formik={formik} />
           </div>
-          <POSPaymentButtons formik={formik} getPosDetails={getPosDetails} setSelectedCustomer={setSelectedCustomer}/>
+          <POSPaymentButtons
+            formik={formik}
+            getPosDetails={getPosDetails}
+            setSelectedCustomer={setSelectedCustomer}
+          />
         </div>
 
         {/* Right side actions */}

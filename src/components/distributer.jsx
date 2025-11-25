@@ -228,7 +228,7 @@ const Distributor = () => {
             <span>{dashbooard_get?.total_cust || 0}</span>
           </div>
           <div className="flex justify-between mb-1">
-            <span className="font-semibold">Direct Gold Wallet</span>
+            <span className="font-semibold">Direct Digital Gold</span>
             <span>
               {dashbooard_get?.dir_gold_wallet || 0} gm (
               {Number(dashbooard_get?.dir_gold_wallet_amount || 0)?.toFixed(2)}{" "}
@@ -236,11 +236,29 @@ const Distributor = () => {
             </span>
           </div>
           <div className="flex justify-between mb-1">
-            <span className="font-semibold">Team Gold Wallet</span>
+            <span className="font-semibold">Team Digital Gold</span>
             <span>
               {dashbooard_get?.team_gold_wallet || 0} gm (
               {Number(dashbooard_get?.team_gold_wallet_amount || 0)?.toFixed(2)}{" "}
               Rs)
+            </span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span className="font-semibold">Direct Dazzle-12</span>
+            <span>
+              {Number(dashbooard_get?.dazzle12_paid_amount_dir || 0)?.toFixed(
+                2
+              )}{" "}
+              Rs
+            </span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span className="font-semibold">Team Dazzle-12</span>
+            <span>
+              {Number(dashbooard_get?.dazzle12_paid_amount_team || 0)?.toFixed(
+                2
+              )}{" "}
+              Rs
             </span>
           </div>
           <div className="flex justify-between mb-1">

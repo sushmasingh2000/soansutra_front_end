@@ -70,7 +70,30 @@ export default function POSProductTable({ formik, defaultRow }) {
     const gw = pw - pl;
     const nw = gw - less;
     const fine = nw * (tunch / 100 + wastage / 100);
-    const total = nw * rate + lbr * (on === "pc" ? qnt : 1) + other - dis;
+    let totalWithoutLbr = nw * rate + other - dis;
+    let total;
+
+    // 🔥 Apply labour based on `on` type
+    switch (on) {
+      case "pc":
+        total = totalWithoutLbr + lbr * qnt;
+        break;
+
+      case "per":
+        total = totalWithoutLbr + (totalWithoutLbr * lbr) / 100;
+        break;
+
+      case "wt":
+        total = totalWithoutLbr + lbr * nw;
+        break;
+
+      case "rs":
+        total = totalWithoutLbr + lbr;
+        break;
+
+      default:
+        total = totalWithoutLbr + lbr;
+    }
 
     row.grWt = gw ? gw.toFixed(3) : "";
     row.netWt = nw ? nw.toFixed(3) : "";
@@ -176,8 +199,12 @@ export default function POSProductTable({ formik, defaultRow }) {
                     onChange={(e) => handleChange(e, index)}
                     className={selectClass}
                   >
+                    <option value="">Select Items</option>
+
                     {items?.map((opt) => (
-                      <option key={opt?.im_id}>{opt?.im_name}</option>
+                      <option key={opt?.im_id} value={opt?.im_name}>
+                        {opt?.im_name}
+                      </option>
                     ))}
                   </select>
                 </td>
@@ -190,6 +217,8 @@ export default function POSProductTable({ formik, defaultRow }) {
                     onChange={(e) => handleChange(e, index)}
                     className={selectClass}
                   >
+                    <option value="">Select Stamp</option>
+
                     {dropdownOptions.stamp.map((opt) => (
                       <option key={opt}>{opt}</option>
                     ))}
@@ -215,6 +244,7 @@ export default function POSProductTable({ formik, defaultRow }) {
                     onChange={(e) => handleChange(e, index)}
                     className={selectClass}
                   >
+                    <option value="">Select Unit</option>
                     {dropdownOptions.unit.map((opt) => (
                       <option key={opt}>{opt}</option>
                     ))}

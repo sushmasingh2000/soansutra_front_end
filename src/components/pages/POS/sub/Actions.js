@@ -12,16 +12,16 @@ export default function POSActions({formik}) {
   const [oepnDialog, setOpenDialog] = useState(false);
 
   const actions = [
-    { name: "Reciepts", compo: <ReceiptForm formik={formik}/> },
-    { name: "Payments", compo: <PaymentForm formik={formik}/> },
-    { name: "Adjust", compo: <AdjustForm formik={formik}/> },
-    { name: "Metal Rcpt", compo: <RateBookingForm formik={formik}/> },
-    { name: "Metal Paid", compo: <RateBookingForm formik={formik}/> },
-    { name: "Gold Bhav", compo: <GoldBhavForm formik={formik}/> },
-    { name: "Silver Bhav", compo: <SilverBhavForm formik={formik}/> },
-    { name: "Transfer", compo: <TransferForm formik={formik}/> },
-    { name: "Bal. Adjust", compo: <RateBookingForm formik={formik}/> },
-    { name: "Commission", compo: <RateBookingForm formik={formik}/> },
+    { name: "Reciepts", compo: <ReceiptForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Payments", compo: <PaymentForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Adjust", compo: <AdjustForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Metal Rcpt", compo: <RateBookingForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Metal Paid", compo: <RateBookingForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Gold Bhav", compo: <GoldBhavForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Silver Bhav", compo: <SilverBhavForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Transfer", compo: <TransferForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Bal. Adjust", compo: <RateBookingForm formik={formik} setOpenDialog={setOpenDialog}/> },
+    { name: "Commission", compo: <RateBookingForm formik={formik} setOpenDialog={setOpenDialog}/> },
   ];
   // 626
   return (

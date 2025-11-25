@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-export default function ReceiptForm({ formik }) {
+export default function ReceiptForm({ formik, setOpenDialog }) {
   const [form, setForm] = useState({
     paymentType: "Cash",
     name: "CASH",
@@ -32,8 +32,7 @@ export default function ReceiptForm({ formik }) {
 
     formik.setFieldValue("receipt", updatedReceipts);
 
-    // alert("✅ Receipt added to Formik successfully!");
-    console.log("🔍 Updated Formik:", formik.values);
+    setOpenDialog(false);
   };
 
   const handleCancel = () => {
@@ -51,6 +50,7 @@ export default function ReceiptForm({ formik }) {
       expDate: "",
       apCode: "",
     });
+    setOpenDialog(false);
   };
 
   return (

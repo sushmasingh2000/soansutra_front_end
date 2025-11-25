@@ -31,6 +31,7 @@ export default function EstimatePrintPreview({ formik }) {
     Number(formik?.values?.add_extra_amount || 0) -
     Number(formik?.values?.less_extra_amount || 0) +
     Number(formik.values.pb_closing_bal || 0);
+
   return (
     <div className="flex justify-center items-start bg-gray-50  relative">
       {/* 🖨️ Print Button (visible only on screen) */}
@@ -80,7 +81,7 @@ export default function EstimatePrintPreview({ formik }) {
               </div>
               <div className="flex justify-between text-[12px] mt-1">
                 <span className="font-semibold">Date:</span>
-                <span>{obj?.values?.curr_date || "07/11/2025"}</span>
+                <span>{obj?.curr_date}</span>
               </div>
             </div>
           </div>
@@ -127,7 +128,7 @@ export default function EstimatePrintPreview({ formik }) {
                     </td>
                     <td className="border border-gray-400 p-[2px]">{row.pc}</td>
                     <td className="border border-gray-400 p-[2px]">
-                      {row.rate}
+                      {row.rate}/gm
                     </td>
                     {/* <td className="border border-gray-400 p-[2px]">
                     {row.value}

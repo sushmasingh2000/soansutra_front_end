@@ -10,6 +10,7 @@ import { endpoint } from "../../../../utils/APIRoutes";
 import { swalAlert } from "../../../../utils/utilsFun";
 import AlertDialog from "./AlertDialog";
 import PrintOptionsForm from "./forms/PrintOptionsForm";
+import toast from "react-hot-toast";
 
 export default function POSPaymentButtons({
   formik,
@@ -47,6 +48,16 @@ export default function POSPaymentButtons({
 
   // ✅ Save Button Function
   const handleSave = async () => {
+    const isSelectedItems = formik.values.rows?.filter((k) => k?.total) || [];
+    console.log(formik?.values?.payment?.length);
+    if (
+      (formik?.values?.payment?.length == 0 || !formik?.values?.payment) &&
+      (formik?.values?.receipt?.length == 0 || !formik?.values?.receipt) &&
+      isSelectedItems?.length == 0
+    ) {
+      toast("There is no any item selected.", { id: 1 });
+      return;
+    }
     setLoading(true);
     try {
       const body = {
@@ -69,7 +80,9 @@ export default function POSPaymentButtons({
         ),
         pb_receipt: JSON.stringify(formik?.values?.receipt || [{}]),
         pb_payment: JSON.stringify(formik?.values?.payment || [{}]),
-        pb_items: JSON.stringify(formik.values.rows || [{}]),
+        pb_items: JSON.stringify(
+          formik.values.rows?.filter((k) => k?.total) || [{}]
+        ),
       };
 
       const res = await apiConnectorPost(endpoint.insert_pos_bill, body);

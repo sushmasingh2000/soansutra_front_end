@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { apiConnectorGet, usequeryBoolean } from "../../utils/ApiConnector";
+import {
+  apiConnectorGet,
+  apiConnectorPost,
+  usequeryBoolean,
+} from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import { useQuery } from "react-query";
 import moment from "moment";
@@ -7,30 +11,20 @@ import CustomToPagination from "../../Shared/Pagination";
 import { Edit } from "lucide-react";
 
 // MUI imports for Dialog
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import CustomTable from "./Shared/CustomTable";
-
+import { Add } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import toast from "react-hot-toast";
 const Distributor = () => {
   const [pagination, setPagination] = useState(1);
   const [search, setSearch] = useState("");
-
-  const { data, isLoading, error } = useQuery(
-    ["get_distributor_details", pagination, search],
-    () =>
-      apiConnectorGet(
-        `${endpoint.get_distributor_details}?page=${pagination}&count=10&search=${search}`
-      ),
-    usequeryBoolean,
-    { keepPreviousData: true }
-  );
-
-  const distributors = data?.data?.result || [];
-
+  const [loading, setLoading] = useState("");
   // States for Downline modal
   const [openDownline, setOpenDownline] = useState(false);
   const [downlineCustId, setDownlineCustId] = useState(null);
@@ -48,6 +42,18 @@ const Distributor = () => {
   const [uplineStartDate, setUplineStartDate] = useState("");
   const [uplineEndDate, setUplineEndDate] = useState("");
   const [isDistributorUpline, setIsDistributorUpline] = useState(1);
+
+  const { data, isLoading, error, refetch } = useQuery(
+    ["get_distributor_details", pagination, search],
+    () =>
+      apiConnectorGet(
+        `${endpoint.get_distributor_details}?page=${pagination}&count=10&search=${search}`
+      ),
+    usequeryBoolean,
+    { keepPreviousData: true }
+  );
+
+  const distributors = data?.data?.result || [];
 
   // Fetch downline data
   const {
@@ -74,7 +80,8 @@ const Distributor = () => {
         is_distributer: isDistributorDownline,
         page: downlinePage,
         count: 10,
-      }), usequeryBoolean,
+      }),
+    usequeryBoolean,
     {
       enabled: !!openDownline && !!downlineCustId,
       keepPreviousData: true,
@@ -121,7 +128,14 @@ const Distributor = () => {
       refetchDownline();
     }, 500);
     return () => clearTimeout(delay);
-  }, [downlineSearch, downlinePage, downlineStartDate, downlineEndDate, isDistributorDownline, openDownline]);
+  }, [
+    downlineSearch,
+    downlinePage,
+    downlineStartDate,
+    downlineEndDate,
+    isDistributorDownline,
+    openDownline,
+  ]);
 
   // Debounce refetch for upline search
   useEffect(() => {
@@ -130,8 +144,31 @@ const Distributor = () => {
       refetchUpline();
     }, 500);
     return () => clearTimeout(delay);
-  }, [uplineSearch, uplinePage, uplineStartDate, uplineEndDate, isDistributorUpline, openUpline]);
+  }, [
+    uplineSearch,
+    uplinePage,
+    uplineStartDate,
+    uplineEndDate,
+    isDistributorUpline,
+    openUpline,
+  ]);
 
+  async function handleRank(id, rank) {
+    setLoading(true);
+    try {
+      const res = await apiConnectorPost(endpoint?.assign_direct_rank, {
+        m_id: id,
+        rank: rank,
+      });
+      if (res.data?.success) {
+        refetch();
+      }
+      toast(res.data?.message, { id: 1 });
+    } catch (e) {
+      toast(e?.message, { id: 1 });
+    }
+    setLoading(false);
+  }
   const tablehead = [
     <span>S.No.</span>,
     <span>Unique ID</span>,
@@ -150,16 +187,25 @@ const Distributor = () => {
     <span>Level Details</span>,
     <span>Downline</span>,
     <span>Upline</span>,
-  ]
-
+  ];
 
   const tablerow = distributors?.data?.map((d, idx) => [
-    <span>{idx + 1}</span>,
+    <span>{(pagination - 1) * 10 + (idx + 1)}</span>,
     <span>{d.mlm_unique_id}</span>,
     <span>{d.name}</span>,
     <span>{d.cl_email}</span>,
     <span>{d.cl_phone}</span>,
-    <span>{d.mlm_curr_level}</span>,
+    <span className="flex items-center justify-between">
+      {d.mlm_curr_level}
+      <IconButton>
+        <Add
+          size={14}
+          onClick={() =>
+            handleRank(d.mlm_id, Number(d.mlm_curr_level || 0) + 1)
+          }
+        />
+      </IconButton>
+    </span>,
     <span>{d.mlm_direct_mem}</span>,
     <span>{d.mlm_team_mem}</span>,
     <span>{d.mlm_team_buss}</span>,
@@ -202,12 +248,13 @@ const Distributor = () => {
           setIsDistributorUpline(1);
         }}
       />
-    </span>
-  ])
+    </span>,
+  ]);
 
   const tableheaddown = [
     <span>S.No</span>,
     <span>Unique ID</span>,
+    <span>Level No.</span>,
     <span>Name</span>,
     <span>Email</span>,
     <span>Phone</span>,
@@ -221,51 +268,14 @@ const Distributor = () => {
     <span>Team Members</span>,
     <span>Team Business</span>,
     <span>Reg. Date</span>,
-  ]
+  ];
 
   const tablerowdown = downlineData?.data?.result?.data?.map((d, index) => [
-    <span>{index + 1}</span>,
-    <span>{d.mlm_unique_id}</span>,
-    <span>{d.name}</span>,
-    <span>{d.cl_email}</span>,
-    <span>{d.cl_phone}</span>,
-    <span>{d.mlm_self_invest}</span>,
-    <span>{d.purchase_wallet}</span>,
-    <span>{d.mlm_direct_buss}</span>,
-    <span>{d.spon_email}</span>,
-    <span>{d.spon_phone}</span>,
-    <span>{d.spon_name}</span>,
-    <span>{d.mlm_direct_mem}</span>,
-    <span>{d.mlm_team_mem}</span>,
-    <span>{d.mlm_team_buss}</span>,
-    <span>
-      {d.mlm_dist_reg_date
-        ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
-        : "--"}
-    </span>
-  ])
+    <span>{(downlinePage - 1) * 10 + (index + 1)}</span>,
 
-  const tableheadUpline = [
-    <span>S.No</span>,
-    <span>Unique ID</span>,
-    <span>Name</span>,
-    <span>Email</span>,
-    <span>Phone</span>,
-    <span>Self Invest</span>,
-    <span>Purchase Wallet</span>,
-    <span>Direct Business</span>,
-    <span>Sponsor Email</span>,
-    <span>Sponsor Phone</span>,
-    <span>Sponsor Name</span>,
-    <span>Direct Members</span>,
-    <span>Team Members</span>,
-    <span>Team Business</span>,
-    <span>Reg. Date</span>,
-  ]
-
-  const tablerowUpline = uplineData?.data?.result?.data?.map((d, index) => [
-    <span>{index + 1}</span>,
     <span>{d.mlm_unique_id}</span>,
+    <span>{d.level_id}</span>,
+
     <span>{d.name}</span>,
     <span>{d.cl_email}</span>,
     <span>{d.cl_phone}</span>,
@@ -283,7 +293,49 @@ const Distributor = () => {
         ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
         : "--"}
     </span>,
-  ])
+  ]);
+
+  const tableheadUpline = [
+    <span>S.No</span>,
+    <span>Unique ID</span>,
+    <span>Level No.</span>,
+    <span>Name</span>,
+    <span>Email</span>,
+    <span>Phone</span>,
+    <span>Self Invest</span>,
+    <span>Purchase Wallet</span>,
+    <span>Direct Business</span>,
+    <span>Sponsor Email</span>,
+    <span>Sponsor Phone</span>,
+    <span>Sponsor Name</span>,
+    <span>Direct Members</span>,
+    <span>Team Members</span>,
+    <span>Team Business</span>,
+    <span>Reg. Date</span>,
+  ];
+
+  const tablerowUpline = uplineData?.data?.result?.data?.map((d, index) => [
+    <span>{(uplinePage - 1) * 10 + (index + 1)}</span>,
+    <span>{d.mlm_unique_id}</span>,
+    <span>{d.level_id}</span>,
+    <span>{d.name}</span>,
+    <span>{d.cl_email}</span>,
+    <span>{d.cl_phone}</span>,
+    <span>{d.mlm_self_invest}</span>,
+    <span>{d.purchase_wallet}</span>,
+    <span>{d.mlm_direct_buss}</span>,
+    <span>{d.spon_email}</span>,
+    <span>{d.spon_phone}</span>,
+    <span>{d.spon_name}</span>,
+    <span>{d.mlm_direct_mem}</span>,
+    <span>{d.mlm_team_mem}</span>,
+    <span>{d.mlm_team_buss}</span>,
+    <span>
+      {d.mlm_dist_reg_date
+        ? moment(d.mlm_dist_reg_date).format("YYYY-MM-DD")
+        : "--"}
+    </span>,
+  ]);
 
   return (
     <div className="p-6 ">
@@ -304,7 +356,7 @@ const Distributor = () => {
       <CustomTable
         tablehead={tablehead}
         tablerow={tablerow}
-        isLoading={isLoading}
+        isLoading={isLoading || loading}
       />
 
       {/* Pagination Component */}
@@ -317,7 +369,12 @@ const Distributor = () => {
       </div>
 
       {/* Downline Modal */}
-      <Dialog open={openDownline} onClose={() => setOpenDownline(false)} maxWidth="lg" fullWidth>
+      <Dialog
+        open={openDownline}
+        onClose={() => setOpenDownline(false)}
+        maxWidth="lg"
+        fullWidth
+      >
         <DialogTitle>Downline Members</DialogTitle>
         <DialogContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -382,7 +439,12 @@ const Distributor = () => {
       </Dialog>
 
       {/* Upline Modal */}
-      <Dialog open={openUpline} onClose={() => setOpenUpline(false)} maxWidth="lg" fullWidth>
+      <Dialog
+        open={openUpline}
+        onClose={() => setOpenUpline(false)}
+        maxWidth="lg"
+        fullWidth
+      >
         <DialogTitle>Upline Members</DialogTitle>
         <DialogContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">

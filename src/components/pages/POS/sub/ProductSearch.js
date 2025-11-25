@@ -24,6 +24,8 @@ export default function POSCustomerSection({
   selectedCustomer,
 }) {
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [showList, setShowList] = useState(false);
 
   async function getDuePayment() {
     setLoading(true);
@@ -51,8 +53,8 @@ export default function POSCustomerSection({
   }
 
   const { data, isLoading } = useQuery(
-    ["get_customer_dropdown"],
-    () => apiConnectorGet(endpoint?.get_customer_dropdown),
+    ["get_customer_dropdown", search],
+    () => apiConnectorGet(endpoint?.get_customer_dropdown, { search: search }),
     {
       keepPreviousData: true,
     }
@@ -92,12 +94,12 @@ export default function POSCustomerSection({
         <div className="col-span-6">
           {/* Account */}
           <div className="flex items-center mb-[2px]">
-            <span className="w-[60px] text-[10px] font-semibold">Account</span>
+            <span className="w-[60px] text-[10px] font-semibold">Cash A/c</span>
             <input
               type="text"
-              value={
-                selectedCustomer ? selectedCustomer.label : "CASH CUSTOMER"
-              }
+              // value={
+              //   selectedCustomer ? selectedCustomer.label : "CASH CUSTOMER"
+              // }
               readOnly
               className={`flex-1 border border-gray-300 rounded px-1 py-[1px] text-[10px] bg-white ${inputClass}`}
             />
@@ -105,54 +107,41 @@ export default function POSCustomerSection({
           </div>
 
           {/* Cash A/c */}
-          <div className="flex items-center mb-[2px]">
-            <span className="w-[60px] text-[10px] font-semibold">Cash A/c</span>
-            <Autocomplete
-              disablePortal
-              options={customers}
-              popupIcon={null}
-              clearIcon={null}
-              value={selectedCustomer || null} // 🔹 Add this line
-              sx={{
-                width: "100%",
-                "& .MuiInputBase-root": {
-                  height: 24,
-                  minHeight: "unset",
-                  borderRadius: "4px",
-                  fontSize: "10px",
-                  paddingRight: "0px !important",
-                },
-                "& .MuiInputBase-input": {
-                  fontSize: "10px",
-                  padding: "2px 6px !important",
-                },
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#d1d5db",
-                },
-                "& .MuiFormLabel-root": {
-                  fontSize: "10px",
-                  top: "-6px",
-                },
+          <div className="flex items-center mb-[2px] relative">
+            <span className="w-[60px] text-[10px] font-semibold">Account</span>
+
+            <input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value); // 🔹 Search update → API call hota rahega
+                setShowList(true); // 🔹 Typing pe list open
               }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select Customer"
-                  size="small"
-                  variant="outlined"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: null,
-                  }}
-                  className="!bg-white"
-                />
-              )}
-              onChange={(e, val) => {
-                setSelectedCustomer(val);
-                formik.setFieldValue("customer_details", val);
-                getPosDetails("new", val?.customer_id);
-              }}
+              onFocus={() => setShowList(true)}
+              placeholder="Select Customer"
+              className="w-full text-[10px] border border-gray-300 rounded px-2 py-[2px] bg-white"
             />
+
+            {/* 🔹 Dropdown List */}
+            {showList && customers?.length > 0 && (
+              <div className="absolute top-[26px] left-[60px] w-[calc(100%-60px)] bg-white border shadow z-10 max-h-40 overflow-auto text-[10px]">
+                {customers.map((item) => (
+                  <div
+                    key={item.customer_id}
+                    onClick={() => {
+                      setSelectedCustomer(item);
+                      setSearch(item.name); // Selected name input me set
+                      setShowList(false);
+
+                      formik.setFieldValue("customer_details", item);
+                      getPosDetails("new", item.customer_id);
+                    }}
+                    className="px-2 py-1 !text-black hover:bg-gray-100 cursor-pointer"
+                  >
+                    {item.name} | {item?.cl_email} | {item?.cl_phone}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Narration */}
