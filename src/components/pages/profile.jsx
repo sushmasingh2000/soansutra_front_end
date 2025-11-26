@@ -238,8 +238,8 @@ const ProfileDashboard = () => {
           className={`
           ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} 
           md:translate-x-0 fixed md:static inset-y-0 left-0 z-40 
-          w-80 bg-white border-r border-yellow-200 min-w-screen 
-          transition-transform duration-300 ease-in-out
+          w-80 bg-white border-r border-yellow-200 
+          transition-transform duration-300 ease-in-out overflow-y-auto
         `}
         >
           {/* Mobile Close Button */}
@@ -306,7 +306,7 @@ const ProfileDashboard = () => {
         )}
 
         {/* Main Content */}
-        <div className="flex-1 md:ml-0">
+        <div className="flex-1 w-full md:w-auto overflow-x-auto">
           {/* Mobile Menu Button */}
           <div className="md:hidden bg-white border-b border-yellow-200 p-4 flex items-center justify-between">
             <button

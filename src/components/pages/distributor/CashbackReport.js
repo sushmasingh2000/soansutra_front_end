@@ -87,14 +87,12 @@ const CashbackReport = () => {
                 />
             </div>
 
-            <div className=" overflow-x-scroll w-auto">
-              <div className="lg:w-full w-[70%] md:w-full ">
-                  <CustomTable
+            <div className="overflow-x-auto">
+                <CustomTable
                     tablehead={tablehead}
                     tablerow={tablerow?.length ? tablerow : [["No records found"]]}
                     isLoading={isLoading}
                 />
-              </div>
             </div>
 
 
