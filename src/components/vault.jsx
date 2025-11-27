@@ -1,12 +1,10 @@
-import React from 'react';
-import Footer from './Footer1';
-import Header from './Header1';
-import NavigationBar from './navigationbar';
-import EgoldHeader from './egoldheader';
 import { useQuery } from 'react-query';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiConnectorGet, usequeryBoolean } from '../utils/ApiConnector';
 import { endpoint } from '../utils/APIRoutes';
-import { Link, useNavigate } from 'react-router-dom';
+import EgoldHeader from './egoldheader';
+import Footer from './Footer1';
+import Header from './Header1';
 
 const GoldLockerUI = () => {
     // Hardcoded data
