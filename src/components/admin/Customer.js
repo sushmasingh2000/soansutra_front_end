@@ -41,7 +41,7 @@
 //   const openPasswordModal = (customerId) => {
 //     setPasswordData({
 //       userId: customerId,
-//       new_password: "", 
+//       new_password: "",
 //     });
 //     setPasswordModalOpen(true);
 //   };
@@ -376,7 +376,7 @@
 
 // export default Customer;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/ApiConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import toast from "react-hot-toast";
@@ -390,10 +390,11 @@ import CustomTable from "./Shared/CustomTable";
 const Customer = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [mlmModalOpen, setMlmModalOpen] = useState(false);
-const [mlmData, setMlmData] = useState({
-  cust_id: "",
-  self_id: "",
-});
+  const [mlmData, setMlmData] = useState({
+    cust_id: "",
+    self_id: "",
+  });
+  const [name, setName] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -518,7 +519,7 @@ const [mlmData, setMlmData] = useState({
         password: "",
         confirm_password: "",
         spon_id: "",
-        spon_name: "",
+        spon_name: "N/A",
         mlm_is_distributor: 0,
         status: "Active",
         // created_by: "admin",
@@ -559,9 +560,7 @@ const [mlmData, setMlmData] = useState({
 
       toast(
         res?.data?.message ||
-          (isEditing
-            ? res?.data?.message
-            : res?.data?.message)
+          (isEditing ? res?.data?.message : res?.data?.message)
       );
 
       setModalOpen(false);
@@ -572,34 +571,50 @@ const [mlmData, setMlmData] = useState({
     }
   };
 
- const handleMLMSubmit = async () => {
-  if (!mlmData.cust_id) {
-    toast.error("Please enter Cust ID");
-    return;
-  }
-  try {
-    const payload = {
-      cust_id: mlmData.cust_id,  
-      self_id: mlmData.self_id,  
-    };
-
-    const res = await apiConnectorPost(
-      endpoint.distributor_registration_admin,
-      payload
-    );
-
-    toast(res?.data?.message);
-    if (res?.data?.success) {
-      setMlmModalOpen(false);
-      refetch();
+  const handleMLMSubmit = async () => {
+    if (!mlmData.cust_id) {
+      toast.error("Please enter Cust ID");
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to register as Distributor");
-  }
-};
+    try {
+      const payload = {
+        cust_id: mlmData.cust_id,
+        self_id: mlmData.self_id,
+      };
 
+      const res = await apiConnectorPost(
+        endpoint.distributor_registration_admin,
+        payload
+      );
 
+      toast(res?.data?.message);
+      if (res?.data?.success) {
+        setMlmModalOpen(false);
+        refetch();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to register as Distributor");
+    }
+  };
+
+  const Customerfunction = async () => {
+    const reqbody = {
+      customer_id: formData.spon_id || mlmData.cust_id,
+    };
+    try {
+      const res = await apiConnectorPost(
+        endpoint?.get_distributor_name,
+        reqbody
+      );
+      setName(res?.data?.result?.[0]);
+    } catch (e) {
+      console.log("something went wrong");
+    }
+  };
+  useEffect(() => {
+    Customerfunction();
+  }, [formData.spon_id, mlmData.cust_id]);
 
   const tablehead = [
     "S.No",
@@ -634,39 +649,37 @@ const [mlmData, setMlmData] = useState({
     c.cl_phone,
     c.spon_id || "-",
     c.spon_name || "-",
-<div className="flex justify-center">
-  <label className="relative inline-flex items-center cursor-pointer">
-    <input
-      type="checkbox"
-      className="sr-only"
-      checked={c.mlm_is_distributor === 1}
-    />
-    <div
-      className={`w-10 h-5 rounded-full transition-colors duration-300 ${
-        c.mlm_is_distributor === 1 ? "bg-green-500" : "bg-gray-300"
-      }`}
-    ></div>
-    <div
-      className={`absolute left-[2px] top-[2px] bg-white w-4 h-4 rounded-full transition-transform duration-300 ${
-        c.mlm_is_distributor === 1 ? "translate-x-5" : ""
-      }`}
-    ></div>
-  </label>
-</div>
-,
-<span
-    className="text-green-600  cursor-pointer" >
-  <Edit
-    onClick={() => {
-      setMlmData({
-        cust_id: "",
-        self_id: c.cust_unique_id, 
-      });
-      setMlmModalOpen(true);
-    }}
-  />
-</span>,
-      c.date_of_birth || "-",
+    <div className="flex justify-center">
+      <label className="relative inline-flex items-center cursor-pointer">
+        <input
+          type="checkbox"
+          className="sr-only"
+          checked={c.mlm_is_distributor === 1}
+        />
+        <div
+          className={`w-10 h-5 rounded-full transition-colors duration-300 ${
+            c.mlm_is_distributor === 1 ? "bg-green-500" : "bg-gray-300"
+          }`}
+        ></div>
+        <div
+          className={`absolute left-[2px] top-[2px] bg-white w-4 h-4 rounded-full transition-transform duration-300 ${
+            c.mlm_is_distributor === 1 ? "translate-x-5" : ""
+          }`}
+        ></div>
+      </label>
+    </div>,
+    <span className="text-green-600  cursor-pointer">
+      <Edit
+        onClick={() => {
+          setMlmData({
+            cust_id: "",
+            self_id: c.cust_unique_id,
+          });
+          setMlmModalOpen(true);
+        }}
+      />
+    </span>,
+    c.date_of_birth || "-",
     <span
       className="text-blue-600 underline cursor-pointer"
       onClick={() => openPasswordModal(c.cust_unique_id)}
@@ -743,12 +756,12 @@ const [mlmData, setMlmData] = useState({
 
       {/* Add/Edit Customer Modal */}
       <ReactModal
-  isOpen={modalOpen}
-  onRequestClose={() => setModalOpen(false)}
-  ariaHideApp={false}
-  className="w-full max-w-5xl mx-auto mt-16 bg-white rounded-lg shadow-xl p-6 outline-none max-h-[90vh] overflow-y-auto"
-  overlayClassName="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-start z-50 overflow-y-auto"
->
+        isOpen={modalOpen}
+        onRequestClose={() => setModalOpen(false)}
+        ariaHideApp={false}
+        className="w-full max-w-5xl mx-auto mt-16 bg-white rounded-lg shadow-xl p-6 outline-none max-h-[90vh] overflow-y-auto"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-start z-50 overflow-y-auto"
+      >
         <h2 className="text-xl font-semibold mb-4">
           {isEditing ? "Edit Customer" : "Add New Customer"}
         </h2>
@@ -770,33 +783,37 @@ const [mlmData, setMlmData] = useState({
             { label: "Govt ID Type", name: "govt_identity" },
             { label: "Govt ID No", name: "govt_no" },
             { label: "Sponsor ID", name: "spon_id" },
-            { label: "Sponsor Name", name: "spon_name" },
           ].map((f) => (
-           <div key={f.name} className="flex flex-col">
-          <label className="mb-1 text-sm font-medium">{f.label}</label>
-          <input
-            name={f.name}
-            type={f.type || "text"}
-            value={formData[f.name]}
-            onChange={handleChange}
-            className="border p-2 rounded"
-          />
-        </div>
+            <div key={f.name} className="flex flex-col">
+              <label className="mb-1 text-sm font-medium">{f.label}</label>
+              <input
+                name={f.name}
+                type={f.type || "text"}
+                value={formData[f.name]}
+                onChange={handleChange}
+                className="border p-2 rounded"
+              />
+              {f.label === "Sponsor ID" && (
+                <span className="!text-xs !text-red-500">
+                  {name?.name || "Invalid Id"}
+                </span>
+              )}
+            </div>
           ))}
 
           {/* Status Dropdown */}
-         <div className="flex flex-col">
-    <label className="mb-1 text-sm font-medium">Status</label>
-    <select
-      name="status"
-      value={formData.status}
-      onChange={handleChange}
-      className="border p-2 rounded"
-    >
-      <option value="Active">Active</option>
-      <option value="Inactive">Inactive</option>
-    </select>
-  </div>
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">Status</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="border p-2 rounded"
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
           {/* Password Fields (only in create mode) */}
           {!isEditing && (
             <>
@@ -815,41 +832,44 @@ const [mlmData, setMlmData] = useState({
                 value={formData.confirm_password}
                 onChange={handleChange}
                 className="border p-2 rounded"
-              /> <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Password</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium">Confirm Password</label>
-        <input
-          type="password"
-          name="confirm_password"
-          value={formData.confirm_password}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
-      </div>
+              />{" "}
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="border p-2 rounded"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="confirm_password"
+                  value={formData.confirm_password}
+                  onChange={handleChange}
+                  className="border p-2 rounded"
+                />
+              </div>
             </>
           )}
 
           {/* File Upload */}
-         <div className="flex flex-col">
-    <label className="mb-1 text-sm font-medium">Upload File</label>
-    <input
-      type="file"
-      accept="image/*"
-      onChange={(e) =>
-        setFormData((prev) => ({ ...prev, file: e.target.files[0] }))
-      }
-      className="border p-2 rounded"
-    />
-  </div>
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">Upload File</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, file: e.target.files[0] }))
+              }
+              className="border p-2 rounded"
+            />
+          </div>
         </div>
 
         <div className="mt-6 flex justify-end gap-2">
@@ -912,57 +932,60 @@ const [mlmData, setMlmData] = useState({
         </div>
       </ReactModal>
       <ReactModal
-  isOpen={mlmModalOpen}
-  onRequestClose={() => setMlmModalOpen(false)}
-  ariaHideApp={false}
-  className="w-full max-w-md mx-auto mt-32 bg-white rounded-lg shadow-xl p-6 outline-none"
-  overlayClassName="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-start z-50"
->
-  <h2 className="text-xl font-semibold mb-4">Distributor Registration</h2>
+        isOpen={mlmModalOpen}
+        onRequestClose={() => setMlmModalOpen(false)}
+        ariaHideApp={false}
+        className="w-full max-w-md mx-auto mt-32 bg-white rounded-lg shadow-xl p-6 outline-none"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-start z-50"
+      >
+        <h2 className="text-xl font-semibold mb-4">Distributor Registration</h2>
 
-  <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4">
+          {/* Cust ID (readonly) */}
+          <input
+            type="text"
+            name="self_id"
+            value={mlmData.self_id}
+            readOnly
+            className="border p-2 rounded bg-gray-100 text-gray-600"
+          />
 
-    {/* Cust ID (readonly) */}
-      <input
-      type="text"
-      name="self_id"
-      value={mlmData.self_id}
-      readOnly
-      className="border p-2 rounded bg-gray-100 text-gray-600"
-    />
+          <div className="!flex !flex-col">
+            <input
+              type="text"
+              name="cust_id"
+              placeholder="Enter Cust ID"
+              value={mlmData.cust_id}
+              onChange={(e) =>
+                setMlmData((prev) => ({ ...prev, cust_id: e.target.value }))
+              }
+              className="border p-2 rounded"
+            />
+            {mlmData.cust_id && (
+              <span className="!text-xs !text-red-500">
+                {name?.name || "Invalid Id"}
+              </span>
+            )}
+          </div>
+        </div>
 
-      <input
-      type="text"
-      name="cust_id"
-      placeholder="Enter Cust ID"
-      value={mlmData.cust_id}
-      onChange={(e) =>
-        setMlmData((prev) => ({ ...prev, cust_id: e.target.value }))
-      }
-      className="border p-2 rounded"
-    />
-  </div>
-
-  <div className="mt-6 flex justify-end gap-2">
-    <button
-      onClick={() => setMlmModalOpen(false)}
-      className="px-4 py-2 bg-gray-300 rounded"
-    >
-      Cancel
-    </button>
-    <button
-      onClick={handleMLMSubmit}
-      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-    >
-      Submit
-    </button>
-  </div>
-</ReactModal>
-
+        <div className="mt-6 flex justify-end gap-2">
+          <button
+            onClick={() => setMlmModalOpen(false)}
+            className="px-4 py-2 bg-gray-300 rounded"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleMLMSubmit}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            Submit
+          </button>
+        </div>
+      </ReactModal>
     </div>
   );
 };
 
 export default Customer;
-
-

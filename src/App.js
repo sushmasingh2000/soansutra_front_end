@@ -28,7 +28,7 @@ function App() {
         <Route path="/admin-Login" element={<AdminLogIn />} />
         <Route path="/deliveryboy-Login" element={<DeliveryBoyLogIn />} />
 
-        {user ? (
+        {admin ? (
           adminroutes.map((route, i) => (
             <Route
               key={i}
@@ -46,13 +46,13 @@ function App() {
         ) : (
           <Route path="*" element={<AdminLogIn />} />
         )}
-        {admin ? (
+        {/* {user ? (
           routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />
           ))
         ) : (
           <Route path="*" element={<Login />} />
-        )}
+        )} */}
 
         {routes.map((route, i) => (
           <Route key={i} path={route.path} element={route.element} />

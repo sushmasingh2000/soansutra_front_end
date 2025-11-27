@@ -18,7 +18,7 @@ const Distributor = () => {
   const [name, setName] = useState("");
   const [customer, setCustomer] = useState("");
   const [loading, setLoading] = useState(false);
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
 
   const handleClose = () => {
     setOpen(false);
@@ -62,9 +62,9 @@ const Distributor = () => {
   const { data: get_didtri_dash } = useQuery(
     ["dashbooard_get"],
     () => apiConnectorGet(endpoint.get_distributor_dashboard),
-   {
-      ...usequeryBoolean,     
-      enabled: !!token    
+    {
+      ...usequeryBoolean,
+      enabled: !!token,
     }
   );
 
@@ -73,22 +73,21 @@ const Distributor = () => {
   const { data, isLoading: profile } = useQuery(
     ["profile_distributor"],
     () => apiConnectorGet(endpoint.get_profile_distributor),
-   {
-       ...usequeryBoolean,
-       enabled: !!token 
-     }
+    {
+      ...usequeryBoolean,
+      enabled: !!token,
+    }
   );
 
   const distri_pro = data?.data?.result?.[0] || {};
 
   const { data: profile_user } = useQuery(
     ["profile_user"],
-    () =>
-      apiConnectorGet(endpoint?.get_customer_profile),
+    () => apiConnectorGet(endpoint?.get_customer_profile),
     {
-    ...usequeryBoolean,
-    enabled: !!token 
-  }
+      ...usequeryBoolean,
+      enabled: !!token,
+    }
   );
 
   const profile_cust = profile_user?.data?.result || [];
@@ -175,7 +174,11 @@ const Distributor = () => {
 
         {/* Business Info Card 1 */}
         <button
-          onClick={() => functionTOCopy(frontend + "/sign-up?referral_id=" + profile_cust?.cust_unique_id)}
+          onClick={() =>
+            functionTOCopy(
+              frontend + "/sign-up?referral_id=" + profile_cust?.cust_unique_id
+            )
+          }
           className="flex items-center justify-start gap-5 w-full text-left text-sm text-black hover:bg-yellow-50 px-3 py-2 rounded transition-colors"
         >
           <span>Referral Code</span>
@@ -188,15 +191,21 @@ const Distributor = () => {
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Total Team</span>
-            <span>{Number(dashbooard_get?.total_team)?.toFixed(0, 2) || 0}</span>
+            <span>
+              {Number(dashbooard_get?.total_team)?.toFixed(0, 2) || 0}
+            </span>
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Self Business</span>
-            <span>₹{Number(dashbooard_get?.total_self_buss)?.toFixed(2) || 0}</span>
+            <span>
+              ₹{Number(dashbooard_get?.total_self_buss)?.toFixed(2) || 0}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Team Business</span>
-            <span>₹{Number(dashbooard_get?.total_team_buss)?.toFixed(2) || 0}</span>
+            <span>
+              ₹{Number(dashbooard_get?.total_team_buss)?.toFixed(2) || 0}
+            </span>
           </div>
         </div>
 
@@ -217,6 +226,40 @@ const Distributor = () => {
           <div className="flex justify-between mb-1">
             <span className="font-semibold">Total Customers</span>
             <span>{dashbooard_get?.total_cust || 0}</span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span className="font-semibold">Direct Digital Gold</span>
+            <span>
+              {dashbooard_get?.dir_gold_wallet || 0} gm (
+              {Number(dashbooard_get?.dir_gold_wallet_amount || 0)?.toFixed(2)}{" "}
+              Rs)
+            </span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span className="font-semibold">Team Digital Gold</span>
+            <span>
+              {dashbooard_get?.team_gold_wallet || 0} gm (
+              {Number(dashbooard_get?.team_gold_wallet_amount || 0)?.toFixed(2)}{" "}
+              Rs)
+            </span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span className="font-semibold">Direct Dazzle-12</span>
+            <span>
+              {Number(dashbooard_get?.dazzle12_paid_amount_dir || 0)?.toFixed(
+                2
+              )}{" "}
+              Rs
+            </span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span className="font-semibold">Team Dazzle-12</span>
+            <span>
+              {Number(dashbooard_get?.dazzle12_paid_amount_team || 0)?.toFixed(
+                2
+              )}{" "}
+              Rs
+            </span>
           </div>
           <div className="flex justify-between mb-1">
             <span className="font-semibold"> Income Wallet</span>
